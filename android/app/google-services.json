@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "596883671981",
+    "project_id": "my-kom",
+    "storage_bucket": "my-kom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596883671981:android:f92278830779c8bb7c6f24",
+        "android_client_info": {
+          "package_name": "com.example.my_kom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596883671981-sjkjgk2hav7fo74sr4v97u4m05g1jfec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtOS6Swpdpy1tqX3jGmeY2sG1q1PHk29I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596883671981-sjkjgk2hav7fo74sr4v97u4m05g1jfec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
