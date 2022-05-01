@@ -1,18 +1,16 @@
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/module_authorization/service/map_service.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
   final MapService _service = MapService();
   MapBloc() : super(MapInitState()) {
     on<MapEvents>((MapEvents event, Emitter<MapStates> emit) {
-      print('rrrrrrrrrrrrrr');
-      print(event);
       if (event is MapLoadingEvent)
         emit(MapLoadingState());
-      else if (event is MapSuccessEvent) emit(MapSuccessState(event.position));
+      else if (event is MapSuccessEvent) emit(MapSuccessState(event.data));
       else if (event is MapErrorEvent) emit(MapErrorState());
 
       else if(event is MapSuccessSavePositionEvent){
@@ -32,15 +30,26 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     });     
   }
 
-  Future<void> savePosition(Position position)async{
- this.add(MapLoadingEvent());
-    _service.saveLocation(position).then((value) {
+ //  Future<void> savePosition(Position position , String description)async{
+ // this.add(MapLoadingEvent());
+ //    _service.saveLocation(position,description).then((value) {
+ //      if(value == null){
+ //      this.add(MapErrorEvent());
+ //      }else{
+ //        this.add(MapSuccessSavePositionEvent());
+ //      }
+ //    });
+ //  }
+
+  Future<void> saveLocation(LatLng latLng, String description) async {
+    this.add(MapLoadingEvent());
+    _service.saveLocation(latLng,description).then((value) {
       if(value == null){
-      this.add(MapErrorEvent());
+        this.add(MapErrorEvent());
       }else{
         this.add(MapSuccessSavePositionEvent());
       }
-    }); 
+    });
   }
 }
 
@@ -49,8 +58,8 @@ abstract class MapEvents {}
 class MapInitEvent extends MapEvents {}
 
 class MapSuccessEvent extends MapEvents {
-  Position position;
-  MapSuccessEvent(this.position);
+  MapData data;
+  MapSuccessEvent(this.data);
 }
 
 class MapLoadingEvent extends MapEvents {}
@@ -63,12 +72,17 @@ abstract class MapStates {}
 class MapInitState extends MapStates {}
 
 class MapSuccessState extends MapStates {
-  Position position;
-  MapSuccessState(this.position);
+  MapData data;  MapSuccessState(this.data);
 }
 
 class MapLoadingState extends MapStates {}
 class MapSuccessSavePositionState extends MapStates {}
 class MapErrorState extends MapStates {}
+
+class MapData{
+  double longitude,latitude;
+  String name;
+  MapData({required this.latitude ,required this.longitude ,required this.name});
+}
 
 MapBloc mapBloc = MapBloc();
