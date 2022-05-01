@@ -8,6 +8,8 @@ import 'package:my_kom/module_info_and_splash/info_splash_module.dart';
 import 'package:my_kom/module_info_and_splash/screen/splash_screen.dart';
 import 'package:my_kom/module_wrapper/wrapper_module.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'module_map/map_module.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -27,8 +29,9 @@ class MyApp extends StatelessWidget {
   final InfoSplashModule _infoSplashModule;
   final NavigatorModule _navigatorModule;
   final AuthorizationModule _authorizationModule;
+  final MapModule _mapModule;
   MyApp(this._wapperModule, this._infoSplashModule, this._navigatorModule,
-      this._authorizationModule);
+      this._authorizationModule,this._mapModule);
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class MyApp extends StatelessWidget {
     routes.addAll(_infoSplashModule.getRoutes());
     routes.addAll(_navigatorModule.getRoutes());
     routes.addAll(_authorizationModule.getRoutes());
+    routes.addAll(_mapModule.getRoutes());
 
     return FutureBuilder<Widget>(
       initialData: Container(color: Colors.green),

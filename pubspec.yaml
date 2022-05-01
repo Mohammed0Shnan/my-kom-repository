@@ -75,6 +75,10 @@ dependencies:
   geoflutterfire: ^3.0.3
   geocoding: ^2.0.4
 
+
+  # Snaks
+  top_snackbar_flutter: ^1.0.2
+
   # Animations
   simple_animations: ^4.0.1
   animated_text_kit: ^4.2.1

@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:my_kom/module_authorization/bloc/map_bloc.dart';
-import 'package:my_kom/module_authorization/models/address_model.dart';
+import 'package:my_kom/module_map/bloc/map_bloc.dart';
+
+import '../models/address_model.dart';
 
 class MapService {
   // final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();

@@ -9,6 +9,8 @@ import 'package:my_kom/module_home/screen/navigator_screen.dart';
 import 'package:my_kom/module_home/screen/shop_navigator_screen.dart';
 import 'package:my_kom/module_info_and_splash/info_splash_module.dart';
 import 'package:my_kom/module_info_and_splash/screen/next_splash_screen.dart';
+import 'package:my_kom/module_map/map_module.dart';
+import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
 import 'package:my_kom/module_wrapper/wrapper.dart';
@@ -27,13 +29,14 @@ class AppComponentInjector implements AppComponent {
     _createWapperModule(),
     _createInfoSplashModule(),
     _createNavigatorModule(),
-    _createAuthorizationModule(),
+    _createAuthorizationModule(), _createMapModule()
   );
   
   WapperModule _createWapperModule() => WapperModule(Wrapper());
   InfoSplashModule _createInfoSplashModule()=>InfoSplashModule(NextSplashScreen());
   NavigatorModule _createNavigatorModule()=>NavigatorModule(ShopNavigatorScreen(navigatorScreen: NavigatorScreen(homeScreen: HomeScreen(),profileScreen: ProfileScreen(),),shopScreen: ShopScreen(),));
   AuthorizationModule _createAuthorizationModule() => AuthorizationModule(LoginScreen(), RegisterScreen());
+  MapModule _createMapModule()=> MapModule(MapScreen());
   MyApp get app {
     return _createApp();
   }

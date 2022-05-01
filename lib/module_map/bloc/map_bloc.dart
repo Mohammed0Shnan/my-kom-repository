@@ -2,7 +2,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:my_kom/module_authorization/service/map_service.dart';
+import 'package:my_kom/module_map/service/map_service.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
   final MapService _service = MapService();
@@ -11,6 +11,8 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
       if (event is MapLoadingEvent)
         emit(MapLoadingState());
       else if (event is MapSuccessEvent) emit(MapSuccessState(event.data));
+      else if (event is MapGestureSuccessEvent) emit(MapGestureSuccessState(event.data));
+
       else if (event is MapErrorEvent) emit(MapErrorState());
 
       else if(event is MapSuccessSavePositionEvent){
@@ -20,14 +22,20 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
   }
 
   Future<void> getCurrentPosition() async {
+
     this.add(MapLoadingEvent());
     _service.getCurrentLocation().then((value) {
-      if(value == null){
       this.add(MapErrorEvent());
-      }else{
-        this.add(MapSuccessEvent(value));
-      }
+      // if(value == null){
+      // this.add(MapErrorEvent());
+      // }else{
+      //   this.add(MapSuccessEvent(value));
+      // }
     });     
+  }
+
+  Future<void> getGesturePosition(LatLng latLng ,String description) async {
+    this.add(MapGestureSuccessEvent(MapData(latitude: latLng.longitude,longitude: latLng.longitude,name:description)));
   }
 
  //  Future<void> savePosition(Position position , String description)async{
@@ -61,6 +69,10 @@ class MapSuccessEvent extends MapEvents {
   MapData data;
   MapSuccessEvent(this.data);
 }
+class MapGestureSuccessEvent extends MapEvents {
+  MapData data;
+  MapGestureSuccessEvent(this.data);
+}
 
 class MapLoadingEvent extends MapEvents {}
 
@@ -73,6 +85,9 @@ class MapInitState extends MapStates {}
 
 class MapSuccessState extends MapStates {
   MapData data;  MapSuccessState(this.data);
+}
+class MapGestureSuccessState extends MapStates {
+  MapData data;  MapGestureSuccessState(this.data);
 }
 
 class MapLoadingState extends MapStates {}

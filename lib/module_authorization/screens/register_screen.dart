@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
-import 'package:my_kom/module_authorization/screens/widgets/map_widget.dart';
+import 'package:my_kom/module_map/map_routes.dart';
+import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
@@ -346,7 +347,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      height: SizeConfig.screenHeight * 0.2,
+                      height: SizeConfig.screenHeight * 0.25,
                       child: Stack(alignment: Alignment.center, children: [
                         Container(color: Colors.black12),
                         Positioned(
@@ -418,10 +419,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 title: Text('Address'),
                                 subtitle: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MapWidget()));
+                                    Navigator.pushNamed(context, MapRoutes.MAP_SCREEN).then((value) {
+                                      _registerAddressController.text = value.toString();
+                                    });
+
                                   },
                                   child: Row(
                                     children: [
@@ -462,14 +463,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 15,
+                                        width: 10,
                                       ),
                                       Align(
                                          alignment: Alignment.topCenter,
                                         child: Container(
                                          
-                                          width: SizeConfig.heightMulti * 7.5,
-                                          height: SizeConfig.heightMulti * 7.5,
+                                          width: SizeConfig.heightMulti * 9.7,
+                                          height: SizeConfig.heightMulti * 9.7,
                                           decoration: BoxDecoration(
                                               color: ColorsConst.mainColor,
                                               borderRadius:
@@ -523,19 +524,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                     Expanded(
                                         child: TextFormField(
+                                          keyboardType: TextInputType.number,
                                       controller:
                                           _registerPhoneNumberController,
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
                                           hintText:
-                                              '012345678921' // S.of(context).email,
+                                              '(0)123412212' // S.of(context).email,
                                           ),
                                           validator: (result){
                                             if(result!.isEmpty){
                                               return 'Phone Number Is Required !';
-                                              
+
+
+                                            }
+                                           else if(!_validatePhoneNumberStructure(result)){
+                                              return 'Enter Valid Phone Number';
                                             }else
-                                            return null;
+
+                                              return null;
                                           },
                                     ))
                                   ],
@@ -634,6 +641,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _validateEmailStructure(String value) {
     //     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
     String pattern = r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
+
+  bool _validatePhoneNumberStructure(String value) {
+    //     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
+    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
