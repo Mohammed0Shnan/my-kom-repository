@@ -25,12 +25,12 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
 
     this.add(MapLoadingEvent());
     _service.getCurrentLocation().then((value) {
+     // this.add(MapErrorEvent());
+      if(value == null){
       this.add(MapErrorEvent());
-      // if(value == null){
-      // this.add(MapErrorEvent());
-      // }else{
-      //   this.add(MapSuccessEvent(value));
-      // }
+      }else{
+        this.add(MapSuccessEvent(value));
+      }
     });     
   }
 

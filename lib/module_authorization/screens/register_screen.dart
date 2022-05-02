@@ -241,7 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               .trim()) {
                                         return 'Confirm pass mismatch';
                                       }
-                                       if (result.isEmpty) {
+                                      if (result.isEmpty) {
                                         return 'Confirm Password Is Required!';
                                       }
                                       return null;
@@ -330,7 +330,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         ],
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
                   ],
                 ),
               ),
@@ -413,16 +416,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              
                             ),
                             child: ListTile(
                                 title: Text('Address'),
                                 subtitle: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, MapRoutes.MAP_SCREEN).then((value) {
-                                      _registerAddressController.text = value.toString();
+                                    Navigator.pushNamed(
+                                            context, MapRoutes.MAP_SCREEN)
+                                        .then((value) {
+                                      _registerAddressController.text =
+                                          value.toString();
                                     });
-
                                   },
                                   child: Row(
                                     children: [
@@ -447,7 +451,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               hintText:
                                                   'Burj Al Arab' // S.of(context).email,
                                               ),
-                                              
+
                                           textInputAction: TextInputAction.next,
                                           onEditingComplete: () =>
                                               node.nextFocus(),
@@ -459,23 +463,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                                             return null;
                                           },
-                                          
                                         ),
                                       ),
                                       SizedBox(
                                         width: 10,
                                       ),
                                       Align(
-                                         alignment: Alignment.topCenter,
+                                        alignment: Alignment.topCenter,
                                         child: Container(
-                                         
-                                          width: SizeConfig.heightMulti * 9.7,
-                                          height: SizeConfig.heightMulti * 9.7,
+                                          width: SizeConfig.heightMulti * 9.1,
+                                          height: SizeConfig.heightMulti * 9.1,
                                           decoration: BoxDecoration(
                                               color: ColorsConst.mainColor,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
-                                          child: Icon(Icons.location_searching,
+                                          child: Icon(Icons.my_location_outlined,
                                               size: SizeConfig.heightMulti * 4,
                                               color: Colors.white),
                                         ),
@@ -524,7 +526,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                     Expanded(
                                         child: TextFormField(
-                                          keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.number,
                                       controller:
                                           _registerPhoneNumberController,
                                       decoration: InputDecoration(
@@ -532,18 +534,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           hintText:
                                               '(0)123412212' // S.of(context).email,
                                           ),
-                                          validator: (result){
-                                            if(result!.isEmpty){
-                                              return 'Phone Number Is Required !';
-
-
-                                            }
-                                           else if(!_validatePhoneNumberStructure(result)){
-                                              return 'Enter Valid Phone Number';
-                                            }else
-
-                                              return null;
-                                          },
+                                      validator: (result) {
+                                        if (result!.isEmpty) {
+                                          return 'Phone Number Is Required !';
+                                        } else if (!_validatePhoneNumberStructure(
+                                            result)) {
+                                          return 'Enter Valid Phone Number';
+                                        } else
+                                          return null;
+                                      },
                                     ))
                                   ],
                                 ),
@@ -591,36 +590,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 50,
+                            height: 10,
                           ),
                         ],
                       ),
                     ),
                     Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40),
                       alignment: Alignment.center,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'You have a Micom account !',
+                            'When registering, you agree to !',
                             style: TextStyle(
-                                fontSize: SizeConfig.titleSize * 2.2,
+                                fontSize: SizeConfig.titleSize * 2,
                                 color: Colors.black54),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AuthorizationRoutes.LOGIN_SCREEN);
-                            },
-                            child: Text('Login',
-                                style: TextStyle(
-                                    fontSize: SizeConfig.titleSize * 2.4,
-                                    fontWeight: FontWeight.w700,
-                                    color: ColorsConst.mainColor)),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                child: Text(' the Privacy and Security Policy',
+                                    style: TextStyle(
+                                        fontSize: SizeConfig.titleSize * 2,
+                                        fontWeight: FontWeight.w700,
+                                        color: ColorsConst.mainColor)),
+                              ),
+                            ),
                           )
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
