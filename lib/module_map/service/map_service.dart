@@ -10,37 +10,48 @@ class MapService {
   // final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<MapData?> getCurrentLocation() async {
+  Future<MapData> getCurrentLocation() async {
     await Future.delayed(Duration(seconds: 2));
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
     try {
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      bool serviceEnabled;
+      LocationPermission permission;
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        Future.error('Location services are disabled');
+        throw('Location services are disabled');
+      }
 
-      String s= await getPositionDetail(LatLng(position.latitude, position.longitude));
-      return MapData(name: s,longitude: position.longitude,latitude: position.latitude);
-    } catch (e) {
-      print(e);
-      return null;
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+           Future.error('Location permissions are denied');
+          throw('Location permissions are denied');
+
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+         Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+        throw( 'Location permissions are permanently denied, we cannot request permissions.');
+
+      }
+
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+
+        String s = await getPositionDetail(
+            LatLng(position.latitude, position.longitude));
+        return MapData(name: s,
+            longitude: position.longitude,
+            latitude: position.latitude,
+        isError: false,
+        message: 'success'
+        );
+
+    }catch(e){
+     return MapData.error(e.toString());
     }
   }
 
@@ -65,13 +76,18 @@ class MapService {
   //       .add({'position': point.data, 'name': desciption});
   // }
 
-  Future<DocumentReference?> saveLocation(LatLng latLng ,String description) async {
+  Future<DocumentReference> saveLocation(LatLng latLng ,String description) async {
     AddressModel addressModel = AddressModel(description: description, latitude: latLng.latitude, longitude: latLng.longitude, geoData: {});
     await Future.delayed(Duration(seconds: 2));
     FirebaseFirestore fire = await FirebaseFirestore.instance;
-    return fire
-        .collection('locations')
-        .add(addressModel.toJson());
+    try{
+      return fire
+          .collection('locations')
+          .add(addressModel.toJson());
+    }catch(e){
+      throw(e.toString());
+    }
+
   }
 
   Future<String> getPositionDetail(LatLng latLng) async {

@@ -28,7 +28,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController(text: '');
-    mapBloc.getCurrentPosition();
+   mapBloc.getCurrentPosition();
   }
 
   final Set<Marker> _markers = Set<Marker>();
@@ -41,14 +41,14 @@ class _MapScreenState extends State<MapScreen> {
         if (state is MapSuccessState) {
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
           _move(latLng);
-          getDetailFromLocation(latLng);
+         // getDetailFromLocation(latLng);
         } else if (state is MapErrorState) {
           showTopSnackBar(
             context,
             CustomSnackBar.error(
                 icon: Icon(Icons.location_off_sharp),
                 message:
-                    "Location could not be found !!! Click on the location marker !"),
+                   state.error_message),
           );
         } else if (state is MapSuccessSavePositionState) {
           showTopSnackBar(
@@ -56,7 +56,7 @@ class _MapScreenState extends State<MapScreen> {
             CustomSnackBar.success(
               backgroundColor: ColorsConst.mainColor,
               icon: Icon(Icons.location_on),
-              message: "Your address has been saved !",
+              message: state.message,
             ),
           );
           Navigator.pop(context, _searchController.text);
@@ -73,8 +73,9 @@ class _MapScreenState extends State<MapScreen> {
                     child: GoogleMap(
                       onTap: (v) {
                         LatLng latLng = LatLng(v.latitude, v.longitude);
-                        mapBloc.getGesturePosition(latLng, '');
-                        getDetailFromLocation(latLng);
+                        mapBloc.getGesturePosition(latLng, '').then((value) {
+                          getDetailFromLocation(latLng);
+                        });
                       },
                       markers: _markers,
                       myLocationButtonEnabled: true,
@@ -141,8 +142,11 @@ class _MapScreenState extends State<MapScreen> {
                           child: TextFormField(
                             controller: _searchController,
                             readOnly: true,
-
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600
+                            ),
                             decoration: InputDecoration(
+
                               prefixIcon: Icon(
                                 Icons.location_on,
                                 color: ColorsConst.mainColor,
@@ -156,7 +160,6 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                               // S.of(context).email,
                             ),
-
                             // Move focus to next
                           ))),
                   Positioned(
@@ -212,6 +215,7 @@ class _MapScreenState extends State<MapScreen> {
 
   getDetailFromLocation(LatLng latLng) async {
     String _currentAddress = await MapService().getPositionDetail(latLng);
+    print(_currentAddress);
     Marker marker = Marker(
         markerId: MarkerId('_current_position'),
         infoWindow: InfoWindow(
@@ -228,12 +232,6 @@ class _MapScreenState extends State<MapScreen> {
     CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 16);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-
-    Marker marker = Marker(
-        markerId: MarkerId('_my_location_id'),
-        infoWindow: InfoWindow(title: 'My Location'),
-        icon: BitmapDescriptor.defaultMarkerWithHue(10),
-        position: latLng);
   }
 
   _setMarker(Marker marker) {

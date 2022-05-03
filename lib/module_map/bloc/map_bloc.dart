@@ -13,10 +13,10 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
       else if (event is MapSuccessEvent) emit(MapSuccessState(event.data));
       else if (event is MapGestureSuccessEvent) emit(MapGestureSuccessState(event.data));
 
-      else if (event is MapErrorEvent) emit(MapErrorState());
+      else if (event is MapErrorEvent) emit(MapErrorState(error_message: event.error_message));
 
       else if(event is MapSuccessSavePositionEvent){
-        emit(MapSuccessSavePositionState());
+        emit(MapSuccessSavePositionState(message: event.message));
       }
     });
   }
@@ -25,17 +25,15 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
 
     this.add(MapLoadingEvent());
     _service.getCurrentLocation().then((value) {
-     // this.add(MapErrorEvent());
-      if(value == null){
-      this.add(MapErrorEvent());
-      }else{
+      if(value.isError)
+        this.add(MapErrorEvent(error_message: value.message.toString()));
+      else
         this.add(MapSuccessEvent(value));
-      }
-    });     
+    });
   }
 
   Future<void> getGesturePosition(LatLng latLng ,String description) async {
-    this.add(MapGestureSuccessEvent(MapData(latitude: latLng.longitude,longitude: latLng.longitude,name:description)));
+    this.add(MapGestureSuccessEvent(MapData(latitude: latLng.longitude,longitude: latLng.longitude,name:description,message: 'success',isError: false)));
   }
 
  //  Future<void> savePosition(Position position , String description)async{
@@ -52,11 +50,9 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
   Future<void> saveLocation(LatLng latLng, String description) async {
     this.add(MapLoadingEvent());
     _service.saveLocation(latLng,description).then((value) {
-      if(value == null){
-        this.add(MapErrorEvent());
-      }else{
-        this.add(MapSuccessSavePositionEvent());
-      }
+        this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !"));
+    }).catchError((e){
+      this.add(MapErrorEvent(error_message: 'error in save location !'));
     });
   }
 }
@@ -76,8 +72,14 @@ class MapGestureSuccessEvent extends MapEvents {
 
 class MapLoadingEvent extends MapEvents {}
 
-class MapErrorEvent extends MapEvents {}
-class MapSuccessSavePositionEvent extends MapEvents {}
+class MapErrorEvent extends MapEvents {
+  final String error_message;
+  MapErrorEvent({required this.error_message});
+}
+class MapSuccessSavePositionEvent extends MapEvents {
+  String message;
+  MapSuccessSavePositionEvent({required this.message});
+}
 
 abstract class MapStates {}
 
@@ -91,13 +93,30 @@ class MapGestureSuccessState extends MapStates {
 }
 
 class MapLoadingState extends MapStates {}
-class MapSuccessSavePositionState extends MapStates {}
-class MapErrorState extends MapStates {}
+class MapSuccessSavePositionState extends MapStates {
+  String message;
+  MapSuccessSavePositionState({required this.message});
+}
+class MapErrorState extends MapStates {
+  final String error_message;
+  MapErrorState({required this.error_message});
+}
 
 class MapData{
-  double longitude,latitude;
-  String name;
-  MapData({required this.latitude ,required this.longitude ,required this.name});
+  late double longitude,latitude;
+ late String name;
+ late String? message ;
+ late bool isError;
+  MapData({required this.latitude ,required this.longitude ,required this.name,required this.message,required this.isError});
+  MapData.error(String error_message){
+    this.latitude = 0.0;
+    this.longitude = 0.0;
+    this.name ='';
+    this.isError = true;
+    this.message = error_message;
+
+  }
+
 }
 
 MapBloc mapBloc = MapBloc();
