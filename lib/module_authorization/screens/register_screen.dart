@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
+import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
+import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/map_routes.dart';
-import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
+  final RegisterBloc _bloc = RegisterBloc();
   RegisterScreen({Key? key}) : super(key: key);
 
   @override
@@ -276,29 +278,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(
                             height: 50,
                           ),
-                          ListTile(
-                            title: Container(
-                              height: 70,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
+                          BlocConsumer<RegisterBloc, RegisterStates>(
+                            bloc: widget._bloc,
+                            listener: (context, state) {
+                              if (state is RegisterSuccessState) {
+                                _pageController.jumpToPage(1);
+                              } else if (state is RegisterErrorState) {
+                                snackBarErrorWidget(context, state.message);
+                              }
+                            },
+                            builder: (context, state) {
+                              if (state is RegisterLoadingState)
+                                return Center(child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircularProgressIndicator()));
+                              else
+                                return ListTile(
+                                  title: Container(
+                                    height: 70,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    primary: Color.fromARGB(255, 28, 174, 147),
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          primary:
+                                              Color.fromARGB(255, 28, 174, 147),
+                                        ),
+                                        onPressed: () {
+                                          if (_registerFormKey.currentState!
+                                              .validate()) {
+                                            String email =
+                                                _registerEmailController.text
+                                                    .trim();
+                                            String password =
+                                                _registerPasswordController.text
+                                                    .trim();
+                                            widget._bloc.register(
+                                                email: email,
+                                                password: password);
+                                          }
+                                        },
+                                        child: Text('Next',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize:
+                                                    SizeConfig.titleSize * 2.6,
+                                                fontWeight: FontWeight.w700))),
                                   ),
-                                  onPressed: () {
-                                    _pageController.jumpToPage(1);
-                                  },
-                                  child: Text('Next',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: SizeConfig.titleSize * 2.6,
-                                          fontWeight: FontWeight.w700))),
-                            ),
+                                );
+                            },
                           ),
                           SizedBox(
                             height: 50,
@@ -343,6 +377,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             //////////////////////////
             /////////////////////////
             ///
+
             Container(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -424,8 +459,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     Navigator.pushNamed(
                                             context, MapRoutes.MAP_SCREEN)
                                         .then((value) {
-                                      _registerAddressController.text =
-                                          value.toString();
+                                      if (value != null)
+                                        _registerAddressController.text =
+                                            value.toString();
                                     });
                                   },
                                   child: Row(
@@ -448,8 +484,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
-                                              hintText:
-                                                  'Burj Al Arab' // S.of(context).email,
+                                              hintText: 'Burj Al Arab',
+                                              hintStyle: TextStyle(
+                                                  color: Colors
+                                                      .black26) // S.of(context).email,
                                               ),
 
                                           textInputAction: TextInputAction.next,
@@ -477,7 +515,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               color: ColorsConst.mainColor,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
-                                          child: Icon(Icons.my_location_outlined,
+                                          child: Icon(
+                                              Icons.my_location_outlined,
                                               size: SizeConfig.heightMulti * 4,
                                               color: Colors.white),
                                         ),

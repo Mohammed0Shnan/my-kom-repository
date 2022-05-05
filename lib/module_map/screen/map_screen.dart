@@ -58,6 +58,8 @@ class _MapScreenState extends State<MapScreen> {
               icon: Icon(Icons.location_on),
               message: state.message,
             ),
+            displayDuration: Duration(seconds: 2),
+
           );
           Navigator.pop(context, _searchController.text);
         }
@@ -185,6 +187,8 @@ class _MapScreenState extends State<MapScreen> {
                                   icon: Icon(Icons.location_on),
                                   message: "Select the address and save !",
                                 ),
+                                displayDuration: Duration(seconds: 2),
+
                               );
                             }
                           },

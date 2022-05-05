@@ -65,11 +65,14 @@ class _ShopNavigatorScreenState extends State<ShopNavigatorScreen>
               duration: Duration(milliseconds: 200),
               bottom: 0,
               top: 0,
-              left: state ? 0 : SizeConfig.screenWidth * 0.85,
-              right: state ? 0 : -0.15 * SizeConfig.screenHeight,
+              left: state ? 0 : SizeConfig.screenWidth * 0.9,
+              right: state ? 0 : -0.1 * SizeConfig.screenHeight,
               child: ScaleTransition(
                 scale: _animation,
-                child: widget.navigatorScreen,
+                child: Material(
+                    borderRadius:  BorderRadius.circular(state ?0:30) ,
+                    clipBehavior: Clip.antiAlias,
+                    child: widget.navigatorScreen),
               ));
         });
   }

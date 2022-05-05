@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -109,8 +110,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
           count: 5,
           effect: const JumpingDotEffect(
               dotColor: Colors.black12,
-              dotHeight: 8,
-              dotWidth: 30,
+              dotHeight:  4,
+              dotWidth: 20,
               spacing: 2,
               jumpScale: 2,
               activeDotColor: ColorsConst.mainColor),

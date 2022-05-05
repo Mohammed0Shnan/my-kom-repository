@@ -1,11 +1,11 @@
 class LoginResponse{
- late String status_code;
- late String message;
- late String token;
-
+ late  String name;
+  late String email;
+  late String token;
+  
   LoginResponse.fromJson(Map<String , dynamic> map){
-    this.status_code = map['status_code'];
-    this.message = map['message'];
+    this.name = map['user']['name'];
+    this.email = map['user']['email'];
     this.token = map['token'];
   }
     Map<String, dynamic> toJson() {
