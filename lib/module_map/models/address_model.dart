@@ -17,9 +17,9 @@ late  final Map<String , dynamic> geoData;
 
 
  AddressModel.fromJson(Map<String , dynamic> map){
-  this.latitude = map['latitude'];
-  this.longitude = map['longitude'];
-  this.description = map['description'];
+  this.latitude = map['position']['latitude'];
+  this.longitude = map['position']['longitude'];
+  this.description = map['name'];
   this.geoData = map['geoData'];
 
  }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -61,7 +62,8 @@ class _MapScreenState extends State<MapScreen> {
             displayDuration: Duration(seconds: 2),
 
           );
-          Navigator.pop(context, _searchController.text);
+          AddressModel addressModel = AddressModel(description: _searchController.text, latitude: state.latitude, longitude:state.longitude, geoData: {});
+          Navigator.pop(context, addressModel);
         }
       },
       builder: (context, state) {

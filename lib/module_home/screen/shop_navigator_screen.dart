@@ -35,7 +35,6 @@ class _ShopNavigatorScreenState extends State<ShopNavigatorScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller.dispose();
     super.dispose();
   }

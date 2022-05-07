@@ -9,7 +9,7 @@ import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class LoginScreen extends StatefulWidget {
-  final LoginBloc _loginBloc =LoginBloc();
+  final LoginBloc _loginBloc = LoginBloc();
   LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    widget._loginBloc.add(LoginEvent.INIT);
     cubit = PasswordHiddinCubit();
   }
 
@@ -41,248 +40,250 @@ class _LoginScreenState extends State<LoginScreen> {
     final node = FocusScope.of(context);
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: SizeConfig.screenHeight * 0.25,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth * 0.2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text('Welcome TO',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: SizeConfig.titleSize * 3.5)),
-                        Text('M Y  K O M',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: SizeConfig.titleSize * 5)),
-                        Text('login and start ordering water now',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black26,
-                                fontSize: SizeConfig.titleSize * 2.5))
-                      ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: SizeConfig.screenHeight * 0.25,
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Welcome TO',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.titleSize * 3.5)),
+                    Text('M Y  K O M',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.titleSize * 5)),
+                    Text('login and start ordering water now',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black26,
+                            fontSize: SizeConfig.titleSize * 2.5))
+                  ],
+                ),
+              ),
+              Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: _LoginFormKey,
+                child: Flex(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  direction: Axis.vertical,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                          title: Text('Email Address'),
+                          subtitle: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _LoginEmailController,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.email),
+                                border: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.black12,
+                                      width: 10,
+                                      style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'Email Address'
+                                //S.of(context).name,
+                                ),
+                            textInputAction: TextInputAction.next,
+                            onEditingComplete: () => node.nextFocus(),
+                            // Move focus to next
+                            validator: (result) {
+                              if (result!.isEmpty) {
+                                return 'Email Address is Required'; //S.of(context).nameIsRequired;
+                              }
+                              if (!_validateEmailStructure(result))
+                                return 'Must write an email address';
+                              return null;
+                            },
+                          )),
                     ),
-                  ),
-                  Form(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    key: _LoginFormKey,
-                    child: Flex(
-
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      direction: Axis.vertical,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ListTile(
-                              title: Text('Email Address'),
-                              subtitle: TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                controller: _LoginEmailController,
-                                decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.email),
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.black12,
-                                          width: 10,
-                                          style: BorderStyle.solid),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    hintText: 'Email Address'
-                                    //S.of(context).name,
-                                    ),
-                                textInputAction: TextInputAction.next,
-                                onEditingComplete: () => node.nextFocus(),
-                                // Move focus to next
-                                validator: (result) {
-                                  if (result!.isEmpty) {
-                                    return 'Email Address is Required'; //S.of(context).nameIsRequired;
-                                  }
-                                  if (!_validateEmailStructure(result))
-                                    return 'Must write an email address';
-                                  return null;
-                                },
-                              )),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ListTile(
-                            title: Text('Password'),
-                            subtitle: BlocBuilder<PasswordHiddinCubit,
-                                PasswordHiddinCubitState>(
-                              bloc: cubit,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  controller: _LoginPasswordController,
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.lock),
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            cubit.changeState();
-                                          },
-                                          icon: state ==
-                                                  PasswordHiddinCubitState
-                                                      .VISIBILITY
-                                              ? Icon(Icons.visibility)
-                                              : Icon(Icons.visibility_off)),
-                                      border: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.black12,
-                                            width: 10,
-                                            style: BorderStyle.solid),
-                                        borderRadius:
-                                            BorderRadius.circular(10),
-                                      ),
-                                      hintText:
-                                          'Password' // S.of(context).email,
-                                      ),
-                                  obscureText: state ==
-                                          PasswordHiddinCubitState.VISIBILITY
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        title: Text('Password'),
+                        subtitle: BlocBuilder<PasswordHiddinCubit,
+                            PasswordHiddinCubitState>(
+                          bloc: cubit,
+                          builder: (context, state) {
+                            return TextFormField(
+                              controller: _LoginPasswordController,
+                              decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.lock),
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        cubit.changeState();
+                                      },
+                                      icon: state ==
+                                              PasswordHiddinCubitState
+                                                  .VISIBILITY
+                                          ? Icon(Icons.visibility)
+                                          : Icon(Icons.visibility_off)),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.black12,
+                                        width: 10,
+                                        style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  hintText: 'Password' // S.of(context).email,
+                                  ),
+                              obscureText:
+                                  state == PasswordHiddinCubitState.VISIBILITY
                                       ? false
                                       : true,
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (v)=>node.unfocus(),
-                                  // Move focus to next
-                                  validator: (result) {
-                                    if (result!.isEmpty) {
-                                      return '* Password is Required'; //S.of(context).emailAddressIsRequired;
-                                    }
-                                    if (result.length < 8) {
-                                      return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                    }
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (v) => node.unfocus(),
+                              // Move focus to next
+                              validator: (result) {
+                                if (result!.isEmpty) {
+                                  return '* Password is Required'; //S.of(context).emailAddressIsRequired;
+                                }
+                                if (result.length < 8) {
+                                  return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
+                                }
 
-                                    return null;
-                                  },
-                                );
+                                return null;
                               },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                         Align(
-                           alignment: Alignment.centerRight,
-                           child: GestureDetector(
-                             onTap: (){
-
-                             },
-                             child: Container(
-                               padding: EdgeInsets.only(right: 2.345 * SizeConfig.heightMulti),
-                                child: Text(
-                                    'did you forget your password ?',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black54)),
-                              ),
-                           ),
-                         ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        ListTile(
-                          title: Container(
-                            height: 70,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10)),
-                                  primary: Color.fromARGB(255, 28, 174, 147),
-                                ),
-                                onPressed: () {
-                                 if(_LoginFormKey.currentState!.validate()){
-                                   String email = _LoginEmailController.text.trim();
-                                   String password = _LoginPasswordController.text.trim();
-                                    widget._loginBloc.login(email, password);
-                                 }
-                                },
-                                child: Text('Login',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: SizeConfig.titleSize * 2.6,
-                                        fontWeight: FontWeight.w700))),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'You don\'t have an account ?',
-                          style: TextStyle(
-                              fontSize: SizeConfig.titleSize * 2.2,
-                              color: Colors.black54),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, AuthorizationRoutes.REGISTER_SCREEN,(route)=>false);
+                            );
                           },
-                          child: Text('Create an account',
-                              style: TextStyle(
-                                  fontSize: SizeConfig.titleSize * 2.4,
-                                  fontWeight: FontWeight.w700,
-                                  color: ColorsConst.mainColor)),
-                        )
-                      ],
-                    ),
-                  ),
-                    SizedBox(
-                          height: 50,
                         ),
-                ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              right: 2.345 * SizeConfig.heightMulti),
+                          child: Text('did you forget your password ?',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black54)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    BlocConsumer<LoginBloc, LoginStates>(
+                        bloc: widget._loginBloc,
+                        listener: (context, LoginStates state) {
+                          if (state is LoginSuccessState) {
+                            snackBarSuccessWidget(context, state.message);
+                            Navigator.pushNamed(
+                                context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                          } else if (state is LoginErrorState) {
+                            snackBarErrorWidget(context, state.message);
+                          }
+                        },
+                        builder: (context, LoginStates state) {
+                          if (state is LoginLoadingState)
+                            return Container(
+                                height: 40,
+                                width: 40,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: ColorsConst.mainColor,
+                                  ),
+                                ));
+                          else
+                            return ListTile(
+                              title: Container(
+                                height: 70,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      primary:
+                                          Color.fromARGB(255, 28, 174, 147),
+                                    ),
+                                    onPressed: () {
+                                      if (_LoginFormKey.currentState!
+                                          .validate()) {
+                                        String email =
+                                            _LoginEmailController.text.trim();
+                                        String password =
+                                            _LoginPasswordController.text
+                                                .trim();
+                                        widget._loginBloc
+                                            .login(email, password);
+                                      }
+                                    },
+                                    child: Text('Login',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize:
+                                                SizeConfig.titleSize * 2.6,
+                                            fontWeight: FontWeight.w700))),
+                              ),
+                            );
+                        }),
+                    SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            //// Where to process the case
-
-            BlocConsumer<LoginBloc,LoginStates>(
-              bloc: widget._loginBloc,
-              listener: (context ,LoginStates state){
-                if(state is LoginSuccessState){
-                  snackBarSuccessWidget(context, 'Success login !');
-                  Navigator.pushNamed(context, NavigatorRoutes.NAVIGATOR_SCREEN);
-                }
-                else if(state is LoginErrorState){
-                  snackBarErrorWidget(context, 'Error in login !');
-                }
-              },
-              builder: (context, LoginStates state) {
-                if(state is LoginLoadingState)
-                return Positioned.fill(child:Container(color: Colors.white.withOpacity(0.5),child:  Center(child: CircularProgressIndicator(color: ColorsConst.mainColor,),),));
-                else
-                  return SizedBox.shrink();
-              }
-            )
-          ],
+              Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'You don\'t have an account ?',
+                      style: TextStyle(
+                          fontSize: SizeConfig.titleSize * 2.2,
+                          color: Colors.black54),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AuthorizationRoutes.REGISTER_SCREEN,
+                            (route) => false);
+                      },
+                      child: Text('Create an account',
+                          style: TextStyle(
+                              fontSize: SizeConfig.titleSize * 2.4,
+                              fontWeight: FontWeight.w700,
+                              color: ColorsConst.mainColor)),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+            ],
+          ),
         ),
       ),
     );

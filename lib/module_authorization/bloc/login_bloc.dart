@@ -7,10 +7,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginStates> {
 
   LoginBloc() : super(LoginInitState()) {
     on<LoginEvent>((LoginEvent event, Emitter<LoginStates> emit) {
-      if (event == LoginEvent.LOADING)
+      if (event is LoginLoadingEvent)
         emit(LoginLoadingState());
-      else if (event == LoginEvent.SUCCESS) emit(LoginSuccessState());
-      else if (event == LoginEvent.ERROR) emit(LoginErrorState());
+      else if (event is LoginErrorEvent){
+        emit(LoginErrorState(message: event.message));
+      }
+      else if (event is LoginSuccessEvent) 
+      emit(LoginSuccessState(message: event.message));
+
       else {
         emit(LoginInitState());
       }
@@ -19,26 +23,45 @@ class LoginBloc extends Bloc<LoginEvent, LoginStates> {
 
 
   login(String email, String password) async {
-    this.add(LoginEvent.LOADING);
-    _service.login(email, password).then((value) {
-      if (value == AuthStatus.AUTHORIZED) {
-        this.add(LoginEvent.SUCCESS);
+    this.add(LoginLoadingEvent());
+    _service.signInWithEmailAndPassword(email, password).then((value) {
+      if (value.status == AuthStatus.AUTHORIZED) {
+        this.add(LoginSuccessEvent(message: value.message));
       } else{
-        this.add(LoginEvent.ERROR);
+        this.add(LoginErrorEvent(message: value.message));
 
       }
     });
   }
 }
 
-enum LoginEvent { INIT, LOADING, SUCCESS, ERROR }
+abstract class LoginEvent { }
+class LoginInitEvent  extends LoginEvent  {}
+
+class LoginSuccessEvent  extends LoginEvent  {
+  String message;
+  LoginSuccessEvent({required this.message});
+}
+
+class LoginLoadingEvent  extends LoginEvent  {}
+
+class LoginErrorEvent  extends LoginEvent  {
+  String message;
+  LoginErrorEvent({required this.message});
+}
 
 abstract class LoginStates {}
 
 class LoginInitState extends LoginStates {}
 
-class LoginSuccessState extends LoginStates {}
+class LoginSuccessState extends LoginStates {
+    String message;
+  LoginSuccessState({required this.message});
+}
 
 class LoginLoadingState extends LoginStates {}
 
-class LoginErrorState extends LoginStates {}
+class LoginErrorState extends LoginStates {
+    String message;
+  LoginErrorState({required this.message});
+}

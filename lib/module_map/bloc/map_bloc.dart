@@ -16,7 +16,9 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
       else if (event is MapErrorEvent) emit(MapErrorState(error_message: event.error_message));
 
       else if(event is MapSuccessSavePositionEvent){
-        emit(MapSuccessSavePositionState(message: event.message));
+        emit(MapSuccessSavePositionState(message: event.message,
+        latitude: event.latitude,longitude: event.longitude
+        ));
       }
     });
   }
@@ -49,8 +51,9 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
 
   Future<void> saveLocation(LatLng latLng, String description) async {
     this.add(MapLoadingEvent());
+  
     _service.saveLocation(latLng,description).then((value) {
-        this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !"));
+        this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !" , latitude: latLng.latitude,longitude: latLng.longitude));
     }).catchError((e){
       this.add(MapErrorEvent(error_message: 'error in save location !'));
     });
@@ -77,8 +80,9 @@ class MapErrorEvent extends MapEvents {
   MapErrorEvent({required this.error_message});
 }
 class MapSuccessSavePositionEvent extends MapEvents {
+  double latitude,longitude;
   String message;
-  MapSuccessSavePositionEvent({required this.message});
+  MapSuccessSavePositionEvent({required this.message,required this.latitude , required this.longitude});
 }
 
 abstract class MapStates {}
@@ -94,8 +98,9 @@ class MapGestureSuccessState extends MapStates {
 
 class MapLoadingState extends MapStates {}
 class MapSuccessSavePositionState extends MapStates {
+  double latitude,longitude;
   String message;
-  MapSuccessSavePositionState({required this.message});
+  MapSuccessSavePositionState({required this.message,required this.latitude , required this.longitude});
 }
 class MapErrorState extends MapStates {
   final String error_message;
