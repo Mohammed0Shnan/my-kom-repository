@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_kom/module_info_and_splash/animations/scale_animation.dart';
-import 'package:my_kom/module_info_and_splash/screen/information_screen.dart';
-import 'package:my_kom/module_info_and_splash/widgets/language_drop_down.dart';
-import 'package:my_kom/module_info_and_splash/widgets/wave_loading.dart';
+import 'package:my_kom/module_about/screen/about_screen.dart';
+import 'package:my_kom/module_about/widgets/language_drop_down.dart';
+import 'package:my_kom/module_about/widgets/wave_loading.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class LanguageScreen extends StatelessWidget {
@@ -62,7 +61,7 @@ class LanguageScreen extends StatelessWidget {
                         onPressed: () {
                               Navigator.of(context)
                             .push(MaterialPageRoute(builder: (conterxt) {
-                          return InformationScreen();
+                          return AboutScreen();
                         }));
                           
                         },

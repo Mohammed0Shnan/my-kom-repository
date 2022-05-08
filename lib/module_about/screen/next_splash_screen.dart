@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_info_and_splash/animations/fade_animation.dart';
-import 'package:my_kom/module_info_and_splash/animations/scale_animation.dart';
-import 'package:my_kom/module_info_and_splash/bloc/splash_animation_bloc.dart';
-import 'package:my_kom/module_info_and_splash/screen/language_screen.dart';
-import 'package:my_kom/module_info_and_splash/widgets/wave_loading.dart';
+import 'package:my_kom/module_about/animations/fade_animation.dart';
+import 'package:my_kom/module_about/animations/scale_animation.dart';
+import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
+import 'package:my_kom/module_about/screen/language_screen.dart';
+import 'package:my_kom/module_about/widgets/wave_loading.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class NextSplashScreen extends StatefulWidget {

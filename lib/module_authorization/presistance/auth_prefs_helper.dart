@@ -1,7 +1,6 @@
 
 import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
-import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPrefsHelper {
@@ -76,10 +75,12 @@ class AuthPrefsHelper {
     );
   }
 
-   Future<AuthSource> getRole() async {
+   Future<UserRole?> getRole() async {
     SharedPreferences preferencesHelper = await SharedPreferences.getInstance();
-    int? index = preferencesHelper.getInt('auth_source');
-    return AuthSource.values[index!];
+    int? index = preferencesHelper.getInt('user_role');
+    if(index == null)
+      return null;
+    return UserRole.values[index];
   }
 
   Future<bool> setRole(UserRole userRole) async {

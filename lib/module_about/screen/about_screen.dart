@@ -3,22 +3,23 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
-import 'package:my_kom/module_info_and_splash/bloc/page_view_animation_bloc.dart';
-import 'package:my_kom/module_info_and_splash/widgets/background.dart';
+import 'package:my_kom/module_about/bloc/page_view_animation_bloc.dart';
+import 'package:my_kom/module_about/widgets/background.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:lottie/lottie.dart';
 
-class InformationScreen extends StatefulWidget {
-  const InformationScreen({Key? key}) : super(key: key);
+class AboutScreen extends StatefulWidget {
+  const AboutScreen({Key? key}) : super(key: key);
 
   @override
-  State<InformationScreen> createState() => _InformationScreenState();
+  State<AboutScreen> createState() => _AboutScreenState();
 }
 
-class _InformationScreenState extends State<InformationScreen> {
+class _AboutScreenState extends State<AboutScreen> {
   final _pageController = PageController(
     initialPage: 0,
   );
@@ -90,7 +91,8 @@ class _InformationScreenState extends State<InformationScreen> {
                 right: 20,
                 child: TextButton(
                   child: Text('Skip'),
-                  onPressed: () {
+                  onPressed: () async{
+                    await  AboutService().setInited();
                     // Navigator.pushNamed(
                     //     context, NavigatorRoutes.NAVIGATOR_SCREEN);
                     Navigator.pushNamed(
@@ -116,8 +118,9 @@ class _InformationScreenState extends State<InformationScreen> {
                 right: 20,
                 child: TextButton(
                   child: Text('Next'),
-                  onPressed: () {
+                  onPressed: () async{
                     if (_pageController.page == 3) {
+                    await  AboutService().setInited();
                       Navigator.pushNamed(
                           context, NavigatorRoutes.NAVIGATOR_SCREEN);
                     } else {

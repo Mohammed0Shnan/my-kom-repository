@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_info_and_splash/bloc/splash_animation_bloc.dart';
+import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class FadeAnimation extends StatelessWidget {

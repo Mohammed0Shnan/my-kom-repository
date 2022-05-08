@@ -1,12 +1,8 @@
-import 'dart:math';
 
-import 'package:my_kom/module_info_and_splash/screen/next_splash_screen.dart';
-import 'package:my_kom/module_info_and_splash/screen/splash_screen.dart';
+import 'package:my_kom/module_splash/screen/splash_screen.dart';
 import 'package:my_kom/utils/auth_guard/auth_gard.dart';
-import 'package:my_kom/utils/back_ground/background.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:my_kom/module_info_and_splash/widgets/wave_loading.dart';
 
 class Wrapper extends StatelessWidget {
   //final AuthGuard _authGuard = AuthGuard(SharedPreferencesHelper());
@@ -26,7 +22,7 @@ class Wrapper extends StatelessWidget {
            return Container();
           } else {
             if (snapshot.data!) {
-              return SplashScreen();     //_homeScreen;
+              return Container();     //_homeScreen;
             } else {
               return Container(
                 color: Colors.red,

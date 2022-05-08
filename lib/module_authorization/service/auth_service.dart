@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/enums/auth_status.dart';
@@ -18,6 +17,13 @@ class AuthService {
 
   final AuthPrefsHelper _prefsHelper = AuthPrefsHelper();
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Delegates
+  Future<bool> get isLoggedIn => _prefsHelper.isSignedIn();
+
+  Future<String?> get userID => _prefsHelper.getUserId();
+
+  Future<UserRole?> get userRole => _prefsHelper.getRole();
 
   Future<RegisterResponse> registerWithEmailAndPassword(String email,
       String password, UserRole role, AuthSource authSource) async {

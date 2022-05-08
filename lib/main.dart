@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
+import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
-import 'package:my_kom/module_info_and_splash/info_splash_module.dart';
-import 'package:my_kom/module_info_and_splash/screen/splash_screen.dart';
+import 'package:my_kom/module_splash/splash_module.dart';
+import 'package:my_kom/module_splash/splash_routes.dart';
 import 'package:my_kom/module_wrapper/wrapper_module.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -26,18 +27,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
   final WapperModule _wapperModule;
-  final InfoSplashModule _infoSplashModule;
+  final SplashModule _splashModule;
+  final AboutModule _aboutModule;
   final NavigatorModule _navigatorModule;
   final AuthorizationModule _authorizationModule;
   final MapModule _mapModule;
-  MyApp(this._wapperModule, this._infoSplashModule, this._navigatorModule,
+  MyApp(this._wapperModule, this._aboutModule,this._splashModule, this._navigatorModule,
       this._authorizationModule,this._mapModule);
 
   @override
   Widget build(BuildContext context) {
     Map<String, WidgetBuilder> routes = {};
     routes.addAll(_wapperModule.getRoutes());
-    routes.addAll(_infoSplashModule.getRoutes());
+    routes.addAll(_aboutModule.getRoutes());
+        routes.addAll(_splashModule.getRoutes());
+
     routes.addAll(_navigatorModule.getRoutes());
     routes.addAll(_authorizationModule.getRoutes());
     routes.addAll(_mapModule.getRoutes());
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'My Kom',
         routes: routes,
-        home: SplashScreen());
+        initialRoute: SplashRoutes.SPLASH_SCREEN);
   }
 }
 
