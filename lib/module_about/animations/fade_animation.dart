@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-class FadeAnimation extends StatelessWidget {
+class CustomFadeAnimation extends StatelessWidget {
   final Widget child;
-  const FadeAnimation({Key? key, required this.child}) : super(key: key);
+  const CustomFadeAnimation({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -63,7 +63,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
                       horizontal: SizeConfig.screenWidth * 0.25),
                   child: Row(
                     children: [
-                      FadeAnimation(
+                      CustomFadeAnimation(
                         child: AnimatedContainer(
                           alignment: Alignment.centerLeft,
                           duration: Duration(milliseconds: 300),

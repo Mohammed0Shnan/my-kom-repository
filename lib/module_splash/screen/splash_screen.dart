@@ -71,6 +71,8 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!isInited) {
         return AboutRoutes.ROUTE_ABOUT;
       }
+
+      // Is LoggedIn
       UserRole? role = await widget._authService.userRole;
       if(role != null){
         if (role == UserRole.ROLE_OWNER) {
@@ -81,8 +83,11 @@ class _SplashScreenState extends State<SplashScreen> {
           //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
         }
       }
+
+      // Is Not LoggedIn
      else {
-        return AuthorizationRoutes.LOGIN_SCREEN;
+         return NavigatorRoutes.NAVIGATOR_SCREEN;
+      //  return AuthorizationRoutes.LOGIN_SCREEN;
       }
     } catch (e) {
       return AboutRoutes.ROUTE_ABOUT;  // about screen

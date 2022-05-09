@@ -34,9 +34,10 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             Icon(Icons.home, color: Colors.white),
             Icon(Icons.person, color: Colors.white),
             Icon(
-              Icons.settings,
+              Icons.border_outer_rounded,
               color: Colors.white,
-            )
+            ),
+          
           ],
           animationDuration: Duration(milliseconds: 100),
           animationCurve: Curves.easeIn,

@@ -25,8 +25,9 @@ class _ShopScreenState extends State<ShopScreen> {
                   openCloseShopBloc.closeShop();
                 },
                 icon: Icon(
-                  Icons.arrow_back_ios,
-                  size: 35,
+                  Icons.arrow_back_ios_rounded,
+                  size: SizeConfig.heightMulti * 4,
+                  color: Colors.black54,
                 ))
           ],
         ),

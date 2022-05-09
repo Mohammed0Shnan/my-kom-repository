@@ -8,4 +8,11 @@ class Urls {
   static const String PRODUCT_DETIAL_URL = DOMAIN + '/product';
     static const String PRODUCT_STORE_URL = DOMAIN + '/product';
 
+
+
+  
 }
+
+
+
+

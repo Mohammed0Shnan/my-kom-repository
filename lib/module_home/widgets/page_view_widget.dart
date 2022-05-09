@@ -1,16 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class PageViewWidget extends StatefulWidget {
   final Function(int) pageBuilder;
+  final int itemCount;
   final double hieght;
   const PageViewWidget(
-      {required this.pageBuilder, required this.hieght, Key? key})
+      {required this.pageBuilder,required this.itemCount, required this.hieght, Key? key})
       : super(key: key);
 
   @override
@@ -38,7 +37,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
 
   _autoMove() async {
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {   
-   if(currentPage <5){
+   if(currentPage <widget.itemCount){
      currentPage ++;
    }else
    currentPage = 0;
@@ -61,7 +60,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         Container(
           height: widget.hieght,
           child: PageView.builder(
-            itemCount: 5,
+            itemCount: widget.itemCount,
             controller: _pageController,
             itemBuilder: (context, int index) {
               Matrix4 matrix = Matrix4.identity();
@@ -107,7 +106,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         ),
         SmoothPageIndicator(
           controller: _pageController,
-          count: 5,
+          count: widget.itemCount,
           effect: const JumpingDotEffect(
               dotColor: Colors.black12,
               dotHeight:  4,

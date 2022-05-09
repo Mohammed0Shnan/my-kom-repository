@@ -6,6 +6,8 @@ import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_company/company_module.dart';
+import 'package:my_kom/module_company/screen/company_products_screen.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
@@ -33,7 +35,9 @@ class AppComponentInjector implements AppComponent {
       _createSplashModule(),
       _createNavigatorModule(),
       _createAuthorizationModule(),
-      _createMapModule());
+      _createMapModule(),
+      _createCompanyModule()
+      );
 
   WapperModule _createWapperModule() => WapperModule(Wrapper());
   AboutModule _createAboutModule() => AboutModule();
@@ -50,6 +54,8 @@ class AppComponentInjector implements AppComponent {
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
+
+  CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company_id: '',));
   MyApp get app {
     return _createApp();
   }

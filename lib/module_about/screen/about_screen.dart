@@ -92,7 +92,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 child: TextButton(
                   child: Text('Skip'),
                   onPressed: () async{
-                    await  AboutService().setInited();
+                      AboutService().setInited();
                     // Navigator.pushNamed(
                     //     context, NavigatorRoutes.NAVIGATOR_SCREEN);
                     Navigator.pushNamed(
@@ -120,7 +120,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   child: Text('Next'),
                   onPressed: () async{
                     if (_pageController.page == 3) {
-                    await  AboutService().setInited();
+                      AboutService().setInited();
                       Navigator.pushNamed(
                           context, NavigatorRoutes.NAVIGATOR_SCREEN);
                     } else {

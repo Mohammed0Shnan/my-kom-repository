@@ -97,8 +97,9 @@ class AuthService {
           message: 'Login Success', status: AuthStatus.AUTHORIZED);
     } catch (e) {
       if (e is FirebaseAuthException) {
-        print('login exception!!!!!!!!!');
-        print(e.code);
+        Logger().info('AuthService', e.code.toString());
+        return AuthResponse(
+            message:e.code.toString() +'\n (There Is No Internet)', status: AuthStatus.UNAUTHORIZED);
       }
       else if(e is GetProfileException)
         {
@@ -107,6 +108,7 @@ class AuthService {
         }
       else
       Logger().info('AuthService', 'Error getting the token from the Fire Base API');
+
 
       return AuthResponse(
           message: e.toString(), status: AuthStatus.UNAUTHORIZED);
@@ -123,8 +125,6 @@ class AuthService {
     // Change This
      try{
        ProfileResponse profileResponse = await _repository.getProfile(user!.uid);
-       print('after get profile');
-       profileResponse.address.longitude;
        await Future.wait([
          _prefsHelper.setUserId(user.uid),
          _prefsHelper.setEmail(user.email!),
@@ -136,10 +136,6 @@ class AuthService {
      }catch(e){
        throw GetProfileException('Error getting Profile Fire Base API');
      }
-    print('======================');
-
-
-
   }
 
   Future<void> logout() async {

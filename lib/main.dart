@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
+import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_splash/splash_routes.dart';
@@ -32,20 +33,20 @@ class MyApp extends StatelessWidget {
   final NavigatorModule _navigatorModule;
   final AuthorizationModule _authorizationModule;
   final MapModule _mapModule;
+  final CompanyModule _companyModule;
   MyApp(this._wapperModule, this._aboutModule,this._splashModule, this._navigatorModule,
-      this._authorizationModule,this._mapModule);
+      this._authorizationModule,this._mapModule, this._companyModule);
 
   @override
   Widget build(BuildContext context) {
     Map<String, WidgetBuilder> routes = {};
     routes.addAll(_wapperModule.getRoutes());
     routes.addAll(_aboutModule.getRoutes());
-        routes.addAll(_splashModule.getRoutes());
-
+    routes.addAll(_splashModule.getRoutes());
     routes.addAll(_navigatorModule.getRoutes());
     routes.addAll(_authorizationModule.getRoutes());
     routes.addAll(_mapModule.getRoutes());
-
+    routes.addAll(_companyModule.getRoutes());
     return FutureBuilder<Widget>(
       initialData: Container(color: Colors.green),
       future: configuratedApp(routes),
