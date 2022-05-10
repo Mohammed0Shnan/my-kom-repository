@@ -42,7 +42,7 @@ class DescoveryGridWidget extends StatelessWidget {
                               child: FadeInAnimation(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CompanyProductScreen(company_id: data[index].id)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CompanyProductScreen(company: data[index])));
                                              //           Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: data[index].id);
 
                               },

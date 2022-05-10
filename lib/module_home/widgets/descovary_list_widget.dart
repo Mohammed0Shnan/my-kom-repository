@@ -54,8 +54,7 @@ class DescoveryListWidget extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CompanyProductScreen(
-                                      company_id: data[index].id)));
+                                  builder: (context) => CompanyProductScreen(company: data[index])));
 
                           //    Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: data[index].id);
                         },

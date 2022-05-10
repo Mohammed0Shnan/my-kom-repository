@@ -19,7 +19,7 @@ class ShimmerList extends StatelessWidget {
                   border: Border.all(
                       color: Colors.white, width: 1, style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.black12,
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                         color: Colors.black38,
@@ -38,7 +38,7 @@ class ShimmerList extends StatelessWidget {
                     width:  SizeConfig.imageSize * 25,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.black,
+                        color: Colors.white,
                         boxShadow: [
                           BoxShadow(
                               color: Colors.white,

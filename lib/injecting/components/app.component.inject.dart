@@ -55,7 +55,7 @@ class AppComponentInjector implements AppComponent {
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
 
-  CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company_id: '',));
+  CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));
   MyApp get app {
     return _createApp();
   }
