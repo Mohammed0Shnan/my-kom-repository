@@ -71,7 +71,7 @@ class DescoveryGridWidget extends StatelessWidget {
                                                   BorderRadius.circular(10),
                                               child: data[index]
                                                           .imageUrl
-                                                          .length ==
+                                                          .length !=
                                                       0
                                                   ? Container(
                                                       decoration: BoxDecoration(
@@ -112,8 +112,9 @@ class DescoveryGridWidget extends StatelessWidget {
                                               data[index].name,
                                               style: TextStyle(
                                                   fontSize:
-                                                      SizeConfig.titleSize * 2.3,
+                                                      SizeConfig.titleSize * 2.2,
                                                   fontWeight: FontWeight.bold,
+                                                  color: Colors.black54,
                                                   overflow: TextOverflow.ellipsis),
                                             ),
                                           ),

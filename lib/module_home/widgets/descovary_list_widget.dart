@@ -84,13 +84,13 @@ class DescoveryListWidget extends StatelessWidget {
                                     width: imageWidth * 25,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: list[index].imageUrl.length == 0
+                                      child: list[index].imageUrl.length != 0
                                           ? Container(
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                   image: new ExactAssetImage(
                                                       list[index].imageUrl),
-                                                  fit: BoxFit.cover,
+                                                  fit: BoxFit.contain,
                                                 ),
                                               ),
                                             )
@@ -115,7 +115,7 @@ class DescoveryListWidget extends StatelessWidget {
                                   width: 20,
                                 ),
                               ),
-                              Flexible(child: Text(list[index].name)),
+                              Flexible(child: Text(list[index].name,style: TextStyle(fontSize: SizeConfig.titleSize * 2.5,fontWeight: FontWeight.w700 ,color: Colors.black54,letterSpacing: 1),)),
                             ],
                           ),
                         ),

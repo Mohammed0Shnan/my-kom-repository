@@ -87,7 +87,7 @@ class WaveLoadingWidget extends StatelessWidget {
               Color.fromARGB(255, 28, 174, 147),
             ],
           ],
-          durations: [6000, 4000, 5000],
+          durations: [8000, 6000, 7000],
           heightPercentages: [0.3, 0.25, 0.32],
           blur: _blur,
           gradientBegin: Alignment.bottomLeft,

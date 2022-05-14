@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
+import 'package:my_kom/module_shoping/shoping_module.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_splash/splash_routes.dart';
 import 'package:my_kom/module_wrapper/wrapper_module.dart';
@@ -34,8 +36,9 @@ class MyApp extends StatelessWidget {
   final AuthorizationModule _authorizationModule;
   final MapModule _mapModule;
   final CompanyModule _companyModule;
+  final ShopingModule _shopingModule;
   MyApp(this._wapperModule, this._aboutModule,this._splashModule, this._navigatorModule,
-      this._authorizationModule,this._mapModule, this._companyModule);
+      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule);
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +50,7 @@ class MyApp extends StatelessWidget {
     routes.addAll(_authorizationModule.getRoutes());
     routes.addAll(_mapModule.getRoutes());
     routes.addAll(_companyModule.getRoutes());
+        routes.addAll(_shopingModule.getRoutes());
     return FutureBuilder<Widget>(
       initialData: Container(color: Colors.green),
       future: configuratedApp(routes),
@@ -61,6 +65,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'My Kom',
         routes: routes,
+        theme: ThemeData(
+          textTheme: TextTheme(
+
+          )
+        ),
         initialRoute: SplashRoutes.SPLASH_SCREEN);
   }
 }

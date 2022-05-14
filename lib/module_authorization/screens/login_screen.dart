@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
+import 'package:my_kom/module_authorization/screens/widgets/custom_clip_widget.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -39,35 +42,75 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                height: SizeConfig.screenHeight * 0.25,
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.screenWidth * 0.2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+              Stack(
+                children: [
+                  Container(
+                   child: ClipPath(
+                     clipper: CustomClipWidget(),
+                      child: Container(
+                        color: ColorsConst.mainColor.withOpacity(0.1),
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.screenHeight * (0.3),
+
+
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: SizeConfig.screenHeight * 0.25,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10,),
+
                     Text('Welcome TO',
                         style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w900,
                             fontSize: SizeConfig.titleSize * 3.5)),
-                    Text('M Y  K O M',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: SizeConfig.titleSize * 5)),
-                    Text('login and start ordering water now',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.black26,
-                            fontSize: SizeConfig.titleSize * 2.5))
-                  ],
-                ),
+                        SizedBox(height: 5,),
+                        Container(
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+
+                              Container(
+                                  width: SizeConfig.screenWidth * 0.4,
+                                  height: 7.8 * SizeConfig.heightMulti,
+                                  child: Image.asset('assets/logo1.png',fit: BoxFit.fitWidth,)),
+                              Container(
+                                  height: 7.8 * SizeConfig.heightMulti,
+                                  width: SizeConfig.screenWidth * 0.1,
+                                  child: Image.asset('assets/logo2.png',fit: BoxFit.contain,))
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text('login and start ordering water now',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.lato(
+                                  fontSize: SizeConfig.titleSize * 2.1,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black38
+                              )),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Form(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -81,94 +124,128 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ListTile(
-                          title: Text('Email Address'),
-                          subtitle: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _LoginEmailController,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.email),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.black12,
-                                      width: 10,
-                                      style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                hintText: 'Email Address'
-                                //S.of(context).name,
-                                ),
-                            textInputAction: TextInputAction.next,
-                            onEditingComplete: () => node.nextFocus(),
-                            // Move focus to next
-                            validator: (result) {
-                              if (result!.isEmpty) {
-                                return 'Email Address is Required'; //S.of(context).nameIsRequired;
-                              }
-                              if (!_validateEmailStructure(result))
-                                return 'Must write an email address';
-                              return null;
-                            },
+                          title: Padding(
+                              padding: EdgeInsets.only(bottom: 8),
+                              child: Text('Email Address' , style:GoogleFonts.lato(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.5
+                              ),)),
+                          subtitle: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                            ),
+                            child: TextFormField(
+                              
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _LoginEmailController,
+                              decoration: InputDecoration(
+                                  errorStyle: GoogleFonts.lato(
+                                    color: Colors.red.shade700,
+                                    fontWeight: FontWeight.w800,
+
+
+                                  ),
+                                  prefixIcon: Icon(Icons.email),
+                                  border: InputBorder.none,
+                                  hintText: 'Email Address',
+                                  hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                  //S.of(context).name,
+                                  ),
+                              textInputAction: TextInputAction.next,
+                              onEditingComplete: () => node.nextFocus(),
+                              // Move focus to next
+                              validator: (result) {
+                                if (result!.isEmpty) {
+                                  return 'Email Address is Required'; //S.of(context).nameIsRequired;
+                                }
+                                if (!_validateEmailStructure(result))
+                                  return 'Must write an email address';
+                                return null;
+                              },
+                            ),
                           )),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 8,
                     ),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
+
                       ),
                       child: ListTile(
-                        title: Text('Password'),
+                        title: Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Text('Password',style:GoogleFonts.lato(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.5
+                            ))),
                         subtitle: BlocBuilder<PasswordHiddinCubit,
                             PasswordHiddinCubitState>(
                           bloc: cubit,
                           builder: (context, state) {
-                            return TextFormField(
-                              controller: _LoginPasswordController,
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: IconButton(
-                                      onPressed: () {
-                                        cubit.changeState();
-                                      },
-                                      icon: state ==
-                                              PasswordHiddinCubitState
-                                                  .VISIBILITY
-                                          ? Icon(Icons.visibility)
-                                          : Icon(Icons.visibility_off)),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: Colors.black12,
-                                        width: 10,
-                                        style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  hintText: 'Password' // S.of(context).email,
-                                  ),
-                              obscureText:
-                                  state == PasswordHiddinCubitState.VISIBILITY
-                                      ? false
-                                      : true,
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (v) => node.unfocus(),
-                              // Move focus to next
-                              validator: (result) {
-                                if (result!.isEmpty) {
-                                  return '* Password is Required'; //S.of(context).emailAddressIsRequired;
-                                }
-                                if (result.length < 8) {
-                                  return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                }
+                            return Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                              ),
+                              child: TextFormField(
+                                controller: _LoginPasswordController,
+                                decoration: InputDecoration(
+                                  errorStyle: GoogleFonts.lato(
+                                    color: Colors.red.shade700,
+                                    fontWeight: FontWeight.w800,
 
-                                return null;
-                              },
+
+                                  ),
+                                    prefixIcon: Icon(Icons.lock),
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          cubit.changeState();
+                                        },
+                                        icon: state ==
+                                                PasswordHiddinCubitState
+                                                    .VISIBILITY
+                                            ? Icon(Icons.visibility)
+                                            : Icon(Icons.visibility_off)),
+                                    border:InputBorder.none,
+                                    hintText: 'Password',
+                                    hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+// S.of(context).email,
+                                    ),
+                                obscureText:
+                                    state == PasswordHiddinCubitState.VISIBILITY
+                                        ? false
+                                        : true,
+
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (v) => node.unfocus(),
+                                // Move focus to next
+                                validator: (result) {
+                                  if (result!.isEmpty) {
+                                    return '* Password is Required'; //S.of(context).emailAddressIsRequired;
+                                  }
+                                  if (result.length < 8) {
+                                    return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
+                                  }
+
+                                  return null;
+                                },
+                              ),
                             );
                           },
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -177,16 +254,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Container(
                           padding: EdgeInsets.only(
                               right: 2.345 * SizeConfig.heightMulti),
-                          child: Text('did you forget your password ?',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black54)),
+                          child: Text('Did you forget your password ?',
+                              style: GoogleFonts.lato(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black45,
+                                fontSize: SizeConfig.titleSize * 2.1,
+                              )),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     BlocConsumer<LoginBloc, LoginStates>(
                         bloc: widget._loginBloc,
@@ -259,9 +337,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       'You don\'t have an account ?',
-                      style: TextStyle(
-                          fontSize: SizeConfig.titleSize * 2.2,
-                          color: Colors.black54),
+                      style:  GoogleFonts.lato(
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black45,
+                        fontSize: SizeConfig.titleSize * 2,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -271,10 +351,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             (route) => false);
                       },
                       child: Text('Create an account',
-                          style: TextStyle(
-                              fontSize: SizeConfig.titleSize * 2.4,
-                              fontWeight: FontWeight.w700,
-                              color: ColorsConst.mainColor)),
+                          style:  GoogleFonts.lato(
+                              fontSize: SizeConfig.titleSize * 2.3,
+                              fontWeight: FontWeight.bold,
+                              color: ColorsConst.mainColor                          )
+
+                            ),
                     )
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_kom/module_about/widgets/custom_clipper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class Background extends StatelessWidget {
@@ -7,12 +8,13 @@ class Background extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Stack(
           
           children: [
             Positioned(
-              bottom:- SizeConfig.screenHeight * 0.1,
+              bottom:- SizeConfig.screenHeight * 0.15,
               left: 0,
               right: 0,
               child: Container(
@@ -23,6 +25,7 @@ class Background extends StatelessWidget {
                     shape: BoxShape.circle),
               ),
             ),
+            BottomCustomClipperWidget(),
             child
           ],
         ),

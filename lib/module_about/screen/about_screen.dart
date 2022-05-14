@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
@@ -20,12 +21,13 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  final _pageController = PageController(
-    initialPage: 0,
-  );
+  late final _pageController ;
   late PageViewAnimationBloc bloc;
   @override
   void initState() {
+    _pageController = PageController(
+      initialPage: 0,
+    );
     bloc = PageViewAnimationBloc(_pageController);
     super.initState();
   }
@@ -56,15 +58,24 @@ class _AboutScreenState extends State<AboutScreen> {
     'you can keep the money in your wallet inside the application'
   ];
 
+  int currentIndex =0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Background(
         child: Stack(
+          
           alignment: Alignment.center,
           children: [
             Positioned.fill(
               child: PageView.builder(
+                onPageChanged: (index){
+                  currentIndex = index;
+                  setState(() {
+
+                  });
+                },
                 controller: _pageController,
                 itemCount: 4,
                 itemBuilder: (context, index) {
@@ -74,7 +85,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       return Opacity(
                         opacity: max(1 - (state - index).abs(), 0),
                         child: Page(
-                          title: index == 0 ? 'M Y  K O M' : '',
+                          title: index == 0 ? Container(
+                            height: SizeConfig.titleSize * 5,
+                            child: Image.asset('assets/logo1.png',fit: BoxFit.contain,)): Text(''),
                           lottieUrl: LottieUrls[index],
                           color: Colors.transparent,
                           infoTitle: pageTitleInformations[index],
@@ -100,14 +113,14 @@ class _AboutScreenState extends State<AboutScreen> {
                   },
                 )),
             Positioned(
-              bottom: SizeConfig.screenHeight * 0.15,
+              bottom: SizeConfig.screenHeight * 0.16,
               child: SmoothPageIndicator(
                 controller: _pageController,
                 count: 4,
                 effect: JumpingDotEffect(
                     dotColor: Colors.black12,
-                    dotHeight: 10,
-                    dotWidth: 30,
+                    dotHeight: 8,
+                    dotWidth: 25,
                     spacing: 2,
                     jumpScale: 2,
                     activeDotColor: ColorsConst.mainColor),
@@ -117,7 +130,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 bottom: 20,
                 right: 20,
                 child: TextButton(
-                  child: Text('Next'),
+                  child:currentIndex == 3? Text('Get Started') :Text('Next'),
                   onPressed: () async{
                     if (_pageController.page == 3) {
                       AboutService().setInited();
@@ -139,7 +152,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
 class Page extends StatelessWidget {
   final Color color;
-  final String title;
+  final Widget title;
   final String infoTitle;
   final String infoSubTitle;
   final String lottieUrl;
@@ -160,20 +173,19 @@ class Page extends StatelessWidget {
       color: color,
       child: Column(children: [
         Flexible(
-          flex: 3,
+          flex: 4,
           child: Column(
             children: [
               Container(
                   height: SizeConfig.screenHeight * .4,
                   child: Lottie.network(lottieUrl)),
-              Text(
-                title,
-                style: TextStyle(fontSize: SizeConfig.titleSize * 4),
-              ),
+                  title
+            ,
               Spacer()
             ],
           ),
         ),
+       
         Flexible(
           flex: 3,
           child: Container(
@@ -181,14 +193,16 @@ class Page extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: SizeConfig.screenHeight * 0.05,
+                  height: SizeConfig.screenHeight * 0.02,
                 ),
                 Text(
                   infoTitle,
-                  style: TextStyle(
-                      fontSize: 28,
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.acme(
+                    fontSize: SizeConfig.titleSize * 3.5,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.red
+
+                  )
                 ),
                 SizedBox(
                   height: 20,
@@ -199,10 +213,14 @@ class Page extends StatelessWidget {
                   child: Text(
                     infoSubTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: SizeConfig.titleSize * 2.2,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.lato(
+
+                      fontSize: SizeConfig.titleSize * 2.4,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black54
+
+
+                    ),
                   ),
                 ),
               ],

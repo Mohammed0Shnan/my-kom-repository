@@ -1,7 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class PriductDetailScreen extends StatefulWidget {
@@ -68,7 +70,7 @@ class _PriductDetailScreenState extends State<PriductDetailScreen> {
                     fontWeight: FontWeight.w600),
               ),
               Container(
-                height: 200,
+                height: 100,
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Column(children: [
                   Divider(
@@ -76,13 +78,30 @@ class _PriductDetailScreenState extends State<PriductDetailScreen> {
                     endIndent: 10,
                   ),
                   Row(
-                    children: [Text(''), Text('')],
+                    children: [
+                      Spacer(),
+                      Text('12 g  '),
+                      Text(
+                        ': البوتاسيوم',
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      )
+                    ],
                   ),
                   Row(
-                    children: [Text(''), Text('')],
+                    children: [
+                      Spacer(),
+                      Text('12 g  '),
+                      Text(': الصوديوم',
+                          style: TextStyle(fontWeight: FontWeight.w800))
+                    ],
                   ),
                   Row(
-                    children: [Text(''), Text('')],
+                    children: [
+                      Spacer(),
+                      Text('12 g  '),
+                      Text(': الحديد',
+                          style: TextStyle(fontWeight: FontWeight.w800))
+                    ],
                   ),
                 ]),
               ),
@@ -94,12 +113,12 @@ class _PriductDetailScreenState extends State<PriductDetailScreen> {
                 child: Column(children: [
                   Row(
                     children: [
-                      Expanded(child: Text('28 ريال')),
+                      Expanded(child: Text('28.00 AED')),
                       Expanded(child: LayoutBuilder(
                         builder:
                             (BuildContext context, BoxConstraints constraints) {
                           double w = constraints.maxWidth;
-      
+
                           return Container(
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
@@ -168,8 +187,11 @@ class _PriductDetailScreenState extends State<PriductDetailScreen> {
                                 color: Colors.white,
                                 fontSize: SizeConfig.titleSize * 2.7),
                           ),
-                          SizedBox(width: 10,),
-                         Icon(Icons.shopping_cart,color: Colors.white)
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(Icons.shopping_cart_outlined,
+                              color: Colors.white)
                         ],
                       ),
                     ),
@@ -264,7 +286,24 @@ class _CustomizeAppBar extends SliverPersistentHeaderDelegate {
                 child: _buildCompanyImage(companyImageUrl),
               )),
           SliverBottomBar(fixAppBarValue: percent, size: size, title: title),
-        ]
+        ],
+        Positioned(
+            top: 5,
+            right: 10,
+            child: Badge(
+              position: BadgePosition.topEnd(top: 0, end: 3),
+              animationDuration: Duration(milliseconds: 300),
+              animationType: BadgeAnimationType.slide,
+              badgeContent: Text(
+                '1',
+                style: TextStyle(color: Colors.white),
+              ),
+              child: IconButton(
+                  icon: Icon(Icons.shopping_cart_outlined),
+                  onPressed: () {
+                    Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+                  }),
+            )),
       ],
     );
   }
@@ -275,11 +314,11 @@ class _CustomizeAppBar extends SliverPersistentHeaderDelegate {
       width: SizeConfig.imageSize * 28,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: companyImageUrl.length == 0
+        child: companyImageUrl.length != 0
             ? Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: new ExactAssetImage('assets/logo_background.png'),
+                    image: new ExactAssetImage(companyImageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -32,6 +32,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
     SizeConfig().init(MediaQuery.of(context).size);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
@@ -41,57 +42,66 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
             ),
             Positioned(
               top: SizeConfig.screenHeight * 0.1,
-              child:const ScaleAnimation(
+              child: ScaleAnimation(
                 duration: 300,
-                child: CircleAvatar(
-                  radius: 100,
-                ),
+                child: 
+                
+               Container(
+                 height: 31.25 * SizeConfig.heightMulti,
+                 width: 31.25 * SizeConfig.heightMulti,
+                 clipBehavior: Clip.antiAlias,
+                 decoration: BoxDecoration(
+                   shape: BoxShape.circle
+                 ),
+                child: Image.asset('assets/logo3.png',fit: BoxFit.cover,)
+               )
               ),
             ),
-            BlocConsumer<SpalshAnimationBloC, bool>(
-              bloc: spalshAnimationBloC,
-              listener: (context, state) {},
-              builder: (context, state) {
-                double current_width = 0;
-                if (state) {
-                  current_width = SizeConfig.screenWidth * 0.4;
-                } else
-                  current_width = 0;
+            Container(
+              width: SizeConfig.screenWidth * 0.54,
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.23),
+              child: BlocConsumer<SpalshAnimationBloC, bool>(
+                bloc: spalshAnimationBloC,
+                listener: (context, state) {},
+                builder: (context, state) {
+                  double current_width = 0;
+                  if (state) {
+                    current_width = SizeConfig.screenWidth * 0.4;
+                  } else
+                    current_width = 0;
 
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth * 0.25),
-                  child: Row(
+                  return Row(
                     children: [
                       CustomFadeAnimation(
                         child: AnimatedContainer(
                           alignment: Alignment.centerLeft,
                           duration: Duration(milliseconds: 300),
-                          child: const Center(
-                              child: Text(
-                            'M Y  K O M',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.blue, fontSize: 30),
-                          )),
-                          height: 50,
+                          child: Container(
+                            color: Colors.red,
+                          child: Image.asset('assets/logo1.png',
+                            fit: BoxFit.cover,
+                          ),
+                          ),
+                          height: 7.8 * SizeConfig.heightMulti,
                           width: current_width,
                         ),
                       ),
                       Container(
-                        height: 50,
-                        width: SizeConfig.screenWidth * 0.1,
-                        color: Colors.blue,
+                        height: 8.2 * SizeConfig.heightMulti,
+                        width: SizeConfig.screenWidth * 0.12,
+                        color: Colors.white,
+                      child: Image.asset('assets/logo2.png',fit: BoxFit.contain,),
                       )
                     ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
 
             Positioned(
               left: -SizeConfig.widhtMulti * 10,
               right: -SizeConfig.widhtMulti * 10,
-              bottom: -SizeConfig.screenWidth / 2,
+              bottom: -SizeConfig.screenHeight / 3,
               child: BlocConsumer<SpalshAnimationBloC, bool>(
                 bloc: spalshAnimationBloC,
                 listener: (context, state) {
@@ -102,14 +112,16 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
                       pageBuilder: (context,animation,seondryAnimation){
                       return LanguageScreen();
                     })
-                    
+
                     );
-             
+
                         });
                   }
                 },
                 builder: (context, state) {
                   return Material(
+                          color: Colors.grey.shade100,
+
                     child: Hero(
                       tag: 'logo',
                       child: WaveLoadingWidget(

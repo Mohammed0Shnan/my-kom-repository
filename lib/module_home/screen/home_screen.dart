@@ -13,6 +13,7 @@ import 'package:my_kom/module_home/widgets/descovary_grid_widget.dart';
 import 'package:my_kom/module_home/widgets/descovary_list_widget.dart';
 import 'package:my_kom/module_home/widgets/page_view_widget.dart';
 import 'package:my_kom/module_home/widgets/shimmer_list.dart';
+import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -58,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                   child: IconButton(
-                      icon: Icon(Icons.shopping_cart),
+                      icon: Icon(Icons.shopping_cart_outlined),
                       onPressed: () {
-                      //  openCloseShopBloc.openShop();
+                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
                       }),
                 )),
                 Flexible(

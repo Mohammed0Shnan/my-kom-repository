@@ -10,6 +10,7 @@ import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_company/screen/products_detail_screen.dart';
 import 'package:my_kom/module_company/screen/widgets/product_shimmer.dart';
 import 'package:my_kom/module_home/bloc/open_close_shop_bloc.dart';
+import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'dart:io' show Platform;
 
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -107,9 +108,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                         style: TextStyle(color: Colors.white),
                       ),
                       child: IconButton(
-                          icon: Icon(Icons.shopping_cart),
+                          icon: Icon(Icons.shopping_cart_outlined),
                           onPressed: () {
-                            openCloseShopBloc.openShop();
+                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
                           }),
                     ),
                   )
@@ -265,7 +266,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                     BorderRadius.circular(10),
                                                 child: data[index]
                                                             .imageUrl
-                                                            .length ==
+                                                            .length !=
                                                         0
                                                     ? Container(
                                                         decoration:
@@ -386,35 +387,42 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                               ),
                                               Flexible(
                                                 flex: 2,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        data[index]
-                                                            .price
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black26,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: SizeConfig
-                                                                    .titleSize *
-                                                                2.5),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          data[index]
+                                                              .price
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black26,
+                                                              fontWeight:
+                                                                  FontWeight.w700,
+                                                              fontSize: SizeConfig
+                                                                      .titleSize *
+                                                                  2.5),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      data[index].title,
-                                                      style: TextStyle(
-                                                          fontSize: SizeConfig
-                                                                  .titleSize *
-                                                              2.3,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
-                                                    ),
-                                                  ],
+                                                      Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 10),
+
+                                                        child: Text(
+                                                          data[index].title,
+                                                          style: TextStyle(
+                                                              fontSize: SizeConfig
+                                                                      .titleSize *
+                                                                  2.3,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              overflow: TextOverflow
+                                                                  .ellipsis),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               Flexible(

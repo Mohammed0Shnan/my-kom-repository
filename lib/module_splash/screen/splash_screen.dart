@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/about_routes.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
@@ -28,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _getNextRoute().then((route) {
+      _getNextRoute().then((route) async{
+        await Future.delayed(Duration(seconds: 1));
         Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
       });
     });
@@ -38,11 +40,14 @@ class _SplashScreenState extends State<SplashScreen> {
     SizeConfig().init(MediaQuery.of(context).size);
 
     return Scaffold(
-      body: Container(
-          color: Colors.white,
-          width: 50,
-          height: 50,
-        ),
+      backgroundColor: ColorsConst.mainColor,
+      body: Center(
+        child: Container(
+            width: SizeConfig.imageSize * 10,
+            height:  SizeConfig.imageSize * 10,
+            child: Image.asset('assets/logo2.png',fit: BoxFit.contain,),
+          ),
+      ),
 //  AnimatedSplashScreen(
 //         splash: Container(
 //           color: Colors.white,
@@ -68,9 +73,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<String> _getNextRoute() async {
     try {
       var isInited = await widget._aboutService.isInited();
-      if (!isInited) {
+      /////if (isInited) {
         return AboutRoutes.ROUTE_ABOUT;
-      }
+    //  }
 
       // Is LoggedIn
       UserRole? role = await widget._authService.userRole;

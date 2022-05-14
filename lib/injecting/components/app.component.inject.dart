@@ -16,6 +16,7 @@ import 'package:my_kom/module_map/map_module.dart';
 import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
+import 'package:my_kom/module_shoping/shoping_module.dart';
 import 'package:my_kom/module_splash/screen/splash_screen.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_wrapper/wrapper.dart';
@@ -36,7 +37,8 @@ class AppComponentInjector implements AppComponent {
       _createNavigatorModule(),
       _createAuthorizationModule(),
       _createMapModule(),
-      _createCompanyModule()
+      _createCompanyModule(),
+      _createShopingModule()
       );
 
   WapperModule _createWapperModule() => WapperModule(Wrapper());
@@ -54,6 +56,7 @@ class AppComponentInjector implements AppComponent {
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
+  ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
 
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));
   MyApp get app {

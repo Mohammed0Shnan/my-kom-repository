@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LangugeDropDownWidget extends StatefulWidget {
   const LangugeDropDownWidget({Key? key}) : super(key: key);
@@ -35,6 +36,10 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
                   ),
                   isDense: true,
                   hint: Text("Select Language"),
+                  style:  GoogleFonts.lato(
+                      color: Colors.black38,
+                      fontWeight: FontWeight.w600
+                  ),
                   value: _selected,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -54,7 +59,10 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
                               margin: EdgeInsets.only(left: 10),
                               child: Text(
                                 map["name"],
-                                style: TextStyle(color: Colors.black),
+                                style:  GoogleFonts.lato(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w600
+                                ),
                               )),
                         ],
                       ),

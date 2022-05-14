@@ -7,32 +7,25 @@ class CompanyService {
     return <CompanyModel>[
       CompanyModel(
           id: '1',
-          name: 'الوطنية',
-          imageUrl: "https://via.placeholder.com/600/92c952"),
+          name: 'Al Wataneeai',
+          imageUrl: "assets/waten.png"),
       CompanyModel(
           id: '2',
-          name: 'العين',
-          imageUrl: "https://via.placeholder.com/600/771796"),
+          name: 'Al Ayen',
+          imageUrl: "assets/ayen.png"),
       CompanyModel(
           id: '3',
-          name: 'ماي دبي',
-          imageUrl: "https://via.placeholder.com/600/24f355"),
+          name: 'May Dubai',
+          imageUrl: "assets/may_dubai.png"),
       CompanyModel(
           id: '4',
-          name: 'القطرة',
-          imageUrl: "https://via.placeholder.com/600/d32776"),
+          name: 'Al Qtrah',
+          imageUrl: "assets/qatraa.png"),
       CompanyModel(
           id: '5',
-          name: 'الوطنية',
-          imageUrl: "https://via.placeholder.com/600/f66b97"),
-      CompanyModel(
-          id: '6',
-          name: 'الوطنية',
-          imageUrl: "https://via.placeholder.com/600/56a8c2"),
-      CompanyModel(
-          id: '7',
-          name: 'ماي دبي',
-          imageUrl: "https://via.placeholder.com/600/b0f7cc"),
+          name: 'Al Yarmook',
+          imageUrl: "assets/yarmook.png"),
+
     ];
   }
 

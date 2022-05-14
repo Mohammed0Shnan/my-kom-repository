@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/module_about/screen/about_screen.dart';
 import 'package:my_kom/module_about/widgets/language_drop_down.dart';
 import 'package:my_kom/module_about/widgets/wave_loading.dart';
@@ -24,8 +25,8 @@ class LanguageScreen extends StatelessWidget {
                   tag: 'logo',
                   child: Center(
                     child: WaveLoadingWidget(
-                      container_height: SizeConfig.widhtMulti * 60,
-                      container_width: SizeConfig.widhtMulti * 60,
+                      container_height: 31.25 * SizeConfig.heightMulti,
+                      container_width: 31.25 * SizeConfig.heightMulti,
                       run: true,
                     ),
                   ),
@@ -37,17 +38,23 @@ class LanguageScreen extends StatelessWidget {
                     title: Padding(
                         padding: EdgeInsets.only(bottom: 10),
                         child: Text('Language',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: SizeConfig.titleSize * 2.2,
-                                fontWeight: FontWeight.w600))),
+                            style: GoogleFonts.lato(
+                              color: Colors.black54,
+                                fontWeight: FontWeight.w600
+                            ),
+                            // style: TextStyle(
+                            //     color: Colors.black,
+                            //     fontSize: SizeConfig.titleSize * 2.2,
+                            //     fontWeight: FontWeight.w600)
+                        )
+                    ),
                     subtitle: LangugeDropDownWidget()),
                 SizedBox(
                   height: SizeConfig.heightMulti * 3.3,
                 ),
                 ListTile(
                   title: Container(
-                    height: 70,
+                    height: 11.8 *  SizeConfig.heightMulti ,
                     clipBehavior: Clip.antiAlias,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
