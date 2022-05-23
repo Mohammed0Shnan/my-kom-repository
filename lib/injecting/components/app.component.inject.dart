@@ -1,6 +1,7 @@
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/main.dart';
 import 'package:my_kom/module_about/about_module.dart';
+import 'package:my_kom/module_about/screen/next_splash_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
@@ -12,8 +13,14 @@ import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
 import 'package:my_kom/module_home/screen/shop_navigator_screen.dart';
+import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_map/map_module.dart';
 import 'package:my_kom/module_map/screen/map_screen.dart';
+import 'package:my_kom/module_orders/orders_module.dart';
+import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
+import 'package:my_kom/module_orders/ui/screens/new_order/new_order_screen.dart';
+import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen.dart';
+import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
 import 'package:my_kom/module_shoping/shoping_module.dart';
@@ -21,16 +28,17 @@ import 'package:my_kom/module_splash/screen/splash_screen.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_wrapper/wrapper.dart';
 import 'package:my_kom/module_wrapper/wrapper_module.dart';
-
+import 'package:my_kom/module_orders/orders_module.dart';
 class AppComponentInjector implements AppComponent {
   AppComponentInjector._();
-
+  LocalizationService? _singeltonLocalizationService;
   static Future<AppComponent> create() async {
     final injector = AppComponentInjector._();
     return injector;
   }
 
   MyApp _createApp() => MyApp(
+      _createLocalizationService(),
       _createWapperModule(),
       _createAboutModule(),
       _createSplashModule(),
@@ -38,25 +46,28 @@ class AppComponentInjector implements AppComponent {
       _createAuthorizationModule(),
       _createMapModule(),
       _createCompanyModule(),
-      _createShopingModule()
+      _createShopingModule(),
+      _createOrderModule(),
+      _createProfileModule()
       );
 
+  LocalizationService _createLocalizationService() =>
+      _singeltonLocalizationService ??= LocalizationService();
   WapperModule _createWapperModule() => WapperModule(Wrapper());
-  AboutModule _createAboutModule() => AboutModule();
+  AboutModule _createAboutModule() => AboutModule(NextSplashScreen(localizationService: _singeltonLocalizationService!,));
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
   NavigatorModule _createNavigatorModule() =>
-      NavigatorModule(ShopNavigatorScreen(
-        navigatorScreen: NavigatorScreen(
-          homeScreen: HomeScreen(),
-          profileScreen: ProfileScreen(),
-        ),
-        shopScreen: ShopScreen(),
-      ));
+      NavigatorModule( NavigatorScreen(
+        homeScreen: HomeScreen(),
+        //profileScreen: ProfileScreen(),
+      ),);
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
+  OrdersModule _createOrderModule()=> OrdersModule(NewOrderScreen(), OrderStatusScreen(), CaptainOrdersScreen());
+  ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
 
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));
   MyApp get app {

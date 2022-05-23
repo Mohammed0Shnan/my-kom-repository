@@ -6,9 +6,11 @@ import 'package:my_kom/module_about/screen/about_screen.dart';
 import 'package:my_kom/module_about/screen/next_splash_screen.dart';
 
 class AboutModule extends MyModule {
+  NextSplashScreen _nextSplashScreen;
+  AboutModule(this._nextSplashScreen);
   @override
   Map<String, WidgetBuilder> getRoutes() {
-    return {  AboutRoutes.ROUTE_ABOUT: (context) => NextSplashScreen()};
+    return {  AboutRoutes.ROUTE_ABOUT: (context) => _nextSplashScreen};
   }
  
   }

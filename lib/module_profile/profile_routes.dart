@@ -1,3 +1,3 @@
-class ProfileRoutes{
-  static const String  PRFILE_SCREEN = '/profile_screen';
+class ProfileRoutes {
+  static const String PROFILE_SCREEN = '/profile';
 }

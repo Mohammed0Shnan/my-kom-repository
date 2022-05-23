@@ -4,13 +4,13 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
-import 'package:my_kom/module_profile/screen/profile_screen.dart';
+import 'package:my_kom/module_home/widgets/side_bar_widget.dart';
 
 class NavigatorScreen extends StatefulWidget {
   final HomeScreen homeScreen;
-  final ProfileScreen profileScreen;
+  //final ProfileScreen profileScreen;
   NavigatorScreen(
-      {required this.homeScreen, required this.profileScreen, Key? key})
+      {required this.homeScreen, Key? key})
       : super(key: key);
 
   @override
@@ -22,7 +22,9 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         body: _getActiveScreen(),
+
         bottomNavigationBar: CurvedNavigationBar(
           color: ColorsConst.mainColor,
           backgroundColor: Colors.white,
@@ -50,8 +52,9 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         return widget.homeScreen;
         
       }
-           case 1 : {
-        return widget.profileScreen;
+       case 1 : {
+       // return widget.profileScreen;
+       return Container();
         
       }
       case 2 : {

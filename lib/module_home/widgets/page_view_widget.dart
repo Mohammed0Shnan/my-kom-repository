@@ -104,6 +104,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
             },
           ),
         ),
+        SizedBox(height: 8,),
         SmoothPageIndicator(
           controller: _pageController,
           count: widget.itemCount,

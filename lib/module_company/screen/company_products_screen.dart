@@ -3,20 +3,27 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/products_company_bloc.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_company/screen/products_detail_screen.dart';
+import 'package:my_kom/module_company/screen/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_company/screen/widgets/product_shimmer.dart';
 import 'package:my_kom/module_home/bloc/open_close_shop_bloc.dart';
+import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart';
+import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/shoping_routes.dart';
+import 'package:my_kom/utils/auth_guard/auth_gard.dart';
 import 'dart:io' show Platform;
 
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class CompanyProductScreen extends StatefulWidget {
   final CompanyModel? company;
+  final AuthService _authService = AuthService();
 
   CompanyProductScreen({required this.company, Key? key}) : super(key: key);
 
@@ -37,6 +44,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -61,12 +69,12 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           width: SizeConfig.imageSize * 12,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: widget.company!.imageUrl.length == 0
+                            child: widget.company!.imageUrl.length != 0
                                 ? Container(
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
                                         image: new ExactAssetImage(
-                                            'assets/logo_background.png'),
+                                            widget.company!.imageUrl),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -97,23 +105,36 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Badge(
-                      position: BadgePosition.topEnd(top: 0, end: 3),
-                      animationDuration: Duration(milliseconds: 300),
-                      animationType: BadgeAnimationType.slide,
-                      badgeContent: Text(
-                        '1',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      child: IconButton(
-                          icon: Icon(Icons.shopping_cart_outlined),
-                          onPressed: () {
-                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
-                          }),
-                    ),
-                  )
+                  BlocBuilder<ShopCartBloc,CartState>(
+                      bloc: shopCartBloc,
+                      builder: (context,state) {
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 12),
+
+                          alignment: Alignment.center,
+                          width:SizeConfig.heightMulti *7,
+                          height: SizeConfig.heightMulti *7,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withOpacity(0.8)
+                          ),
+                          child:     Badge(
+                            // position: BadgePosition.topEnd(top: 0, end: 3),
+                            animationDuration: Duration(milliseconds: 300),
+                            animationType: BadgeAnimationType.slide,
+                            badgeContent: Text(
+                           state is CartLoaded?   state.cart.products.length.toString():'0',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: IconButton(
+                                icon: Icon(Icons.shopping_cart_outlined,color: Colors.black,),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+                                }),
+                          ),
+                        );
+                      }
+                  ),
                 ],
               ),
               SizedBox(
@@ -151,7 +172,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                   listener: (context, state) {},
                   builder: (context, state) {
                     if (state is ProductsCompanySuccessState)
-                      return _buildProductListWidget(state.data);
+                      return  _buildProductListWidget(state.data);
                     else if (state is ProductsCompanyErrorState) {
                       return Center(
                           child: Container(
@@ -178,7 +199,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Minimum order',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),),
+                  Text('Minimum order 200 AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     clipBehavior: Clip.antiAlias,
@@ -187,12 +208,33 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       borderRadius: BorderRadius.circular(10)
                     ),
                    child: MaterialButton(
-                     onPressed: (){},
+                     onPressed: (){
+                       widget._authService.isLoggedIn.then((value) {
+                         if(value){
+                           Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+
+                         }else{
+                           loginCheakAlertWidget(context);
+                         }
+                       });
+                     },
                      child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('See the cart',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
-                            Text('200 AED',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7))
+                            BlocBuilder<ShopCartBloc,CartState>(
+                              bloc: shopCartBloc,
+                              builder: (context,state) {
+                                if(state is CartLoaded ){
+
+                                  return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                                }
+                                else{
+                                return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                                }
+
+                              }
+                            )
                           ],
                         ),
                    ),
@@ -207,301 +249,348 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
     );
   }
 
-  Widget _buildProductListWidget(List<ProductModel> data) {
-    if (data.length == 0) {
+  Widget _buildProductListWidget(List<ProductModel> items) {
+
+    if (items.length == 0) {
       return Center(
           child: Container(
         child: Text('Empty !!!'),
       ));
     } else {
-      return AnimationLimiter(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5),
-          child: RefreshIndicator(
-            onRefresh: () => onRefresh(),
-            child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-                childAspectRatio: 0.6,
-                children: List.generate(
-                    data.length,
-                    (index) => AnimationConfiguration.staggeredGrid(
-                          position: index,
-                          columnCount: 2,
-                          duration: Duration(milliseconds: 350),
-                          child: ScaleAnimation(
-                              child: FadeInAnimation(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PriductDetailScreen(productModel: data[index],companyImge: widget.company!.imageUrl,)));
-                              },
-                              child: Container(
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 3,
-                                          offset: Offset(0, 5))
-                                    ]),
-                                child: Hero(
-                                  tag:'product'+data[index].id,
-                                  child: Column(
-                                    children: [
-                                      Flexible(
-                                        flex: 3,
-                                        child: Stack(
+
+            return AnimationLimiter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: RefreshIndicator(
+                  onRefresh: () => onRefresh(),
+
+                  child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 0.6,
+                      children: List.generate(
+                          items.length,
+                              (index){
+                                final AddRemoveProductQuantityBloc addRemoveBloc =AddRemoveProductQuantityBloc();
+                         return  AnimationConfiguration.staggeredGrid(
+                            position: index,
+                            columnCount: 2,
+                            duration: Duration(milliseconds: 350),
+                            child: ScaleAnimation(
+                                child: FadeInAnimation(
+                                  child: GestureDetector(
+                                    onTap: () {
+
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BlocProvider.value(
+                                                    value: shopCartBloc,
+                                                    child:   PriductDetailScreen(productModel: items[index],)),
+                                          )
+                                      );
+                                    },
+                                    child: Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black12,
+                                                blurRadius: 3,
+                                                offset: Offset(0, 5))
+                                          ]),
+                                      child: Hero(
+                                        tag:'product'+items[index].id,
+                                        child: Column(
                                           children: [
-                                            Container(
-                                              width: double.infinity,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: data[index]
+                                            AspectRatio(
+                                              aspectRatio:  1.5,
+                                              child: Container(
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      width: double.infinity,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                        BorderRadius.circular(10),
+                                                        child: items[index]
                                                             .imageUrl
                                                             .length !=
-                                                        0
-                                                    ? Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          image:
-                                                              DecorationImage(
-                                                            image: new ExactAssetImage(
-                                                                data[index]
-                                                                    .imageUrl),
-                                                            fit: BoxFit.cover,
+                                                            0
+                                                            ? Container(
+                                                          decoration:
+                                                          BoxDecoration(
+                                                            image:
+                                                            DecorationImage(
+                                                              image: new ExactAssetImage(
+                                                                  items[index]
+                                                                      .imageUrl),
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                           ),
+                                                        )
+                                                            : CachedNetworkImage(
+                                                          maxHeightDiskCache: 10,
+                                                          imageUrl: items[index]
+                                                              .imageUrl,
+                                                          progressIndicatorBuilder:
+                                                              (context, l, ll) =>
+                                                              CircularProgressIndicator(
+                                                                value: ll.progress,
+                                                              ),
+                                                          errorWidget: (context,
+                                                              s, l) =>
+                                                              Icon(Icons.error),
+                                                          fit: BoxFit.cover,
                                                         ),
-                                                      )
-                                                    : CachedNetworkImage(
-                                                        maxHeightDiskCache: 10,
-                                                        imageUrl: data[index]
-                                                            .imageUrl,
-                                                        progressIndicatorBuilder:
-                                                            (context, l, ll) =>
-                                                                CircularProgressIndicator(
-                                                          value: ll.progress,
-                                                        ),
-                                                        errorWidget: (context,
-                                                                s, l) =>
-                                                            Icon(Icons.error),
-                                                        fit: BoxFit.cover,
                                                       ),
-                                              ),
-                                            ),
-                                            (data[index].old_price != null)
-                                                ? Positioned(
-                                                    top: 0,
-                                                    right: 0,
-                                                    child: Container(
-                                                      alignment:
+                                                    ),
+                                                    (items[index].old_price != null)
+                                                        ? Positioned(
+                                                        top: 0,
+                                                        right: 0,
+                                                        child: Container(
+                                                          alignment:
                                                           Alignment.center,
-                                                      width: SizeConfig
+                                                          width: SizeConfig
                                                               .widhtMulti *
-                                                          15,
-                                                      height: SizeConfig
+                                                              15,
+                                                          height: SizeConfig
                                                               .heightMulti *
-                                                          5,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.orange,
-                                                          borderRadius:
+                                                              5,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.orange,
+                                                              borderRadius:
                                                               BorderRadius.only(
                                                                   bottomLeft: Radius
                                                                       .circular(
-                                                                          10))),
-                                                      child: Text(
-                                                        'خصم',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight:
+                                                                      10))),
+                                                          child: Text(
+                                                            'خصم',
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontWeight:
                                                                 FontWeight.w400,
-                                                            fontSize: SizeConfig
+                                                                fontSize: SizeConfig
                                                                     .titleSize *
-                                                                3),
-                                                      ),
-                                                    ))
-                                                : SizedBox.shrink()
-                                          ],
-                                        ),
-                                      ),
-                                      Flexible(
-                                        flex: 4,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 8),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        data[index]
-                                                            .price
-                                                            .toString(),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            color: Colors.green,
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: SizeConfig
-                                                                    .titleSize *
-                                                                4),
-                                                      ),
-                                                    ),
-                                                    (data[index].old_price !=
-                                                            null)
-                                                        ? Expanded(
-                                                            child: Text(
-                                                              data[index]
-                                                                  .old_price
-                                                                  .toString(),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .lineThrough,
-                                                                  color: Colors
-                                                                      .black26,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  fontSize:
-                                                                      SizeConfig
-                                                                              .titleSize *
-                                                                          3),
-                                                            ),
-                                                          )
-                                                        : SizedBox.shrink(),
+                                                                    3),
+                                                          ),
+                                                        ))
+                                                        : SizedBox.shrink()
                                                   ],
                                                 ),
                                               ),
-                                              Flexible(
-                                                flex: 2,
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          data[index]
-                                                              .price
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black26,
-                                                              fontWeight:
-                                                                  FontWeight.w700,
-                                                              fontSize: SizeConfig
-                                                                      .titleSize *
-                                                                  2.5),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets.symmetric(horizontal: 10),
-
-                                                        child: Text(
-                                                          data[index].title,
-                                                          style: TextStyle(
-                                                              fontSize: SizeConfig
-                                                                      .titleSize *
-                                                                  2.3,
-                                                              fontWeight:
-                                                                  FontWeight.bold,
+                                            ),
+                                            SizedBox(height: 10,),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(top: 8),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 5),
+                                                      child: Row(
+                                                        children: [
+                                                          (items[index].old_price !=
+                                                              null)
+                                                              ? Text(
+                                                            items[index]
+                                                                .old_price
+                                                                .toString(),
+                                                            overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                            style: TextStyle(
+                                                                decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                                color: Colors
+                                                                    .black26,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w700,
+                                                                fontSize:
+                                                                SizeConfig
+                                                                    .titleSize *
+                                                                    3),
+                                                          )
+                                                              : SizedBox.shrink(),
+                                                          SizedBox(width: 8,),
+                                                          Expanded(
+                                                            child: Text(
+                                                              items[index]
+                                                                  .price
+                                                                  .toString(),
                                                               overflow: TextOverflow
-                                                                  .ellipsis),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                flex: 3,
-                                                child: Container(
-                                                  child: Text(
-                                                      data[index].description),
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Flexible(
-                                                  flex: 2,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Container(
-                                                          height: 35,
-                                                          child: ElevatedButton
-                                                              .icon(
-                                                            onPressed: () {},
-                                                            label: Text(
-                                                              'اضف',
+                                                                  .ellipsis,
                                                               style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
+                                                                  color: Colors.green,
                                                                   fontWeight:
-                                                                      FontWeight
-                                                                          .w900),
+                                                                  FontWeight.w700,
+                                                                  fontSize: SizeConfig
+                                                                      .titleSize *
+                                                                      4),
                                                             ),
-                                                            icon: Icon(
-                                                              Icons
-                                                                  .shopping_cart_outlined,
-                                                              size: SizeConfig
-                                                                      .imageSize *
-                                                                  5,
+                                                          ),
+
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5,),
+                                                    Padding(
+                                                      padding: EdgeInsets.symmetric(horizontal: 5),
+                                                      child: Row(
+                                                        children: [
+
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding: EdgeInsets.symmetric(horizontal: 5),
+
+                                                              child: Text(
+                                                                items[index].title,
+                                                                style: TextStyle(
+                                                                    fontSize: SizeConfig
+                                                                        .titleSize *
+                                                                        2.1,
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis),
+                                                              ),
                                                             ),
+                                                          ),
+                                                          Text(
+                                                            items[index]
+                                                                .quantity
+                                                                .toString() + ' Plot',
+                                                            style: TextStyle(
+                                                                color:
+                                                                Colors.black26,
+                                                                fontWeight:
+                                                                FontWeight.w700,
+                                                                fontSize: SizeConfig
+                                                                    .titleSize *
+                                                                    2.2),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5,),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                                        child: Text(
+                                                          items[index].description,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          maxLines: 3,
+                                                          style: GoogleFonts.lato(
+                                                              fontSize: SizeConfig.titleSize * 2,
+                                                              color: Colors.black54,
+                                                              fontWeight: FontWeight.w600
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(
-                                                        width: 8,
+                                                    ),
+
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: SizeConfig.heightMulti *5,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    // height: 10,
+                                                    child: ElevatedButton
+                                                        .icon(
+                                                      onPressed: () {
+                                                        widget._authService.isLoggedIn.then((value) {
+                                                          if(value){
+                                                            if(addRemoveBloc.state == 0){
+
+                                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                                content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                                                backgroundColor: Colors.black54,
+                                                                duration: const Duration(seconds: 1),
+
+                                                              ));
+                                                            }
+                                                            else{
+                                                              shopCartBloc.addProductsToCart(items[index],addRemoveBloc.state).then((value) {
+                                                                addRemoveBloc.clear();
+                                                              });
+                                                            }
+
+                                                          }else{
+                                                            loginCheakAlertWidget(context);
+                                                          }
+                                                        });
+
+                                                      },
+                                                      label: Text(
+                                                        'اضف',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w900),
                                                       ),
-                                                      Expanded(
-                                                          child: LayoutBuilder(
+                                                      icon: Icon(
+                                                        Icons
+                                                            .shopping_cart_outlined,
+                                                        size: SizeConfig
+                                                            .imageSize *
+                                                            5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Expanded(
+                                                      child: LayoutBuilder(
                                                         builder: (BuildContext
-                                                                context,
+                                                        context,
                                                             BoxConstraints
-                                                                constraints) {
+                                                            constraints) {
                                                           double w = constraints
                                                               .maxWidth;
 
                                                           return Container(
                                                             clipBehavior:
-                                                                Clip.antiAlias,
+                                                            Clip.antiAlias,
                                                             decoration:
-                                                                BoxDecoration(
+                                                            BoxDecoration(
                                                               boxShadow: [
                                                                 BoxShadow(
                                                                     color: Colors
                                                                         .black12)
                                                               ],
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
+                                                              BorderRadius
+                                                                  .circular(
+                                                                  5),
                                                               color: Colors
                                                                   .white
                                                                   .withOpacity(
-                                                                      0.1),
+                                                                  0.1),
                                                             ),
                                                             child: Stack(
                                                               children: [
                                                                 Row(
                                                                   mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
                                                                   children: [
                                                                     Container(
                                                                       color: ColorsConst
@@ -509,27 +598,36 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                       width: w /
                                                                           3,
                                                                       child: IconButton(
-                                                                          onPressed: () {},
+                                                                          onPressed: () {
+                                                                            addRemoveBloc.removeOne();
+                                                                          },
                                                                           icon: Icon(
-                                                                            Icons.minimize_sharp,
+                                                                            Icons.remove,
                                                                             size:
-                                                                                SizeConfig.imageSize * 5,
+                                                                            SizeConfig.imageSize * 5,
                                                                             color:
-                                                                                Colors.white,
+                                                                            Colors.white,
                                                                           )),
                                                                     ),
-                                                                    Container(
-                                                                        child: Text('100'),
-                                                                    ),
+                                                                    BlocBuilder<AddRemoveProductQuantityBloc , int>(
+                                                                        bloc:addRemoveBloc ,
+                                                                        builder: (context,state){
+                                                                          return  Container(
+                                                                            child: Text( state.toString(),style: TextStyle(fontWeight: FontWeight.w500,),),
+                                                                          );
+                                                                        }),
                                                                     Container(
                                                                       width: w /
                                                                           3,
                                                                       color: ColorsConst
                                                                           .mainColor,
                                                                       child:
-                                                                          Center(
+                                                                      Center(
                                                                         child: IconButton(
-                                                                            onPressed: () {},
+                                                                            onPressed: () {
+                                                                              addRemoveBloc.addOne();
+
+                                                                            },
                                                                             icon: Icon(
                                                                               Icons.add,
                                                                               size: SizeConfig.imageSize * 5,
@@ -544,26 +642,26 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                           );
                                                         },
                                                       ))
-                                                    ],
-                                                  ))
-                                            ],
-                                          ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
-                                    ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          )),
-                        ))),
-          ),
-        ),
-      );
+                                )),
+                          );}))
+                ),
+              ),
+            );
+
+
+
     }
   }
 
  Future<void> onRefresh()async {
-    productsCompanyBloc.getProducts('1');
+    productsCompanyBloc.getProducts(widget.company!.id);
   }
 }

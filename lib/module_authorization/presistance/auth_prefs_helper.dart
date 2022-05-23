@@ -1,6 +1,7 @@
 
 import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPrefsHelper {
@@ -121,10 +122,8 @@ class AuthPrefsHelper {
   Future<String?> getToken() async {
     SharedPreferences preferencesHelper = await SharedPreferences.getInstance();
     var token =  preferencesHelper.getString('token');
-    if (token == null) {
-    // throw UnauthorizedException('Token not found');
-    }
-   // return token;
+
+    return token;
   }
 
   /// @return DateTime tokenDate
@@ -136,6 +135,22 @@ class AuthPrefsHelper {
     //  throw UnauthorizedException('Token date not found');
     }else
     return DateTime.parse(dateStr);
+  }
+
+  Future<void>setAdderss(AddressModel addressModel) async{
+    SharedPreferences preferencesHelper = await SharedPreferences.getInstance();
+    await preferencesHelper.setDouble(
+      'latitude',
+      addressModel.latitude,
+    );
+    await preferencesHelper.setDouble(
+      'longitude',
+      addressModel.longitude,
+    );
+    await preferencesHelper.setString(
+      'description',
+      addressModel.description,
+    );
   }
 
   // /// @return void

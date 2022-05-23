@@ -1,20 +1,97 @@
 import 'dart:math';
+import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_orders/orders_routes.dart';
+import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
+import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({Key? key}) : super(key: key);
+   ShopScreen({Key? key}) : super(key: key);
 
   @override
   State<ShopScreen> createState() => _ShopScreenState();
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  late final String companyName;
+  late final _pageController;
+  final PaymentMethodeNumberBloc paymentMethodeNumberBloc = PaymentMethodeNumberBloc();
+  @override
+  void initState() {
+    _pageController = PageController(
+      initialPage: 0,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  int currentIndex = 0;
+
+  List<String> nowTitle = [
+    'Details and price of the shipment 1',
+    'Details and price of the shipment 2',
+    'Details and price of the shipment 3',
+    'Details and price of the shipment 4',
+  ];
+
+  List<String> nextTitle = [
+    'Next is the address and shipping details 1',
+    'Next is the address and shipping details 2',
+    'Next is the address and shipping details 3',
+    'Next is the address and shipping details 4',
+  ];
+  double stateAngle = 0;
+  double endAngle = 0;
+  int groupValue = 0;
+  int numberOfMonth = 0;
+  DateTime? _expiry_date = DateTime.now();
+
+  late int paymentGroupValue = 0;
+
+  int paymentMethodeCreditGroupValue = 0;
   @override
   Widget build(BuildContext context) {
+    switch (currentIndex) {
+      case 0:
+        {
+          stateAngle = 0;
+          endAngle = pi / 2;
+        }
+        break;
+      case 1 :
+        {
+          stateAngle = pi / 2;
+          endAngle = pi;
+        }
+        break;
+      case 2 :
+        {
+          stateAngle = pi;
+          endAngle = 3 * pi / 2;
+        }
+        break;
+      case 3 :
+        {
+          stateAngle = 3 * pi / 2;
+          endAngle = 2 * pi;
+        }
+        break;
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,120 +106,123 @@ class _ShopScreenState extends State<ShopScreen> {
           },
         ),
         elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Shopping Cart',
-              style: TextStyle(color: Colors.black),
-            ),
-            Text(
-              'شركة العين',
-              style: TextStyle(color: Colors.black45),
-            )
-          ],
+        title: Text(
+          'Shopping Cart',
+          style: TextStyle(color: Colors.black),
         ),
       ),
+
       body: SafeArea(
           child: Container(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: 100,
-              decoration: BoxDecoration(color: Colors.black12.withOpacity(0.1)),
-              child: Row(
-                children: [
-                  TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.0, end: 1.0),
-                      duration: Duration(seconds: 2),
-                      builder: (context,double value, child) {
-                        return Container(
-                            width: 100,
-                            height: 100,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Stack(
-                              children: [
-                                ShaderMask(
-                                  shaderCallback: (rect) {
-                                    return SweepGradient(
-                                        startAngle: 0,
-                                        endAngle: 2 * pi,
-                                        center: Alignment.center,
-                                        stops: [
-                                          value,
-                                          value
-                                        ],
-                                        colors: [
-                                           ColorsConst.mainColor,
-                                          Colors.grey.withOpacity(0.2)
-                                        ]).createShader(rect);
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                Center(
-                                  child: Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white),
-                                        child: Center(child: Text('1 of 4',style: TextStyle(fontWeight: FontWeight.w600,color: ColorsConst.mainColor),)),
-                                  ),
-                                )
-                              ],
-                            ));
-                      }),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Details and price of the shipment',
-                            style: TextStyle(
-                                color: ColorsConst.mainColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: SizeConfig.titleSize * 2.5)),
-                        SizedBox(
-                          height: 8,
+            child: Column(
+              children: [
+                Container(
+                  height: 11 * SizeConfig.heightMulti,
+                  decoration: BoxDecoration(
+                      color: Colors.black12.withOpacity(0.1)),
+                  child: Row(
+                    children: [
+                      TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 0.0, end: 1.0),
+                          duration: Duration(seconds: 2),
+                          builder: (context, double value, child) {
+                            return Container(
+                                width: 13 * SizeConfig.heightMulti,
+                                height: 13 * SizeConfig.heightMulti,
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Stack(
+                                  children: [
+                                    ShaderMask(
+                                      shaderCallback: (rect) {
+                                        return SweepGradient(
+
+                                            startAngle: stateAngle,
+                                            endAngle: endAngle,
+                                            center: Alignment.center,
+                                            stops: [
+                                              value,
+                                              value
+                                            ],
+                                            colors: [
+                                              ColorsConst.mainColor,
+                                              Colors.grey.withOpacity(0.2)
+                                            ]).createShader(rect);
+                                      },
+                                      child: Container(
+                                        width: 13 * SizeConfig.heightMulti,
+                                        height: 13 * SizeConfig.heightMulti,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        height: 8.8 * SizeConfig.heightMulti,
+                                        width: 8.8 * SizeConfig.heightMulti,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white),
+                                        child: Center(child: Text(
+                                          '${currentIndex + 1} of 4',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: ColorsConst.mainColor),)),
+                                      ),
+                                    )
+                                  ],
+                                ));
+                          }),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(nowTitle[currentIndex],
+                                style: TextStyle(
+                                    color: ColorsConst.mainColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: SizeConfig.titleSize * 2.4)),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(nextTitle[currentIndex],
+                                style: TextStyle(
+                                    color: Colors.black38,
+                                    fontSize: SizeConfig.titleSize * 2))
+                          ],
                         ),
-                        Text('Next is the address and shipping details',
-                            style: TextStyle(
-                                color: Colors.black38,
-                                fontSize: SizeConfig.titleSize * 2))
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+
+                    ],
+                  ),
+                ), Expanded(
+                  child: PageView(
+                    onPageChanged: (index) {
+                      setState(() {
+                        currentIndex = index;
+                      });
+                    },
+                    controller: _pageController,
+                    children: [
+                      firstPage(),
+                      secondPage(),
+                      thirdPage(),
+                    ],
+
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildShopeCard(),
-                  _buildShopeCard(),
-                  _buildShopeCard(),
-                  _buildShopeCard(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      )),
+
+          )),
     );
   }
 
-  Widget _buildShopeCard() {
+  Widget _buildShopeCard(
+      {required ProductModel productModel, required int quantity}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      height: SizeConfig.heightMulti * 18,
+      height: SizeConfig.heightMulti * 14,
       child: Row(
         children: [
           Container(
@@ -175,20 +255,20 @@ class _ShopScreenState extends State<ShopScreen> {
                       children: [
                         Container(
                           width: w / 4,
-                          child: Image.asset('assets/productItem.png'),
+                          child: Image.asset(productModel.imageUrl),
                         ),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'مياه االعين 200 مل ',
+                                productModel.title,
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
-                              Text('24 حبة \ الكرتون'),
+                              Text('${productModel.quantity} حبة \ الكرتون'),
                               Text(
-                                '1200 AED',
+                                '${productModel.price} AED',
                                 style: TextStyle(color: ColorsConst.mainColor),
                               )
                             ]),
@@ -209,28 +289,35 @@ class _ShopScreenState extends State<ShopScreen> {
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
                                         color: ColorsConst.mainColor,
                                         width: 30,
                                         child: IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              shopCartBloc
+                                                  .removeProductFromCart(
+                                                  productModel);
+                                            },
                                             icon: Icon(
-                                              Icons.minimize_sharp,
+                                              Icons.remove,
                                               size: SizeConfig.imageSize * 5,
                                               color: Colors.white,
                                             )),
                                       ),
                                       Container(
-                                        child: Text('100'),
+                                        child: Text(quantity.toString()),
                                       ),
                                       Container(
                                         width: 30,
                                         color: ColorsConst.mainColor,
                                         child: Center(
                                           child: IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                shopCartBloc.addProductToCart(
+                                                    productModel);
+                                              },
                                               icon: Icon(
                                                 Icons.add,
                                                 size: SizeConfig.imageSize * 5,
@@ -249,9 +336,1097 @@ class _ShopScreenState extends State<ShopScreen> {
                     );
                   },
                 )),
-          )
+          ),
+
         ],
       ),
     );
   }
+
+
+  Widget firstPage() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 5,
+        ),
+
+
+        Expanded(
+          child: BlocBuilder<ShopCartBloc, CartState>(
+              bloc: shopCartBloc,
+              builder: (context, state) {
+                if (state is CartLoading) {
+                  return CircularProgressIndicator();
+                }
+                else if (state is CartLoaded) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.cart
+                          .productQuantity(state.cart.products)
+                          .keys
+                          .length,
+                      itemBuilder: (context, index) {
+                        return _buildShopeCard(productModel: state.cart
+                            .productQuantity(state.cart.products)
+                            .keys
+                            .elementAt(index),
+                            quantity: state.cart
+                                .productQuantity(state.cart.products)
+                                .values
+                                .elementAt(index)
+                        );
+                      });
+                } else {
+                  return Container(
+                      child: Center(child: Text('Error in Load Items'),));
+                }
+              }),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(height: 1, color: Colors.black38, thickness: 1),
+              SizedBox(height: 10,),
+              Text('Payment Summary',
+                  style: GoogleFonts.lato(fontSize: SizeConfig.titleSize * 2.5,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black54)
+              ),
+              SizedBox(height: 8,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total ', style: GoogleFonts.lato(
+                      fontSize: SizeConfig.titleSize * 2.3,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black54),),
+                  BlocBuilder<ShopCartBloc, CartState>(
+                      bloc: shopCartBloc,
+                      builder: (context, state) {
+                        if (state is CartLoaded) {
+                          return Text(state.cart.totalString,
+                              style: GoogleFonts.lato(fontSize: SizeConfig
+                                  .titleSize * 2.5,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.black54));
+                        }
+                        else {
+                          return Text('', style: TextStyle(color: Colors
+                              .black54, fontSize: SizeConfig.titleSize * 2.9));
+                        }
+                      }
+                  ),
+
+                ],),
+              SizedBox(height: 10,),
+              BlocBuilder<ShopCartBloc, CartState>(
+                  bloc: shopCartBloc,
+                  builder: (context, state) {
+                    if (state is CartLoaded) {
+                      if (!state.cart.minimum(220)) {
+                        return Container(
+
+                            width: double.maxFinite,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.widhtMulti * 5),
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.red.shade50,
+
+                            ),
+                            child:
+                            Center(child: Text(
+                                'Minimum order is 220 AED ', style: GoogleFonts
+                                .lato(fontSize: SizeConfig.titleSize * 2.3,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.red))));
+                      }
+                      else
+                        return Container();
+                    }
+                    else {
+                      return Container();
+                    }
+                  }
+              )
+
+
+            ],
+          ),
+        ),
+        Container(
+          height: 6.78 * SizeConfig.heightMulti,
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                      color: Colors.white
+                      ,
+                      border: Border.all(
+                          color: ColorsConst.mainColor,
+                          width: 2
+                      ),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+
+                    },
+                    child: Text('Add More', style: TextStyle(
+                        color: ColorsConst.mainColor,
+                        fontSize: SizeConfig.titleSize * 2.7),),
+
+                  ),
+                ),
+              ),
+              SizedBox(width: SizeConfig.widhtMulti * 3,),
+              Expanded(child: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: ColorsConst.mainColor,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: MaterialButton(
+                  onPressed: () {
+                    if (_pageController.page == 3) {
+                      _pageController.nextPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.ease);
+                    }
+                    else {
+                      _pageController.nextPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.ease);
+                    }
+                  },
+                  child: Text('Next', style: TextStyle(color: Colors.white,
+                      fontSize: SizeConfig.titleSize * 2.7),),
+
+                ),
+              ))
+              ,
+            ],
+          ),
+        ),
+
+
+      ],
+    );
+  }
+
+  Widget secondPage() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Expanded(
+              child: SingleChildScrollView(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(height: 1, color: Colors.black38, thickness: 1),
+                  SizedBox(height: 10,),
+                  Text('Delivery Times',
+                      style: GoogleFonts.lato(
+                          fontSize: SizeConfig.titleSize * 2.5,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.black54)
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio<int>(
+                            value: 1,
+                            groupValue: groupValue,
+                            onChanged: (value) {
+                              setState(() {
+                                groupValue = value!;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Once', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2,
+                              fontWeight: FontWeight.bold
+                          ),)
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+
+                        children: [
+                          Radio<int>(
+                            value: 2,
+                            groupValue: groupValue,
+                            onChanged: (value) {
+                              setState(() {
+                                groupValue = value!;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Weekly', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2,
+                              fontWeight: FontWeight.bold
+                          ),)
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+
+                        children: [
+                          Radio<int>(
+                            value: 3,
+                            groupValue: groupValue,
+                            onChanged: (value) {
+                              setState(() {
+                                groupValue = value!;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Daily', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2,
+                              fontWeight: FontWeight.bold
+                          ),)
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+
+                        children: [
+                          Radio<int>(
+                            value: 4,
+                            groupValue: groupValue,
+                            onChanged: (value) {
+                              setState(() {
+                                groupValue = value!;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Monthly', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2,
+                              fontWeight: FontWeight.bold
+                          ),)
+                        ],
+                      ),
+
+
+                    ],),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          Text('Number of months', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2.7,
+                              fontWeight: FontWeight.bold
+                          ),),
+                          SizedBox(height: 8,),
+                          Row(
+                            children: [
+                              Container(
+                                  width: SizeConfig.widhtMulti * 30
+                                  , height: 6 * SizeConfig.heightMulti
+                                  , child: LayoutBuilder(
+                                builder:
+                                    (BuildContext context,
+                                    BoxConstraints constraints) {
+                                  double w = constraints.maxWidth;
+
+                                  return Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(color: Colors.black12)
+                                      ],
+                                      borderRadius: BorderRadius.circular(10)
+                                      ,
+                                      color: Colors.white.withOpacity(0.1),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+
+                                              decoration: BoxDecoration(
+                                                  color: ColorsConst.mainColor,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              width: w / 3,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    if (numberOfMonth != 0)
+                                                      setState(() {
+                                                        numberOfMonth --;
+                                                      });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.remove,
+                                                    size: SizeConfig.imageSize *
+                                                        5,
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                            Text(numberOfMonth.toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,),)
+                                            ,
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: ColorsConst.mainColor,
+                                                  borderRadius: BorderRadius
+                                                      .circular(10)
+                                              ),
+                                              width: w / 3,
+                                              child: Center(
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        numberOfMonth ++;
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.add,
+                                                      size: SizeConfig
+                                                          .imageSize * 5,
+                                                      color: Colors.white,
+                                                    )),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )),
+                              SizedBox(width: 8,),
+                              Text('Month', style: GoogleFonts.lato(
+                                  color: Colors.black54,
+                                  fontSize: SizeConfig.titleSize * 2.5,
+                                  fontWeight: FontWeight.bold
+                              ))
+                            ],
+                          )
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Application start date', style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: SizeConfig.titleSize * 2.7,
+                              fontWeight: FontWeight.bold
+                          )),
+                          SizedBox(height: 8,),
+
+                          Container(
+                            alignment: Alignment.center,
+                            height: 40,
+                            width: 140,
+                            padding: EdgeInsets.symmetric(horizontal: 8,
+                                vertical: 5),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey.shade200,
+
+                            ),
+                            child: Center(
+                              child: Row(
+
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                        _expiry_date != null
+                                            ? _expiry_date!.year.toString() +
+                                            '  /  ' +
+                                            _expiry_date!.month.toString() +
+                                            '  /  ' +
+                                            _expiry_date!.day.toString()
+                                            : '',
+                                        style: GoogleFonts.lato(
+                                            fontSize: SizeConfig.titleSize *
+                                                2.5,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsConst.mainColor
+                                        ),
+                                      )),
+                                  InkWell(
+                                    onTap: () {
+                                      DatePicker.showDatePicker(context,
+                                        showTitleActions: true,
+                                        minTime: DateTime(1990, 3, 5),
+                                        maxTime: DateTime.now(),
+                                        theme: DatePickerTheme(
+                                          headerColor: Colors.blue[900],
+                                          backgroundColor: Colors.blue,
+                                          itemStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                          doneStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                          cancelStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
+                                        onChanged: (date) {
+                                          _expiry_date = date;
+                                        },
+                                        onConfirm: (date) {
+                                          _expiry_date = date;
+                                          setState(() {});
+                                        },
+                                        currentTime: DateTime.now(),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      child: Icon(Icons.date_range,
+                                        color: ColorsConst.mainColor,),
+                                    ),
+                                  )
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Text('The application will be sent ' +
+                      _getNameOfDay(_expiry_date!.day) + ' corresponding to' +
+                      _expiry_date!.year.toString() + '  /  ' +
+                      _expiry_date!.month.toString() + '  /  ' +
+                      _expiry_date!.day.toString(),
+
+                      style: GoogleFonts.lato(
+                          fontSize: SizeConfig.titleSize * 2.5,
+                          fontWeight: FontWeight.bold,
+                          color: ColorsConst.mainColor
+                      )),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 100,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(children: [
+                              Icon(Icons.location_on),
+                              Text('adress')
+                            ],),
+                            TextButton(onPressed: () {}, child: Text('Change'))
+                          ],),
+                        Text('street'),
+                        Text('Phone Number : 009034958945')
+                      ],),
+                  )
+                ],
+              ),)
+
+
+          ),
+          Container(
+            height: 6.78 * SizeConfig.heightMulti,
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                        color: Colors.white
+                        ,
+                        border: Border.all(
+                            color: ColorsConst.mainColor,
+                            width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: MaterialButton(
+                      onPressed: () {
+                        currentIndex --;
+                        _pageController.animateToPage(
+                          currentIndex,
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                      child: Text('Previous', style: TextStyle(
+                          color: ColorsConst.mainColor,
+                          fontSize: SizeConfig.titleSize * 2.7),),
+
+                    ),
+                  ),
+                ),
+                SizedBox(width: SizeConfig.widhtMulti * 3,),
+                Expanded(child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                      color: ColorsConst.mainColor,
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (_pageController.page == 3) {
+                        _pageController.nextPage(
+                            duration: Duration(milliseconds: 100),
+                            curve: Curves.ease);
+                      }
+                      else {
+                        _pageController.nextPage(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.ease);
+                      }
+                    },
+                    child: Text('Next', style: TextStyle(color: Colors.white,
+                        fontSize: SizeConfig.titleSize * 2.7),),
+
+                  ),
+                ))
+                ,
+              ],
+            ),
+          ),
+
+
+        ],
+      ),
+    );
+  }
+
+  Widget thirdPage() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 5,
+        ),
+
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10,),
+                Text('Payment Summary',
+                    style: GoogleFonts.lato(
+                        fontSize: SizeConfig.titleSize * 2.5,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black54)
+                ),
+                SizedBox(height: 8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total ', style: GoogleFonts.lato(
+                        fontSize: SizeConfig.titleSize * 2.3,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black54),),
+                    BlocBuilder<ShopCartBloc, CartState>(
+                        bloc: shopCartBloc,
+                        builder: (context, state) {
+                          if (state is CartLoaded) {
+                            return Text(state.cart.totalString,
+                                style: GoogleFonts.lato(
+                                    fontSize: SizeConfig.titleSize * 2.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black54));
+                          }
+                          else {
+                            return Text('', style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.9));
+                          }
+                        }
+                    ),
+
+                  ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Delivery Charge ', style: GoogleFonts.lato(
+                        fontSize: SizeConfig.titleSize * 2.3,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black54),),
+                    BlocBuilder<ShopCartBloc, CartState>(
+                        bloc: shopCartBloc,
+                        builder: (context, state) {
+                          if (state is CartLoaded) {
+                            return Text(state.cart.totalString,
+                                style: GoogleFonts.lato(
+                                    fontSize: SizeConfig.titleSize * 2.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black54));
+                          }
+                          else {
+                            return Text('', style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.9));
+                          }
+                        }
+                    ),
+
+                  ],),
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(' Order Value ', style: GoogleFonts.lato(
+                        fontSize: SizeConfig.titleSize * 2.3,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.black54),),
+                    BlocBuilder<ShopCartBloc, CartState>(
+                        bloc: shopCartBloc,
+                        builder: (context, state) {
+                          if (state is CartLoaded) {
+                            return Text(state.cart.totalString,
+                                style: GoogleFonts.lato(
+                                    fontSize: SizeConfig.titleSize * 2.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black54));
+                          }
+                          else {
+                            return Text('', style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.9));
+                          }
+                        }
+                    ),
+
+                  ],),
+                SizedBox(height: 20,),
+                Divider(height: 1, color: Colors.black54,),
+                SizedBox(height: 10,),
+                Center(
+                  child: Container(
+                    width: SizeConfig.screenWidth * 0.8,
+                    height: 6.8 * SizeConfig.heightMulti,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey.shade50,
+                      border: Border.all(
+                        color: Colors.black26,
+                        width: 2
+                      )
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+
+                      children: [
+                        Radio<int>(
+                          value: 1,
+                          groupValue: paymentGroupValue,
+                          onChanged: (value) {
+                            setState(() {
+                              paymentGroupValue = value!;
+                            });
+                          },
+                          activeColor: Colors.green,
+                        ),
+                        Icon(Icons.payment),
+                        SizedBox(width: 10,),
+
+                        Text('Credit card', style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: SizeConfig.titleSize * 2.6,
+                            fontWeight: FontWeight.bold
+                        ),)
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8,),
+                Center(
+                  child: Container(
+                    width: SizeConfig.screenWidth * 0.8,
+                    height: 6.8 * SizeConfig.heightMulti,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey.shade50,
+                        border: Border.all(
+                            color: Colors.black26,
+                            width: 2
+                        )
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+
+                      children: [
+                        Radio<int>(
+                          value: 2,
+                          groupValue: paymentGroupValue,
+                          onChanged: (value) {
+                            setState(() {
+                              paymentGroupValue = value!;
+                            });
+                          },
+                          activeColor: Colors.green,
+                        ),
+                        Icon(Icons.payment),
+                        SizedBox(width: 10,),
+
+                        Text('Cash Money', style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: SizeConfig.titleSize * 2.6,
+                            fontWeight: FontWeight.bold
+                        ),)
+                      ],
+                    ),
+                  ),
+                ),
+
+
+              ],
+            ),
+          ),
+        ),
+
+        Container(
+          height: 6.78 * SizeConfig.heightMulti,
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                      color: Colors.white
+                      ,
+                      border: Border.all(
+                          color: ColorsConst.mainColor,
+                          width: 2
+                      ),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      currentIndex --;
+                      _pageController.animateToPage(
+                        currentIndex,
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Text('Previous', style: TextStyle(
+                        color: ColorsConst.mainColor,
+                        fontSize: SizeConfig.titleSize * 2.7),),
+
+                  ),
+                ),
+              ),
+              SizedBox(width: SizeConfig.widhtMulti * 3,),
+              Expanded(child: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: ColorsConst.mainColor,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: MaterialButton(
+                  onPressed: () {
+                    showMaterialModalBottomSheet(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => SingleChildScrollView(
+                        controller: ModalScrollController.of(context),
+                             child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+                               bloc: paymentMethodeNumberBloc,
+                               builder: (context,state) {
+                                 return Container(
+                                   padding: EdgeInsets.symmetric(horizontal: 10),
+                                   height: SizeConfig.screenHeight * 0.8 ,
+                                   clipBehavior: Clip.antiAlias,
+                                   decoration: BoxDecoration(
+                                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                         topRight: Radius.circular(30)
+                                     ),
+                                   ),
+                                   child: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       IconButton(onPressed: (){
+                                         Navigator.of(context).pop();
+                                       }, icon:Icon(Icons.clear) ),
+                                       Text('Pay by card' , style:TextStyle(
+
+                                           color: Colors.black54,
+                                           fontWeight: FontWeight.bold,
+                                           fontSize: SizeConfig.titleSize*2.9
+
+                                       ),),
+                                       SizedBox(height: 15,),
+                                       Container(
+                                         margin: EdgeInsets.symmetric(horizontal: 20),
+
+                                         child: ListView.separated(
+                                           separatorBuilder: (context,index){
+                                             return  SizedBox(height: 8,);
+                                           },
+                                           shrinkWrap:true ,
+                                           itemCount: paymentMethodeNumberBloc.state.index,
+                                           itemBuilder: (context,index){
+                                           return   Center(
+                                               child: Container(
+                                                 width: double.infinity,
+                                                 height: 6.8 * SizeConfig.heightMulti,
+                                                 decoration: BoxDecoration(
+                                                     borderRadius: BorderRadius.circular(10),
+                                                     color: Colors.grey.shade50,
+                                                     border: Border.all(
+                                                         color: Colors.black26,
+                                                         width: 2
+                                                     )
+                                                 ),
+                                                 child: Row(
+                                                   mainAxisSize: MainAxisSize.min,
+
+                                                   children: [
+                                                     Radio<int>(
+                                                       value: index+1,
+                                                       groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+                                                       onChanged: (value) {
+                                                         paymentMethodeNumberBloc.changeSelect(value!);
+                                                       },
+                                                       activeColor: Colors.green,
+                                                     ),
+                                                     Icon(Icons.payment),
+                                                     SizedBox(width: 10,),
+
+                                                     Text('*** *** *** 2233', style: GoogleFonts.lato(
+                                                         color: Colors.black54,
+                                                         fontSize: SizeConfig.titleSize * 2.6,
+                                                         fontWeight: FontWeight.bold
+                                                     ),),
+                                                     Spacer(),
+                                                     IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.red,)),
+
+                                                   ],
+                                                 ),
+                                               ),
+                                             );
+
+                                           },
+
+                                         ),
+                                       ),
+                        SizedBox(height:25,),
+                        Center(
+                          child: GestureDetector(
+                            onTap: (){
+                              paymentMethodeNumberBloc.addOne();
+                            },
+                            child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+
+                                  width: SizeConfig.screenWidth ,
+                                  height: 6.8 * SizeConfig.heightMulti,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade50,
+                                      border: Border.all(
+                                          color: Colors.black26,
+                                          width: 2
+                                      )
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+
+                                    children: [
+
+                                      Icon(Icons.add),
+                                      SizedBox(width: 10,),
+
+                                      Text('Add a card', style: GoogleFonts.lato(
+                                          color: Colors.black54,
+                                          fontSize: SizeConfig.titleSize * 2.6,
+                                          fontWeight: FontWeight.bold
+                                      ),)
+                                    ],
+                                  ),
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                                       Container(
+                                         clipBehavior: Clip.antiAlias,
+                                         width: double.infinity,
+                                         margin: EdgeInsets.symmetric(horizontal: 20),
+                                         decoration: BoxDecoration(
+                                             color: ColorsConst.mainColor,
+                                             borderRadius: BorderRadius.circular(10)
+                                         ),
+                                         child: MaterialButton(
+                                           onPressed: () {
+                                             Navigator.pushNamed(context, OrdersRoutes.NEW_ORDER_SCREEN);
+                                           },
+                                           child: Text('Confirmation', style: TextStyle(color: Colors.white,
+                                               fontSize: SizeConfig.titleSize * 2.7),),
+
+                                         ),
+                                       ),
+                                       SizedBox(height: SizeConfig.screenHeight * 0.05,)
+                                     ],
+                                   ),
+                                 );
+                               }
+                             ),
+                      ),
+                    );
+                   //  showModalBottomSheet(context: context, builder: (context){
+                   //    return Material(
+                   //      borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                   //          topRight: Radius.circular(30)
+                   //      ),
+                   //      child: Container(
+                   //        padding: EdgeInsets.symmetric(horizontal: 10),
+                   //        height: SizeConfig.screenHeight ,
+                   //        clipBehavior: Clip.antiAlias,
+                   //        decoration: BoxDecoration(
+                   //          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                   //              topRight: Radius.circular(30)
+                   //          ),
+                   //        ),
+                   //        child: Column(
+                   //          children: [
+                   //            Text('Pay by card' , style: GoogleFonts.lato(
+                   //                color: Colors.black54,
+                   //                fontWeight: FontWeight.bold,
+                   //                fontSize: SizeConfig.titleSize*2.7
+                   //            ),),
+                   //            SizedBox(height: 15,),
+                   //            ListView.builder(
+                   //              itemCount: paymentMethodeNumber,
+                   //              itemBuilder: (context,index){
+                   //
+                   //              },
+                   //
+                   //            )
+                   //          ],
+                   //        ),
+                   //      ),
+                   //    );
+                   // // backgroundColor:,
+                   // //        double? elevation,
+                   // //    ShapeBorder? shape,
+                   // //    Clip? clipBehavior,
+                   // //    Color? barrierColor,
+                   // //    bool isScrollControlled = false,
+                   // //    bool useRootNavigator = false,
+                   // //    bool isDismissible = true,
+                   // //    bool enableDrag = true,
+                   //  });
+
+                  },
+                  child: Text('Next', style: TextStyle(color: Colors.white,
+                      fontSize: SizeConfig.titleSize * 2.7),),
+
+                ),
+              ))
+              ,
+            ],
+          ),
+        ),
+
+
+      ],
+    );
+  }
+
+
+  String _getNameOfDay(int d) {
+    int day = 0;
+    if (d < 8) {
+      day = d;
+    } else {
+      day = (d / 7).floor();
+    }
+    String name = '';
+    switch (day) {
+      case 1:
+        {
+          name = 'Sunday';
+        }
+        break;
+      case 2:
+        {
+          name = 'Monday';
+        }
+        break;
+      case 3:
+        {
+          name = 'Tuesday';
+        }
+        break;
+      case 4:
+        {
+          name = 'Wednesday';
+        }
+        break;
+      case 5:
+        {
+          name = 'Thursday';
+        }
+        break;
+      case 6:
+        {
+          name = 'Friday';
+        }
+        break;
+      case 7:
+        {
+          name = 'Saturday';
+        }
+    }
+    return name;
+  }
 }
+
+
+
+
+  /////////////////
+
+

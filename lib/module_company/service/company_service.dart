@@ -7,23 +7,23 @@ class CompanyService {
     return <CompanyModel>[
       CompanyModel(
           id: '1',
-          name: 'Al Wataneeai',
+          name: 'الوطنية',
           imageUrl: "assets/waten.png"),
       CompanyModel(
           id: '2',
-          name: 'Al Ayen',
+          name: 'العين',
           imageUrl: "assets/ayen.png"),
       CompanyModel(
           id: '3',
-          name: 'May Dubai',
+          name: 'ماي دبي',
           imageUrl: "assets/may_dubai.png"),
       CompanyModel(
           id: '4',
-          name: 'Al Qtrah',
+          name: 'القطرة',
           imageUrl: "assets/qatraa.png"),
       CompanyModel(
           id: '5',
-          name: 'Al Yarmook',
+          name: 'اليرموك',
           imageUrl: "assets/yarmook.png"),
 
     ];
@@ -34,60 +34,63 @@ class CompanyService {
     return <ProductModel>[
       ProductModel(
           id: '1',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/92c952",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
+          title: 'Al Wataneia 200 ml',
+          imageUrl: "assets/product1.png",
+          description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
           old_price: 100.5,
           price: 100.0,
-          quantity: 5),
+          quantity: 5,
+        specifications: [
+          SpecificationsModel(name: 'potassium', value: '12 g'),
+          SpecificationsModel(name: 'sodium', value: '12 g'),
+          SpecificationsModel(name: 'iron', value: '12 g'),
+        ]
+
+
+      ),
       ProductModel(
           id: '2',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/771796",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
+          title: 'Al Wataneia 200 ml',
+          imageUrl: "assets/product2.png",
+          description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
           old_price: null,
           price: 100.0,
-          quantity: 5),
+          quantity: 5,
+          specifications: [
+            SpecificationsModel(name: 'potassium', value: '12 g'),
+            SpecificationsModel(name: 'sodium', value: '12 g'),
+            SpecificationsModel(name: 'iron', value: '12 g'),
+          ]
+      ),
       ProductModel(
           id: '3',
-          title: 'الوطنية 200 مل',
-          imageUrl:  "https://via.placeholder.com/600/24f355",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
+          title: 'Al Wataneia 200 ml',
+          imageUrl:  "assets/produt3.png",
+          description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
           old_price: 100.5,
           price: 100.0,
-          quantity: 5),
+          quantity: 5,
+          specifications: [
+            SpecificationsModel(name: 'potassium', value: '12 g'),
+            SpecificationsModel(name: 'sodium', value: '12 g'),
+            SpecificationsModel(name: 'iron', value: '12 g'),
+          ]
+      ),
       ProductModel(
           id: '4',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/d32776",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
+          title: 'Al Wataneia 200 ml',
+          imageUrl: "assets/product4.png",
+          description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
           old_price: null,
           price: 100.0,
-          quantity: 5),
-      ProductModel(
-          id: '5',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/f66b97",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
-          old_price: null,
-          price: 100.0,
-          quantity: 5),
-      ProductModel(
-          id: '6',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/56a8c2",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
-          old_price: 100.5,
-          price: 100.0,
-          quantity: 5),
-      ProductModel(
-          id: '7',
-          title: 'الوطنية 200 مل',
-          imageUrl: "https://via.placeholder.com/600/92c952",
-          description: 'تمتع بمذاق ماء العين الصافي و المتوازن والصحي.......',
-          old_price: 100.5,
-          price: 100.0,
-          quantity: 5),
+          quantity: 5,
+          specifications: [
+            SpecificationsModel(name: 'potassium', value: '12 g'),
+            SpecificationsModel(name: 'sodium', value: '12 g'),
+            SpecificationsModel(name: 'iron', value: '12 g'),
+          ]
+      ),
+
     ];
   }
 }

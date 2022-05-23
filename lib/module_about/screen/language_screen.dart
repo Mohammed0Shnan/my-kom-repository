@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/module_about/screen/about_screen.dart';
 import 'package:my_kom/module_about/widgets/language_drop_down.dart';
 import 'package:my_kom/module_about/widgets/wave_loading.dart';
+import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class LanguageScreen extends StatelessWidget {
-  const LanguageScreen({Key? key}) : super(key: key);
+ final  LocalizationService localizationService ;
+  const LanguageScreen({ required this.localizationService, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class LanguageScreen extends StatelessWidget {
                 ListTile(
                     title: Padding(
                         padding: EdgeInsets.only(bottom: 10),
-                        child: Text('Language',
+                        child: Text(S.of(context)!.language,
                             style: GoogleFonts.lato(
                               color: Colors.black54,
                                 fontWeight: FontWeight.w600
@@ -48,7 +51,7 @@ class LanguageScreen extends StatelessWidget {
                             //     fontWeight: FontWeight.w600)
                         )
                     ),
-                    subtitle: LangugeDropDownWidget()),
+                    subtitle: LangugeDropDownWidget(localizationService: localizationService,)),
                 SizedBox(
                   height: SizeConfig.heightMulti * 3.3,
                 ),
@@ -72,7 +75,7 @@ class LanguageScreen extends StatelessWidget {
                         }));
                           
                         },
-                        child: Text('Next',
+                        child: Text(S.of(context)!.next,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: SizeConfig.titleSize * 2.6,

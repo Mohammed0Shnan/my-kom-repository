@@ -89,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
 
-      // Is Not LoggedIn
+      // Is Not LoggedInt
      else {
          return NavigatorRoutes.NAVIGATOR_SCREEN;
       //  return AuthorizationRoutes.LOGIN_SCREEN;

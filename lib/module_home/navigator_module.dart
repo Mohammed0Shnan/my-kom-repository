@@ -7,7 +7,7 @@ import 'package:my_kom/module_home/screen/navigator_screen.dart';
 import 'package:my_kom/module_home/screen/shop_navigator_screen.dart';
 
 class NavigatorModule extends MyModule {
-  final ShopNavigatorScreen _navigatorScreen;
+  final NavigatorScreen _navigatorScreen;
   NavigatorModule(this._navigatorScreen);
   @override
   Map<String, WidgetBuilder> getRoutes() => {

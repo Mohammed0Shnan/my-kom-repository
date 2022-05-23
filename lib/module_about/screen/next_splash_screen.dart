@@ -5,10 +5,12 @@ import 'package:my_kom/module_about/animations/scale_animation.dart';
 import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
 import 'package:my_kom/module_about/screen/language_screen.dart';
 import 'package:my_kom/module_about/widgets/wave_loading.dart';
+import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class NextSplashScreen extends StatefulWidget {
-  const NextSplashScreen({Key? key}) : super(key: key);
+  LocalizationService localizationService;
+   NextSplashScreen({required this.localizationService, Key? key}) : super(key: key);
 
   @override
   State<NextSplashScreen> createState() => _NextSplashScreenState();
@@ -110,7 +112,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
                         return  Navigator.push(context, PageRouteBuilder(
                       transitionDuration: Duration(milliseconds: 500),
                       pageBuilder: (context,animation,seondryAnimation){
-                      return LanguageScreen();
+                      return LanguageScreen(localizationService: widget.localizationService,);
                     })
 
                     );
