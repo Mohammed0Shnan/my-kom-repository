@@ -37,7 +37,7 @@ class NewOrderScreenState extends State<NewOrderScreen> {
     String recipientPhone,
   ) {
     widget._stateManager.addNewOrder(fromBranch, destination, note,
-        paymentMethod, recipientName, recipientPhone, date, this);
+        paymentMethod, date, this);
   }
 
   void moveToNext() {

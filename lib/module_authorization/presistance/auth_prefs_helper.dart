@@ -152,7 +152,20 @@ class AuthPrefsHelper {
       addressModel.description,
     );
   }
+  Future<AddressModel?> getAddress() async {
+  SharedPreferences preferencesHelper = await SharedPreferences.getInstance();
+  double? lat = await preferencesHelper.getDouble('latitude');
+  double? long = await preferencesHelper.getDouble('longitude');
+  String? des = await preferencesHelper.getString('description');
+  if(lat==null || long == null|| des==null)
 
+return null;
+  else {
+    AddressModel addressModel = AddressModel(description: des, latitude: lat, longitude: long, geoData: {});
+    return addressModel;
+  }
+
+  }
   // /// @return void
   // Future<void> setCurrentRole(UserRole user_type) async {
   //   SharedPreferences preferencesHelper = await SharedPreferences.getInstance();

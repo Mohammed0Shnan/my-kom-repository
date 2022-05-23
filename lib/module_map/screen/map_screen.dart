@@ -41,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
       listener: (context, state) {
         if (state is MapSuccessState) {
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
+          _searchController.text = state.data.name;
           _move(latLng);
          // getDetailFromLocation(latLng);
         } else if (state is MapErrorState) {

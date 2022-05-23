@@ -34,14 +34,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
   }
   
    editProfile(ProfileRequest request){
-  //        this.add(CompleteLoadingEvent());
-  // _service.createProfile(request).then((value) {
-  //         if (value.state) {
-  //       this.add(CompleteSuccessEvent(data: value.data));
-  //     } else
-  //       this.add(CompleteErrorEvent(data:value.data));
- // });
+     this.add(ProfileLoadingEvent());
+     _service.editMyProfile(request).then((value) {
+       if (value !=null) {
+         this.add(ProfileSuccessEvent(data: value));
+       } else
+         this.add(ProfileErrorEvent(data: 'Error getting Profile Fire Base API'));
+     });
  }
+
 
   void deleteFakeAccount() {
   //  _service.fakeAccount();

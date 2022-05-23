@@ -111,18 +111,15 @@ class OrdersService {
   Future<bool> addNewOrder(
       Branch fromBranch,
       GeoJson destination,
-      String note,
+      String phone,
       String paymentMethod,
-      String recipientName,
-      String recipientPhone,
       String date) async {
     var orderRequest = CreateOrderRequest(
-      note: note,
+      phone: phone,
       date: date,
       payment: paymentMethod,
       fromBranch: fromBranch.id.toString(),
-      recipientName: recipientName,
-      recipientPhone: recipientPhone,
+
       destination: destination,
     );
     return 

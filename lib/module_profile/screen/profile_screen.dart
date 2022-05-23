@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
+import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_map/map_routes.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_profile/bloc/profile_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
@@ -16,14 +19,25 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileBloc profileBloc = ProfileBloc();
+
+  final TextEditingController _profileUserNameController = TextEditingController();
+  final TextEditingController _profileAddressController = TextEditingController();
+  final TextEditingController _profilePhoneController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     profileBloc.getMyProfile();
   }
+
+  bool isEditingProfile = false;
+ late ProfileRequest? request ;
+  late AddressModel addressModel ;
   @override
   Widget build(BuildContext context) {
+    final node = FocusScope.of(context);
+
     return Stack(
       children: [
         Container(
@@ -31,8 +45,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
-          body: BlocBuilder<ProfileBloc, ProfileStates>(
+          body: BlocConsumer<ProfileBloc, ProfileStates>(
             bloc: profileBloc,
+            listener: (context,state){
+              if(state is ProfileSuccessState){
+                _profileUserNameController.text = state.data.userName;
+                _profileAddressController.text = state.data.address.description;
+                _profilePhoneController.text = state.data.phone;
+                addressModel = state.data.address;
+              }
+
+            },
             builder: (context,state) {
 
             if(state is ProfileErrorState){
@@ -45,7 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               }
                 else if(state is ProfileSuccessState) {
-                  return SingleChildScrollView(
+
+              return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 30),
                   child: Column(
@@ -61,11 +85,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                            ),
                           IconButton(
                               onPressed: (){
-                                AuthService().logout().then((value) {
-                                  Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
-                                });
+                                if(!isEditingProfile){
+                                  isEditingProfile = !isEditingProfile;
+                                  setState(() {
+                                  });
+                                }else{
+
+                                  request = ProfileRequest
+                                    (userName: _profileUserNameController.text.trim(), address:
+
+                                  addressModel
+                                      , phone: _profilePhoneController.text.trim());
+                                profileBloc.editProfile(request!);
+                                }
+
+
                               },
-                              icon: Icon( Icons.logout , color: Colors.black54,),
+                              icon: Icon(!isEditingProfile? Icons.edit: Icons.save , color: Colors.black54,),
                           ),
 
                         ],
@@ -98,15 +134,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(30)
                                 ),
-                                  child: Column(children: [
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+
                                     SizedBox(
                                       height: 70,
                                     ),
-                                    Text(state.data.userName,style: TextStyle(
-                                      fontSize: 27,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700]
-                                    ),),
+                                    Center(
+                                      child: TextFormField(
+                                        textAlign: TextAlign.center,
+                                        controller: _profileUserNameController,
+                                       style: TextStyle(
+                                          fontSize: 27,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700]
+                                      ),
+
+                                        decoration: InputDecoration(
+                                          suffixIcon: (!isEditingProfile)?Text(''):Icon(Icons.edit,color: Colors.black,),
+                                            border: InputBorder.none,
+                                          //S.of(context).name,
+                                        ),
+                                        textInputAction: TextInputAction.next,
+                                        // Move focus to next
+                                      ),
+                                    ),
+
                                     SizedBox(height: 8,),
                                     Text(state.data.userRole.name.toString(),style: TextStyle(
                                         fontSize: 15,
@@ -177,18 +231,62 @@ crossAxisAlignment: CrossAxisAlignment.start,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[600]
                                   ),),
-                                  SizedBox(height: 10,),
                                   Row(
                                     children: [
                                       Icon(Icons.location_on , color: ColorsConst.mainColor,),
                                       SizedBox(width: 10,),
                                       Expanded(
-                                        child: Text(state.data.address.description,style:  TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[600]
-                                        ),),
-                                      )
+                                       child: Container(
+                                         child: TextFormField(
+                                           readOnly: true,
+                                            controller: _profileAddressController,
+                                           maxLines: 2,
+                                           style:  TextStyle(
+                                             fontSize: 16,
+
+                                             fontWeight: FontWeight.bold,
+                                             color: Colors.grey[600]
+                                         ),
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              //S.of(context).name,
+                                            ),
+                                            textInputAction: TextInputAction.next,
+                                            // Move focus to next
+                                          ),
+                                       ),
+
+                                      ),
+                                      if(isEditingProfile)
+                                        GestureDetector(
+                                          onTap: (){
+                                            Navigator.pushNamed(
+                                                context, MapRoutes.MAP_SCREEN)
+                                                .then((value) {
+                                              if (value != null) {
+                                                addressModel = (value as AddressModel);
+                                                _profileAddressController.text =
+                                                    addressModel.description;
+                                                addressModel = value;
+
+                                              }
+
+                                            });
+                                          },
+                                          child: Container(
+                                            width: SizeConfig.heightMulti * 6,
+                                            height: SizeConfig.heightMulti * 6,
+                                            decoration: BoxDecoration(
+                                                color: ColorsConst.mainColor,
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            child: Icon(
+                                                Icons.my_location_outlined,
+                                                size: SizeConfig.heightMulti * 4,
+                                                color: Colors.white),
+                                          ),
+                                        )
+
                                     ],
                                   )
                                 ],

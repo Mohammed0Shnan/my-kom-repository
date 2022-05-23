@@ -24,16 +24,14 @@ class NewOrderStateManager {
   void addNewOrder(
       Branch fromBranch,
       GeoJson destination,
-      String note,
+      String phone,
       String paymentMethod,
-      String recipientName,
-      String recipientPhone,
       String date,
       NewOrderScreenState screenState) {
     _stateSubject.add(NewOrderStateInit(screenState));
     _service
-        .addNewOrder(fromBranch, destination, note, paymentMethod,
-            recipientName, recipientPhone, date)
+        .addNewOrder(fromBranch, destination, phone, paymentMethod,
+         date)
         .then((newOrder) {
       if (newOrder) {
         screenState.moveToNext();

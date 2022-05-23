@@ -5,16 +5,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/payment_method.dart';
+import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_orders/orders_routes.dart';
+import 'package:my_kom/module_map/map_routes.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
+import 'package:my_kom/module_orders/request/order/order_request.dart';
+import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
+import 'package:my_kom/module_shoping/models/card_model.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';
 
 class ShopScreen extends StatefulWidget {
    ShopScreen({Key? key}) : super(key: key);
@@ -26,6 +33,8 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   late final _pageController;
   final PaymentMethodeNumberBloc paymentMethodeNumberBloc = PaymentMethodeNumberBloc();
+  final TextEditingController _newAddressController = TextEditingController();
+
   @override
   void initState() {
     _pageController = PageController(
@@ -61,9 +70,11 @@ class _ShopScreenState extends State<ShopScreen> {
   int numberOfMonth = 0;
   DateTime? _expiry_date = DateTime.now();
 
-  late int paymentGroupValue = 0;
+  late String paymentGroupValue = '';
 
   int paymentMethodeCreditGroupValue = 0;
+  late String phoneNumber = '';
+  late AddressModel addressModel ;
   @override
   Widget build(BuildContext context) {
     switch (currentIndex) {
@@ -523,6 +534,8 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget secondPage() {
+
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -542,7 +555,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           color: Colors.black54)
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -585,33 +598,13 @@ class _ShopScreenState extends State<ShopScreen> {
                           ),)
                         ],
                       ),
+
                       Row(
                         mainAxisSize: MainAxisSize.min,
 
                         children: [
                           Radio<int>(
                             value: 3,
-                            groupValue: groupValue,
-                            onChanged: (value) {
-                              setState(() {
-                                groupValue = value!;
-                              });
-                            },
-                            activeColor: Colors.green,
-                          ),
-                          Text('Daily', style: GoogleFonts.lato(
-                              color: Colors.black54,
-                              fontSize: SizeConfig.titleSize * 2,
-                              fontWeight: FontWeight.bold
-                          ),)
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-
-                        children: [
-                          Radio<int>(
-                            value: 4,
                             groupValue: groupValue,
                             onChanged: (value) {
                               setState(() {
@@ -837,7 +830,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       )),
                   SizedBox(height: 10,),
                   Container(
-                    height: 100,
+                    padding: EdgeInsets.all(8),
+                    height: 140,
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                         color: Colors.grey.shade200
@@ -848,14 +842,93 @@ class _ShopScreenState extends State<ShopScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(children: [
-                              Icon(Icons.location_on),
-                              Text('adress')
-                            ],),
-                            TextButton(onPressed: () {}, child: Text('Change'))
+                            Text('Address',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.7),),
+
+                            TextButton(onPressed: (){
+                              Navigator.pushNamed(
+                                  context, MapRoutes.MAP_SCREEN)
+                                  .then((value) {
+                                if (value != null) {
+                                  addressModel = (value as AddressModel);
+                                  _newAddressController.text =
+                                      addressModel.description;
+                                  addressModel = value;
+
+                                }
+
+                              });
+                            }, child: Text('Change'))
+
+                          ],
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('street :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
+                           SizedBox(width: 10,),
+                            Expanded(
+                              child: Container(
+                                child: FutureBuilder<AddressModel?>(
+                                  initialData: null,
+                                  future: AuthPrefsHelper().getAddress(),
+                                  builder: (context,state) {
+                                    if(state.data == null){
+                                      _newAddressController.text = '';
+                                    }
+                                    else
+                                    _newAddressController.text = state.data!.description;
+                                    return TextFormField(
+                                      readOnly: true,
+                                      controller: _newAddressController,
+                                      maxLines: 1,
+                                      style:  TextStyle(
+                                          fontSize: 12,
+
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600]
+                                      ),
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        //S.of(context).name,
+                                      ),
+                                      textInputAction: TextInputAction.next,
+                                      // Move focus to next
+                                    );
+                                  }
+                                ),
+                              ),
+
+                            ),
                           ],),
-                        Text('street'),
-                        Text('Phone Number : 009034958945')
+                        FutureBuilder<String?>(
+                            initialData: null,
+                            future: AuthPrefsHelper().getPhone(),
+                            builder: (context,state) {
+                              phoneNumber = '';
+                              if(state.data == null){
+                                phoneNumber  = '';
+                              }
+                              else
+                                phoneNumber = state.data!;
+                              return Row(
+                                children: [
+                                  Text('phone number :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
+                                  SizedBox(width: 10,),
+
+                                  Text(phoneNumber,style: TextStyle(
+                                      fontSize: 14,
+letterSpacing: 2,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600]
+                                  ),),
+
+                                ],
+                              );
+
+
+                            }
+                        ),
                       ],),
                   )
                 ],
@@ -953,7 +1026,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         fontWeight: FontWeight.w800,
                         color: Colors.black54)
                 ),
-                SizedBox(height: 8,),
+                SizedBox(height: 12,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -980,6 +1053,8 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
 
                   ],),
+                SizedBox(height: 8,),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -991,7 +1066,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         bloc: shopCartBloc,
                         builder: (context, state) {
                           if (state is CartLoaded) {
-                            return Text(state.cart.totalString,
+                            return Text(state.cart.deliveryFreeString,
                                 style: GoogleFonts.lato(
                                     fontSize: SizeConfig.titleSize * 2.5,
                                     fontWeight: FontWeight.w800,
@@ -1006,7 +1081,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
 
                   ],),
-                SizedBox(height: 10,),
+                SizedBox(height: 8,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1018,7 +1093,8 @@ class _ShopScreenState extends State<ShopScreen> {
                         bloc: shopCartBloc,
                         builder: (context, state) {
                           if (state is CartLoaded) {
-                            return Text(state.cart.totalString,
+                            double total = state.cart.deliveryFee(state.cart.subTotal)+ state.cart.subTotal;
+                          return Text(total.toString() ,
                                 style: GoogleFonts.lato(
                                     fontSize: SizeConfig.titleSize * 2.5,
                                     fontWeight: FontWeight.w800,
@@ -1052,8 +1128,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
 
                       children: [
-                        Radio<int>(
-                          value: 1,
+                        Radio<String>(
+                          value: PaymentMethod.CREDIT_CARD,
                           groupValue: paymentGroupValue,
                           onChanged: (value) {
                             setState(() {
@@ -1091,9 +1167,9 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
 
                       children: [
-                        Radio<int>(
-                          value: 2,
-                          groupValue: paymentGroupValue,
+                        Radio<String>(
+                          value: PaymentMethod.CASH_MONEY,
+                          groupValue:paymentGroupValue,
                           onChanged: (value) {
                             setState(() {
                               paymentGroupValue = value!;
@@ -1206,8 +1282,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                              return  SizedBox(height: 8,);
                                            },
                                            shrinkWrap:true ,
-                                           itemCount: paymentMethodeNumberBloc.state.index,
+                                           itemCount: paymentMethodeNumberBloc.state.cards.length,
                                            itemBuilder: (context,index){
+                                           CardModel  card =   state.cards[index];
                                            return   Center(
                                                child: Container(
                                                  width: double.infinity,
@@ -1225,7 +1302,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                                    children: [
                                                      Radio<int>(
-                                                       value: index+1,
+                                                       value: card.id,
                                                        groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
                                                        onChanged: (value) {
                                                          paymentMethodeNumberBloc.changeSelect(value!);
@@ -1235,13 +1312,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                                      Icon(Icons.payment),
                                                      SizedBox(width: 10,),
 
-                                                     Text('*** *** *** 2233', style: GoogleFonts.lato(
+                                                     Text(card.cardNumber.substring(0,4) + ' **** **** '+card.cardNumber.substring(15,card.cardNumber.length) , style: GoogleFonts.lato(
                                                          color: Colors.black54,
-                                                         fontSize: SizeConfig.titleSize * 2.6,
+                                                         fontSize: SizeConfig.titleSize * 2.1,
                                                          fontWeight: FontWeight.bold
                                                      ),),
                                                      Spacer(),
-                                                     IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.red,)),
+                                                     IconButton(onPressed: (){
+                                                       paymentMethodeNumberBloc.removeOne(state.cards[index]);
+                                                     }, icon: Icon(Icons.delete,color: Colors.red,)),
 
                                                    ],
                                                  ),
@@ -1256,7 +1335,12 @@ class _ShopScreenState extends State<ShopScreen> {
                         Center(
                           child: GestureDetector(
                             onTap: (){
-                              paymentMethodeNumberBloc.addOne();
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                               BlocProvider.value(
+                                   value: paymentMethodeNumberBloc,
+                                   child: AddCardScreen())
+                           ));
+                          //  paymentMethodeNumberBloc.addOne();
                             },
                             child: Container(
                                   margin: EdgeInsets.symmetric(horizontal: 20),
@@ -1283,7 +1367,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                           color: Colors.black54,
                                           fontSize: SizeConfig.titleSize * 2.6,
                                           fontWeight: FontWeight.bold
-                                      ),)
+                                      )
+                                        ,)
                                     ],
                                   ),
                             ),
@@ -1300,7 +1385,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                          ),
                                          child: MaterialButton(
                                            onPressed: () {
-                                             Navigator.pushNamed(context, OrdersRoutes.NEW_ORDER_SCREEN);
+                                             GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+
+                                             CreateOrderRequest request = CreateOrderRequest( phone: phoneNumber,fromBranch: '', payment: paymentGroupValue, destination:geoJson,  date:_expiry_date!.toIso8601String() );
+
                                            },
                                            child: Text('Confirmation', style: TextStyle(color: Colors.white,
                                                fontSize: SizeConfig.titleSize * 2.7),),
@@ -1315,49 +1403,7 @@ class _ShopScreenState extends State<ShopScreen> {
                              ),
                       ),
                     );
-                   //  showModalBottomSheet(context: context, builder: (context){
-                   //    return Material(
-                   //      borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                   //          topRight: Radius.circular(30)
-                   //      ),
-                   //      child: Container(
-                   //        padding: EdgeInsets.symmetric(horizontal: 10),
-                   //        height: SizeConfig.screenHeight ,
-                   //        clipBehavior: Clip.antiAlias,
-                   //        decoration: BoxDecoration(
-                   //          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                   //              topRight: Radius.circular(30)
-                   //          ),
-                   //        ),
-                   //        child: Column(
-                   //          children: [
-                   //            Text('Pay by card' , style: GoogleFonts.lato(
-                   //                color: Colors.black54,
-                   //                fontWeight: FontWeight.bold,
-                   //                fontSize: SizeConfig.titleSize*2.7
-                   //            ),),
-                   //            SizedBox(height: 15,),
-                   //            ListView.builder(
-                   //              itemCount: paymentMethodeNumber,
-                   //              itemBuilder: (context,index){
-                   //
-                   //              },
-                   //
-                   //            )
-                   //          ],
-                   //        ),
-                   //      ),
-                   //    );
-                   // // backgroundColor:,
-                   // //        double? elevation,
-                   // //    ShapeBorder? shape,
-                   // //    Clip? clipBehavior,
-                   // //    Color? barrierColor,
-                   // //    bool isScrollControlled = false,
-                   // //    bool useRootNavigator = false,
-                   // //    bool isDismissible = true,
-                   // //    bool enableDrag = true,
-                   //  });
+
 
                   },
                   child: Text('Next', style: TextStyle(color: Colors.white,
@@ -1424,6 +1470,248 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 }
 
+
+
+class AddCardScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return AddCardScreenState();
+  }
+}
+
+class AddCardScreenState extends State<AddCardScreen> {
+  String cardNumber = '';
+  String expiryDate = '';
+  String cardHolderName = '';
+  String cvvCode = '';
+  bool isCvvFocused = false;
+  bool useGlassMorphism = false;
+  bool useBackgroundImage = false;
+  OutlineInputBorder? border;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        
+        color: Colors.grey.withOpacity(0.7),
+        width: 2.0,
+      ),
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Credit Card View Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          decoration: BoxDecoration(
+
+            // image: !useBackgroundImage
+            //     ? const DecorationImage(
+            //   image: ExactAssetImage('assets/bg.png'),
+            //   fit: BoxFit.fill,
+            // )
+            //     : null,
+            color: Colors.white,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 30,
+                ),
+                CreditCardWidget(
+                  glassmorphismConfig:
+                  useGlassMorphism ? Glassmorphism.defaultConfig() : null,
+                  cardNumber: cardNumber,
+                  expiryDate: expiryDate,
+                  cardHolderName: cardHolderName,
+                  cvvCode: cvvCode,
+                  showBackView: isCvvFocused,
+                  obscureCardNumber: true,
+                  obscureCardCvv: true,
+                  isHolderNameVisible: true,
+                  cardBgColor: Colors.red,
+                  // backgroundImage:
+                  // useBackgroundImage ? 'assets/card_bg.png' : null,
+                  isSwipeGestureEnabled: true,
+                  onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
+                  customCardTypeIcons: <CustomCardTypeIcon>[
+                    CustomCardTypeIcon(
+                      cardType: CardType.mastercard,
+                      cardImage: Image.asset(
+                        'assets/mastercard.png',
+                        height: 48,
+                        width: 48,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        CreditCardForm(
+                          formKey: formKey,
+                          obscureCvv: true,
+                          obscureNumber: true,
+                          cardNumber: cardNumber,
+                          cvvCode: cvvCode,
+                          isHolderNameVisible: true,
+                          isCardNumberVisible: true,
+                          isExpiryDateVisible: true,
+                          cardHolderName: cardHolderName,
+                          expiryDate: expiryDate,
+                          themeColor: Colors.blue,
+                          textColor: Colors.black45,
+                          cardNumberDecoration: InputDecoration(
+                            border:OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            ) ,
+                            labelText: 'Number',
+                            hintText: 'XXXX XXXX XXXX XXXX',
+                            hintStyle: const TextStyle(color: Colors.black45),
+                            labelStyle: const TextStyle(color: Colors.black45),
+                            focusedBorder: border,
+                            enabledBorder: border,
+                          ),
+                          expiryDateDecoration: InputDecoration(
+                            hintStyle: const TextStyle(color: Colors.black45),
+                            labelStyle: const TextStyle(color: Colors.black45),
+                            focusedBorder: border,
+                            enabledBorder: border,
+                            labelText: 'Expired Date',
+                            hintText: 'XX/XX',
+                          ),
+                          cvvCodeDecoration: InputDecoration(
+                            
+                            hintStyle: const TextStyle(color: Colors.black45),
+                            labelStyle: const TextStyle(color: Colors.black45),
+                            focusedBorder: border,
+                            enabledBorder: border,
+                            labelText: 'CVV',
+                            hintText: 'XXX',
+                          ),
+                          cardHolderDecoration: InputDecoration(
+                            hintStyle: const TextStyle(color: Colors.black45),
+                            labelStyle: const TextStyle(color: Colors.black45),
+                            focusedBorder: border,
+                            enabledBorder: border,
+                            labelText: 'Card Holder',
+                          ),
+                          onCreditCardModelChange: onCreditCardModelChange,
+                        ),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: <Widget>[
+                        //     const Text(
+                        //       'Glassmorphism',
+                        //       style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //     Switch(
+                        //       value: useGlassMorphism,
+                        //       inactiveTrackColor: Colors.grey,
+                        //       activeColor: Colors.white,
+                        //       activeTrackColor: Colors.green,
+                        //       onChanged: (bool value) => setState(() {
+                        //         useGlassMorphism = value;
+                        //       }),
+                        //     ),
+                        //   ],
+                        // ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: <Widget>[
+                        //     const Text(
+                        //       'Card Image',
+                        //       style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //     Switch(
+                        //       value: useBackgroundImage,
+                        //       inactiveTrackColor: Colors.grey,
+                        //       activeColor: Colors.white,
+                        //       activeTrackColor: Colors.green,
+                        //       onChanged: (bool value) => setState(() {
+                        //         useBackgroundImage = value;
+                        //       }),
+                        //     ),
+                        //   ],
+                        // ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            primary: const Color(0xff1b447b),
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.all(12),
+                            child: const Text(
+                              'Validate',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'halter',
+                                fontSize: 14,
+                                package: 'flutter_credit_card',
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                           // if (formKey.currentState!.validate()) {
+                            PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
+                              CardModel card = CardModel(
+                                  id: bloc.state.cards.length+1, cardHolderName: cardHolderName, cardNumber: cardNumber, cvvCode: cvvCode, expiryDate: expiryDate);
+                              bloc.addOne(card);
+                              Navigator.pop(context);
+                         //   } else {
+                              print('invalid!');
+                          //  }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void onCreditCardModelChange(CreditCardModel? creditCardModel) {
+    setState(() {
+      cardNumber = creditCardModel!.cardNumber;
+      expiryDate = creditCardModel.expiryDate;
+      cardHolderName = creditCardModel.cardHolderName;
+      cvvCode = creditCardModel.cvvCode;
+      isCvvFocused = creditCardModel.isCvvFocused;
+    });
+  }
+}
 
 
 

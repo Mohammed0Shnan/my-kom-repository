@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 
 import '../models/address_model.dart';
@@ -9,50 +11,60 @@ import '../models/address_model.dart';
 class MapService {
   // final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
   Future<MapData> getCurrentLocation() async {
     await Future.delayed(Duration(seconds: 2));
-    try {
-      bool serviceEnabled;
-      LocationPermission permission;
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        Future.error('Location services are disabled');
-        throw('Location services are disabled');
+
+      AddressModel? addressModel = await _authPrefsHelper.getAddress();
+      if(addressModel != null){
+        MapData mapData = MapData(latitude: addressModel.latitude, longitude: addressModel.longitude, name: addressModel.description, message: 'success', isError: false);
+        return mapData;
       }
+      else {
+        try {
+          bool serviceEnabled;
+          LocationPermission permission;
+          serviceEnabled = await Geolocator.isLocationServiceEnabled();
+          if (!serviceEnabled) {
+            Future.error('Location services are disabled');
+            throw('Location services are disabled');
+          }
 
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-           Future.error('Location permissions are denied');
-          throw('Location permissions are denied');
+          permission = await Geolocator.checkPermission();
+          if (permission == LocationPermission.denied) {
+            permission = await Geolocator.requestPermission();
+            if (permission == LocationPermission.denied) {
+              Future.error('Location permissions are denied');
+              throw('Location permissions are denied');
 
+            }
+          }
+
+          if (permission == LocationPermission.deniedForever) {
+            Future.error(
+                'Location permissions are permanently denied, we cannot request permissions.');
+            throw( 'Location permissions are permanently denied, we cannot request permissions.');
+
+          }
+
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+
+          String s = await getPositionDetail(
+              LatLng(position.latitude, position.longitude));
+          return MapData(name: s,
+              longitude: position.longitude,
+              latitude: position.latitude,
+              isError: false,
+              message: 'success'
+          );
+
+        }catch(e){
+          return MapData.error(e.toString());
         }
-      }
+        }
 
-      if (permission == LocationPermission.deniedForever) {
-         Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-        throw( 'Location permissions are permanently denied, we cannot request permissions.');
 
-      }
-
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-
-        String s = await getPositionDetail(
-            LatLng(position.latitude, position.longitude));
-        return MapData(name: s,
-            longitude: position.longitude,
-            latitude: position.latitude,
-        isError: false,
-        message: 'success'
-        );
-
-    }catch(e){
-     return MapData.error(e.toString());
-    }
   }
 
   // Future<DocumentReference?> saveLocation(Position position ,String desciption) async {

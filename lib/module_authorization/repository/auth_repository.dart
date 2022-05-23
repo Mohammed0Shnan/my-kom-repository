@@ -80,4 +80,24 @@ class AuthRepository {
       throw Exception();
     }
   }
+
+  Future<bool>editProfile(String uid, ProfileRequest request)  async {
+    var existingProfile =
+    await _firestore.collection('users').doc(uid).get();
+
+    if (!existingProfile.exists) {
+      throw Exception('Profile dosnt exsit !');
+    }
+
+    existingProfile.reference
+        .update(request.toJson())
+        .then((value) => null)
+        .catchError((error) {
+      throw Exception('Error in set data !');
+    });
+
+    // correct exit point
+    return true;
+  }
+
 }

@@ -1,28 +1,13 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_about/animations/fade_animation.dart';
-import 'package:my_kom/module_authorization/authorization_routes.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/all_company_bloc.dart';
-import 'package:my_kom/module_company/models/company_model.dart';
-import 'package:my_kom/module_company/screen/company_products_screen.dart';
-import 'package:my_kom/module_home/bloc/cubits.dart';
-import 'package:my_kom/module_home/bloc/open_close_shop_bloc.dart';
 import 'package:my_kom/module_home/widgets/descovary_grid_widget.dart';
-import 'package:my_kom/module_home/widgets/descovary_list_widget.dart';
 import 'package:my_kom/module_home/widgets/menu_item.dart';
 import 'package:my_kom/module_home/widgets/page_view_widget.dart';
 import 'package:my_kom/module_home/widgets/shimmer_list.dart';
-import 'package:my_kom/module_home/widgets/side_bar_widget.dart';
 import 'package:my_kom/module_profile/profile_routes.dart';
-import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-import 'package:badges/badges.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
 
@@ -136,12 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 InkWell(
                   onTap: (){
-                    AuthService().logout().then((value) {
-                      Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
-                    });
+
                   },
                   child: menuItem(
-                      icon: Icons.logout,
+                      icon: Icons.edit,
                       title: 'Logout'
                   ),
                 ),

@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/request/update_order_request/update_order_request.dart';
@@ -9,6 +10,7 @@ import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 class OrderRepository {
 
   final AuthService _authService = AuthService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // OrderRepository(
   //   this._apiClient,
@@ -16,18 +18,19 @@ class OrderRepository {
   // );
 
   Future<bool> addNewOrder(CreateOrderRequest orderRequest) async {
-   // await _authService.refreshToken();
-    // var token = await _authService.getToken();
-    // dynamic response = await _apiClient.post(
-    //   Urls.NEW_ORDER_API,
-    //   orderRequest.toJson(),
-    //   headers: {'Authorization': 'Bearer ' + token},
-    // );
 
-    // if (response == null) return false;
 
-    // return response['status_code'] == '201' ? true : false;
+    try{
+      var userId =await _authService.userID;
+      orderRequest.userId = userId!;
+      await _firestore.collection('orders').add(orderRequest.toJson());
+
+    }catch(e){
+      throw Exception('Error in set data !');
+
+    }
     return true;
+
   }
 
   Future<OrderDetailsData?> getOrderDetails(int orderId) async {
