@@ -12,6 +12,7 @@ class CreateOrderRequest {
 
   CreateOrderRequest(
       {
+        required this.userId,
         required this.fromBranch,
      required this.destination,
      required this.phone,
@@ -28,6 +29,7 @@ class CreateOrderRequest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['userId'] = this.userId;
     data['fromBranch'] = this.fromBranch;
     data['destination'] = this.destination.toJson();
     data['phone'] = this.phone;

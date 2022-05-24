@@ -4,12 +4,14 @@ import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/enums/auth_status.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/exceptions/auth_exception.dart';
+import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_authorization/repository/auth_repository.dart';
 import 'package:my_kom/module_authorization/requests/login_request.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/response/login_response.dart';
 import 'package:my_kom/module_authorization/response/register_response.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/utils/logger/logger.dart';
 
 class AuthService {
@@ -25,6 +27,18 @@ class AuthService {
 
   Future<UserRole?> get userRole => _prefsHelper.getRole();
 
+Future<AppUser>  getCurrentUser()async{
+    String? id = await _prefsHelper.getUserId();
+    String? email = await _prefsHelper.getEmail();
+    String? phone_number = await _prefsHelper.getPhone();
+    UserRole? userRole = await _prefsHelper.getRole();
+    AuthSource? authSource = await _prefsHelper.getAuthSource();
+    String? user_name = await _prefsHelper.getUsername();
+    AddressModel? address = await _prefsHelper.getAddress();
+    String? strip_id = await _prefsHelper.getStripId();
+    return AppUser(id: id!, email: email!, authSource: authSource, userRole: userRole!, address: address!, phone_number: phone_number!, user_name: user_name!,stripeId: strip_id,activeCard: null);
+
+}
   Future<RegisterResponse> registerWithEmailAndPassword(String email,
       String password, UserRole role, AuthSource authSource) async {
     //  DTO

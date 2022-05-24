@@ -10,18 +10,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/consts/payment_method.dart';
+import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
+import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/models/card_model.dart';
+import 'package:my_kom/module_shoping/service/payment_service.dart';
+import 'package:my_kom/module_shoping/service/stripe.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:stripe_payment/src/payment_method.dart';
 
 class ShopScreen extends StatefulWidget {
    ShopScreen({Key? key}) : super(key: key);
@@ -1129,7 +1135,7 @@ letterSpacing: 2,
 
                       children: [
                         Radio<String>(
-                          value: PaymentMethod.CREDIT_CARD,
+                          value: PaymentMethodConst.CREDIT_CARD,
                           groupValue: paymentGroupValue,
                           onChanged: (value) {
                             setState(() {
@@ -1168,7 +1174,7 @@ letterSpacing: 2,
 
                       children: [
                         Radio<String>(
-                          value: PaymentMethod.CASH_MONEY,
+                          value: PaymentMethodConst.CASH_MONEY,
                           groupValue:paymentGroupValue,
                           onChanged: (value) {
                             setState(() {
@@ -1282,7 +1288,7 @@ letterSpacing: 2,
                                              return  SizedBox(height: 8,);
                                            },
                                            shrinkWrap:true ,
-                                           itemCount: paymentMethodeNumberBloc.state.cards.length,
+                                           itemCount: state.cards.length,
                                            itemBuilder: (context,index){
                                            CardModel  card =   state.cards[index];
                                            return   Center(
@@ -1301,7 +1307,7 @@ letterSpacing: 2,
                                                    mainAxisSize: MainAxisSize.min,
 
                                                    children: [
-                                                     Radio<int>(
+                                                     Radio<String>(
                                                        value: card.id,
                                                        groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
                                                        onChanged: (value) {
@@ -1312,7 +1318,7 @@ letterSpacing: 2,
                                                      Icon(Icons.payment),
                                                      SizedBox(width: 10,),
 
-                                                     Text(card.cardNumber.substring(0,4) + ' **** **** '+card.cardNumber.substring(15,card.cardNumber.length) , style: GoogleFonts.lato(
+                                                     Text(card.cardNumber , style: GoogleFonts.lato(
                                                          color: Colors.black54,
                                                          fontSize: SizeConfig.titleSize * 2.1,
                                                          fontWeight: FontWeight.bold
@@ -1386,8 +1392,9 @@ letterSpacing: 2,
                                          child: MaterialButton(
                                            onPressed: () {
                                              GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-
                                              CreateOrderRequest request = CreateOrderRequest( phone: phoneNumber,fromBranch: '', payment: paymentGroupValue, destination:geoJson,  date:_expiry_date!.toIso8601String() );
+
+                                             NewOrderStateManager().addNewOrder(request);
 
                                            },
                                            child: Text('Confirmation', style: TextStyle(color: Colors.white,
@@ -1489,9 +1496,11 @@ class AddCardScreenState extends State<AddCardScreen> {
   bool useBackgroundImage = false;
   OutlineInputBorder? border;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
+
     border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
@@ -1611,51 +1620,7 @@ class AddCardScreenState extends State<AddCardScreen> {
                           ),
                           onCreditCardModelChange: onCreditCardModelChange,
                         ),
-                        // const SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: <Widget>[
-                        //     const Text(
-                        //       'Glassmorphism',
-                        //       style: TextStyle(
-                        //         color: Colors.white,
-                        //         fontSize: 18,
-                        //       ),
-                        //     ),
-                        //     Switch(
-                        //       value: useGlassMorphism,
-                        //       inactiveTrackColor: Colors.grey,
-                        //       activeColor: Colors.white,
-                        //       activeTrackColor: Colors.green,
-                        //       onChanged: (bool value) => setState(() {
-                        //         useGlassMorphism = value;
-                        //       }),
-                        //     ),
-                        //   ],
-                        // ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: <Widget>[
-                        //     const Text(
-                        //       'Card Image',
-                        //       style: TextStyle(
-                        //         color: Colors.white,
-                        //         fontSize: 18,
-                        //       ),
-                        //     ),
-                        //     Switch(
-                        //       value: useBackgroundImage,
-                        //       inactiveTrackColor: Colors.grey,
-                        //       activeColor: Colors.white,
-                        //       activeTrackColor: Colors.green,
-                        //       onChanged: (bool value) => setState(() {
-                        //         useBackgroundImage = value;
-                        //       }),
-                        //     ),
-                        //   ],
-                        // ),
+
                         const SizedBox(
                           height: 20,
                         ),
@@ -1678,16 +1643,57 @@ class AddCardScreenState extends State<AddCardScreen> {
                               ),
                             ),
                           ),
-                          onPressed: () {
-                           // if (formKey.currentState!.validate()) {
+                          onPressed: () async{
+                            int? cvc = int.tryParse(cvvCode);
+                            int? carNo = int.tryParse(cardNumber.replaceAll(RegExp(r"\s+\b|\b\s"), ""));
+                            int? exp_year = int.tryParse(expiryDate.substring(3,5));
+                            int? exp_month = int.tryParse(expiryDate.substring(0,2));
+                            print("cvc num: ${cvc.toString()}");
+                            print("card num: ${carNo.toString()}");
+                            print("exp year: ${exp_year.toString()}");
+                            print("exp month: ${exp_month.toString()}");
+                            print(cardNumber.replaceAll(RegExp(r"\s+\b|\b\s"), ""));
+
+                            StripeServices stripeServices = StripeServices();
+
+                            AppUser user =await authService.getCurrentUser();
+
+                            // CardModel card ;
+                            // if(user.stripeId == null){
+                            //   String stripeID = await stripeServices.createStripeCustomer(uid: user.id,email: user.email);
+                            //   print('start print strip id ================================');
+                            //   print("stripe id: $stripeID");
+                            //   print('end print strip id ================================');
+                            //   card = await stripeServices.addCard(stripeId: stripeID, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
+                            // }else{
+                            //   card = await   stripeServices.addCard(stripeId: user.stripeId!, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
+                            // }
+                             // PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
+                          //  bloc.getCards();
+                            String card_number_in_firebase = carNo.toString().substring(0,4)+' **** **** ' +carNo.toString().substring(12,carNo.toString().length);
+                            print(card_number_in_firebase);
+                            CardModel card = CardModel(id: DateTime.now().toString(),cardNumber: card_number_in_firebase,
+                            userID: user.id,month: exp_month!,year: exp_year!,last4: int.parse(carNo.toString().substring(11))
+
+                            );
+
                             PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
-                              CardModel card = CardModel(
-                                  id: bloc.state.cards.length+1, cardHolderName: cardHolderName, cardNumber: cardNumber, cvvCode: cvvCode, expiryDate: expiryDate);
-                              bloc.addOne(card);
-                              Navigator.pop(context);
-                         //   } else {
-                              print('invalid!');
-                          //  }
+                           await bloc.addOne(card);
+                            Navigator.of(context).pop();
+                            //   user.hasCard();
+                           // user.loadCardsAndPurchase(userId: user.user.uid);
+                           // if (formKey.currentState!.validate()) {
+                         //    PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
+                         //      CardModel card = CardModel(
+                         //          id: bloc.state.cards.length+1, cardHolderName: cardHolderName, cardNumber: cardNumber, cvvCode: cvvCode, expiryDate: expiryDate);
+                         //      bloc.addOne(card);
+                         //     // Navigator.pop(context);
+                         //  PaymentMethod  paymentMethod = await paymentService.createPaymentMethod();
+                         //  print('ssssssssssssssssssssss');
+                         //  print(paymentMethod.id);
+                         // //   } else {
+                         //      print('invalid!');
+                         //  //  }
                           },
                         ),
                       ],

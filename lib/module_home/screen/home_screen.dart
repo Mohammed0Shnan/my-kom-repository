@@ -1,7 +1,10 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_kom/module_authorization/authorization_routes.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/all_company_bloc.dart';
+import 'package:my_kom/module_company/screen/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_home/widgets/descovary_grid_widget.dart';
 import 'package:my_kom/module_home/widgets/menu_item.dart';
 import 'package:my_kom/module_home/widgets/page_view_widget.dart';
@@ -102,7 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 InkWell(
                   onTap: (){
-                    Navigator.pushNamed(context, ProfileRoutes.PROFILE_SCREEN);
+                    AuthService().isLoggedIn.then((value) {
+                      if(value)
+                        Navigator.pushNamed(context, ProfileRoutes.PROFILE_SCREEN);
+
+                      else
+                        loginCheakAlertWidget(context);
+                    });
                   },
                   child: menuItem(
                       icon: Icons.person,
@@ -121,7 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 InkWell(
                   onTap: (){
-
+                    AuthService().logout().then((value) {
+                      Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
+                    });
                   },
                   child: menuItem(
                       icon: Icons.edit,

@@ -26,19 +26,54 @@ class NewOrderStateManager {
       GeoJson destination,
       String phone,
       String paymentMethod,
-      String date,
-      NewOrderScreenState screenState) {
-    _stateSubject.add(NewOrderStateInit(screenState));
+      String date) {
+    //_stateSubject.add(NewOrderStateInit(screenState));
     _service
         .addNewOrder(fromBranch, destination, phone, paymentMethod,
          date)
-        .then((newOrder) {
-      if (newOrder) {
-        screenState.moveToNext();
-      } else {
-        // _stateSubject
-        //     .add(NewOrderStateErrorState('Error Creating Order', screenState));
+        .then((response) {
+
       }
+    ).catchError((e){
+      
     });
   }
+}
+
+
+
+abstract class CreateOrderEvent { }
+class CreateOrderInitEvent  extends CreateOrderEvent  {}
+
+class CreateOrderSuccessEvent  extends CreateOrderEvent  {
+  List <ProductModel>  data;
+  CreateOrderSuccessEvent({required this.data});
+}
+class UpdateProductsCompanySuccessEvent  extends ProductsCompanyEvent  {
+
+  UpdateProductsCompanySuccessEvent();
+}
+
+class ProductsCompanyLoadingEvent  extends ProductsCompanyEvent  {}
+
+class ProductsCompanyErrorEvent  extends ProductsCompanyEvent  {
+  String message;
+  ProductsCompanyErrorEvent({required this.message});
+}
+
+abstract class ProductsCompanyStates {}
+
+class ProductsCompanyInitState extends ProductsCompanyStates {}
+
+class ProductsCompanySuccessState extends ProductsCompanyStates {
+  List <ProductModel>  data;
+  ProductsCompanySuccessState({required this.data});
+}
+
+
+class ProductsCompanyLoadingState extends ProductsCompanyStates {}
+
+class ProductsCompanyErrorState extends ProductsCompanyStates {
+  String message;
+  ProductsCompanyErrorState({required this.message});
 }

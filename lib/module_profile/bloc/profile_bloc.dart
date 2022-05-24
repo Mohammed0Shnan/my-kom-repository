@@ -14,7 +14,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
               emit(ProfileErrorState(message: event.data));
             }
             else if (event is ProfileSuccessEvent)
-            emit(ProfileSuccessState(data: event.data));
+            emit(ProfileSuccessState(data: event.data , isEditState: event.isEditState));
       else {
         emit(ProfileInitState());
       }
@@ -27,7 +27,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
     this.add(ProfileLoadingEvent());
     _service.getMyProfile().then((value) {
       if (value !=null) {
-        this.add(ProfileSuccessEvent(data: value));
+        this.add(ProfileSuccessEvent(data: value,isEditState: false));
       } else
         this.add(ProfileErrorEvent(data: 'Error getting Profile Fire Base API'));
     });
@@ -37,7 +37,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
      this.add(ProfileLoadingEvent());
      _service.editMyProfile(request).then((value) {
        if (value !=null) {
-         this.add(ProfileSuccessEvent(data: value));
+         this.add(ProfileSuccessEvent(data: value,isEditState: true));
        } else
          this.add(ProfileErrorEvent(data: 'Error getting Profile Fire Base API'));
      });
@@ -61,8 +61,11 @@ class ProfileInitEvent extends ProfileEvent {
 
 class ProfileSuccessEvent extends ProfileEvent {
   ProfileModel data;
-  ProfileSuccessEvent({required this.data});
+  bool isEditState;
+  ProfileSuccessEvent({required this.data,required this.isEditState});
 }
+
+
 
 class ProfileLoadingEvent extends ProfileEvent {}
 
@@ -77,10 +80,13 @@ class ProfileInitState extends ProfileStates {}
 
 class ProfileSuccessState extends ProfileStates {
     ProfileModel data;
-  ProfileSuccessState({required this.data});
+    bool isEditState;
+  ProfileSuccessState({required this.data,required this.isEditState});
 }
 
-class ProfileLoadingState extends ProfileStates {}
+class ProfileLoadingState extends ProfileStates {
+
+}
 
 class ProfileErrorState extends ProfileStates {
   String message;

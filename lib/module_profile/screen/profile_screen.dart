@@ -53,8 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _profileAddressController.text = state.data.address.description;
                 _profilePhoneController.text = state.data.phone;
                 addressModel = state.data.address;
-              }
+                if(state.isEditState){
+                  isEditingProfile = ! isEditingProfile;
+                }
 
+              }
             },
             builder: (context,state) {
 
@@ -87,10 +90,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onPressed: (){
                                 if(!isEditingProfile){
                                   isEditingProfile = !isEditingProfile;
-                                  setState(() {
-                                  });
+                                  setState((){});
                                 }else{
-
                                   request = ProfileRequest
                                     (userName: _profileUserNameController.text.trim(), address:
 
@@ -123,11 +124,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             double innerWidth  = constraints.maxWidth;
                             return Stack(
                               fit:StackFit.expand,
+                              alignment: Alignment.center,
                               children: [
                                 Positioned(left: 0,
                                 right: 0,
                                 bottom: 0,
                                 child: Container(
+                                  alignment: Alignment.center,
                                   height:innerHeight * 0.65,
                                 width:innerWidth ,
                                 decoration: BoxDecoration(
@@ -145,14 +148,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: TextFormField(
                                         textAlign: TextAlign.center,
                                         controller: _profileUserNameController,
+
                                        style: TextStyle(
+
                                           fontSize: 27,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey[700]
                                       ),
 
                                         decoration: InputDecoration(
-                                          suffixIcon: (!isEditingProfile)?Text(''):Icon(Icons.edit,color: Colors.black,),
+                                          suffixIcon: (!isEditingProfile)?null:Icon(Icons.edit,color: Colors.black,),
                                             border: InputBorder.none,
                                           //S.of(context).name,
                                         ),

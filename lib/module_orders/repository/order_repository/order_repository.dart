@@ -9,7 +9,6 @@ import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 
 class OrderRepository {
 
-  final AuthService _authService = AuthService();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // OrderRepository(
@@ -19,10 +18,8 @@ class OrderRepository {
 
   Future<bool> addNewOrder(CreateOrderRequest orderRequest) async {
 
-
     try{
-      var userId =await _authService.userID;
-      orderRequest.userId = userId!;
+
       await _firestore.collection('orders').add(orderRequest.toJson());
 
     }catch(e){

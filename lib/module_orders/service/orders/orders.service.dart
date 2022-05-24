@@ -1,5 +1,6 @@
 
 import 'package:my_kom/consts/order_status.dart';
+import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/repository/order_repository/order_repository.dart';
 import 'package:my_kom/module_orders/request/accept_order_request/accept_order_request.dart';
@@ -12,6 +13,7 @@ import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 class OrdersService {
   //final ProfileService _profileService;
   final  OrderRepository _orderRepository = OrderRepository();
+  final AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
   //OrdersService(this._ordersManager, this._profileService);
 
   Future<List<OrderModel>?> getMyOrders() async {
@@ -114,12 +116,13 @@ class OrdersService {
       String phone,
       String paymentMethod,
       String date) async {
+    String? uId = await _authPrefsHelper.getUserId();
     var orderRequest = CreateOrderRequest(
+      userId: uId!,
       phone: phone,
       date: date,
       payment: paymentMethod,
       fromBranch: fromBranch.id.toString(),
-
       destination: destination,
     );
     return 
