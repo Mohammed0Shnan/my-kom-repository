@@ -6,6 +6,7 @@ class ProductModel {
   late final double? old_price;
   late final int quantity;
   late final imageUrl;
+  late final int orderQuantity;
   late final List<SpecificationsModel> specifications;
   ProductModel(
       {required this.id,
@@ -25,7 +26,8 @@ class ProductModel {
     this.price = map['price'];
     this.old_price = map['old_price'];
     this.quantity = map['quantity'];
-    this.quantity = map['imageUrl'];
+    this.orderQuantity = map['order_quantity'];
+    this.imageUrl = map['image_url'];
     this.specifications = (map['specifications']).map((e) => SpecificationsModel.fromJson(e)).toList();
   }
 
@@ -37,7 +39,8 @@ class ProductModel {
     map['price'] = this.price;
     map['old_price'] = this.old_price;
     map['quantity'] = this.quantity;
-    map['imageUrl'] = this.quantity;
+    map['order_quantity'] = this.orderQuantity;
+    map['image_url'] = this.imageUrl;
     return map;
   }
 }

@@ -1,42 +1,55 @@
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:my_kom/module_orders/response/branch.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/service/orders/orders.service.dart';
-import 'package:my_kom/module_orders/ui/screens/new_order/new_order_screen.dart';
-import 'package:my_kom/module_orders/ui/state/new_order/new_order.state.dart';
-import 'package:rxdart/rxdart.dart';
 
-class NewOrderStateManager {
+class NewOrderBloc extends Bloc<CreateOrderEvent,CreateOrderStates> {
   final OrdersService _service = OrdersService();
-  final PublishSubject<NewOrderState> _stateSubject = new PublishSubject();
+  NewOrderBloc() : super(CreateOrderInitState()) {
 
-  Stream<NewOrderState> get stateStream => _stateSubject.stream;
+    on<CreateOrderEvent>((CreateOrderEvent event, Emitter<CreateOrderStates> emit) {
+      if (event is CreateOrderLoadingEvent)
+        emit(CreateOrderLoadingState());
+      else if (event is CreateOrderErrorEvent){
+        emit(CreateOrderErrorState(message: event.message));
+      }
+      else if (event is CreateOrderSuccessEvent){
+        emit(CreateOrderSuccessState(data: event.data));}
+      // else if(event is UpdateProductsCompanySuccessEvent){
+      //   _update(event,emit);
+      // }
+    });
 
-//  NewOrderStateManager(this._service, this._profileService);
+    // streamSubscription = shopBloc.stream.listen((event) {
+    //  _update1();
+    // });
 
-  void loadBranches(NewOrderScreenState screenState, LatLng location) {
-     // _profileService.getMyBranches().then((value) {
-       _stateSubject.add(NewOrderStateBranchesLoaded([], location, screenState));
-   //  });
   }
 
-  void addNewOrder(
-      Branch fromBranch,
-      GeoJson destination,
-      String phone,
-      String paymentMethod,
-      String date) {
-    //_stateSubject.add(NewOrderStateInit(screenState));
-    _service
-        .addNewOrder(fromBranch, destination, phone, paymentMethod,
-         date)
-        .then((response) {
 
+  // void loadBranches(NewOrderScreenState screenState, LatLng location) {
+  //    // _profileService.getMyBranches().then((value) {
+  //      _stateSubject.add(NewOrderStateBranchesLoaded([], location, screenState));
+  //  //  });
+  // }
+
+  void addNewOrder({required List<ProductModel>  product ,required int numberOfMonth,required String addressName, required String deliveryTimes,
+  required DateTime date , required GeoJson destination, required String phoneNumber,required String paymentMethod,
+    required  double orderValue , required String cardId
+  }) {
+    this.add(CreateOrderLoadingEvent());
+    _service
+        .addNewOrder(products: product, addressName: addressName,deliveryTimes: deliveryTimes, numberOfMonth: numberOfMonth,date: date, destination: destination, phoneNumber: phoneNumber, paymentMethod: paymentMethod, amount: orderValue, cardId: cardId, )
+        .then((response) {
+          if(response != null){
+            this.add(CreateOrderSuccessEvent(data: response));
+          }else{
+            this.add(CreateOrderErrorEvent(message: 'Error in create order'));
+          }
       }
-    ).catchError((e){
-      
-    });
+    );
   }
 }
 
@@ -46,34 +59,30 @@ abstract class CreateOrderEvent { }
 class CreateOrderInitEvent  extends CreateOrderEvent  {}
 
 class CreateOrderSuccessEvent  extends CreateOrderEvent  {
-  List <ProductModel>  data;
+  OrderModel  data;
   CreateOrderSuccessEvent({required this.data});
 }
-class UpdateProductsCompanySuccessEvent  extends ProductsCompanyEvent  {
 
-  UpdateProductsCompanySuccessEvent();
-}
+class CreateOrderLoadingEvent  extends CreateOrderEvent  {}
 
-class ProductsCompanyLoadingEvent  extends ProductsCompanyEvent  {}
-
-class ProductsCompanyErrorEvent  extends ProductsCompanyEvent  {
+class CreateOrderErrorEvent  extends CreateOrderEvent  {
   String message;
-  ProductsCompanyErrorEvent({required this.message});
+  CreateOrderErrorEvent({required this.message});
 }
 
-abstract class ProductsCompanyStates {}
+abstract class CreateOrderStates {}
 
-class ProductsCompanyInitState extends ProductsCompanyStates {}
+class CreateOrderInitState extends CreateOrderStates {}
 
-class ProductsCompanySuccessState extends ProductsCompanyStates {
-  List <ProductModel>  data;
-  ProductsCompanySuccessState({required this.data});
+class CreateOrderSuccessState extends CreateOrderStates {
+  OrderModel data;
+  CreateOrderSuccessState({required this.data});
 }
 
 
-class ProductsCompanyLoadingState extends ProductsCompanyStates {}
+class CreateOrderLoadingState extends CreateOrderStates {}
 
-class ProductsCompanyErrorState extends ProductsCompanyStates {
+class CreateOrderErrorState extends CreateOrderStates {
   String message;
-  ProductsCompanyErrorState({required this.message});
+  CreateOrderErrorState({required this.message});
 }

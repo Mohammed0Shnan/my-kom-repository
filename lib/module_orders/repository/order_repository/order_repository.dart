@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/request/update_order_request/update_order_request.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
@@ -16,18 +16,17 @@ class OrderRepository {
   //   this._authService,
   // );
 
-  Future<bool> addNewOrder(CreateOrderRequest orderRequest) async {
+  Future<DocumentSnapshot> addNewOrder(CreateOrderRequest orderRequest) async {
+
 
     try{
-
-      await _firestore.collection('orders').add(orderRequest.toJson());
-
+     DocumentReference document = await _firestore.collection('orders').add(orderRequest.mainDetailsToJson());
+                                  await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
+     DocumentSnapshot d =  await _firestore.collection('orders').doc(document.id).get();
+     return d;
     }catch(e){
       throw Exception('Error in set data !');
-
     }
-    return true;
-
   }
 
   Future<OrderDetailsData?> getOrderDetails(int orderId) async {
@@ -46,36 +45,18 @@ class OrderRepository {
     // return OrderStatusResponse.fromJson(response).data;
   }
 
-  Future<List<Order>?> getNearbyOrders() async {
-    return null;
-    // var token = await _authService.getToken();
 
-    // if (token == null) {
-    //   throw UnauthorizedException('User Not Logged In');
-    // }
-
-    // dynamic response = await _apiClient.get(
-    //   Urls.NEARBY_ORDERS_API,
-    //   headers: {'Authorization': 'Bearer ' + token},
-    // );
-    // if (response == null) return null;
-
-    // var list = OrdersResponse.fromJson(response).data;
-    // return list;
-  }
-
-  Future<List<Order>?> getMyOrders() async {
-    return null;
+  Future<List<OrdersListResponse>?> getMyOrders(String uid) async {
     // await _authService.refreshToken();
     // var token = await _authService.getToken();
-
+    //
     // try {
     //   dynamic response = await _apiClient.get(
     //     Urls.OWNER_ORDERS_API,
     //     headers: {'Authorization': 'Bearer ${token}'},
     //   );
     //   if (response == null) return [];
-
+    //
     //   return OrdersResponse
     //       .fromJson(response)
     //       .data;
@@ -84,31 +65,6 @@ class OrderRepository {
     // }
   }
 
-  Future<List<Order>?> getCaptainOrders() async {
-    return null;
-  //   var token = await _authService.getToken();
-
-  //   dynamic response = await _apiClient.get(
-  //     Urls.CAPTAIN_ACCEPTED_ORDERS_API,
-  //     headers: {'Authorization': 'Bearer ${token}'},
-  //   );
-  //   if (response == null) return [];
-
-  //   return OrdersResponse.fromJson(response).data;
-  // }
-
-  // Future<OrderDetailsResponse> acceptOrder(AcceptOrderRequest request) async {
-  //   var token = await _authService.getToken();
-  //   dynamic response = await _apiClient.post(
-  //     '${Urls.ACCEPT_ORDER_API}',
-  //     request.toJson(),
-  //     headers: {'Authorization': 'Bearer ' + token},
-  //   );
-
-  //   if (response == null) return null;
-
-  //   return OrderDetailsResponse.fromJson(response);
-  }
 
   Future<OrderDetailsResponse?> updateOrder(UpdateOrderRequest request) async {
     // var token = await _authService.getToken();

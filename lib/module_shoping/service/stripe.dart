@@ -110,26 +110,23 @@ class StripeServices{
     return cardModel;
   }
 
-  Future<bool> charge({required String customer,required double amount,required String userId,required String cardId,required String productName})async{
+  Future<bool> charge({required String customer,required double amount,required String userId,required String cardId})async{
     Map<String, dynamic> data ={
       "amount": amount,
       "currency": "usd",
       "source": cardId,
       "customer": customer
     };
-    try{
-      Dio().post(CHARGE_URL, data: data, options: Options(contentType: Headers.formUrlEncodedContentType, headers: headers)).then((response){
-        print(response.toString());
-      });
-      PurchaseServices purchaseServices = PurchaseServices();
-      var uuid = Uuid();
-      var purchaseId = uuid.v1();
-      purchaseServices.createPurchase(id: purchaseId, amount: amount, cardId: cardId, userId: userId, productName: productName, date: '');
-      return true;
-    }catch(e){
-      print("there was an error charging the customer: ${e.toString()}");
-      return false;
-    }
+    // try{
+    //  await Dio().post(CHARGE_URL, data: data, options: Options(contentType: Headers.formUrlEncodedContentType, headers: headers)).then((response){
+    //     print(response.toString());
+    //   });
+    //  return true;
+    // }catch(e){
+    //   print("there was an error charging the customer: ${e.toString()}");
+    //   return false;
+    // }
+    return true;
   }
 
 }

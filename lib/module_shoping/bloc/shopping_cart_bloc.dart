@@ -38,6 +38,10 @@ class ShopCartBloc extends Bloc<CartEvents,CartState> {
 
   }
 
+  startedShop(){
+    add(CartStartedEvent());
+  }
+
   Future<void> addProductToCart(ProductModel productModel) async{
     this.add(CartAddedEvent(productModel));
   }

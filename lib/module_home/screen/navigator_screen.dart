@@ -4,13 +4,13 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
-import 'package:my_kom/module_home/widgets/side_bar_widget.dart';
+import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 
 class NavigatorScreen extends StatefulWidget {
   final HomeScreen homeScreen;
-  //final ProfileScreen profileScreen;
+  final CaptainOrdersScreen orderScreen;
   NavigatorScreen(
-      {required this.homeScreen, Key? key})
+      {required this.homeScreen,required this.orderScreen, Key? key})
       : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           },
           items: [
             Icon(Icons.home, color: Colors.white),
-            Icon(Icons.person, color: Colors.white),
+            Icon(Icons.list, color: Colors.white),
             Icon(
               Icons.border_outer_rounded,
               color: Colors.white,
@@ -53,8 +53,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         
       }
        case 1 : {
-       // return widget.profileScreen;
-       return Container();
+       return widget.orderScreen;
         
       }
       case 2 : {

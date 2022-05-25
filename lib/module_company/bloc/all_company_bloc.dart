@@ -16,18 +16,16 @@ class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
       else if (event is AllCompanySuccessEvent) 
       emit(AllCompanySuccessState(data: event.data));
     });
-
   }
 
 
-  getAllCompany() async {
+  getAllCompany() async{
     this.add(AllCompanyLoadingEvent());
     _service.getAllCompanies().then((value) {
-      if (value != null) {
+      if (value != null){
         this.add(AllCompanySuccessEvent(data: value));
       } else{
         this.add(AllCompanyErrorEvent(message: 'Error '));
-
       }
     });
   }

@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           clipBehavior: Clip.antiAlias,
                           height: SizeConfig.screenHeight * 0.2,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
 
                             border:Border.all(
                               color: Colors.black12,

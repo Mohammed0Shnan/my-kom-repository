@@ -60,13 +60,17 @@ class AppComponentInjector implements AppComponent {
   NavigatorModule _createNavigatorModule() =>
       NavigatorModule( NavigatorScreen(
         homeScreen: HomeScreen(),
+        orderScreen:  CaptainOrdersScreen()
         //profileScreen: ProfileScreen(),
-      ),);
+      ),
+
+
+      );
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
-  OrdersModule _createOrderModule()=> OrdersModule(NewOrderScreen(), OrderStatusScreen(), CaptainOrdersScreen());
+  OrdersModule _createOrderModule()=> OrdersModule(OrderStatusScreen(), CaptainOrdersScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
 
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));

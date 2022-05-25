@@ -8,12 +8,12 @@ import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen
 
 class OrdersModule extends MyModule {
   //final OwnerOrdersScreen _ordersScreen;
-  final NewOrderScreen _newOrderScreen;
+  //final NewOrderScreen _newOrderScreen;
   final OrderStatusScreen _orderStatus;
   final CaptainOrdersScreen _captainOrdersScreen;
 
   OrdersModule(
-    this._newOrderScreen,
+    //this._newOrderScreen,
     this._orderStatus,
   //  this._ordersScreen,
     this._captainOrdersScreen,
@@ -21,7 +21,7 @@ class OrdersModule extends MyModule {
 
   Map<String, WidgetBuilder> getRoutes() {
     return {
-      OrdersRoutes.NEW_ORDER_SCREEN: (context) => _newOrderScreen,
+     // OrdersRoutes.NEW_ORDER_SCREEN: (context) => _newOrderScreen,
     //  OrdersRoutes.OWNER_ORDERS_SCREEN: (context) => _ordersScreen,
       OrdersRoutes.ORDER_STATUS_SCREEN: (context) => _orderStatus,
       OrdersRoutes.CAPTAIN_ORDERS_SCREEN: (context) => _captainOrdersScreen,

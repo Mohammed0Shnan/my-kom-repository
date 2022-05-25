@@ -9,13 +9,17 @@ import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/delivery_times.dart';
 import 'package:my_kom/consts/payment_method.dart';
 import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
+import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
+import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
@@ -39,6 +43,7 @@ class ShopScreen extends StatefulWidget {
 class _ShopScreenState extends State<ShopScreen> {
   late final _pageController;
   final PaymentMethodeNumberBloc paymentMethodeNumberBloc = PaymentMethodeNumberBloc();
+  final NewOrderBloc _orderBloc = NewOrderBloc();
   final TextEditingController _newAddressController = TextEditingController();
 
   @override
@@ -72,15 +77,17 @@ class _ShopScreenState extends State<ShopScreen> {
   ];
   double stateAngle = 0;
   double endAngle = 0;
-  int groupValue = 0;
+
+  // request parameters
+  late List<ProductModel> requestProduct;
+  String deliveryTimesGroupValue = DeliveryTimesConst.ONE;
   int numberOfMonth = 0;
   DateTime? _expiry_date = DateTime.now();
-
-  late String paymentGroupValue = '';
-
-  int paymentMethodeCreditGroupValue = 0;
-  late String phoneNumber = '';
   late AddressModel addressModel ;
+  late String phoneNumber = '';
+  late String paymentGroupValue = '';
+  late double orderValue = 0.0;
+  late String cardId= '';
   @override
   Widget build(BuildContext context) {
     switch (currentIndex) {
@@ -377,6 +384,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   return CircularProgressIndicator();
                 }
                 else if (state is CartLoaded) {
+                  requestProduct = state.cart.products;
                   return ListView.builder(
                       shrinkWrap: true,
                       itemCount: state.cart
@@ -513,16 +521,17 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
                 child: MaterialButton(
                   onPressed: () {
-                    if (_pageController.page == 3) {
+                    // if (_pageController.page == 3) {
+                    //   _pageController.nextPage(
+                    //       duration: Duration(milliseconds: 200),
+                    //       curve: Curves.ease);
+                    // }
+                 //   else {
+
                       _pageController.nextPage(
                           duration: Duration(milliseconds: 200),
                           curve: Curves.ease);
-                    }
-                    else {
-                      _pageController.nextPage(
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.ease);
-                    }
+                   // }
                   },
                   child: Text('Next', style: TextStyle(color: Colors.white,
                       fontSize: SizeConfig.titleSize * 2.7),),
@@ -566,12 +575,12 @@ class _ShopScreenState extends State<ShopScreen> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Radio<int>(
-                            value: 1,
-                            groupValue: groupValue,
+                          Radio<String>(
+                            value: DeliveryTimesConst.ONE,
+                            groupValue: deliveryTimesGroupValue,
                             onChanged: (value) {
                               setState(() {
-                                groupValue = value!;
+                                deliveryTimesGroupValue = value!;
                               });
                             },
                             activeColor: Colors.green,
@@ -587,12 +596,12 @@ class _ShopScreenState extends State<ShopScreen> {
                         mainAxisSize: MainAxisSize.min,
 
                         children: [
-                          Radio<int>(
-                            value: 2,
-                            groupValue: groupValue,
+                          Radio<String>(
+                            value: DeliveryTimesConst.WEEKLY,
+                            groupValue: deliveryTimesGroupValue,
                             onChanged: (value) {
                               setState(() {
-                                groupValue = value!;
+                                deliveryTimesGroupValue = value!;
                               });
                             },
                             activeColor: Colors.green,
@@ -609,12 +618,12 @@ class _ShopScreenState extends State<ShopScreen> {
                         mainAxisSize: MainAxisSize.min,
 
                         children: [
-                          Radio<int>(
-                            value: 3,
-                            groupValue: groupValue,
+                          Radio<String>(
+                            value: DeliveryTimesConst.MONTHLY,
+                            groupValue: deliveryTimesGroupValue,
                             onChanged: (value) {
                               setState(() {
-                                groupValue = value!;
+                                deliveryTimesGroupValue = value!;
                               });
                             },
                             activeColor: Colors.green,
@@ -882,8 +891,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                     if(state.data == null){
                                       _newAddressController.text = '';
                                     }
-                                    else
-                                    _newAddressController.text = state.data!.description;
+                                    else{
+                                      addressModel =  state.data!;
+                                      _newAddressController.text = state.data!.description;
+                                    }
+
                                     return TextFormField(
                                       readOnly: true,
                                       controller: _newAddressController,
@@ -1100,7 +1112,8 @@ letterSpacing: 2,
                         builder: (context, state) {
                           if (state is CartLoaded) {
                             double total = state.cart.deliveryFee(state.cart.subTotal)+ state.cart.subTotal;
-                          return Text(total.toString() ,
+                            orderValue = total;
+                            return Text(total.toString() ,
                                 style: GoogleFonts.lato(
                                     fontSize: SizeConfig.titleSize * 2.5,
                                     fontWeight: FontWeight.w800,
@@ -1381,27 +1394,60 @@ letterSpacing: 2,
                           ),
                         ),
                         Spacer(),
-                                       Container(
-                                         clipBehavior: Clip.antiAlias,
-                                         width: double.infinity,
-                                         margin: EdgeInsets.symmetric(horizontal: 20),
-                                         decoration: BoxDecoration(
-                                             color: ColorsConst.mainColor,
-                                             borderRadius: BorderRadius.circular(10)
-                                         ),
-                                         child: MaterialButton(
-                                           onPressed: () {
-                                             GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-                                             CreateOrderRequest request = CreateOrderRequest( phone: phoneNumber,fromBranch: '', payment: paymentGroupValue, destination:geoJson,  date:_expiry_date!.toIso8601String() );
+                             Center(
+                               child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+                                 bloc: _orderBloc,
+                                 listener: (context,state)async{
+                                   if(state is CreateOrderSuccessState)
+                                     {
+                                       shopCartBloc.startedShop();
+                                       snackBarSuccessWidget(context, 'Order Created Successfully!!');
+                                       Navigator.pushNamedAndRemoveUntil(context, NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
+                                     }
+                                  else if(state is CreateOrderErrorState)
+                                   {
+                                     snackBarSuccessWidget(context, 'The Order Was Not Created!!');
+                                   }
+                                 },
+                                 builder: (context,state) {
+                                   bool isLoading = state is CreateOrderLoadingState?true:false;
+                                   return AnimatedContainer(
+                                     duration: Duration(milliseconds: 200),
+                                     clipBehavior: Clip.antiAlias,
+                                     height: 8.44 * SizeConfig.heightMulti,
+                                     width:isLoading?60: SizeConfig.screenWidth * 0.8,
+                                     padding: EdgeInsets.all(isLoading?8:0 ),
+                                     margin: EdgeInsets.symmetric(horizontal: 20),
+                                     decoration: BoxDecoration(
+                                         color: ColorsConst.mainColor,
+                                         borderRadius: BorderRadius.circular(10)
+                                     ),
+                                     child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+                                       onPressed: () {
+                                         print('============= request =================');
+                                         print('products : ');
+                                         print(requestProduct);
+                                         print('delivery time : ${deliveryTimesGroupValue}');
+                                         print('month : ${numberOfMonth}');
+                                         print('start date  : ${_expiry_date}');
+                                         print('address date  : ${addressModel.description}');
+                                         print('phone  : ${phoneNumber}');
+                                         print('payment method : ${paymentGroupValue}');
+                                         print('order value  : ${orderValue}');
+                                         print('card id  : ${paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue}');
+                                         print('============= request =================');
+                                         cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+                                         GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+                                         _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, date:_expiry_date! , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId);
+                                       },
+                                       child: Text('Confirmation', style: TextStyle(color: Colors.white,
+                                           fontSize: SizeConfig.titleSize * 2.7),),
 
-                                             NewOrderStateManager().addNewOrder(request);
-
-                                           },
-                                           child: Text('Confirmation', style: TextStyle(color: Colors.white,
-                                               fontSize: SizeConfig.titleSize * 2.7),),
-
-                                         ),
-                                       ),
+                                     ),
+                                   );
+                                 }
+                               ),
+                             ),
                                        SizedBox(height: SizeConfig.screenHeight * 0.05,)
                                      ],
                                    ),

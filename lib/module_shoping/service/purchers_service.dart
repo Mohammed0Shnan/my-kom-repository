@@ -8,15 +8,20 @@ class PurchaseServices{
   String collection = "purchases";
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void createPurchase({required String id,required String productName,required double amount,required String userId,required String date,required String cardId }){
-    _firestore.collection(collection).doc(id).set({
-      "id":id,
-      "productName":productName,
-      "amount": amount,
-      "userId": userId,
-      "date": DateTime.now().toString(),
-      "cardId":cardId
-    });
+  Future<bool> createPurchase({required String orderID,required double amount,required String userId,required String date,required String cardId })async{
+   try{
+    await _firestore.collection(collection).add({
+       "order":orderID,
+       "amount": amount,
+       "userId": userId,
+       "date":date,
+       "cardId":cardId
+     });
+     return true;
+   }catch(e){
+     return false;
+   }
+
   }
 
 

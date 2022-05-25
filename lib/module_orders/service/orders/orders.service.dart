@@ -1,6 +1,10 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/consts/order_status.dart';
+import 'package:my_kom/consts/payment_method.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
+import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/repository/order_repository/order_repository.dart';
 import 'package:my_kom/module_orders/request/accept_order_request/accept_order_request.dart';
@@ -9,36 +13,42 @@ import 'package:my_kom/module_orders/request/update_order_request/update_order_r
 import 'package:my_kom/module_orders/response/branch.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
+import 'package:my_kom/module_shoping/service/purchers_service.dart';
+import 'package:my_kom/module_shoping/service/stripe.dart';
 
 class OrdersService {
   //final ProfileService _profileService;
   final  OrderRepository _orderRepository = OrderRepository();
   final AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
-  //OrdersService(this._ordersManager, this._profileService);
+  final StripeServices _stripeServices = StripeServices();
+ final  PurchaseServices _purchaseServices = PurchaseServices();
 
   Future<List<OrderModel>?> getMyOrders() async {
-   // List<Order> response = await _ordersManager.getMyOrders();
+    String? uid = await _authPrefsHelper.getUserId();
+       await _orderRepository.getMyOrders(uid!);
    // if (response == null) return null;
+   //
+   //  List<OrderModel> orders = [];
+   //
+   //  response.forEach((element) {
+   //    if (element.state != 'delivered') {
+   //      orders.add(new OrderModel(
+   //        to: element.location,
+   //        clientPhone: element.recipientPhone,
+   //        from: element.fromBranch.brancheName,
+   //        creationTime: DateTime.fromMillisecondsSinceEpoch(
+   //            element.date.timestamp * 1000),
+   //        paymentMethod: element.payment,
+   //        id: element.id,
+   //      ));
+   //    }
+   //  });
 
-    // List<OrderModel> orders = [];
-
-    // response.forEach((element) {
-    //   if (element.state != 'delivered') {
-    //     orders.add(new OrderModel(
-    //       to: element.location,
-    //       clientPhone: element.recipientPhone,
-    //       from: element.fromBranch.brancheName,
-    //       creationTime: DateTime.fromMillisecondsSinceEpoch(
-    //           element.date.timestamp * 1000),
-    //       paymentMethod: element.payment,
-    //       id: element.id,
-    //     ));
-    //   }
-    // });
-
-   // return orders.reversed.toList();
+   //return orders.reversed.toList();
    return null;
   }
+
+
 
   Future<OrderModel?> getOrderDetails(int orderId) async {
     // OrderDetailsData response = await _ordersManager.getOrderDetails(orderId);
@@ -110,23 +120,63 @@ class OrdersService {
     return orders;
   }
 
-  Future<bool> addNewOrder(
-      Branch fromBranch,
-      GeoJson destination,
-      String phone,
-      String paymentMethod,
-      String date) async {
+  Future<OrderModel?> addNewOrder(
+      {required List<ProductModel>  products ,required String addressName, required String deliveryTimes,
+        required DateTime date , required GeoJson destination, required String phoneNumber,required String paymentMethod,
+        required  double amount , required String cardId,required int numberOfMonth
+      }
+      ) async {
     String? uId = await _authPrefsHelper.getUserId();
-    var orderRequest = CreateOrderRequest(
-      userId: uId!,
-      phone: phone,
-      date: date,
-      payment: paymentMethod,
-      fromBranch: fromBranch.id.toString(),
-      destination: destination,
-    );
-    return 
-     _orderRepository.addNewOrder(orderRequest);
+    String? customername = await _authPrefsHelper.getUsername();
+
+    // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
+    //   bool stripResponse =  await _stripeServices.charge(customer: customername!, amount: amount, userId: uId!, cardId: cardId);
+    //   if(!stripResponse){
+    //     throw Exception();
+    //   }
+    // }
+    Map<ProductModel,int> productsMap = Map<ProductModel,int>();
+    products.forEach((element) {
+      if(!productsMap.containsKey(element)){
+        productsMap[element]= 1;
+      }
+      else{
+        productsMap[element] = productsMap[element]! + 1;
+      }
+    });
+    List<ProductModel> newproducts = [];
+    String description = '';
+    productsMap.forEach((key, value) {
+      key.orderQuantity = value;
+      description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
+      newproducts.add(key);
+    });
+    
+    print(description);
+       var orderRequest = CreateOrderRequest(
+           userId: uId!,
+           destination: destination,
+           phone: phoneNumber,
+           payment: paymentMethod,
+           products: newproducts,
+           numberOfMonth: numberOfMonth,
+           deliveryTime: deliveryTimes,
+           orderValue: amount,
+           startDate:   date.toIso8601String(),
+           description:description.substring(0 , description.length-2),
+         addressName :addressName
+       );
+
+
+    DocumentSnapshot orderSnapShot =await _orderRepository.addNewOrder(orderRequest);
+    // bool purchaseResponse =  await _purchaseServices.createPurchase(amount: amount, cardId: cardId, userId: uId, orderID: orderSnapShot.id, date: DateTime.now().toIso8601String());
+    // if(!purchaseResponse){
+    //   throw Exception();
+    // }
+    Map<String ,dynamic> map = orderSnapShot.data() as Map<String ,dynamic>;
+    map['id'] = orderSnapShot.id;
+   return OrderModel.fromJson(map);
+  }
   }
 
   OrderDetailsResponse? updateOrder(int orderId, OrderModel order) {
@@ -181,4 +231,4 @@ return OrderDetailsResponse.fromJson({});
     // return orders;
     return null;
   }
-}
+
