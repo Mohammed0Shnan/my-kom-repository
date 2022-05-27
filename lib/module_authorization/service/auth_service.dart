@@ -142,6 +142,7 @@ Future<AppUser>  getCurrentUser()async{
        await Future.wait([
          _prefsHelper.setUserId(user.uid),
          _prefsHelper.setEmail(user.email!),
+         _prefsHelper.setAdderss(profileResponse.address),
          _prefsHelper.setUsername(profileResponse.userName),
          _prefsHelper.setPhone(profileResponse.phone),
          _prefsHelper.setAuthSource(authSource),

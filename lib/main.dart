@@ -6,6 +6,7 @@ import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_company/company_module.dart';
+import 'package:my_kom/module_dashbord/dashboard_module.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
@@ -44,8 +45,9 @@ class MyApp extends StatefulWidget {
   final ShopingModule _shopingModule;
   final OrdersModule _ordersModule;
   final ProfileModule _profileModule;
+  final DashBoardModule _dashBoardModule;
   MyApp(this._localizationService,this._wapperModule, this._aboutModule,this._splashModule, this._navigatorModule,
-      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule);
+      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule,this._dashBoardModule);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -65,6 +67,7 @@ class _MyAppState extends State<MyApp> {
         routes.addAll(widget._shopingModule.getRoutes());
     routes.addAll(widget._ordersModule.getRoutes());
     routes.addAll(widget._profileModule.getRoutes());
+    routes.addAll(widget._dashBoardModule.getRoutes());
 
     return FutureBuilder<Widget>(
       initialData: Container(color: Colors.green),

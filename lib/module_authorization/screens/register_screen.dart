@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
@@ -79,18 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                 Stack(
                 children: [
-                Container(
-                child: ClipPath(
-                    clipper: CustomClipWidget(),
-                child: Container(
-                  color: ColorsConst.mainColor.withOpacity(0.1),
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight * (0.3),
 
-
-                ),
-              ),
-            ),
             Container(
               height: SizeConfig.screenHeight * 0.25,
               margin: EdgeInsets.symmetric(
@@ -107,21 +97,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontSize: SizeConfig.titleSize * 3.5)),
                   SizedBox(height: 5,),
                   Container(
+                    width: SizeConfig.screenWidth * 0.6,
+                    height: 7.9 * SizeConfig.heightMulti,
 
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child:  Stack(
                       children: [
+                        Container(
+                            width: SizeConfig.screenWidth * 0.5,
+                            height: 7.8 * SizeConfig.heightMulti,
+                            child: Image.asset('assets/logo_word.png',fit: BoxFit.cover,)),
+                        Positioned(
+                            top: SizeConfig.widhtMulti*2.4,
+                            left: SizeConfig.widhtMulti * 15,
+                            child: Container(
+                                width: SizeConfig.widhtMulti * 7.2,
+                                height: SizeConfig.widhtMulti * 7.2,
+                                child: SvgPicture.asset('assets/2.svg')) ),
 
-                        Container(
-                            width: SizeConfig.screenWidth * 0.4,
-                            height: 7.8 * SizeConfig.heightMulti,
-                            child: Image.asset('assets/logo1.png',fit: BoxFit.fitWidth,)),
-                        Container(
-                            height: 7.8 * SizeConfig.heightMulti,
-                            width: SizeConfig.screenWidth * 0.1,
-                            child: Image.asset('assets/logo2.png',fit: BoxFit.contain,))
+                        Positioned(
+                            top: 10,
+                            right: SizeConfig.widhtMulti * 5,
+                            child: Container(
+                                width:  SizeConfig.widhtMulti * 8,
+                                height: SizeConfig.widhtMulti * 8,
+                                child: SvgPicture.asset('assets/2.svg')) ),
+
                       ],
                     ),
+                    //  child: Row(
+                    //    mainAxisAlignment: MainAxisAlignment.center,
+                    //    children: [
+                    //      Stack(
+                    //        children: [
+                    //  Container(
+                    //  width: SizeConfig.screenWidth * 0.5,
+                    //      height: 7.8 * SizeConfig.heightMulti,
+                    //      child: Image.asset('assets/logo_word.png',fit: BoxFit.cover,)),
+                    //      Positioned(
+                    //        top: 10,
+                    //          left: 55,
+                    //          child: Container(
+                    //          width: 25,
+                    //          height: 25,
+                    //          child: SvgPicture.asset('assets/2.svg')) )
+                    //
+                    //  ],
+                    //      ),
+                    // //  Image.asset('assets/logo1.png',fit: BoxFit.fitWidth,)),
+                    //      Container(
+                    //          height: 7.8 * SizeConfig.heightMulti,
+                    //          width: SizeConfig.screenWidth * 0.1,
+                    //          child: SvgPicture.asset('assets/1.svg'))
+                    //    ],
+                    //  ),
                   ),
                   SizedBox(height: 5,),
 

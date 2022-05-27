@@ -18,65 +18,72 @@ class OrderRepository {
 
   Future<DocumentSnapshot> addNewOrder(CreateOrderRequest orderRequest) async {
 
-
-    try{
+     try{
      DocumentReference document = await _firestore.collection('orders').add(orderRequest.mainDetailsToJson());
-                                  await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
+     await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
      DocumentSnapshot d =  await _firestore.collection('orders').doc(document.id).get();
      return d;
+
     }catch(e){
       throw Exception('Error in set data !');
     }
   }
 
-  Future<OrderDetailsData?> getOrderDetails(int orderId) async {
-    return null;
-    // if (orderId == null) {
-    //   return null;
-    // }
-    // await _authService.refreshToken();
-    // var token = await _authService.getToken();
+  Future<OrderDetailResponse?> getOrderDetails(String orderId) async {
+    try{
+       return await _firestore.collection('orders').doc(orderId).collection('details').get().then((value) {
+         Map <String ,dynamic> result = value.docs[0].data() ;
+         result['id'] = orderId;
 
-    // dynamic response = await _apiClient.get(
-    //   Urls.ORDER_STATUS_API + '$orderId',
-    //   headers: {'Authorization': 'Bearer $token'},
-    // );
-    // if (response == null) return null;
-    // return OrderStatusResponse.fromJson(response).data;
+         OrderDetailResponse r =   OrderDetailResponse.fromJson(result) ;
+         return r;
+   });
+
+    }catch(e){
+      print(e);
+      throw Exception('Error in set data !');
+    }
   }
 
 
-  Future<List<OrdersListResponse>?> getMyOrders(String uid) async {
-    // await _authService.refreshToken();
-    // var token = await _authService.getToken();
-    //
-    // try {
-    //   dynamic response = await _apiClient.get(
-    //     Urls.OWNER_ORDERS_API,
-    //     headers: {'Authorization': 'Bearer ${token}'},
-    //   );
-    //   if (response == null) return [];
-    //
-    //   return OrdersResponse
-    //       .fromJson(response)
-    //       .data;
-    // } catch (e) {
-    //   return [];
-    // }
+  Stream<QuerySnapshot> getMyOrders(String uid)  {
+
+    try{
+      return   _firestore.collection('orders').snapshots();
+    }catch(e){
+      throw Exception('Error in get data !');
+    }
   }
 
+ Future<bool> deleteOrder(String orderId)async {
+    print('delete order by order id: ${orderId}');
+    try{
+      await _firestore.collection('orders').doc(orderId).delete();
+     //  await Future.wait([
+     //    //_firestore.collection('orders').doc(orderId).collection('details').
 
-  Future<OrderDetailsResponse?> updateOrder(UpdateOrderRequest request) async {
-    // var token = await _authService.getToken();
-    // dynamic response = await _apiClient.put(
-    //   '${Urls.CAPTAIN_ORDER_UPDATE_API}',
-    //   request.toJson(),
-    //   headers: {'Authorization': 'Bearer ' + token},
-    // );
+ //  ]);
+      return true;
+    }catch(e){
+      print('tag : repository , message : Error in deleted !!! ');
+      return false;
+    }
+ }
 
-    // if (response == null) return null;
 
-    // return OrderDetailsResponse.fromJson(response);
-    return null;
-  }
+
+
+  // Future<OrderDetailsResponse?> updateOrder(UpdateOrderRequest request) async {
+  //   // var token = await _authService.getToken();
+  //   // dynamic response = await _apiClient.put(
+  //   //   '${Urls.CAPTAIN_ORDER_UPDATE_API}',
+  //   //   request.toJson(),
+  //   //   headers: {'Authorization': 'Bearer ' + token},
+  //   // );
+  //
+  //   // if (response == null) return null;
+  //
+  //   // return OrderDetailsResponse.fromJson(response);
+  //   return null;
+  // }
 }

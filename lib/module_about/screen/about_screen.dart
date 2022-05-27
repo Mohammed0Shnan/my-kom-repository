@@ -130,7 +130,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 bottom: 20,
                 right: 20,
                 child: TextButton(
-                  child:currentIndex == 3? Text('Get Started') :Text('Next'),
+                  child:currentIndex == 3? Text('Get Started',style: TextStyle(color: Colors.white)) :Text('Next',style: TextStyle(color: Colors.white),),
                   onPressed: () async{
                     if (_pageController.page == 3) {
                       AboutService().setInited();
@@ -197,9 +197,9 @@ class Page extends StatelessWidget {
                 ),
                 Text(
                   infoTitle,
-                  style: GoogleFonts.acme(
+                  style: GoogleFonts.lato(
                     fontSize: SizeConfig.titleSize * 3.5,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.bold,
                     color: Colors.red
 
                   )

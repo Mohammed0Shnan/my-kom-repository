@@ -75,13 +75,20 @@ class ProductsCompanyBloc extends Bloc<ProductsCompanyEvent, ProductsCompanyStat
   //     }
   // }
 
+  List<ProductModel> products =[];
+  search(String query){
+    print(query);
+    List<ProductModel> suggestionList = products.where((element) => element.title.startsWith(query)).toList();
+    this.add(ProductsCompanySuccessEvent(data: suggestionList));
 
+  }
 
   getProducts(String compny_id) async {
     this.add(ProductsCompanyLoadingEvent());
     _service.getCompanyProducts(compny_id).then((value) {
       if (value != null) {
-        this.add(ProductsCompanySuccessEvent(data: value));
+        products = value;
+        this.add(ProductsCompanySuccessEvent(data: products));
       } else{
         this.add(ProductsCompanyErrorEvent(message: 'Error '));
 

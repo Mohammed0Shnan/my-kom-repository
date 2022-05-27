@@ -5,6 +5,7 @@ import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 
 class OrdersListResponse {
+  late String id;
   late String userId;
   late String storeId;
   late String addressName;
@@ -28,44 +29,41 @@ class OrdersListResponse {
   //   products = (json['products']).map((e) => null);
   // }
 
-  Map<String, dynamic> mainDetailsToJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+  OrdersListResponse.mainDetailsFromJson(Map<String, dynamic> data) {
+    this.id = data['id']  ;
+    this.description = data['description']  ;
+    this.orderValue = data['order_value'];
+    this.addressName = data['address_name'] ;
 
-    data['userId'] = this.userId;
-    // data['storeId'] = this.storeId;
-    data['description'] = this.description;
-    data['order_value'] = this.orderValue;
-    data['address_name'] = this.addressName;
-
-
-    return data;
   }
 }
 
 
 class GeoJson {
- late double lat;
- late double lon;
+  late double lat;
+  late double lon;
 
-  GeoJson({required this.lat,required this.lon});
+  GeoJson({required this.lat, required this.lon});
 
-  GeoJson.fromJson(dynamic data) {
-    var json = <String, dynamic>{};
+  GeoJson.fromJson(Map<String, dynamic> data) {
     if (data == null) {
       return;
     }
-    if (data is List) {
-      if (data.last is Map) {
-        json = data.last;
-      }
+    else {
+      this.lat = double.tryParse(data['lat'].toString())!;
+      this.lon = double.tryParse(data['lon'].toString())!;
     }
-    if (data != null) {
-      if (data is Map) {
-        lat = double.tryParse(json['lat'].toString())!;
-        lon = double.tryParse(json['lon'].toString())!;
-      }
-    }
+    // if (data is List) {
+    //   if (data.last is Map) {
+    //     json = data.last;
+    //   }
+    //  else if (data is Map) {
+    //     this.lat = double.tryParse(json['lat'].toString())!;
+    //     this.lon = double.tryParse(json['lon'].toString())!;
+    //   }
+    // }
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -73,8 +71,8 @@ class GeoJson {
     data['lon'] = this.lon;
     return data;
   }
-}
 
+}
 
 
 

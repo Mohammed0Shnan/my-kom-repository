@@ -19,16 +19,23 @@ class ProductModel {
       required this.specifications
       });
 
-  ProductModel.fromJson(Map<String, dynamic> map) {
+  ProductModel.fromJson(dynamic json) {
+    Map<String ,dynamic> map = json as Map<String ,dynamic>;
+    print('1111111111111111111111111111111111111111111111111111');
+    print(map);
     this.id = map['id'];
     this.title = map['title'];
     this.description = map['description'];
     this.price = map['price'];
-    this.old_price = map['old_price'];
+    this.old_price = map['old_price'] ;
     this.quantity = map['quantity'];
     this.orderQuantity = map['order_quantity'];
     this.imageUrl = map['image_url'];
-    this.specifications = (map['specifications']).map((e) => SpecificationsModel.fromJson(e)).toList();
+    List<SpecificationsModel> specifications = [];
+    map['specifications'].forEach((v) {
+      specifications.add(SpecificationsModel.fromJson(v));
+    });
+    this.specifications = specifications;
   }
 
   Map<String, dynamic>? toJson() {
@@ -41,6 +48,7 @@ class ProductModel {
     map['quantity'] = this.quantity;
     map['order_quantity'] = this.orderQuantity;
     map['image_url'] = this.imageUrl;
+   map['specifications'] = this.specifications.map((e) => e.toJson()).toList();
     return map;
   }
 }

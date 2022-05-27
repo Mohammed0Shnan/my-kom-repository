@@ -9,6 +9,8 @@ import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_company/screen/company_products_screen.dart';
+import 'package:my_kom/module_dashbord/dashboard_module.dart';
+import 'package:my_kom/module_dashbord/screen/dash_bord_screen.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
@@ -19,6 +21,7 @@ import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/ui/screens/new_order/new_order_screen.dart';
+import 'package:my_kom/module_orders/ui/screens/order_detail.dart';
 import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
@@ -48,7 +51,8 @@ class AppComponentInjector implements AppComponent {
       _createCompanyModule(),
       _createShopingModule(),
       _createOrderModule(),
-      _createProfileModule()
+      _createProfileModule(),
+      _createDashBoard()
       );
 
   LocalizationService _createLocalizationService() =>
@@ -70,9 +74,9 @@ class AppComponentInjector implements AppComponent {
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
-  OrdersModule _createOrderModule()=> OrdersModule(OrderStatusScreen(), CaptainOrdersScreen());
+  OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OrderDetailScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
-
+  DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));
   MyApp get app {
     return _createApp();

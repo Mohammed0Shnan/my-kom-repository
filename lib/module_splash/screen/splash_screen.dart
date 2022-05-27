@@ -6,9 +6,10 @@ import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 class SplashScreen extends StatefulWidget {
   final AuthService _authService;
    final AboutService _aboutService;
@@ -45,7 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Container(
             width: SizeConfig.imageSize * 10,
             height:  SizeConfig.imageSize * 10,
-            child: Image.asset('assets/logo2.png',fit: BoxFit.contain,),
+            color: Colors.white,
+            child:SvgPicture.asset('assets/1.svg')// Image.asset('assets/logo2.png',fit: BoxFit.contain,),
           ),
       ),
 //  AnimatedSplashScreen(
@@ -73,27 +75,28 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<String> _getNextRoute() async {
     try {
       var isInited = await widget._aboutService.isInited();
-      /////if (isInited) {
+     //if (isInited) {
         return AboutRoutes.ROUTE_ABOUT;
-    //  }
+      //  }
 
-      // Is LoggedIn
-      UserRole? role = await widget._authService.userRole;
-      if(role != null){
-        if (role == UserRole.ROLE_OWNER) {
-          return NavigatorRoutes.NAVIGATOR_SCREEN;
-          // return OrdersRoutes.OWNER_ORDERS_SCREEN;
-        }  else{
-          return NavigatorRoutes.NAVIGATOR_SCREEN;
-          //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
-        }
-      }
-
-      // Is Not LoggedInt
-     else {
-         return NavigatorRoutes.NAVIGATOR_SCREEN;
-      //  return AuthorizationRoutes.LOGIN_SCREEN;
-      }
+     // // Is LoggedIn
+     //  UserRole? role = await widget._authService.userRole;
+     //  if(role != null){
+     //
+     //    if (role == UserRole.ROLE_OWNER) {
+     //      return DashboardRoutes.DASHBOARD_SCREEN;
+     //      // return OrdersRoutes.OWNER_ORDERS_SCREEN;
+     //    }  else{
+     //      return NavigatorRoutes.NAVIGATOR_SCREEN;
+     //      //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
+     //    }
+     //  }
+     //
+     //  // Is Not LoggedInt
+     // else {
+     //     return NavigatorRoutes.NAVIGATOR_SCREEN;
+     //  //  return AuthorizationRoutes.LOGIN_SCREEN;
+     //  }
     } catch (e) {
       return AboutRoutes.ROUTE_ABOUT;  // about screen
     }

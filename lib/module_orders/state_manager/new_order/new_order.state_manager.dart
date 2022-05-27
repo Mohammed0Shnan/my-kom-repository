@@ -41,7 +41,8 @@ class NewOrderBloc extends Bloc<CreateOrderEvent,CreateOrderStates> {
   }) {
     this.add(CreateOrderLoadingEvent());
     _service
-        .addNewOrder(products: product, addressName: addressName,deliveryTimes: deliveryTimes, numberOfMonth: numberOfMonth,date: date, destination: destination, phoneNumber: phoneNumber, paymentMethod: paymentMethod, amount: orderValue, cardId: cardId, )
+        .addNewOrder(products: product, addressName: addressName,deliveryTimes: deliveryTimes, numberOfMonth: numberOfMonth,date: date, destination: destination, phoneNumber: phoneNumber, paymentMethod: paymentMethod, amount: orderValue, cardId: cardId,
+    reorder: false,description: null)
         .then((response) {
           if(response != null){
             this.add(CreateOrderSuccessEvent(data: response));
@@ -49,6 +50,19 @@ class NewOrderBloc extends Bloc<CreateOrderEvent,CreateOrderStates> {
             this.add(CreateOrderErrorEvent(message: 'Error in create order'));
           }
       }
+    );
+  }
+  reorder(String orderID){
+    this.add(CreateOrderLoadingEvent());
+    _service
+        .reorder(orderID)
+        .then((response) {
+      if(response!= null){
+        this.add(CreateOrderSuccessEvent(data:response ));
+      }else{
+        this.add(CreateOrderErrorEvent(message: 'Error in create order'));
+      }
+    }
     );
   }
 }

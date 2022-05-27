@@ -19,19 +19,15 @@ import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
-import 'package:my_kom/module_orders/orders_routes.dart';
-import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/models/card_model.dart';
-import 'package:my_kom/module_shoping/service/payment_service.dart';
 import 'package:my_kom/module_shoping/service/stripe.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:stripe_payment/src/payment_method.dart';
 
 class ShopScreen extends StatefulWidget {
    ShopScreen({Key? key}) : super(key: key);

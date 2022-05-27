@@ -36,8 +36,8 @@ class _ExpadedTextWidgetState extends State<ExpadedTextWidget> {
             style: TextStyle(
               height: 1.2,
               fontSize: SizeConfig.titleSize * 2.6,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54
+              fontWeight: FontWeight.w800,
+              color: Colors.black45
             ),
           ),
           InkWell(

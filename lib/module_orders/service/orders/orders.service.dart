@@ -13,8 +13,10 @@ import 'package:my_kom/module_orders/request/update_order_request/update_order_r
 import 'package:my_kom/module_orders/response/branch.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
+import 'package:my_kom/module_orders/utils/status_helper/status_helper.dart';
 import 'package:my_kom/module_shoping/service/purchers_service.dart';
 import 'package:my_kom/module_shoping/service/stripe.dart';
+import 'package:rxdart/rxdart.dart';
 
 class OrdersService {
   //final ProfileService _profileService;
@@ -23,56 +25,72 @@ class OrdersService {
   final StripeServices _stripeServices = StripeServices();
  final  PurchaseServices _purchaseServices = PurchaseServices();
 
-  Future<List<OrderModel>?> getMyOrders() async {
-    String? uid = await _authPrefsHelper.getUserId();
-       await _orderRepository.getMyOrders(uid!);
-   // if (response == null) return null;
-   //
-   //  List<OrderModel> orders = [];
-   //
-   //  response.forEach((element) {
-   //    if (element.state != 'delivered') {
-   //      orders.add(new OrderModel(
-   //        to: element.location,
-   //        clientPhone: element.recipientPhone,
-   //        from: element.fromBranch.brancheName,
-   //        creationTime: DateTime.fromMillisecondsSinceEpoch(
-   //            element.date.timestamp * 1000),
-   //        paymentMethod: element.payment,
-   //        id: element.id,
-   //      ));
-   //    }
-   //  });
+  final PublishSubject<Map<String,List<OrderModel>>?> orderPublishSubject =
+  new PublishSubject();
 
-   //return orders.reversed.toList();
-   return null;
+  Future<void> getMyOrders() async {
+    String? uid = await _authPrefsHelper.getUserId();
+
+
+
+      _orderRepository.getMyOrders(uid!).listen((event) {
+        Map<String,List<OrderModel>> orderList = {};
+        List<OrderModel> cur =[];
+        List<OrderModel> pre =[];
+        event.docs.forEach((element2) {
+          Map <String ,dynamic> order = element2.data() as Map<String , dynamic>;
+          order['id'] = element2.id;
+          OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
+
+          if(orderModel.status == OrderStatus.DELIVERING.name)
+            {
+              pre.add(orderModel);
+            }
+          else{
+            cur.add(orderModel);
+          }
+
+        }
+        );
+        orderList['cur']= cur;
+        orderList['pre']= pre;
+
+        orderPublishSubject.add(orderList);
+
+      }).onError((e){
+        print('errorrrrrrrrrrrrrrr in order service');
+        orderPublishSubject.add(null);
+      });
+
   }
 
 
 
-  Future<OrderModel?> getOrderDetails(int orderId) async {
-    // OrderDetailsData response = await _ordersManager.getOrderDetails(orderId);
-    // if (response == null) return null;
 
-    // var date =
-    //     DateTime.fromMillisecondsSinceEpoch(response.date.timestamp * 1000);
+  Future<OrderModel?> getOrderDetails(String orderId) async {
+    try{
+    OrderDetailResponse? response =   await _orderRepository.getOrderDetails(orderId);
 
-    // OrderModel order = new OrderModel(
-    //   paymentMethod: response.payment,
-    //   from: response.fromBranch.toString(),
-    //   to: response.location,
-    //   creationTime: date,
-    //   status: StatusHelper.getStatus(response.state),
-    //   id: orderId,
-    //   chatRoomId: response.uuid,
-    //   ownerPhone: response.phone,
-    //   captainPhone: response.acceptedOrder.isNotEmpty
-    //       ? response.acceptedOrder.last.phone
-    //       : null,
-    // );
+    if(response ==null)
+      return null;
+    OrderModel orderModel = OrderModel() ;
+     orderModel.id = response.id;
+    orderModel.products = response.products;
+    orderModel.payment = response.payment;
+    orderModel.orderValue = response.orderValue;
+    orderModel.description = response.description;
+    orderModel.addressName = response.addressName;
+    orderModel.destination = response.destination;
+    orderModel.phone = response.phone;
+    orderModel.startDate = response.startDate;
+    orderModel.numberOfMonth = response.numberOfMonth;
+    orderModel.deliveryTime = response.deliveryTime;
+    orderModel.cardId = response.cardId;
 
-    // return order;
-    return null;
+    return orderModel;
+    }catch(e){
+      return null;
+    }
   }
 
   Future<List<OrderModel>?> getNearbyOrders() async {
@@ -123,9 +141,10 @@ class OrdersService {
   Future<OrderModel?> addNewOrder(
       {required List<ProductModel>  products ,required String addressName, required String deliveryTimes,
         required DateTime date , required GeoJson destination, required String phoneNumber,required String paymentMethod,
-        required  double amount , required String cardId,required int numberOfMonth
+        required  double amount , required String? cardId,required int numberOfMonth,required bool reorder,String? description
       }
       ) async {
+
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
 
@@ -135,37 +154,74 @@ class OrdersService {
     //     throw Exception();
     //   }
     // }
-    Map<ProductModel,int> productsMap = Map<ProductModel,int>();
-    products.forEach((element) {
-      if(!productsMap.containsKey(element)){
-        productsMap[element]= 1;
-      }
-      else{
-        productsMap[element] = productsMap[element]! + 1;
-      }
-    });
-    List<ProductModel> newproducts = [];
-    String description = '';
-    productsMap.forEach((key, value) {
-      key.orderQuantity = value;
-      description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
-      newproducts.add(key);
-    });
-    
-    print(description);
-       var orderRequest = CreateOrderRequest(
-           userId: uId!,
-           destination: destination,
-           phone: phoneNumber,
-           payment: paymentMethod,
-           products: newproducts,
-           numberOfMonth: numberOfMonth,
-           deliveryTime: deliveryTimes,
-           orderValue: amount,
-           startDate:   date.toIso8601String(),
-           description:description.substring(0 , description.length-2),
-         addressName :addressName
-       );
+
+    late CreateOrderRequest orderRequest;
+    if(!reorder){
+      Map<ProductModel,int> productsMap = Map<ProductModel,int>();
+      products.forEach((element) {
+        if(!productsMap.containsKey(element)){
+          productsMap[element]= 1;
+        }
+        else{
+          productsMap[element] = productsMap[element]! + 1;
+        }
+      });
+      List<ProductModel> newproducts = [];
+      String description = '';
+      productsMap.forEach((key, value) {
+        key.orderQuantity = value;
+        description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
+        newproducts.add(key);
+      });
+       orderRequest = CreateOrderRequest(
+          userId: uId!,
+          destination: destination,
+          phone: phoneNumber,
+          payment: paymentMethod,
+          products: newproducts,
+          numberOfMonth: numberOfMonth,
+          deliveryTime: deliveryTimes,
+          orderValue: amount,
+          startDate:   date.toIso8601String(),
+          description:description.substring(0 , description.length-2),
+          addressName :addressName,
+          cardId:cardId
+
+      );
+      orderRequest.status = OrderStatus.DELIVERING.name;
+
+    }
+    else{
+      orderRequest = CreateOrderRequest(
+          userId: uId!,
+          destination: destination,
+          phone: phoneNumber,
+          payment: paymentMethod,
+          products: products,
+          numberOfMonth: numberOfMonth,
+          deliveryTime: deliveryTimes,
+          orderValue: amount,
+          startDate: date.toIso8601String(),
+          description:description!,
+          addressName :addressName,
+          cardId:cardId
+      );
+      print('seeeeeeeeeeeeriveeeeeeeeeeeeeeeeee');
+      print(orderRequest.userId);
+      print(orderRequest.destination);
+      print(orderRequest.phone);
+      print(orderRequest.payment);
+      print(orderRequest.products);
+      print(orderRequest.numberOfMonth);
+      print(orderRequest.deliveryTime.toString());
+      print(orderRequest.orderValue);
+      print(orderRequest.startDate);
+      print(orderRequest.description);
+      print(orderRequest.addressName);
+      print(orderRequest.cardId);
+      print('seeeeeeeeeeeeriveeeeeeeeeeeeeeeeee');
+      orderRequest.status = OrderStatus.INIT.name;
+    }
 
 
     DocumentSnapshot orderSnapShot =await _orderRepository.addNewOrder(orderRequest);
@@ -175,39 +231,116 @@ class OrdersService {
     // }
     Map<String ,dynamic> map = orderSnapShot.data() as Map<String ,dynamic>;
     map['id'] = orderSnapShot.id;
-   return OrderModel.fromJson(map);
-  }
+   return OrderModel.mainDetailsFromJson(map);
   }
 
-  OrderDetailsResponse? updateOrder(int orderId, OrderModel order) {
-    switch (order.status) {
-      case OrderStatus.GOT_CAPTAIN:
-        var request = AcceptOrderRequest(orderID: orderId.toString(), duration: '');
-       // return _ordersManager.acceptOrder(request);
-        break;
-      case OrderStatus.IN_STORE:
-        var request = UpdateOrderRequest(id: orderId, state: 'in store', distance: '');
-       // return _ordersManager.updateOrder(request);
-        break;
-      case OrderStatus.DELIVERING:
-        var request = UpdateOrderRequest(id: orderId, state: 'ongoing', distance: '');
-       // return _ordersManager.updateOrder(request);
-        break;
-      case OrderStatus.GOT_CASH:
-        var request = UpdateOrderRequest(id: orderId, state: 'got cash', distance: '');
-       // return _ordersManager.updateOrder(request);
-        break;
-      case OrderStatus.FINISHED:
-        var request = UpdateOrderRequest(
-            id: orderId, state: 'delivered', distance: order.distance);
-       // return _ordersManager.updateOrder(request);
-        break;
-      default:
-     //   return null;
-return OrderDetailsResponse.fromJson({});
+  closeStream(){
+    orderPublishSubject.close();
+  }
 
+  Future<bool> deleteOrder(String orderId)async{
+      bool response = await  _orderRepository.deleteOrder(orderId);
+      if(response){
+        return true;
+      }else{
+        return false;
+      }
+  }
+
+ Future<OrderModel?> reorder(String orderID)async {
+    OrderModel? order =  await getOrderDetails(orderID);
+
+    if(order == null){
+
+      return null;
     }
+    else{
+
+      // print('###############################');
+      // print(order.destination);
+      // print(order.phone);
+      // print(order.payment);
+      // print(order.products);
+      // print(order.numberOfMonth);
+      // print(order.deliveryTime.toString());
+      // print(order.orderValue);
+      // print(order.startDate);
+      // print(order.description);
+      // print(order.addressName);
+      // print(order.cardId);
+      // print('###############################');
+      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!');
+      print(order.destination.lat);
+      OrderModel? neworder = await addNewOrder(products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, date: DateTime.parse(order.startDate), destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
+      reorder: true,
+        description: order.description
+      );
+   if(neworder !=null)
+     return neworder;
+         else
+      return null;
+    }
+
+
+ }
+
+  // Future<OrderModel?> getOrdersDetail(String ) async {
+  //   _orderRepository.getOrderDetails(uid)
+  //   // List<Order> response = await _ordersManager.getCaptainOrders();
+  //   // if (response == null) return null;
+  //
+  //   // List<OrderModel> orders = [];
+  //
+  //   // response.forEach((element) {
+  //   //   orders.add(new OrderModel(
+  //   //     to: element.location,
+  //   //     clientPhone: element.recipientPhone,
+  //   //     from: '',
+  //   //     storeName: element.userName,
+  //   //     creationTime:
+  //   //         DateTime.fromMillisecondsSinceEpoch(element.date.timestamp * 1000),
+  //   //     paymentMethod: element.payment,
+  //   //     id: element.id,
+  //   //   ));
+  //   // });
+  //
+  //   // return orders;
+  //   return null;
+  // }
+
   }
+
+//   OrderDetailsResponse? updateOrder(int orderId, OrderModel order) {
+//     switch (order.status) {
+//       case OrderStatus.GOT_CAPTAIN:
+//         var request = AcceptOrderRequest(orderID: orderId.toString(), duration: '');
+//        // return _ordersManager.acceptOrder(request);
+//         break;
+//       case OrderStatus.IN_STORE:
+//         var request = UpdateOrderRequest(id: orderId, state: 'in store', distance: '');
+//        // return _ordersManager.updateOrder(request);
+//         break;
+//       case OrderStatus.DELIVERING:
+//         var request = UpdateOrderRequest(id: orderId, state: 'ongoing', distance: '');
+//        // return _ordersManager.updateOrder(request);
+//         break;
+//       case OrderStatus.GOT_CASH:
+//         var request = UpdateOrderRequest(id: orderId, state: 'got cash', distance: '');
+//        // return _ordersManager.updateOrder(request);
+//         break;
+//       case OrderStatus.FINISHED:
+//         var request = UpdateOrderRequest(
+//             id: orderId, state: 'delivered', distance: order.distance);
+//        // return _ordersManager.updateOrder(request);
+//         break;
+//       default:
+//      //   return null;
+// return OrderDetailsResponse.fromJson({});
+//
+//     }
+ // }
+
+
 
   Future<List<OrderModel>?> getCaptainOrders() async {
     // List<Order> response = await _ordersManager.getCaptainOrders();

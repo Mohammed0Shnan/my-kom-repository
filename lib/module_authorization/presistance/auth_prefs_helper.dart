@@ -169,8 +169,10 @@ class AuthPrefsHelper {
   double? long = await preferencesHelper.getDouble('longitude');
   String? des = await preferencesHelper.getString('description');
   if(lat==null || long == null|| des==null)
+   {
+     return null;
 
-return null;
+   }
   else {
     AddressModel addressModel = AddressModel(description: des, latitude: lat, longitude: long, geoData: {});
     return addressModel;

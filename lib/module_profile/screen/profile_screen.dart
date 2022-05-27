@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Stack(
       children: [
         Container(
-          color: Colors.grey.shade200,
+          color: Colors.grey.shade50,
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -135,6 +135,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width:innerWidth ,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(color: Colors.black12,
+                                    blurRadius: 5
+                                    )
+                                  ],
                                   borderRadius: BorderRadius.circular(30)
                                 ),
                                   child: Column(
@@ -184,7 +189,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Container(
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(color: Colors.black12,
+                                              blurRadius: 5
+                                          )
+                                        ],
                                       ),
                                       child: Image.asset('assets/profile.png',
                                       fit: BoxFit.fitWidth,
@@ -204,7 +214,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: SizeConfig.screenHeight * 0.55,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color: Colors.white
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12,
+                                blurRadius: 5
+                            )
+                          ],
                         ),
                         child: Column(
                           children: [
@@ -224,6 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: SizeConfig.screenHeight *0.17,
                               padding: EdgeInsets.symmetric(horizontal: 20),
                               decoration: BoxDecoration(
+
                                   borderRadius: BorderRadius.circular(30),
                                   color: Colors.grey.shade200
                               ),

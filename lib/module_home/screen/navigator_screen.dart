@@ -27,7 +27,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
 
         bottomNavigationBar: CurvedNavigationBar(
           color: ColorsConst.mainColor,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade50,
           onTap: (index) {
             current_index = index;
             setState(() {});
@@ -36,10 +36,9 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             Icon(Icons.home, color: Colors.white),
             Icon(Icons.list, color: Colors.white),
             Icon(
-              Icons.border_outer_rounded,
+              Icons.notifications,
               color: Colors.white,
             ),
-          
           ],
           animationDuration: Duration(milliseconds: 100),
           animationCurve: Curves.easeIn,

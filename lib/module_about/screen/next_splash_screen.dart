@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_kom/module_about/animations/fade_animation.dart';
 import 'package:my_kom/module_about/animations/scale_animation.dart';
 import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
@@ -34,7 +36,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
     SizeConfig().init(MediaQuery.of(context).size);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade50,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
@@ -51,11 +53,12 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
                Container(
                  height: 31.25 * SizeConfig.heightMulti,
                  width: 31.25 * SizeConfig.heightMulti,
+                 padding: EdgeInsets.all(25),
                  clipBehavior: Clip.antiAlias,
                  decoration: BoxDecoration(
                    shape: BoxShape.circle
                  ),
-                child: Image.asset('assets/logo3.png',fit: BoxFit.cover,)
+                child:SvgPicture.asset('assets/3.svg',fit: BoxFit.contain,)// Image.asset('assets/logo3.png',fit: BoxFit.cover,)
                )
               ),
             ),
@@ -122,8 +125,7 @@ class _NextSplashScreenState extends State<NextSplashScreen> {
                 },
                 builder: (context, state) {
                   return Material(
-                          color: Colors.grey.shade100,
-
+                    color: Colors.grey.shade50,
                     child: Hero(
                       tag: 'logo',
                       child: WaveLoadingWidget(

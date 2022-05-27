@@ -3,7 +3,7 @@ import 'package:my_kom/module_company/models/product_model.dart';
 
 class CompanyService {
   Future<List<CompanyModel>> getAllCompanies() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
     return <CompanyModel>[
       CompanyModel(
           id: '1',
@@ -30,7 +30,7 @@ class CompanyService {
   }
 
   Future<List<ProductModel>> getCompanyProducts(String company_id) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
     return <ProductModel>[
       ProductModel(
           id: '1',

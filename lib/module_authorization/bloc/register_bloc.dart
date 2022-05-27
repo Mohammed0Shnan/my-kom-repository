@@ -36,7 +36,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterStates> {
 
   register({required String email,required String password,}) async {
     this.add(RegisterLoadingEvent());
-    _service.registerWithEmailAndPassword(email, password ,UserRole.ROLE_USER, AuthSource.EMAIL).then((value) {
+    _service.registerWithEmailAndPassword(email, password ,UserRole.ROLE_OWNER, AuthSource.EMAIL).then((value) {
       if (value.state) {
         this.add(RegisterSuccessEvent(data: value.data));
       } else

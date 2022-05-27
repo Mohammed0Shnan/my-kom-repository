@@ -33,6 +33,7 @@ class CompanyProductScreen extends StatefulWidget {
 
 class _CompanyProductScreenState extends State<CompanyProductScreen> {
   late String company_id;
+  final TextEditingController _serachController = TextEditingController();
   @override
   void initState() {
     //     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -149,6 +150,10 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       BoxShadow(color: Colors.black26, blurRadius: 2)
                     ]),
                 child: TextField(
+                  controller: _serachController,
+                  onChanged: (String query){
+                    productsCompanyBloc.search(query);
+                  },
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: IconButton(
@@ -157,7 +162,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           size: 28,
                           color: Colors.black38,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          productsCompanyBloc.search(_serachController.text);
+                        },
                       ),
                       hintText: 'Search for your products',
                       hintStyle: TextStyle(color: Colors.black26)),
