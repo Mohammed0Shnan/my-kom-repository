@@ -1,18 +1,14 @@
-class AcceptOrderRequest {
+class updateOrderRequest {
   late String orderID;
-  late String duration;
+  late String state;
+ // late String duration;
 
-  AcceptOrderRequest({required this.orderID,required this.duration});
+  updateOrderRequest({required this.orderID,required this.state});
 
-  AcceptOrderRequest.fromJson(Map<String, dynamic> json) {
-    orderID = json['orderID'];
-    duration = json['duration'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['orderID'] = this.orderID;
-    data['duration'] = this.duration;
+   data['status'] = this.state;
     return data;
   }
 }

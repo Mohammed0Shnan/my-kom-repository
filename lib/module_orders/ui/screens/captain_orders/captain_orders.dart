@@ -224,12 +224,18 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                           color: Colors.black54,
                           fontWeight: FontWeight.w800
                         ),),
-                        InkWell(
-                            onTap: (){
-
-                              deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                            },
-                            child: Icon(Icons.close,color:Colors.black54 ,)),
+                        Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                          color: ColorsConst.mainColor,
+                          fontSize: 18,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold
+                        ),)
+                        // InkWell(
+                        //     onTap: (){
+                        //
+                        //      deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
+                        //     },
+                        //     child: Icon(Icons.close,color:Colors.black54 ,)),
                       ],
                     ),
                     SizedBox(height: 8,),
@@ -282,7 +288,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               ),
                               child: MaterialButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, OrdersRoutes.ORDER_DETAIL_SCREEN,arguments: orders[index].id);
+                                  Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_DETAIL_SCREEN,arguments: orders[index].id);
                                 },
                                 child: Text('Details', style: TextStyle(
                                     color: ColorsConst.mainColor,
@@ -301,6 +307,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                             child: MaterialButton(
                               onPressed: () {
 
+                              Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
                               },
                               child: Text('Track Shipment', style: TextStyle(color: Colors.white,
                                   fontSize: SizeConfig.titleSize * 2.6),),
@@ -410,12 +417,18 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                       color: Colors.black54,
                                       fontWeight: FontWeight.w800
                                   ),),
-                                  InkWell(
-                                      onTap: (){
-
-                                        deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                                      },
-                                      child: Icon(Icons.close,color:Colors.black54 ,)),
+                                  Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                      color: ColorsConst.mainColor,
+                                      fontSize: 18,
+                                      letterSpacing: 1,
+                                      fontWeight: FontWeight.bold
+                                  ),)
+                                  // InkWell(
+                                  //     onTap: (){
+                                  //
+                                  //       deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
+                                  //     },
+                                  //     child: Icon(Icons.close,color:Colors.black54 ,)),
                                 ],
                               ),
                               SizedBox(height: 8,),

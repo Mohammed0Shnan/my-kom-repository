@@ -1,13 +1,16 @@
 class ProductModel {
   late final String id;
+  late final String companyId;
   late final String title;
   late final String description;
   late final double price;
   late final double? old_price;
   late final int quantity;
   late final imageUrl;
-  late final int orderQuantity;
+  late final int? orderQuantity;
+  late bool  isRecommended;
   late final List<SpecificationsModel> specifications;
+
   ProductModel(
       {required this.id,
       required this.title,
@@ -16,26 +19,28 @@ class ProductModel {
       required this.old_price,
       required this.imageUrl,
       required this.quantity,
-      required this.specifications
+      required this.specifications,
+        required this.isRecommended
       });
 
   ProductModel.fromJson(dynamic json) {
     Map<String ,dynamic> map = json as Map<String ,dynamic>;
-    print('1111111111111111111111111111111111111111111111111111');
     print(map);
     this.id = map['id'];
+    this.companyId = map['company_id'];
     this.title = map['title'];
     this.description = map['description'];
     this.price = map['price'];
     this.old_price = map['old_price'] ;
     this.quantity = map['quantity'];
     this.orderQuantity = map['order_quantity'];
-    this.imageUrl = map['image_url'];
-    List<SpecificationsModel> specifications = [];
-    map['specifications'].forEach((v) {
-      specifications.add(SpecificationsModel.fromJson(v));
-    });
-    this.specifications = specifications;
+    this.imageUrl = map['imageUrl'];
+    this.isRecommended = map['isRecommended']==null? false:true;
+   // List<SpecificationsModel> specifications = [];
+   //  map['specifications'].forEach((v) {
+   //    specifications.add(SpecificationsModel.fromJson(v));
+   //  });
+   //  this.specifications = specifications;
   }
 
   Map<String, dynamic>? toJson() {
@@ -47,8 +52,9 @@ class ProductModel {
     map['old_price'] = this.old_price;
     map['quantity'] = this.quantity;
     map['order_quantity'] = this.orderQuantity;
-    map['image_url'] = this.imageUrl;
-   map['specifications'] = this.specifications.map((e) => e.toJson()).toList();
+    map['imageUrl'] = this.imageUrl;
+  //  map['specifications'] = this.specifications.map((e) => e.toJson()).toList();
+    map['isRecommended'] = this.isRecommended;
     return map;
   }
 }

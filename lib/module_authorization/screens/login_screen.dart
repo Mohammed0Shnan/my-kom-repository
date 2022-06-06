@@ -7,6 +7,7 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
+import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/screens/widgets/auth_background.dart';
 import 'package:my_kom/module_authorization/screens/widgets/custom_clip_widget.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
@@ -367,10 +368,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamedAndRemoveUntil(
+                          Navigator.pushNamed(
                               context,
                               AuthorizationRoutes.REGISTER_SCREEN,
-                              (route) => false);
+                            arguments: UserRole.ROLE_USER
+                             );
                         },
                         child: Text('Create an account',
                             style:  GoogleFonts.lato(

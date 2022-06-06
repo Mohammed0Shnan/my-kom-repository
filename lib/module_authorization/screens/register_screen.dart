@@ -7,6 +7,7 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
+import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/widgets/custom_clip_widget.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
@@ -43,8 +44,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   late final PasswordHiddinCubit cubit1, cubit2;
   late final PageController _pageController;
+  late final UserRole userRole;
   @override
   void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      userRole =  ModalRoute.of(context)!.settings.arguments as UserRole;
+    });
     super.initState();
     _pageController = PageController(
       initialPage: 0,
@@ -436,6 +441,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 _registerPasswordController.text
                                                     .trim();
                                             widget._bloc.register(
+                                                userRole: userRole,
                                                 email: email,
                                                 password: password);
                                           }
@@ -781,8 +787,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   snackBarErrorWidget(context, state.message);
                                 } else if (state is CompleteSuccessState) {
                                   snackBarSuccessWidget(context, state.data);
-                                  Navigator.pushNamed(
-                                      context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                                  if(userRole == UserRole.ROLE_USER){
+                                    Navigator.pushNamed(
+                                        context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                                  }else{
+                                    Navigator.pop(context);
+                                  }
+
                                 }
                               },
                               builder: (context, state) {

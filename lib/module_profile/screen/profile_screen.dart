@@ -26,11 +26,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      userId =  ModalRoute.of(context)!.settings.arguments as String? ;
+      if(userId == null){
+        profileBloc.getMyProfile();
+      }else{
+        profileBloc.getUserProfile(userId: userId!);
+      }
 
+    });
     super.initState();
-    profileBloc.getMyProfile();
   }
-
+ late String? userId;
   bool isEditingProfile = false;
  late ProfileRequest? request ;
   late AddressModel addressModel ;

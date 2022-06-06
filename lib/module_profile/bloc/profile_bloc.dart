@@ -32,6 +32,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
         this.add(ProfileErrorEvent(data: 'Error getting Profile Fire Base API'));
     });
   }
+  getUserProfile({required String userId}) async {
+    this.add(ProfileLoadingEvent());
+    _service.getUserProfile(userId).then((value) {
+      if (value !=null) {
+        this.add(ProfileSuccessEvent(data: value,isEditState: false));
+      } else
+        this.add(ProfileErrorEvent(data: 'Error getting Profile Fire Base API'));
+    });
+  }
   
    editProfile(ProfileRequest request){
      this.add(ProfileLoadingEvent());

@@ -23,6 +23,8 @@ import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.da
 import 'package:my_kom/module_orders/ui/screens/new_order/new_order_screen.dart';
 import 'package:my_kom/module_orders/ui/screens/order_detail.dart';
 import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen.dart';
+import 'package:my_kom/module_orders/ui/screens/orders/owner_orders_screen.dart';
+import 'package:my_kom/module_orders/ui/screens/owner_orders.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
@@ -74,7 +76,7 @@ class AppComponentInjector implements AppComponent {
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
-  OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OrderDetailScreen());
+  OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OwnerOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
   DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));

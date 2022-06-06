@@ -18,16 +18,16 @@ class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
     });
   }
 
-
-  getAllCompany() async{
+  getAllCompany(String storeId) async{
     this.add(AllCompanyLoadingEvent());
-    _service.getAllCompanies().then((value) {
+    _service.companyStoresPublishSubject.listen((value) {
       if (value != null){
         this.add(AllCompanySuccessEvent(data: value));
       } else{
         this.add(AllCompanyErrorEvent(message: 'Error '));
       }
     });
+    _service.getAllCompanies(storeId);
   }
 }
 

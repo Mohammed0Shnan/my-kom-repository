@@ -11,7 +11,8 @@ class OrdersListResponse {
   late String addressName;
   late double orderValue;
   late String description;
-
+  late String payment;
+  late int  customerOrderID;
   OrdersListResponse(
       {
         required this.userId,
@@ -33,7 +34,9 @@ class OrdersListResponse {
     this.id = data['id']  ;
     this.description = data['description']  ;
     this.orderValue = data['order_value'];
+    this.payment = data['payment'];
     this.addressName = data['address_name'] ;
+    this.customerOrderID =data ['customer_order_id'] ;
 
   }
 }

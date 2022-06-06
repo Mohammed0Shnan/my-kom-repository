@@ -20,17 +20,17 @@ class ProductsCompanyBloc extends Bloc<ProductsCompanyEvent, ProductsCompanyStat
   }
 
 
-  getProducts(String compny_id) async {
-    this.add(ProductsCompanyLoadingEvent());
-    _service.getCompanyProducts(compny_id).then((value) {
-      if (value != null) {
-        this.add(ProductsCompanySuccessEvent(data: value));
-      } else{
-        this.add(ProductsCompanyErrorEvent(message: 'Error '));
-
-      }
-    });
-  }
+  // getProducts(String compny_id) async {
+  //   this.add(ProductsCompanyLoadingEvent());
+  //   _service.getCompanyProducts(compny_id).then((value) {
+  //     if (value != null) {
+  //       this.add(ProductsCompanySuccessEvent(data: value));
+  //     } else{
+  //       this.add(ProductsCompanyErrorEvent(message: 'Error '));
+  //
+  //     }
+  //   });
+  // }
 }
 
 abstract class ProductsCompanyEvent { }

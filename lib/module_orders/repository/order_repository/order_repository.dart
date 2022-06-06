@@ -1,6 +1,8 @@
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
+import 'package:my_kom/module_orders/request/accept_order_request/accept_order_request.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/request/update_order_request/update_order_request.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
@@ -10,6 +12,8 @@ import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 class OrderRepository {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
 
   // OrderRepository(
   //   this._apiClient,
@@ -21,6 +25,8 @@ class OrderRepository {
      try{
      DocumentReference document = await _firestore.collection('orders').add(orderRequest.mainDetailsToJson());
      await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
+     print('{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}');
+
      DocumentSnapshot d =  await _firestore.collection('orders').doc(document.id).get();
      return d;
 
@@ -34,7 +40,7 @@ class OrderRepository {
        return await _firestore.collection('orders').doc(orderId).collection('details').get().then((value) {
          Map <String ,dynamic> result = value.docs[0].data() ;
          result['id'] = orderId;
-
+         print('products detail from repository ================================ ');
          OrderDetailResponse r =   OrderDetailResponse.fromJson(result) ;
          return r;
    });
@@ -44,17 +50,35 @@ class OrderRepository {
       throw Exception('Error in set data !');
     }
   }
+  Future<OrderStatusResponse?> getTrackingDetails(String orderId) async {
+    try{
+      return await _firestore.collection('orders').doc(orderId).get().then((value) {
+        Map <String ,dynamic> result =value.data() as  Map <String ,dynamic>;
+        result['id'] = orderId;
+
+        OrderStatusResponse r =   OrderStatusResponse.fromJson(result) ;
+        return r;
+      });
+
+    }catch(e){
+      print(e);
+      throw Exception('Error in set data !');
+    }
+  }
+
 
 
   Stream<QuerySnapshot> getMyOrders(String uid)  {
 
     try{
-      return   _firestore.collection('orders').snapshots();
+      return   _firestore.collection('orders').where('userId',isEqualTo: uid).snapshots();
     }catch(e){
       throw Exception('Error in get data !');
     }
   }
 
+
+  
  Future<bool> deleteOrder(String orderId)async {
     print('delete order by order id: ${orderId}');
     try{
@@ -68,6 +92,57 @@ class OrderRepository {
       print('tag : repository , message : Error in deleted !!! ');
       return false;
     }
+ }
+
+  Future<OrderStatusResponse?> updateOrder(updateOrderRequest request) async{
+    try{
+       await _firestore.collection('orders').doc(request.orderID).update(request.toJson()).then((value) {
+       });
+
+  }catch(e){
+  print(e);
+  throw Exception('Error in update data !');
+  }
+  }
+
+  Future<int> getOrdersSize() async{
+    try{
+      int size = 0;
+    var list = await  _firestore.collection('orders').snapshots().toList();
+   return list.length;
+
+    }catch(e){
+
+      return 0;
+    }
+  }
+
+  getOwnerOrders() {
+    try{
+      return   _firestore.collection('orders').snapshots();
+    }catch(e){
+      throw Exception('Error in get data !');
+    }
+  }
+
+ Future<int?> generateOrderID()async {
+    try{
+
+     Map<String , dynamic> map =  await _firestore.collection('utils').get().then((value) {
+        return {'doc_id':value.docs[0].id,
+        'order_id':value.docs[0].data()['cutomer_order_id']
+        };
+      });
+
+       await _firestore.collection('utils').doc( map['doc_id']).update({
+       'cutomer_order_id': map['order_id']+1
+     });
+       int id = map['order_id']+1;
+       return id ;
+    }catch(e){
+      return null;
+    }
+
  }
 
 

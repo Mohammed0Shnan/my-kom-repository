@@ -70,28 +70,18 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           width: SizeConfig.imageSize * 12,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: widget.company!.imageUrl.length != 0
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: new ExactAssetImage(
-                                            widget.company!.imageUrl),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  )
-                                : CachedNetworkImage(
-                                    maxHeightDiskCache: 5,
-                                    imageUrl: widget.company!.imageUrl,
-                                    progressIndicatorBuilder:
-                                        (context, l, ll) =>
-                                            CircularProgressIndicator(
-                                      value: ll.progress,
-                                    ),
-                                    errorWidget: (context, s, l) =>
-                                        Icon(Icons.error),
-                                    fit: BoxFit.cover,
+                            child: CachedNetworkImage(
+                              maxHeightDiskCache: 5,
+                              imageUrl: widget.company!.imageUrl,
+                              progressIndicatorBuilder:
+                                  (context, l, ll) =>
+                                  CircularProgressIndicator(
+                                    value: ll.progress,
                                   ),
+                              errorWidget: (context, s, l) =>
+                                  Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -313,6 +303,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                       child: Hero(
                                         tag:'product'+items[index].id,
                                         child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             AspectRatio(
                                               aspectRatio:  1.5,
@@ -324,23 +315,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       child: ClipRRect(
                                                         borderRadius:
                                                         BorderRadius.circular(10),
-                                                        child: items[index]
-                                                            .imageUrl
-                                                            .length !=
-                                                            0
-                                                            ? Container(
-                                                          decoration:
-                                                          BoxDecoration(
-                                                            image:
-                                                            DecorationImage(
-                                                              image: new ExactAssetImage(
-                                                                  items[index]
-                                                                      .imageUrl),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        )
-                                                            : CachedNetworkImage(
+                                                        child:  CachedNetworkImage(
                                                           maxHeightDiskCache: 10,
                                                           imageUrl: items[index]
                                                               .imageUrl,
@@ -351,7 +326,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                               ),
                                                           errorWidget: (context,
                                                               s, l) =>
-                                                              Icon(Icons.error),
+                                                              Center(child: Icon(Icons.error,size: 40,color: Colors.black45,)),
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
@@ -397,6 +372,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 8),
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Container(
                                                       padding: EdgeInsets.symmetric(horizontal: 5),
@@ -489,7 +465,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                     SizedBox(height: 5,),
                                                     Expanded(
                                                       child: Container(
-                                                        padding: EdgeInsets.symmetric(horizontal: 5),
+
+                                                        padding: EdgeInsets.symmetric(horizontal: 10),
                                                         child: Text(
                                                           items[index].description,
                                                           overflow: TextOverflow.ellipsis,

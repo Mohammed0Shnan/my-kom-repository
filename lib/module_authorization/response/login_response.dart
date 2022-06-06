@@ -19,6 +19,7 @@ class LoginResponse{
 
 
 class ProfileResponse{
+  late String email;
   late String userName;
   late String phone;
  late UserRole userRole;
@@ -27,7 +28,8 @@ class ProfileResponse{
   ProfileResponse.fromJson(Map<String , dynamic> map){
     this.userName = map['userName'];
     this.phone = map['phone'];
-     this.userRole = (map['userRole'] == '${UserRole.ROLE_USER}')? UserRole.ROLE_USER:UserRole.ROLE_OWNER ;
+    this.email = map['email'];
+     this.userRole = (map['userRole'] == '${UserRole.ROLE_USER.name}')? UserRole.ROLE_USER:UserRole.ROLE_OWNER ;
      this.address =AddressModel.fromJson( map['address']);
   }
 

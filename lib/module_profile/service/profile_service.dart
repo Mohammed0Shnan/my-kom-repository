@@ -38,6 +38,21 @@ class ProfileService{
 
   }
 
+  Future<ProfileModel?> getUserProfile(String userID) async {
+
+    // Change This
+    try{
+      ProfileResponse profileResponse = await _repository.getProfile(userID);
+
+      ProfileModel profileModel = ProfileModel(userName: profileResponse.userName, email: profileResponse.email,  phone: profileResponse.phone,address: profileResponse.address, userRole: profileResponse.userRole);
+      return profileModel;
+    }catch(e){
+      return null;
+      throw GetProfileException('Error getting Profile Fire Base API');
+    }
+
+  }
+
   Future <ProfileModel?> editMyProfile(ProfileRequest request)async {
     await Future.delayed(Duration(seconds: 1));
     var user = _auth.currentUser;

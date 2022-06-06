@@ -1,7 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:my_kom/consts/order_status.dart';
 import 'package:my_kom/consts/payment_method.dart';
+import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
@@ -12,6 +14,7 @@ import 'package:my_kom/module_orders/request/order/order_request.dart';
 import 'package:my_kom/module_orders/request/update_order_request/update_order_request.dart';
 import 'package:my_kom/module_orders/response/branch.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
+import 'package:my_kom/module_orders/response/order_status/order_status_response.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/utils/status_helper/status_helper.dart';
 import 'package:my_kom/module_shoping/service/purchers_service.dart';
@@ -28,28 +31,29 @@ class OrdersService {
   final PublishSubject<Map<String,List<OrderModel>>?> orderPublishSubject =
   new PublishSubject();
 
+
   Future<void> getMyOrders() async {
     String? uid = await _authPrefsHelper.getUserId();
-
-
-
       _orderRepository.getMyOrders(uid!).listen((event) {
         Map<String,List<OrderModel>> orderList = {};
         List<OrderModel> cur =[];
         List<OrderModel> pre =[];
         event.docs.forEach((element2) {
-          Map <String ,dynamic> order = element2.data() as Map<String , dynamic>;
-          order['id'] = element2.id;
-          OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
+          Map <String, dynamic> order = element2.data() as Map<String,
+              dynamic>;
+          // if(order['userId'] == uid) {
+          //
+          // }
 
-          if(orderModel.status == OrderStatus.DELIVERING.name)
-            {
-              pre.add(orderModel);
-            }
-          else{
+          order['id'] = element2.id;
+
+          OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
+          if (orderModel.status == OrderStatus.FINISHED) {
+            pre.add(orderModel);
+          }
+          else {
             cur.add(orderModel);
           }
-
         }
         );
         orderList['cur']= cur;
@@ -58,7 +62,6 @@ class OrdersService {
         orderPublishSubject.add(orderList);
 
       }).onError((e){
-        print('errorrrrrrrrrrrrrrr in order service');
         orderPublishSubject.add(null);
       });
 
@@ -82,12 +85,30 @@ class OrdersService {
     orderModel.addressName = response.addressName;
     orderModel.destination = response.destination;
     orderModel.phone = response.phone;
-    orderModel.startDate = response.startDate;
+    orderModel.startDate = DateTime.parse(response.startDate) ;
     orderModel.numberOfMonth = response.numberOfMonth;
     orderModel.deliveryTime = response.deliveryTime;
     orderModel.cardId = response.cardId;
-
+    orderModel.status = response.status;
+    orderModel.customerOrderID = response.customerOrderID;
+    orderModel.productIds = response.products_ides;
     return orderModel;
+    }catch(e){
+      return null;
+    }
+  }
+
+  Future<OrderModel?> getTrackingDetails(String orderId) async {
+    try{
+      OrderStatusResponse? response =   await _orderRepository.getTrackingDetails(orderId);
+
+      if(response ==null)
+        return null;
+      OrderModel orderModel = OrderModel() ;
+      orderModel.id = response.id;
+      orderModel.status = response.status;
+      orderModel.payment = response.payment;
+      return orderModel;
     }catch(e){
       return null;
     }
@@ -142,6 +163,7 @@ class OrdersService {
       {required List<ProductModel>  products ,required String addressName, required String deliveryTimes,
         required DateTime date , required GeoJson destination, required String phoneNumber,required String paymentMethod,
         required  double amount , required String? cardId,required int numberOfMonth,required bool reorder,String? description
+        ,required int? customerOrderID,required List<String>? productsIds
       }
       ) async {
 
@@ -156,6 +178,9 @@ class OrdersService {
     // }
 
     late CreateOrderRequest orderRequest;
+
+   // int size = await  _orderRepository.getOrdersSize();
+
     if(!reorder){
       Map<ProductModel,int> productsMap = Map<ProductModel,int>();
       products.forEach((element) {
@@ -168,11 +193,37 @@ class OrdersService {
       });
       List<ProductModel> newproducts = [];
       String description = '';
+      print('+++++++++++++++++++++++++++');
+      productsMap.forEach((key, value) {
+        print('id : '+ key.id.toString());
+        print('title : '+ key.title);
+        print('description : '+ key.description);
+        print( key.isRecommended);
+        print('price : '+ key.price.toString());
+        print('quantity : '+ key.quantity.toString());
+      });
+
+      List<String> products_ides = [];
+
       productsMap.forEach((key, value) {
         key.orderQuantity = value;
+
         description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
         newproducts.add(key);
+        products_ides.add(key.id);
+
       });
+      print('+++++++++++++++++++++++++++ 00000000000000000');
+
+      /// generate sequence id;
+      ///
+       int? customer_order_id = await _orderRepository.generateOrderID();
+
+       print('======================== products ides ====================');
+       print(products_ides);
+       if(customer_order_id== null)
+         throw Exception();
+
        orderRequest = CreateOrderRequest(
           userId: uId!,
           destination: destination,
@@ -182,16 +233,21 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate:   date.toIso8601String(),
+          startDate: DateFormat('yyyy-MM-dd').format(date)  ,
           description:description.substring(0 , description.length-2),
           addressName :addressName,
-          cardId:cardId
+          cardId:cardId,
+         customerOrderID:customer_order_id,
+         productsIdes: products_ides
+
 
       );
-      orderRequest.status = OrderStatus.DELIVERING.name;
-
+      orderRequest.status = OrderStatus.INIT.name;
+      print('request for create order');
+      print(orderRequest);
     }
     else{
+
       orderRequest = CreateOrderRequest(
           userId: uId!,
           destination: destination,
@@ -201,37 +257,39 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate: date.toIso8601String(),
+          startDate: DateFormat('yyyy-MM-dd').format(date),
           description:description!,
           addressName :addressName,
-          cardId:cardId
+          cardId:cardId,
+        customerOrderID: customerOrderID!.bitLength,
+        productsIdes: productsIds!
       );
-      print('seeeeeeeeeeeeriveeeeeeeeeeeeeeeeee');
-      print(orderRequest.userId);
-      print(orderRequest.destination);
-      print(orderRequest.phone);
-      print(orderRequest.payment);
-      print(orderRequest.products);
-      print(orderRequest.numberOfMonth);
-      print(orderRequest.deliveryTime.toString());
-      print(orderRequest.orderValue);
-      print(orderRequest.startDate);
-      print(orderRequest.description);
-      print(orderRequest.addressName);
-      print(orderRequest.cardId);
-      print('seeeeeeeeeeeeriveeeeeeeeeeeeeeeeee');
+
       orderRequest.status = OrderStatus.INIT.name;
+
     }
 
-
     DocumentSnapshot orderSnapShot =await _orderRepository.addNewOrder(orderRequest);
+
     // bool purchaseResponse =  await _purchaseServices.createPurchase(amount: amount, cardId: cardId, userId: uId, orderID: orderSnapShot.id, date: DateTime.now().toIso8601String());
     // if(!purchaseResponse){
     //   throw Exception();
     // }
+
+     await createpurchase(amount: amount, cardId: cardId!, userId: uId, orderID: orderSnapShot.id, date: DateTime.now());
     Map<String ,dynamic> map = orderSnapShot.data() as Map<String ,dynamic>;
     map['id'] = orderSnapShot.id;
-   return OrderModel.mainDetailsFromJson(map);
+
+    return OrderModel.mainDetailsFromJson(map);
+  }
+
+ Future<bool> createpurchase(
+     {required double amount,required String cardId,required String userId,required String orderID,required DateTime date})async{
+   bool purchaseResponse =  await _purchaseServices.createPurchase(amount: amount, cardId: cardId, userId: userId, orderID: orderID, date: DateTime.now().toIso8601String());
+   if(!purchaseResponse){
+     throw Exception();
+   }
+   return true;
   }
 
   closeStream(){
@@ -249,33 +307,18 @@ class OrdersService {
 
  Future<OrderModel?> reorder(String orderID)async {
     OrderModel? order =  await getOrderDetails(orderID);
-
     if(order == null){
 
       return null;
     }
     else{
 
-      // print('###############################');
-      // print(order.destination);
-      // print(order.phone);
-      // print(order.payment);
-      // print(order.products);
-      // print(order.numberOfMonth);
-      // print(order.deliveryTime.toString());
-      // print(order.orderValue);
-      // print(order.startDate);
-      // print(order.description);
-      // print(order.addressName);
-      // print(order.cardId);
-      // print('###############################');
-      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!!!!!!!!!!!');
-      print(order.destination.lat);
-      OrderModel? neworder = await addNewOrder(products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, date: DateTime.parse(order.startDate), destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
+      OrderModel? neworder = await addNewOrder(productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, date: order.startDate!, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
       reorder: true,
         description: order.description
       );
-   if(neworder !=null)
+
+      if(neworder !=null)
      return neworder;
          else
       return null;
@@ -308,38 +351,40 @@ class OrdersService {
   //   return null;
   // }
 
-  }
 
-//   OrderDetailsResponse? updateOrder(int orderId, OrderModel order) {
-//     switch (order.status) {
-//       case OrderStatus.GOT_CAPTAIN:
-//         var request = AcceptOrderRequest(orderID: orderId.toString(), duration: '');
-//        // return _ordersManager.acceptOrder(request);
-//         break;
-//       case OrderStatus.IN_STORE:
-//         var request = UpdateOrderRequest(id: orderId, state: 'in store', distance: '');
-//        // return _ordersManager.updateOrder(request);
-//         break;
-//       case OrderStatus.DELIVERING:
-//         var request = UpdateOrderRequest(id: orderId, state: 'ongoing', distance: '');
-//        // return _ordersManager.updateOrder(request);
-//         break;
-//       case OrderStatus.GOT_CASH:
-//         var request = UpdateOrderRequest(id: orderId, state: 'got cash', distance: '');
-//        // return _ordersManager.updateOrder(request);
-//         break;
-//       case OrderStatus.FINISHED:
-//         var request = UpdateOrderRequest(
-//             id: orderId, state: 'delivered', distance: order.distance);
-//        // return _ordersManager.updateOrder(request);
-//         break;
-//       default:
-//      //   return null;
-// return OrderDetailsResponse.fromJson({});
-//
-//     }
- // }
 
+Future<void> getOwnerOrders() async {
+  _orderRepository.getOwnerOrders().listen((event) {
+    Map<String,List<OrderModel>> orderList = {};
+    List<OrderModel> cur =[];
+    List<OrderModel> pre =[];
+    event.docs.forEach((element2) {
+
+      Map <String ,dynamic> order = element2.data() as Map<String , dynamic>;
+      if(order['status'] != OrderStatus.FINISHED.name){
+        order['id'] = element2.id;
+        OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
+        cur.add(orderModel);
+      }
+      else{
+        order['id'] = element2.id;
+        OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
+        pre.add(orderModel);
+      }
+
+
+    }
+    );
+    orderList['cur']= cur;
+    orderList['pre']= pre;
+
+    orderPublishSubject.add(orderList);
+
+  }).onError((e){
+    orderPublishSubject.add(null);
+  });
+
+}
 
 
   Future<List<OrderModel>?> getCaptainOrders() async {
@@ -364,4 +409,7 @@ class OrdersService {
     // return orders;
     return null;
   }
+
+
+}
 

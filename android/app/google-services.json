@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "596883671981",
-    "project_id": "my-kom",
-    "storage_bucket": "my-kom.appspot.com"
+    "project_number": "895795274928",
+    "project_id": "tidal-timer-310718",
+    "storage_bucket": "tidal-timer-310718.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:596883671981:android:f92278830779c8bb7c6f24",
+        "mobilesdk_app_id": "1:895795274928:android:3c3bb8f57331cac46b0775",
         "android_client_info": {
           "package_name": "com.example.my_kom"
         }
       },
       "oauth_client": [
         {
-          "client_id": "596883671981-0slbp0fdrseir7g7er1350nbflbbugn2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.my_kom",
-            "certificate_hash": "d887dc7c38a4c074b30011f159f9991a533a21fd"
-          }
-        },
-        {
-          "client_id": "596883671981-sjkjgk2hav7fo74sr4v97u4m05g1jfec.apps.googleusercontent.com",
+          "client_id": "895795274928-58agqp8mgc2a8kh1njj1tfu1l94nnlb2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCtOS6Swpdpy1tqX3jGmeY2sG1q1PHk29I"
+          "current_key": "AIzaSyB-CL-FSXRaLQcsAxUNEBhc1pocDQZWFBQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "596883671981-sjkjgk2hav7fo74sr4v97u4m05g1jfec.apps.googleusercontent.com",
+              "client_id": "895795274928-58agqp8mgc2a8kh1njj1tfu1l94nnlb2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

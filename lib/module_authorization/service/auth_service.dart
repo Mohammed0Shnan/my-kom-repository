@@ -84,7 +84,6 @@ Future<AppUser>  getCurrentUser()async{
   }
 
   Future<RegisterResponse> createProfile(ProfileRequest profileRequest) async {
-    await Future.delayed(Duration(seconds: 2));
     try {
       bool result = await _repository.createProfile(profileRequest);
       return RegisterResponse(data: 'Success Register !', state: true);
@@ -139,6 +138,8 @@ Future<AppUser>  getCurrentUser()async{
     // Change This
      try{
        ProfileResponse profileResponse = await _repository.getProfile(user!.uid);
+       print('profile!!!!!!!!!!!!!!!');
+       print(profileResponse.userRole);
        await Future.wait([
          _prefsHelper.setUserId(user.uid),
          _prefsHelper.setEmail(user.email!),

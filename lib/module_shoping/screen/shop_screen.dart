@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -275,8 +276,18 @@ class _ShopScreenState extends State<ShopScreen> {
                       children: [
                         Container(
                           width: w / 4,
-                          child: Image.asset(productModel.imageUrl),
+                          child:CachedNetworkImage(
+                            maxHeightDiskCache: 5,
+                            imageUrl: productModel.imageUrl,
+                            progressIndicatorBuilder: (context, l, ll) =>
+                                CircularProgressIndicator(
+                                  value: ll.progress,
+                                ),
+                            errorWidget: (context, s, l) => Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),// Image.asset(productModel.imageUrl),
                         ),
+                        SizedBox(width: 10,),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,

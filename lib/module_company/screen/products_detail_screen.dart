@@ -92,25 +92,17 @@ addRemoveBloc.close();
               flexibleSpace: FlexibleSpaceBar(
                 background:     Container(
             width: double.infinity,
-            child: widget.productModel.imageUrl.length != 0
-                ? Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: new ExactAssetImage(widget.productModel.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                : CachedNetworkImage(
-                    maxHeightDiskCache: 5,
-                    imageUrl: widget.productModel.imageUrl,
-                    progressIndicatorBuilder: (context, l, ll) =>
-                        CircularProgressIndicator(
-                      value: ll.progress,
-                    ),
-                    errorWidget: (context, s, l) => Icon(Icons.error),
-                    fit: BoxFit.cover,
+            child:CachedNetworkImage(
+              maxHeightDiskCache: 5,
+              imageUrl: widget.productModel.imageUrl,
+              progressIndicatorBuilder: (context, l, ll) =>
+                  CircularProgressIndicator(
+                    value: ll.progress,
                   ),
+              errorWidget: (context, s, l) => Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
+
           ),
 
 
@@ -152,39 +144,39 @@ addRemoveBloc.close();
                        SizedBox(
                   height: 10,
                 ),
-                Text(
-                  'Specifications',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w600),
-                ),
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(children: [
-                    Divider(
-                      color: Colors.black,
-
-                      endIndent: 10,
-                    ),
-                   ...widget.productModel.specifications.map((e) =>       Container(
-                     margin: EdgeInsets.symmetric(vertical: 5),
-                     child: Row(
-                       children: [
-                         Text(
-                           '${e.name} : ',
-                           style: TextStyle(fontWeight: FontWeight.w800),
-                         ),
-                         Text('${e.value}  '),
-
-                       ],
-                     ),
-                   ),),
-                    SizedBox(height: 20,)
-
-                  ]),
-                ),
+                // Text(
+                //   'Specifications',
+                //   style: TextStyle(
+                //       fontSize: 20,
+                //       color: Colors.black54,
+                //       fontWeight: FontWeight.w600),
+                // ),
+                //
+                // Container(
+                //   padding: EdgeInsets.symmetric(horizontal: 10),
+                //   child: Column(children: [
+                //     Divider(
+                //       color: Colors.black,
+                //
+                //       endIndent: 10,
+                //     ),
+                //    ...widget.productModel.specifications.map((e) =>       Container(
+                //      margin: EdgeInsets.symmetric(vertical: 5),
+                //      child: Row(
+                //        children: [
+                //          Text(
+                //            '${e.name} : ',
+                //            style: TextStyle(fontWeight: FontWeight.w800),
+                //          ),
+                //          Text('${e.value}  '),
+                //
+                //        ],
+                //      ),
+                //    ),),
+                //     SizedBox(height: 20,)
+                //
+                //   ]),
+                // ),
                   ],
                 ),
               ),

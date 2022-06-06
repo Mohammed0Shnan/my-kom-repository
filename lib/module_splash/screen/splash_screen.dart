@@ -75,28 +75,33 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<String> _getNextRoute() async {
     try {
       var isInited = await widget._aboutService.isInited();
-     //if (isInited) {
+     if (!isInited) {
         return AboutRoutes.ROUTE_ABOUT;
-      //  }
+        }
 
-     // // Is LoggedIn
-     //  UserRole? role = await widget._authService.userRole;
-     //  if(role != null){
-     //
-     //    if (role == UserRole.ROLE_OWNER) {
-     //      return DashboardRoutes.DASHBOARD_SCREEN;
-     //      // return OrdersRoutes.OWNER_ORDERS_SCREEN;
-     //    }  else{
-     //      return NavigatorRoutes.NAVIGATOR_SCREEN;
-     //      //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
-     //    }
-     //  }
-     //
-     //  // Is Not LoggedInt
-     // else {
-     //     return NavigatorRoutes.NAVIGATOR_SCREEN;
-     //  //  return AuthorizationRoutes.LOGIN_SCREEN;
-     //  }
+     // Is LoggedIn
+      UserRole? role = await widget._authService.userRole;
+      if(role != null){
+
+        if (role == UserRole.ROLE_OWNER) {
+
+          print('login as admin!!!!!!');
+          print(role.name);
+          return DashboardRoutes.DASHBOARD_SCREEN;
+          // return OrdersRoutes.OWNER_ORDERS_SCREEN;
+        }  else{
+          print('login as user!!!!!!');
+          print(role.name);
+          return NavigatorRoutes.NAVIGATOR_SCREEN;
+          //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
+        }
+      }
+
+      // Is Not LoggedInt
+     else {
+         return NavigatorRoutes.NAVIGATOR_SCREEN;
+      //  return AuthorizationRoutes.LOGIN_SCREEN;
+      }
     } catch (e) {
       return AboutRoutes.ROUTE_ABOUT;  // about screen
     }

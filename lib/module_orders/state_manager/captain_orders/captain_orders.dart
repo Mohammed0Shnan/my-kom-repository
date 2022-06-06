@@ -73,6 +73,24 @@ class CaptainOrdersListBloc extends Bloc<CaptainOrdersListEvent,CaptainOrdersLis
      _ordersService.getMyOrders();
   }
 
+  void getOwnerOrders() {
+
+    this.add(CaptainOrdersListLoadingEvent());
+    _ordersService.orderPublishSubject.listen((value) {
+
+      if(value != null){
+        this.add(CaptainOrdersListSuccessEvent(currentOrders: value['cur']!,previousOrders: value['pre']!));
+
+      }else
+      {
+        this.add(CaptainOrdersListErrorEvent(message: 'Error In Fetch Data !!'));
+      }
+    });
+    _ordersService.getOwnerOrders();
+  }
+
+
+
  Future<bool> deleteOrder(String orderID)async{
   return await _ordersService.deleteOrder(orderID);
    await _ordersService.deleteOrder(orderID).then((value) {

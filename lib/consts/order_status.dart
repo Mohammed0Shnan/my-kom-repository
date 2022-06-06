@@ -4,5 +4,6 @@ enum OrderStatus {
   IN_STORE,
   DELIVERING,
   GOT_CASH,
-  FINISHED
+  FINISHED,
+  DONE
 }

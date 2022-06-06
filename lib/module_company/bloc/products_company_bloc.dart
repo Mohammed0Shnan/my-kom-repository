@@ -85,7 +85,7 @@ class ProductsCompanyBloc extends Bloc<ProductsCompanyEvent, ProductsCompanyStat
 
   getProducts(String compny_id) async {
     this.add(ProductsCompanyLoadingEvent());
-    _service.getCompanyProducts(compny_id).then((value) {
+    _service.productCompanyStoresPublishSubject.listen((value) {
       if (value != null) {
         products = value;
         this.add(ProductsCompanySuccessEvent(data: products));
@@ -94,6 +94,7 @@ class ProductsCompanyBloc extends Bloc<ProductsCompanyEvent, ProductsCompanyStat
 
       }
     });
+    _service.getCompanyProducts(compny_id);
   }
 }
 

@@ -39,6 +39,23 @@ dependencies:
   firebase_auth: ^3.3.17
   cloud_firestore: ^3.1.13
   firebase_core: ^1.15.0
+  firebase_storage: ^10.2.17
+
+  # Path
+  path: ^1.8.0
+
+
+  # Charts
+  charts_flutter: ^0.12.0
+
+
+  # Image Network
+  image_picker: ^0.8.5+3
+  flutter_image_compress: ^1.1.0
+  image_cropper: ^1.4.1
+  cached_network_image: ^3.2.0
+
+
 
   # Payment
   flutter_credit_card: ^3.0.1
@@ -95,8 +112,7 @@ dependencies:
   # Shimmer
   shimmer: ^2.0.0
 
-   # Image Network
-  cached_network_image: ^3.2.0
+
 
   # Dart Pucakges
   equatable: ^2.0.3

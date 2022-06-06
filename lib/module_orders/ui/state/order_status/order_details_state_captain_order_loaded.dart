@@ -45,7 +45,7 @@
 //               ),
 //             ),
 //             Text(
-//               timeago.format(currentOrder.creationTime),
+//               '',//timeago.format(currentOrder.creationTime),
 //               textAlign: TextAlign.center,
 //               style: TextStyle(
 //                 fontWeight: FontWeight.bold,
@@ -62,31 +62,31 @@
 //             // To WhatsApp with store owner
 //
 //             // To WhatsApp with client
-//             currentOrder.ownerPhone != null
-//                 ? GestureDetector(
-//                     onTap: () {
-//                       var url = WhatsAppLinkHelper.getWhatsAppLink(
-//                           currentOrder.clientPhone);
-//                      // launch(url);
-//                     },
-//               child: Text('whatsappWithClient'),
-//                     // child: CommunicationCard(
-//                     //   text: S.of(context).whatsappWithClient,
-//                     //   image: FaIcon(
-//                     //     FontAwesomeIcons.whatsapp,
-//                     //     color: Theme.of(context).brightness == Brightness.dark
-//                     //         ? Colors.white
-//                     //         : Colors.black,
-//                     //   ),
-//                     // ),
-//                   )
-//                 : Container(),
+//             // currentOrder.ownerPhone != null
+//             //     ? GestureDetector(
+//             //         onTap: () {
+//             //           var url = WhatsAppLinkHelper.getWhatsAppLink(
+//             //               currentOrder.clientPhone);
+//             //          // launch(url);
+//             //         },
+//             //   child: Text('whatsappWithClient'),
+//             //         // child: CommunicationCard(
+//             //         //   text: S.of(context).whatsappWithClient,
+//             //         //   image: FaIcon(
+//             //         //     FontAwesomeIcons.whatsapp,
+//             //         //     color: Theme.of(context).brightness == Brightness.dark
+//             //         //         ? Colors.white
+//             //         //         : Colors.black,
+//             //         //   ),
+//             //         // ),
+//             //       )
+//               //  : Container(),
 //             // To Open Maps
 //             GestureDetector(
 //               onTap: () {
-//                 var url = WhatsAppLinkHelper.getMapsLink(
-//                     currentOrder.to.lat, currentOrder.to.lat);
-//                // launch(url);
+//                //  var url = WhatsAppLinkHelper.getMapsLink(
+//                //      currentOrder.to.lat, currentOrder.to.lat);
+//                // // launch(url);
 //               },
 //               child: Text('getDirection'),
 //               // child: CommunicationCard(
@@ -207,7 +207,7 @@
 //         child: CommunicationCard(
 //           text: OrderProgressionHelper.getNextStageHelper(
 //             currentOrder.status,
-//             currentOrder.paymentMethod.toLowerCase().contains('ca'),
+//             currentOrder.payment.toLowerCase().contains('ca'),
 //             context,
 //           ),
 //           color: Theme.of(context).accentColor,

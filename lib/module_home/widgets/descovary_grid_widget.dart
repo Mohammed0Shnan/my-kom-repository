@@ -69,35 +69,21 @@ class DescoveryGridWidget extends StatelessWidget {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: data[index]
-                                                          .imageUrl
-                                                          .length !=
-                                                      0
-                                                  ? Container(
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image:
-                                                              new ExactAssetImage(
-                                                                  data[index]
-                                                                      .imageUrl),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : CachedNetworkImage(
-                                                      maxHeightDiskCache: 10,
-                                                      imageUrl:
-                                                          data[index].imageUrl,
-                                                      progressIndicatorBuilder:
-                                                          (context, l, ll) =>
-                                                              CircularProgressIndicator(
-                                                        value: ll.progress,
-                                                      ),
-                                                      errorWidget:
-                                                          (context, s, l) =>
-                                                              Icon(Icons.error),
-                                                      fit: BoxFit.cover,
+                                              child:  CachedNetworkImage(
+                                                maxHeightDiskCache: 10,
+                                                imageUrl:
+                                                data[index].imageUrl,
+                                                progressIndicatorBuilder:
+                                                    (context, l, ll) =>
+                                                    CircularProgressIndicator(
+                                                      value: ll.progress,
                                                     ),
+                                                errorWidget:
+                                                    (context, s, l) =>
+                                                    Icon(Icons.error),
+                                                fit: BoxFit.cover,
+                                              ),
+
                                             ),
                                           ),
                                         ),
