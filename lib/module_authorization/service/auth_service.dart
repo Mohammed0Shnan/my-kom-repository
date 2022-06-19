@@ -163,4 +163,16 @@ Future<AppUser>  getCurrentUser()async{
   void fakeAccount() {
     FirebaseAuth.instance.currentUser!.delete();
   }
+
+ Future<AuthResponse> resetPassword(String email) async{
+    try {
+      bool response = await _repository.getNewPassword(email);
+      return AuthResponse(
+          message: 'The new code has been sent', status: AuthStatus.AUTHORIZED);
+    } catch (e) {
+
+      return AuthResponse(
+          message: e.toString(), status: AuthStatus.UNAUTHORIZED);
+    }
+  }
 }

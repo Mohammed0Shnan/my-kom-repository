@@ -3,6 +3,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
   final MapService _service = MapService();
@@ -10,7 +11,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     on<MapEvents>((MapEvents event, Emitter<MapStates> emit) {
       if (event is MapLoadingEvent)
         emit(MapLoadingState());
-      else if (event is MapSuccessEvent) emit(MapSuccessState(event.data));
+      else if (event is MapSuccessEvent) emit(MapSuccessState(event.data,event.isRefresh));
       else if (event is MapGestureSuccessEvent) emit(MapGestureSuccessState(event.data));
 
       else if (event is MapErrorEvent) emit(MapErrorState(error_message: event.error_message));
@@ -30,12 +31,32 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
       if(value.isError)
         this.add(MapErrorEvent(error_message: value.message.toString()));
       else
-        this.add(MapSuccessEvent(value));
+        this.add(MapSuccessEvent(value,false));
     });
   }
 
+  getSubArea(){
+    this.add(MapLoadingEvent());
+    _service.getSubAreaPosition(null).then((value) {
+      if(value == null)
+        this.add(MapErrorEvent(error_message: 'Error Get Current Location '));
+      else{
+        MapData map =  MapData(latitude: 0.0, longitude: 0.0, name:'', message: '', isError: false);
+      map.subArea = value;
+        this.add(MapSuccessEvent(map,false));
+      }
+
+    });
+  }
+
+  setLocationManually(String subArea){
+    MapData map =  MapData(latitude: 0.0, longitude: 0.0, name:'', message: '', isError: false);
+    map.subArea = subArea;
+    this.add(MapSuccessEvent(map,false));
+  }
+
   Future<void> getGesturePosition(LatLng latLng ,String description) async {
-    this.add(MapGestureSuccessEvent(MapData(latitude: latLng.longitude,longitude: latLng.longitude,name:description,message: 'success',isError: false)));
+    this.add(MapGestureSuccessEvent(MapData(latitude: latLng.latitude,longitude: latLng.longitude,name:description,message: 'success',isError: false)));
   }
 
  //  Future<void> savePosition(Position position , String description)async{
@@ -53,10 +74,26 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     this.add(MapLoadingEvent());
   
     _service.saveLocation(latLng,description).then((value) {
+      if(value == true)
         this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !" , latitude: latLng.latitude,longitude: latLng.longitude));
-    }).catchError((e){
-      this.add(MapErrorEvent(error_message: 'error in save location !'));
+    else
+        this.add(MapErrorEvent(error_message: 'error in save location !'));
+
+
     });
+  }
+
+  void refresh(String subArea) {
+    // SharedPreferencesHelper().getCurrentStore().then((value) {
+    //
+    //
+    // });
+    MapData newState = MapData(latitude: 0.0, longitude: 0.0, name: '', message:'', isError:false);
+    newState.subArea = subArea;
+    add(MapSuccessEvent(newState,true));
+
+
+
   }
 }
 
@@ -66,7 +103,9 @@ class MapInitEvent extends MapEvents {}
 
 class MapSuccessEvent extends MapEvents {
   MapData data;
-  MapSuccessEvent(this.data);
+  bool  isRefresh;
+
+  MapSuccessEvent(this.data,this.isRefresh);
 }
 class MapGestureSuccessEvent extends MapEvents {
   MapData data;
@@ -90,7 +129,9 @@ abstract class MapStates {}
 class MapInitState extends MapStates {}
 
 class MapSuccessState extends MapStates {
-  MapData data;  MapSuccessState(this.data);
+  MapData data;
+  bool  isRefresh;
+  MapSuccessState(this.data,this.isRefresh);
 }
 class MapGestureSuccessState extends MapStates {
   MapData data;  MapGestureSuccessState(this.data);
@@ -110,6 +151,7 @@ class MapErrorState extends MapStates {
 class MapData{
   late double longitude,latitude;
  late String name;
+ late String subArea;
  late String? message ;
  late bool isError;
   MapData({required this.latitude ,required this.longitude ,required this.name,required this.message,required this.isError});

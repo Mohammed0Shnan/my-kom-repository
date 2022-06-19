@@ -11,7 +11,7 @@ import 'package:my_kom/utils/image_compression.dart';
 class ImageUploadService {
   final UploadRepository _uploadRepository = UploadRepository();
   Future<String?> uploadImage(String filePath) async {
-    File out = await ImageCompression.compressAndGetFile(file: File(filePath));
+    File out = File(filePath);//await ImageCompression.compressAndGetFile(file: File(filePath));
      UploadTask? task = await  _uploadRepository.upload(filePath , out);
      if(task == null){
        return null;

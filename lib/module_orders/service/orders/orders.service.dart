@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:my_kom/consts/order_status.dart';
 import 'package:my_kom/consts/payment_method.dart';
@@ -17,6 +18,7 @@ import 'package:my_kom/module_orders/response/order_details/order_details_respon
 import 'package:my_kom/module_orders/response/order_status/order_status_response.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/utils/status_helper/status_helper.dart';
+import 'package:my_kom/module_shoping/service/payment_service.dart';
 import 'package:my_kom/module_shoping/service/purchers_service.dart';
 import 'package:my_kom/module_shoping/service/stripe.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,6 +31,9 @@ class OrdersService {
  final  PurchaseServices _purchaseServices = PurchaseServices();
 
   final PublishSubject<Map<String,List<OrderModel>>?> orderPublishSubject =
+  new PublishSubject();
+
+  final PublishSubject<List<NotificationModel>?> notificationsPublishSubject =
   new PublishSubject();
 
 
@@ -56,8 +61,10 @@ class OrdersService {
           }
         }
         );
-        orderList['cur']= cur;
-        orderList['pre']= pre;
+        cur.sort((OrderModel a, OrderModel b)=>a.customerOrderID.compareTo(b.customerOrderID));
+        pre.sort((OrderModel a, OrderModel b)=>a.customerOrderID.compareTo(b.customerOrderID));
+        orderList['cur']= cur.reversed.toList();
+        orderList['pre']= pre.reversed.toList();
 
         orderPublishSubject.add(orderList);
 
@@ -106,57 +113,13 @@ class OrdersService {
         return null;
       OrderModel orderModel = OrderModel() ;
       orderModel.id = response.id;
+      orderModel.customerOrderID = response.customerOrderID;
       orderModel.status = response.status;
       orderModel.payment = response.payment;
       return orderModel;
     }catch(e){
       return null;
     }
-  }
-
-  Future<List<OrderModel>?> getNearbyOrders() async {
-    // List<Order> response = await _ordersManager.getNearbyOrders();
-    // if (response == null) {
-    //   return null;
-    // }
-
-    // if (response.isEmpty) {
-    //   return null;
-    // }
-
-    var orders = <OrderModel>[
-
-    // OrderModel(
-    //   to:  GeoJson(),
-    //   from: element.fromBranch?.id.toString(),
-    //   storeName: element.owner.userName,
-    //   creationTime: DateTime.fromMillisecondsSinceEpoch(
-    //       element.date.timestamp * 1000),
-    //   paymentMethod: '',
-    //   id: 1, chatRoomId: '', captainPhone: '', status: OrderStatus.DELIVERING,clientPhone: '',
-    //
-    // )
-    // if (response.isNotEmpty) {
-    //   response.forEach((element) {
-    //     try {
-    //       orders.add(OrderModel(
-    //         to: element.location,
-    //         from: element.fromBranch?.id.toString(),
-    //         storeName: element.owner.userName,
-    //         creationTime: DateTime.fromMillisecondsSinceEpoch(
-    //             element.date.timestamp * 1000),
-    //         paymentMethod: element.payment,
-    //         id: element.id,
-    //       ));
-    //     } catch (e, stack) {
-    //       Logger().error('Mapping Error',
-    //           '${e.toString()}:\n${stack.toString()}', StackTrace.current);
-    //     }
-    //   });
-    // }
-      ];
-
-    return orders;
   }
 
   Future<OrderModel?> addNewOrder(
@@ -170,6 +133,8 @@ class OrdersService {
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
 
+    //await PaymentService().processPayment(cardId!);
+
     // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
     //   bool stripResponse =  await _stripeServices.charge(customer: customername!, amount: amount, userId: uId!, cardId: cardId);
     //   if(!stripResponse){
@@ -178,8 +143,6 @@ class OrdersService {
     // }
 
     late CreateOrderRequest orderRequest;
-
-   // int size = await  _orderRepository.getOrdersSize();
 
     if(!reorder){
       Map<ProductModel,int> productsMap = Map<ProductModel,int>();
@@ -191,36 +154,30 @@ class OrdersService {
           productsMap[element] = productsMap[element]! + 1;
         }
       });
+
       List<ProductModel> newproducts = [];
       String description = '';
-      print('+++++++++++++++++++++++++++');
-      productsMap.forEach((key, value) {
-        print('id : '+ key.id.toString());
-        print('title : '+ key.title);
-        print('description : '+ key.description);
-        print( key.isRecommended);
-        print('price : '+ key.price.toString());
-        print('quantity : '+ key.quantity.toString());
-      });
-
       List<String> products_ides = [];
 
+      print('+++++++++++++++++++++++++++++++++++++');
+
       productsMap.forEach((key, value) {
-        key.orderQuantity = value;
+       key.orderQuantity = value;
 
         description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
         newproducts.add(key);
         products_ides.add(key.id);
 
       });
-      print('+++++++++++++++++++++++++++ 00000000000000000');
+      print('+++++++++++++++++++++++++++++++++++++');
+
+      newproducts.forEach((element) {
+        print(element.orderQuantity);
+      });
 
       /// generate sequence id;
       ///
        int? customer_order_id = await _orderRepository.generateOrderID();
-
-       print('======================== products ides ====================');
-       print(products_ides);
        if(customer_order_id== null)
          throw Exception();
 
@@ -409,6 +366,36 @@ Future<void> getOwnerOrders() async {
     // return orders;
     return null;
   }
+
+  Future<void> getNotifications()async {
+    String? uid = await _authPrefsHelper.getUserId();
+    _orderRepository.getNotifications(uid!).listen((event) {
+     List<NotificationModel> notifications = [];
+      event.docs.forEach((element2) {
+        Map <String, dynamic> not = element2.data() as Map<String,
+            dynamic>;
+        // if(order['userId'] == uid) {
+        //
+        // }
+
+
+
+        not['id'] = element2.id;
+
+        NotificationModel  notificationModel = NotificationModel.fromJson(not);
+        notifications.add(notificationModel);
+      }
+      );
+
+
+     notificationsPublishSubject.add(notifications);
+
+    }).onError((e){
+      notificationsPublishSubject.add(null);
+    });
+  }
+
+  Future<OrderModel?>  addNewOffer()async {}
 
 
 }

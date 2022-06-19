@@ -14,9 +14,7 @@ class ProfileService{
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<ProfileModel?> getMyProfile() async {
-    await Future.delayed(Duration(seconds: 1));
     var user = _auth.currentUser;
-
     // Change This
     try{
       ProfileResponse profileResponse = await _repository.getProfile(user!.uid);

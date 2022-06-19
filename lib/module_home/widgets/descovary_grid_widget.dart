@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:my_kom/module_company/company_routes.dart';
+import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:my_kom/module_company/screen/company_products_screen.dart';
@@ -41,10 +42,15 @@ class DescoveryGridWidget extends StatelessWidget {
                           child: ScaleAnimation(
                               child: FadeInAnimation(
                             child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> CompanyProductScreen(company: data[index])));
-                                             //           Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: data[index].id);
 
+                              onTap: () {
+                              //  Navigator.push(context, MaterialPageRoute(builder: (context)=> CompanyProductScreen(company: data[index])));
+                                CompanyArgumentsRoute argumentsRoute = CompanyArgumentsRoute();
+                                argumentsRoute.companyId = data[index].id;
+                                argumentsRoute.companyImage = data[index].imageUrl;
+                                argumentsRoute.companyName = data[index].name;
+
+                                Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: argumentsRoute);
                               },
                               child: Container(
                                 clipBehavior: Clip.antiAlias,
@@ -69,14 +75,23 @@ class DescoveryGridWidget extends StatelessWidget {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child:  CachedNetworkImage(
-                                                maxHeightDiskCache: 10,
+                                             // child: Image.network( data[index].imageUrl,fit: BoxFit.cover,),
+                                              child: CachedNetworkImage(
+                                                filterQuality: FilterQuality.high,
                                                 imageUrl:
                                                 data[index].imageUrl,
                                                 progressIndicatorBuilder:
                                                     (context, l, ll) =>
-                                                    CircularProgressIndicator(
-                                                      value: ll.progress,
+                                                    Center(
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: 40,
+                                                        child: CircularProgressIndicator(
+                                                          value: ll.progress,
+                                                          color: Colors.black12,
+
+                                                        ),
+                                                      ),
                                                     ),
                                                 errorWidget:
                                                     (context, s, l) =>

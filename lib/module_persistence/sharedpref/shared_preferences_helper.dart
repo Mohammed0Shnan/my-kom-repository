@@ -1,12 +1,30 @@
 
 // import 'package:shared_preferences/shared_preferences.dart';
 
-// class SharedPreferencesHelper {
-//  Future<void> setCurrentUsername(String username) async {
-//    SharedPreferences _sharedPreferences =
-//        await SharedPreferences.getInstance();
-//    await _sharedPreferences.setString('username', username);
-//  }
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SharedPreferencesHelper {
+  Future<void> setCurrentStore(String store) async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    await _sharedPreferences.setString('storeID', store);
+  }
+  Future<String?> getCurrentStore() async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+     return  _sharedPreferences.getString('storeID');
+  }
+  Future<void> setCurrentSubArea(String store) async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    await _sharedPreferences.setString('sub_area', store);
+  }
+  Future<String?> getCurrentSubArea() async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    return  _sharedPreferences.getString('sub_area');
+  }
+}
 
 //  Future<String> getCurrentUsername() async {
 //    SharedPreferences _sharedPreferences =

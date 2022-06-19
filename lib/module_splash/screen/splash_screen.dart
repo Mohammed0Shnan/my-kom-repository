@@ -1,18 +1,24 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/about_routes.dart';
+import 'package:my_kom/module_about/animations/fade_animation.dart';
+import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
+import 'package:my_kom/module_about/screen/language_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
+import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 class SplashScreen extends StatefulWidget {
   final AuthService _authService;
    final AboutService _aboutService;
+  LocalizationService localizationService =LocalizationService();
   // final ProfileService _profileService;
 
   SplashScreen(
@@ -29,46 +35,68 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    spalshAnimationBloC.playAnimation();
+       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _getNextRoute().then((route) async{
         await Future.delayed(Duration(seconds: 1));
         Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
       });
     });
   }
+
+  @override
+  void dispose() {
+    spalshAnimationBloC.close();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(MediaQuery.of(context).size);
-
     return Scaffold(
       backgroundColor: ColorsConst.mainColor,
-      body: Center(
-        child: Container(
-            width: SizeConfig.imageSize * 10,
-            height:  SizeConfig.imageSize * 10,
-            color: Colors.white,
-            child:SvgPicture.asset('assets/1.svg')// Image.asset('assets/logo2.png',fit: BoxFit.contain,),
-          ),
-      ),
-//  AnimatedSplashScreen(
-//         splash: Container(
-//           color: Colors.white,
-//           width: 50,
-//           height: 50,
-//         ),
-//         backgroundColor: ColorsConst.Splash,
-//         animationDuration: Duration(milliseconds: 200),
-//         duration: 900,
-//         centered: true,
-//         curve: Curves.easeInOut,
-//         function: () async{
-//         await  _getNextRoute();
-//         },
-//         splashIconSize: 50,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: SizeConfig.screenHeight,
+            ),
+            Center(
+              child: Container(
+                child: BlocConsumer<SpalshAnimationBloC, bool>(
+                  bloc: spalshAnimationBloC,
+                  listener: (context, state) {
 
-//         splashTransition: SplashTransition.fadeTransition,
-//         nextScreen: ,
-//          )
+                  },
+                  builder: (context, state) {
+                    double current_width = 0;
+                    if (state) {
+                      current_width = SizeConfig.screenWidth * 0.5;
+                    } else
+                      current_width = 0;
+                    return CustomFadeAnimation(
+                      child: AnimatedContainer(
+                        alignment: Alignment.center,
+                        duration: Duration(milliseconds: 300),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: ColorsConst.mainColor
+                          ),
+                          child: Image.asset('assets/new_logo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        height: 10 * SizeConfig.heightMulti,
+                        width: current_width,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

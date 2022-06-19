@@ -8,6 +8,7 @@ import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
 import 'package:my_kom/module_dashbord/models/more_statis_model.dart';
 import 'package:my_kom/module_dashbord/models/order_state_chart.dart';
 import 'package:my_kom/module_dashbord/models/process_statis_model.dart';
@@ -201,6 +202,11 @@ class DashBoardService{
       return null;
     }
   }
+
+  Future<void> addAdvertisements()async{
+
+  }
+
 
   Future<CompanyStoreDetailResponse?> getCompaniesStoreDetail(String storeId) async {
     try {
@@ -418,13 +424,13 @@ return   await _firestore.collection('orders').where('start_date',isEqualTo: tim
       Map<String ,int> reverseProSortedMap = LinkedHashMap.fromEntries(sortedProMap.entries.toList().reversed);
        index =0;
       ids=[];
-      // reverseProSortedMap.forEach((key, value) {
-      //   if(index < 5){
-      //     ids.add(key);
-      //     index ++;
-      //   }
-      // });
-      ids.add('uyf6a6EVO3lm4U6p2Zlh');
+      reverseProSortedMap.forEach((key, value) {
+        if(index < 5){
+          ids.add(key);
+          index ++;
+        }
+      });
+       ids.add('uyf6a6EVO3lm4U6p2Zlh');
       ids.add('uyf6a6EVO3lm4U6p2Zlh');
       ids.add('uyf6a6EVO3lm4U6p2Zlh');
       ids.add('uyf6a6EVO3lm4U6p2Zlh');
@@ -445,7 +451,6 @@ return   await _firestore.collection('orders').where('start_date',isEqualTo: tim
 
         });
       }
-     print('sssssssssssssssssssssssssssssss');
       products.forEach((element) {
         print(element.toJson());
       });
@@ -455,6 +460,16 @@ return   await _firestore.collection('orders').where('start_date',isEqualTo: tim
       moreStatisPublishSubject.add(null);
 
     });
+  }
+
+ Future<bool> addAdvertisementToStore(AdvertisementModel request) async{
+    try{
+
+      await _firestore.collection('advertisements').add(request.toJson());
+      return true;
+    }catch(e){
+      return false;
+    }
   }
   
 }

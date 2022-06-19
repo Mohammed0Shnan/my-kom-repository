@@ -28,7 +28,9 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-              
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="easyapproach"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -40,8 +42,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBNRUekR6R3TGyiuvLow72hNH5S61u0ffg"/>        
+            android:value="AIzaSyD2mHkT8_abpMD9LJl307Qhk7GHWuKqMJw"/>
     </application>
 </manifest>

@@ -1,14 +1,21 @@
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/main.dart';
 import 'package:my_kom/module_about/about_module.dart';
+import 'package:my_kom/module_about/screen/language_screen.dart';
 import 'package:my_kom/module_about/screen/next_splash_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_company/bloc/all_company_bloc.dart';
+import 'package:my_kom/module_company/bloc/check_zone_bloc.dart';
+import 'package:my_kom/module_company/bloc/recomended_products_bloc.dart';
 import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_company/screen/company_products_screen.dart';
+import 'package:my_kom/module_company/screen/products_detail_screen.dart';
+import 'package:my_kom/module_company/service/company_service.dart';
+import 'package:my_kom/module_dashbord/bloc/filter_zone_bloc.dart';
 import 'package:my_kom/module_dashbord/dashboard_module.dart';
 import 'package:my_kom/module_dashbord/screen/dash_bord_screen.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
@@ -16,6 +23,7 @@ import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
 import 'package:my_kom/module_home/screen/shop_navigator_screen.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
+import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/map_module.dart';
 import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
@@ -37,6 +45,8 @@ import 'package:my_kom/module_orders/orders_module.dart';
 class AppComponentInjector implements AppComponent {
   AppComponentInjector._();
   LocalizationService? _singeltonLocalizationService;
+
+  CompanyService? _singeltonCompanyService;
   static Future<AppComponent> create() async {
     final injector = AppComponentInjector._();
     return injector;
@@ -60,18 +70,27 @@ class AppComponentInjector implements AppComponent {
   LocalizationService _createLocalizationService() =>
       _singeltonLocalizationService ??= LocalizationService();
   WapperModule _createWapperModule() => WapperModule(Wrapper());
-  AboutModule _createAboutModule() => AboutModule(NextSplashScreen(localizationService: _singeltonLocalizationService!,));
+  AboutModule _createAboutModule() => AboutModule(LanguageScreen(localizationService: _singeltonLocalizationService!,));
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
-  NavigatorModule _createNavigatorModule() =>
-      NavigatorModule( NavigatorScreen(
-        homeScreen: HomeScreen(),
+  NavigatorModule _createNavigatorModule() {
+
+    _singeltonCompanyService ??= CompanyService();
+
+    return NavigatorModule( NavigatorScreen(
+        homeScreen: HomeScreen(mapBloc: MapBloc(),filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singeltonCompanyService!),
+            recommendedProductsCompanyBloc: RecommendedProductsCompanyBloc(_singeltonCompanyService!),
+          checkZoneBloc: CheckZoneBloc(_singeltonCompanyService!),
+          isInit: true,
+            ),
         orderScreen:  CaptainOrdersScreen()
-        //profileScreen: ProfileScreen(),
-      ),
+      //profileScreen: ProfileScreen(),
+    ),
 
 
-      );
+    );
+  }
+
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule(LoginScreen(), RegisterScreen());
   MapModule _createMapModule() => MapModule(MapScreen());
@@ -79,7 +98,7 @@ class AppComponentInjector implements AppComponent {
   OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OwnerOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
   DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
-  CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(company: null,));
+  CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(),PriductDetailScreen());
   MyApp get app {
     return _createApp();
   }

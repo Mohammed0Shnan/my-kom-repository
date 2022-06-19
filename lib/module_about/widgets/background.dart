@@ -23,7 +23,7 @@ class Background extends StatelessWidget {
                 // decoration: BoxDecoration(
                 //     color: Colors.green.withOpacity(0.1),
                 //     shape: BoxShape.circle),
-                child: SvgPicture.asset('assets/CIRCLE.svg',fit: BoxFit.cover,),
+
               ),
             ),
            // BottomCustomClipperWidget(),

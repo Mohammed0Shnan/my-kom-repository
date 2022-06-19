@@ -48,3 +48,4 @@ class CommunicationCard extends StatelessWidget {
         : Colors.black;
   }
 }
+

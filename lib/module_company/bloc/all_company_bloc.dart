@@ -3,9 +3,9 @@ import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/service/company_service.dart';
 
 class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
-  final CompanyService _service = CompanyService();
+  final CompanyService _service ;
 
-  AllCompanyBloc() : super(AllCompanyLoadingState()) {
+  AllCompanyBloc(this._service) : super(AllCompanyInitState()) {
     
     on<AllCompanyEvent>((AllCompanyEvent event, Emitter<AllCompanyStates> emit) {
       if (event is AllCompanyLoadingEvent)
@@ -15,10 +15,19 @@ class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
       }
       else if (event is AllCompanySuccessEvent) 
       emit(AllCompanySuccessState(data: event.data));
+
+      else if (event is AllCompanyZoneErrorEvent)
+        emit(AllCompanyZoneErrorState(message: event.message));
+
+      else if(event is AllCompanyInitEvent) {
+        print('----------- emit init state -------------');
+        AllCompanyInitState();
+      }
     });
   }
 
   getAllCompany(String storeId) async{
+
     this.add(AllCompanyLoadingEvent());
     _service.companyStoresPublishSubject.listen((value) {
       if (value != null){
@@ -27,8 +36,20 @@ class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
         this.add(AllCompanyErrorEvent(message: 'Error '));
       }
     });
-    _service.getAllCompanies(storeId);
+    try{
+      _service.getAllCompanies(storeId);
+    }catch(e){
+      print( 'This area is currently available!! ');
+      this.add(AllCompanyZoneErrorEvent(message: 'This area is currently available!! '));
+    }
+
   }
+
+  void setInit() {
+
+    add(AllCompanySuccessEvent(data: []));
+  }
+
 }
 
 abstract class AllCompanyEvent { }
@@ -44,6 +65,11 @@ class AllCompanyLoadingEvent  extends AllCompanyEvent  {}
 class AllCompanyErrorEvent  extends AllCompanyEvent  {
   String message;
   AllCompanyErrorEvent({required this.message});
+}
+
+class AllCompanyZoneErrorEvent  extends AllCompanyEvent  {
+  String message;
+  AllCompanyZoneErrorEvent({required this.message});
 }
 
 abstract class AllCompanyStates {}
@@ -62,4 +88,7 @@ class AllCompanyErrorState extends AllCompanyStates {
   AllCompanyErrorState({required this.message});
 }
 
-AllCompanyBloc allCompanyBloc = AllCompanyBloc();
+class AllCompanyZoneErrorState extends AllCompanyStates {
+  String message;
+  AllCompanyZoneErrorState({required this.message});
+}

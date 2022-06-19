@@ -40,11 +40,13 @@ dependencies:
   cloud_firestore: ^3.1.13
   firebase_core: ^1.15.0
   firebase_storage: ^10.2.17
+  firebase_messaging: ^11.4.1
+  flutter_local_notifications: ^7.0.0
 
   # Path
   path: ^1.8.0
 
-
+  page_view_indicators: ^2.0.0
   # Charts
   charts_flutter: ^0.12.0
 
@@ -64,7 +66,7 @@ dependencies:
   
   # Streams and State Managment 
   flutter_bloc: ^8.0.1
-  rxdart: ^0.27.3
+  rxdart: ^0.26.0
 
   # Pair and Other Types
   #analyzer_plugin: ^0.3.0
@@ -77,13 +79,13 @@ dependencies:
   # Connectivity Plus (check internet)
   #connectivity_plus: ^2.0.2
 
-  # Local Storge
+  # Local Storage
   shared_preferences: ^2.0.6
 
   # Localization Library
   flutter_localizations:
     sdk: flutter
-  gen_lang: ^0.1.3
+  #gen_lang: any
 
   # Internationalization
   intl: ^0.17.0
@@ -105,7 +107,7 @@ dependencies:
   google_maps_flutter: ^2.1.4
   geolocator: ^8.2.0
   search_map_location: ^0.0.5
-  geoflutterfire: ^3.0.3
+  flutter_google_places: ^0.3.0
   geocoding: ^2.0.4
   location: ^4.4.0
   distance: ^1.0.0
@@ -117,7 +119,7 @@ dependencies:
   # Dart Pucakges
   equatable: ^2.0.3
 
-  latlong2: ^0.8.1
+  #latlong2: ^0.8.1
 
   # Picker
   flutter_datetime_picker: ^1.5.1
@@ -135,6 +137,8 @@ dependencies:
   url_launcher: ^6.1.2
   font_awesome_flutter: ^10.1.0
 
+  fluttertoast: ^8.0.9
+
   step_progress_indicator: ^1.0.2
   # Animations
   simple_animations: ^4.0.1
@@ -146,10 +150,22 @@ dependencies:
   badges: ^2.0.2
   flutter_custom_clippers: ^2.0.0
 
+  hexcolor: ^2.0.7
+
+  # TIME LINES
+  timelines: ^0.1.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons: ^0.9.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -171,6 +187,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/new_oval_logo.png
+    - assets/icons/
+    - assets/icons/in_store.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

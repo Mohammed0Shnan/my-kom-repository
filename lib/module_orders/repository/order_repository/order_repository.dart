@@ -25,11 +25,8 @@ class OrderRepository {
      try{
      DocumentReference document = await _firestore.collection('orders').add(orderRequest.mainDetailsToJson());
      await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
-     print('{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}');
-
      DocumentSnapshot d =  await _firestore.collection('orders').doc(document.id).get();
      return d;
-
     }catch(e){
       throw Exception('Error in set data !');
     }
@@ -40,14 +37,13 @@ class OrderRepository {
        return await _firestore.collection('orders').doc(orderId).collection('details').get().then((value) {
          Map <String ,dynamic> result = value.docs[0].data() ;
          result['id'] = orderId;
-         print('products detail from repository ================================ ');
          OrderDetailResponse r =   OrderDetailResponse.fromJson(result) ;
          return r;
    });
 
     }catch(e){
       print(e);
-      throw Exception('Error in set data !');
+      throw Exception('Error in get order detail  !');
     }
   }
   Future<OrderStatusResponse?> getTrackingDetails(String orderId) async {
@@ -62,7 +58,7 @@ class OrderRepository {
 
     }catch(e){
       print(e);
-      throw Exception('Error in set data !');
+      throw Exception('Error in get tracking details !');
     }
   }
 
@@ -73,11 +69,18 @@ class OrderRepository {
     try{
       return   _firestore.collection('orders').where('userId',isEqualTo: uid).snapshots();
     }catch(e){
-      throw Exception('Error in get data !');
+      throw Exception('Error in get my order !');
     }
   }
 
+  Stream<QuerySnapshot> getNotifications(String uid)  {
 
+    try{
+      return   _firestore.collection('offers').snapshots();
+    }catch(e){
+      throw Exception('Error in get notifications !');
+    }
+  }
   
  Future<bool> deleteOrder(String orderId)async {
     print('delete order by order id: ${orderId}');
@@ -105,17 +108,17 @@ class OrderRepository {
   }
   }
 
-  Future<int> getOrdersSize() async{
-    try{
-      int size = 0;
-    var list = await  _firestore.collection('orders').snapshots().toList();
-   return list.length;
-
-    }catch(e){
-
-      return 0;
-    }
-  }
+  // Future<int> getOrdersSize() async{
+  //   try{
+  //     int size = 0;
+  //   var list = await  _firestore.collection('orders').snapshots().toList();
+  //  return list.length;
+  //
+  //   }catch(e){
+  //
+  //     return 0;
+  //   }
+  // }
 
   getOwnerOrders() {
     try{
@@ -130,12 +133,12 @@ class OrderRepository {
 
      Map<String , dynamic> map =  await _firestore.collection('utils').get().then((value) {
         return {'doc_id':value.docs[0].id,
-        'order_id':value.docs[0].data()['cutomer_order_id']
+        'order_id':value.docs[0].data()['customer_order_id']
         };
       });
 
        await _firestore.collection('utils').doc( map['doc_id']).update({
-       'cutomer_order_id': map['order_id']+1
+       'customer_order_id': map['order_id']+1
      });
        int id = map['order_id']+1;
        return id ;

@@ -35,19 +35,20 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
   final ZoneBloc zoneBloc = ZoneBloc();
   final StoreBloc storeBloc = StoreBloc();
   late AddressModel addressModel ;
+  late AddressModel zoneAddressModel ;
   late List<ZoneModel> zones=[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Store Screen'),
-
+        backgroundColor: ColorsConst.mainColor,
       ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
             children: [
-
+              SizedBox(height: 30,),
               /// Store Name
               Container(
                 decoration: BoxDecoration(
@@ -69,6 +70,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                           controller: _storeameController,
                           decoration: InputDecoration(
                               errorStyle: GoogleFonts.lato(
+                                fontSize: 18,
                                 color: Colors.red.shade700,
                                 fontWeight: FontWeight.w800,
 
@@ -77,7 +79,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                               prefixIcon: Icon(Icons.store),
                               border:InputBorder.none,
                               hintText: 'store name .'
-                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 18)
 
                             //S.of(context).name,
                           ),
@@ -94,19 +96,14 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
               ),
 
 
+              SizedBox(height: 20,),
               ///   Address
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: ListTile(
-                    title: Padding(
-                        padding: EdgeInsets.only(bottom: 8),
-                        child: Text('Address', style:GoogleFonts.lato(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                            fontSize: SizeConfig.titleSize * 2.5
-                        ))),
+
                     subtitle: Row(
                       children: [
                         Expanded(
@@ -133,8 +130,8 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                                   prefixIcon:
                                   Icon(Icons.location_on),
                                   border:InputBorder.none,
-                                  hintText: 'Burj Al Arab',
-                                  hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
+                                  hintText: 'Dubai',
+                                  hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 18)// S.of(context).email,
                               ),
 
                               textInputAction: TextInputAction.next,
@@ -160,6 +157,11 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                                 .then((value) {
                               if (value != null) {
                                 addressModel = (value as AddressModel);
+                                print('addressssssssssss from map in add store screen');
+                                print(addressModel.latitude);
+                                print(addressModel.longitude);
+                                print(addressModel.description);
+                                print(addressModel.subArea);
                                 _newAddressController.text =
                                     addressModel.description;
                               }
@@ -168,7 +170,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                           child: Container(
 
                             width: SizeConfig.heightMulti * 8.5,
-                            height: SizeConfig.heightMulti * 8.5,
+                            height: SizeConfig.heightMulti * 7.5,
                             decoration: BoxDecoration(
                                 color: ColorsConst.mainColor,
                                 borderRadius:
@@ -182,7 +184,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                       ],
                     )),
               ),
-
+              SizedBox(height: 20,),
               /// Add Zones
               Container(
                 decoration: BoxDecoration(
@@ -194,6 +196,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
                       subtitle: Container(
                         height: 50,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -212,14 +215,24 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                              suffixIcon: IconButton(
                                icon: Icon(Icons.add),
                                onPressed: (){
-                                String zone = _zoneNameController.text.trim();
-                                 zoneBloc.addOne(zone);
-                                _zoneNameController.clear();
+                                 Navigator.pushNamed(
+                                     context, MapRoutes.MAP_SCREEN)
+                                     .then((value) {
+                                   if (value != null) {
+                                     zoneAddressModel = (value as AddressModel);
+                                     _zoneNameController.text =
+                                         zoneAddressModel.subArea;
+                                     String zone = _zoneNameController.text.trim();
+                                     zoneBloc.addOne(zone);
+                                     _zoneNameController.clear();
+                                   }
+                                 });
+
                                },
                              ),
                               border:InputBorder.none,
                               hintText: 'zone name .'
-                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 18)
 
                             //S.of(context).name,
                           ),
@@ -253,6 +266,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
                           return   Center(
                             child: Container(
+                              padding: EdgeInsets.all(5),
                               width: double.infinity,
                               height: 6.8 * SizeConfig.heightMulti,
                               decoration: BoxDecoration(
@@ -271,7 +285,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
                                   Text(state.zones[index] , style: GoogleFonts.lato(
                                       color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.1,
+                                      fontSize: SizeConfig.titleSize * 2.2,
                                       fontWeight: FontWeight.bold
                                   ),),
                                   Spacer(),
@@ -324,6 +338,9 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                           StoreModel store = StoreModel(id: '',zones: []);
                           store.name = _storeameController.text.trim();
                           store.location = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+                          print('======================= in add store button ===================');
+                          print(addressModel.description);
+                          print('======================= in add store button ===================');
                           store.locationName = addressModel.description;
                           store.zones = zoneBloc.state.zones.map((e) =>ZoneModel(name: e) ).toList();
                           storeBloc.addStore(store);

@@ -27,10 +27,10 @@ class LanguageScreen extends StatelessWidget {
                 Hero(
                   tag: 'logo',
                   child: Center(
-                    child: WaveLoadingWidget(
-                      container_height: 31.25 * SizeConfig.heightMulti,
-                      container_width: 31.25 * SizeConfig.heightMulti,
-                      run: true,
+                    child: Container(
+                           height: 31.25 * SizeConfig.heightMulti,
+                           width: 31.25 * SizeConfig.heightMulti,
+                      child: Image.asset('assets/new_oval_logo.png',fit: BoxFit.contain,),
                     ),
                   ),
                 ),

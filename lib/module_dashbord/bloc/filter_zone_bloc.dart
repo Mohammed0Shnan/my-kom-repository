@@ -4,7 +4,7 @@ import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_home/models/search_model.dart';
 
 class FilterZoneCubit extends Cubit<FilterZoneCubitState> {
-  FilterZoneCubit() : super(FilterZoneCubitState(searchModel:SearchModel(storeId:'tYxGSb6QQEn3bPOeHr6X' , zoneName: 'zone 1')));
+  FilterZoneCubit() : super(FilterZoneCubitState(searchModel:SearchModel(storeId:'rbma6ffsivqpdEGjb7f3' , zoneName: 'Al Fujeraa')));
 
   setFilter(SearchModel searchModel){
    return emit(FilterZoneCubitState(searchModel: searchModel));

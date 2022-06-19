@@ -11,8 +11,9 @@ import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/module_orders/state_manager/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/ui/widgets/delete_order_sheak_alert.dart';
+import 'package:my_kom/module_orders/util/whatsapp_link_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class OwnerOrdersScreen extends StatefulWidget {
 
 
@@ -145,7 +146,10 @@ class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
 
                   return GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_DETAIL_SCREEN , arguments:orders[index].id );
+                      var url = WhatsAppLinkHelper.getMapsLink(
+                          orders[index].destination.lat,  orders[index].destination.lon);
+                      launchUrl(Uri.parse(url));
+                     // Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_DETAIL_SCREEN , arguments:orders[index].id );
                     },
                     child: Container(
                       height: 150,
@@ -398,82 +402,95 @@ class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-                          Text('Details',style: GoogleFonts.lato(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w800
-                          ),),
-                          InkWell(
-                              onTap: (){
-
-                                deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                              },
-                              child: Icon(Icons.close,color:Colors.black54 ,)),
-                        ],
-                      ),
-                      SizedBox(height: 8,),
-                      Expanded(
-                        child: Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                            fontSize: 12,
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w800
-                        )),
-                      ),
-                      SizedBox(height: 4,),
-
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                        Icon(Icons.location_on_outlined , color: Colors.black45,),
-                        Expanded(
-                          child: Text(orders[index].addressName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                              fontSize: 12,
-                              color: Colors.black45,
-                              fontWeight: FontWeight.w800,
-
-                          )),
-                        )
-
-                      ],),
-                      SizedBox(height: 4,),
-                      Text(orders[index].orderValue.toString() + '    AED',style: GoogleFonts.lato(
-                          fontSize: 14,
-                          color: ColorsConst.mainColor,
-                          fontWeight: FontWeight.bold
-                      )),
-                      SizedBox(height: 8,),
                       Container(
-                        height: 35,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                            color: ColorsConst.mainColor,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: MaterialButton(
-                          onPressed: () {
-                            requestOrderProgress(orders[index]);
-                           // Navigator.pushNamed(context, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text('Update Status To ',style: TextStyle(color: Colors.white),),
-                              Icon(Icons.arrow_forward ,color: Colors.white,),
-                              Text(_getNextState(orders[index]),style: TextStyle(color: Colors.white))
-                            ],
-                          ),
+                        width: 80,
+                        height: 80,
+                        child: Image.asset('assets/order.png',fit: BoxFit.fill,),
+                      ),
+                      SizedBox(width: 8,),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-                        ),
-                      )
+                                Text('Details',style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w800
+                                ),),
+                                InkWell(
+                                    onTap: (){
 
+                                      deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
+                                    },
+                                    child: Icon(Icons.close,color:Colors.black54 ,)),
+                              ],
+                            ),
+                            SizedBox(height: 8,),
+                            Expanded(
+                              child: Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w800
+                              )),
+                            ),
+                            SizedBox(height: 4,),
+
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                              Icon(Icons.location_on_outlined , color: Colors.black45,),
+                              Expanded(
+                                child: Text(orders[index].addressName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                    fontSize: 12,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w800,
+
+                                )),
+                              )
+
+                            ],),
+                            SizedBox(height: 4,),
+                            Text(orders[index].orderValue.toString() + '    AED',style: GoogleFonts.lato(
+                                fontSize: 14,
+                                color: ColorsConst.mainColor,
+                                fontWeight: FontWeight.bold
+                            )),
+                            SizedBox(height: 8,),
+                            Container(
+                              height: 35,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                  color: ColorsConst.mainColor,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  requestOrderProgress(orders[index]);
+                                  // Navigator.pushNamed(context, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text('Update Status To ',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2),),
+                                    Icon(Icons.arrow_forward ,color: Colors.white,),
+                                    Text(_getNextState(orders[index]),style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2))
+                                  ],
+                                ),
+
+                              ),
+                            )
+
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

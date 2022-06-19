@@ -9,12 +9,15 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
+import 'package:my_kom/module_dashbord/bloc/add_advertisement_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/add_company1_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/add_product_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/add_specefications_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/add_zone_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/all_store_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/store_bloc.dart';
+import 'package:my_kom/module_dashbord/enum/advertisement_type.dart';
+import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
 import 'package:my_kom/module_dashbord/models/store_model.dart';
 import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_dashbord/requests/add_company_request.dart';
@@ -52,18 +55,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   final TextEditingController _quantityProductController =
   TextEditingController();
-  final TextEditingController _speciProductController =
-  TextEditingController();
 
-  final TextEditingController _ImageCompanyController =
+  final TextEditingController _routeController =
   TextEditingController();
   //final ZoneBloc zoneBloc = ZoneBloc();
   final AllStoreBloc allStoreBloc = AllStoreBloc();
   final UploadBloc _uploadCompanyImageBloc = UploadBloc();
+  final UploadBloc _uploadAdvertisementImageBloc = UploadBloc();
   final UploadBloc _uploadProductImageBloc = UploadBloc();
   final AddCompanyBloc _addCompanyBloc = AddCompanyBloc();
+  final AddAdvertisementBloc _addAdvertisementBloc = AddAdvertisementBloc();
   final AddProductBloc _addProductBloc = AddProductBloc();
   final SpecificationsBloc specificationsBloc = SpecificationsBloc();
+
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
   /// Company Parameters
   late AddressModel addressModel ;
@@ -74,11 +79,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
   late CompanyModel companyModel;
  /// Product Parameters
   String ? _imageProduct = null;
+
+  String ? _advertisementImage = null;
   late double price;
   bool isRecommended = false;
 
   bool  formOpen  =false;
 
+  bool  productFormOpen  =false;
+
+  bool AdvertisementFormOpen  =false;
+
+  String? advertisementType = null;
   @override
   void initState() {
     // TODO: implement initState
@@ -88,6 +100,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         title: Text('Add Products Screen'),
         backgroundColor: ColorsConst.mainColor,
@@ -366,9 +379,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         bloc: _uploadCompanyImageBloc,
                         listener: (context, state) {
                           if(state is UploadSuccessState){
-                            Scaffold.of(context).showBottomSheet((context) => Container(
-                              child: Text('upload successfuly !!!'),
-                            ));
+                            _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Company Image successful uploaded')));
+
                           }
                         },
                         builder: (context, state) {
@@ -425,14 +437,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     ),
                                   )
                                       : CachedNetworkImage(
-                                    maxHeightDiskCache: 5,
                                     imageUrl: _image!,
                                     progressIndicatorBuilder: (context, l, ll) =>
                                         CircularProgressIndicator(
                                           value: ll.progress,
                                         ),
                                     errorWidget: (context, s, l) => Icon(Icons.error),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                                     // : Container(
@@ -478,18 +489,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           if(state is AddCompanySuccessState)
                           {
                             _image = null;
+                            _storeID = null;
                             _uploadCompanyImageBloc.initState();
-                            setState(() {
 
-                            });
                             _nameCompanyController.clear();
                             _desCompanyController.clear();
                             allStoreBloc.getAllStore();
-                            snackBarSuccessWidget(context, 'Order Created Successfully!!');
+                            setState(() {
+
+                            });
+                            snackBarSuccessWidget(context, 'Company Added Successfully!!');
                           }
                           else if(state is AddCompanyErrorState)
                           {
-                            snackBarSuccessWidget(context, 'The Order Was Not Created!!');
+                            snackBarSuccessWidget(context, 'Company Added Was Not Created!!');
                           }
                         },
                         builder: (context,state) {
@@ -507,11 +520,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             ),
                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
                               onPressed: () {
-                               String companyName = _nameCompanyController.text.trim();
-                               String companyDes = _desCompanyController.text.trim();
+                                if(_storeID == null){
+                                  _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Store !!!!')));
+                                }
+                                else {
+                                  String companyName = _nameCompanyController.text.trim();
+                                  String companyDes = _desCompanyController.text.trim();
 
-                                AddCompanyRequest request = AddCompanyRequest(name: companyName, description:companyDes , imageUrl: _image!);
-                                _addCompanyBloc.addCompany(_storeID!, request);
+                                  AddCompanyRequest request = AddCompanyRequest(name: companyName, description:companyDes , imageUrl: _image!);
+                                  _addCompanyBloc.addCompany(_storeID!, request);
+                                }
+
                               },
                               child: Text('Add Company', style: TextStyle(color: Colors.white,
                                   fontSize: SizeConfig.titleSize * 2.7),),
@@ -530,6 +549,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ///
             ,
               Divider(color: Colors.black45,height: 5,thickness:3,endIndent: 20,indent: 20,),
+
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Text('Add Products '),
+                      GestureDetector(
+                          onTap: (){
+                            productFormOpen = ! productFormOpen;
+                            setState(() {
+
+                            });
+                          },
+                          child: Text('Click here',style: TextStyle(color: Colors.blue),)),
+                    ],
+                  )),
+              SizedBox(height: 10,),
+
+
+              if(productFormOpen)
               Card(
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 elevation: 5,
@@ -732,9 +771,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       bloc: _uploadProductImageBloc,
                       listener: (context,state){
                     if (state is UploadSuccessState) {
-                   Scaffold.of(context).showSnackBar(SnackBar(content:Container(
-                     child: Text('successful uploaded'),
-                   )));
+                      _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Product image successful uploaded')));
                            }
                   },
                       builder: (context, state) {
@@ -789,14 +826,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   ),
                                 )
                                     : CachedNetworkImage(
-                                  maxHeightDiskCache: 5,
                                   imageUrl: _imageProduct!,
                                   progressIndicatorBuilder: (context, l, ll) =>
                                       CircularProgressIndicator(
                                         value: ll.progress,
                                       ),
                                   errorWidget: (context, s, l) => Icon(Icons.error),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                               Positioned(
@@ -937,21 +973,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   //       }
                   //   ),
                   // ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Recommended'),
-
-                      Checkbox(
-                        value: isRecommended,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isRecommended = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text('Recommended'),
+                  //
+                  //     Checkbox(
+                  //       value: isRecommended,
+                  //       onChanged: (bool? value) {
+                  //         setState(() {
+                  //           isRecommended = value!;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 20,),
                   BlocConsumer<AddProductBloc, AddProductStates>(
                       bloc: _addProductBloc,
@@ -960,17 +996,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         {
                           _imageProduct = null;
                           _uploadProductImageBloc.initState();
-                          setState(() {
-                          });
+
                           _nameProductController.clear();
                           _desProductController.clear();
                           _priceProductController.clear();
                           _quantityProductController.clear();
-                          snackBarSuccessWidget(context, 'Product Created Successfully!!');
+                          setState(() {
+                          });
+                          snackBarSuccessWidget(context, 'Product Added Successfully!!');
                         }
                         else if(state is AddProductErrorState)
                         {
-                          snackBarSuccessWidget(context, 'The Product Was Not Created!!');
+                          snackBarSuccessWidget(context, 'Product Added Was Not Created!!');
                         }
                       },
                       builder: (context,state) {
@@ -988,14 +1025,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ),
                           child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
                             onPressed: () {
-                              String productName = _nameProductController.text.trim();
-                              String productDes = _desProductController.text.trim();
-                              double price = double.parse(_priceProductController.text.trim());
-                              int quantity = int.parse(_quantityProductController.text.trim());
-                              AddProductRequest productRequest = AddProductRequest(isRecommended: isRecommended,title: productName,description: productDes,imageUrl: _imageProduct!,
-                              price: price,quantity: quantity
-                              );
-                              _addProductBloc.addProduct(_storeID!, _companyID!, productRequest);
+                              print(_storeID);
+                              if(_storeID == null){
+                                _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Store !!!!')));
+                              }
+                              else if(_companyID == null){
+                                _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Company !!!!')));
+
+                              }
+                              else {
+                                String productName = _nameProductController.text.trim();
+                                String productDes = _desProductController.text.trim();
+                                double price = double.parse(_priceProductController.text.trim());
+                                int quantity = int.parse(_quantityProductController.text.trim());
+                                AddProductRequest productRequest = AddProductRequest(isRecommended: isRecommended,title: productName,description: productDes,imageUrl: _imageProduct!,
+                                    price: price,quantity: quantity
+                                );
+                                _addProductBloc.addProduct(_storeID!, _companyID!, productRequest);
+                              }
+
                             },
                             child: Text('Add Product', style: TextStyle(color: Colors.white,
                                 fontSize: SizeConfig.titleSize * 2.7),),
@@ -1007,6 +1055,325 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
                 ],),
               ),
+              SizedBox(height: 30,)
+
+              /// Advertisements
+              ///
+             , Divider(color: Colors.black45,height: 5,thickness:3,endIndent: 20,indent: 20,),
+
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Text('Add Advertisement '),
+                      GestureDetector(
+                          onTap: (){
+                            AdvertisementFormOpen = !AdvertisementFormOpen;
+                            setState(() {
+
+                            });
+                          },
+                          child: Text('Click here',style: TextStyle(color: Colors.blue),)),
+                    ],
+                  )),
+              SizedBox(height: 10,),
+
+
+              if(AdvertisementFormOpen)
+                Card(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  elevation: 5,
+                  child: Column(
+                    children: [
+                    // late final String id;
+                    // late final String name;
+                    // late String description;
+                    // late String imageUrl;
+                      SizedBox(height: 10,),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal:20),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                      ),
+                      child: ListTile(
+                        title:  Text('Advertisement Type'),subtitle:
+                      DropdownButtonFormField<String>(
+                        onTap: () {},
+                        validator: (s) {
+                          return s == null
+                              ? 'Store Is Required !'
+                              : null;
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Advertisement Type',
+                          hintStyle: TextStyle(fontSize: 16),
+                        ),
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: AdvertisementType.ADVERTISEMENT_PRODUCT.name,
+                            child: Text(
+                              'ADVERTISEMENT PRODUCT',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: AdvertisementType.ADVERTISEMENT_COMPANY.name,
+                            child: Text(
+                              'ADVERTISEMENT COMPANY',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          DropdownMenuItem<String>(
+                            value:AdvertisementType.ADVERTISEMENT_OFFER.name,
+                            child: Text(
+                              'ADVERTISEMENT OFFER',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: AdvertisementType.ADVERTISEMENT_EXTERNAL.name,
+                            child: Text(
+                              'ADVERTISEMENT EXTERNAL',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          )
+                        ],
+                        onChanged: (s) {
+
+                          advertisementType = s;
+                          setState(() {
+
+                          });
+                        },
+                      ),
+                      ),
+                    ),
+                      SizedBox(height: 15,),
+
+                    Text('Advertisement Name'),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Container(
+
+                        child: ListTile(
+
+                            subtitle: Container(
+                              height: 50,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                              ),
+                              child: TextFormField(
+                                controller: _routeController,
+                                decoration: InputDecoration(
+                                    errorStyle: GoogleFonts.lato(
+                                      color: Colors.red.shade700,
+                                      fontWeight: FontWeight.w800,
+
+
+                                    ),
+                                    prefixIcon: Icon(Icons.store),
+                                    border:InputBorder.none,
+                                    hintText: 'Advertisement route .'
+                                    , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                  //S.of(context).name,
+                                ),
+                                // Move focus to next
+                                validator: (result) {
+                                  if (result!.isEmpty) {
+                                    return 'Advertisement route is Required'; //S.of(context).nameIsRequired;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            )),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                      Text('Advertisement image'),
+                    BlocConsumer<UploadBloc, UploadStates>(
+                        bloc: _uploadAdvertisementImageBloc,
+                        listener: (context, state) {
+                          if(state is UploadSuccessState){
+                            _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Advertisement Image successful uploaded')));
+
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is UploadSuccessState) {
+                            _advertisementImage = state.image;
+                          }
+                          return Container(
+                            width: SizeConfig.screenWidth * 0.8,
+                            height: 150,
+
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                state is UploadLoadingState
+                                    ? Container(
+                                  padding: EdgeInsets.all(20),
+                                  width: SizeConfig.screenWidth * 0.8,
+                                  height: 150,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                ): state is UploadInitState?
+                                Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(20),
+                                    // image: DecorationImage(
+                                    //   image: new ExactAssetImage('assets/logo3.png'),
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                  ),
+                                )
+                                    :Container(
+                                  width: SizeConfig.screenWidth * 0.8,
+                                  height: 150,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius: BorderRadius.circular(20),
+
+                                  ),
+                                  child: _advertisementImage == null
+                                      ? Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey
+                                      // image: DecorationImage(
+                                      //   image: new ExactAssetImage('assets/logo3.png'),
+                                      //   fit: BoxFit.cover,
+                                      // ),
+
+                                    ),
+                                  )
+                                      : CachedNetworkImage(
+                                    imageUrl: _advertisementImage!,
+                                    progressIndicatorBuilder: (context, l, ll) =>
+                                        Center(
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            child: CircularProgressIndicator(
+                                              value: ll.progress,
+                                            ),
+                                          ),
+                                        ),
+                                    errorWidget: (context, s, l) => Icon(Icons.error),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                // : Container(
+                                // width: 150,
+                                // height: 150,
+                                // decoration: BoxDecoration(
+                                //     shape: BoxShape.circle,
+                                //     color: Colors.black12,
+                                //     image: _image == null
+                                //         ? null
+                                //         : DecorationImage(
+                                //         fit: BoxFit.cover,
+                                //         image: AssetImage('assets/logo3.png')))),
+                                Positioned(
+                                    bottom: 0,
+                                    left: 0,
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue,
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          choosePhotoSource(context, _uploadAdvertisementImageBloc);
+                                        },
+                                        icon: Icon(
+                                          Icons.camera,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ))
+                              ],
+                            ),
+                          );
+                        }),
+
+                    SizedBox(height: 20,),
+                    BlocConsumer<AddAdvertisementBloc, AddAdvertisementStates>(
+                        bloc: _addAdvertisementBloc,
+                        listener: (context,state)async{
+                          if(state is AddAdvertisementSuccessState)
+                          {
+                            _advertisementImage = null;
+                            _storeID = null;
+                            _uploadAdvertisementImageBloc.initState();
+                            allStoreBloc.getAllStore();
+                            setState(() {
+
+                            });
+                            snackBarSuccessWidget(context, 'Advertisement Added Successfully!!');
+                          }
+                          else if(state is AddAdvertisementErrorState)
+                          {
+                            snackBarSuccessWidget(context, 'Advertisement Added Was Not Created!!');
+                          }
+                        },
+                        builder: (context,state) {
+                          bool isLoading = state is AddAdvertisementLoadingState?true:false;
+                          return AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            clipBehavior: Clip.antiAlias,
+                            height: 8.44 * SizeConfig.heightMulti,
+                            width:isLoading?60: SizeConfig.screenWidth * 0.8,
+                            padding: EdgeInsets.all(isLoading?8:0 ),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                                color: ColorsConst.mainColor,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+                              onPressed: () {
+                                if(_storeID == null){
+                                  _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Store !!!!')));
+                                }
+                                else {
+                                  String route = _routeController.text.trim();
+                                  if(advertisementType != null){
+                                    String query =advertisementType.toString()+'/'+route;
+                                    AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!);
+                                    _addAdvertisementBloc.addAdvertisement(request);
+                                  }
+
+                                }
+
+                              },
+                              child: Text('Add Advertisement', style: TextStyle(color: Colors.white,
+                                  fontSize: SizeConfig.titleSize * 2.7),),
+
+                            ),
+                          );
+                        }
+                    ),
+
+                  ],),
+                ),
               SizedBox(height: 30,)
 
             ],

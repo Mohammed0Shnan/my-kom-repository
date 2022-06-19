@@ -9,7 +9,6 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
-import 'package:my_kom/module_authorization/screens/widgets/custom_clip_widget.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
@@ -47,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final UserRole userRole;
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       userRole =  ModalRoute.of(context)!.settings.arguments as UserRole;
     });
     super.initState();
@@ -70,148 +69,106 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _pageController,
-          children: [
-            /// Page Number One
-            ///
-            Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                Stack(
-                children: [
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Container(
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.heightMulti * 7,
+            color: ColorsConst.mainColor,
 
-            Container(
-              height: SizeConfig.screenHeight * 0.25,
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10,),
-
-                  Text('Welcome TO',
-                      style: TextStyle(
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w900,
-                          fontSize: SizeConfig.titleSize * 3.5)),
-                  SizedBox(height: 5,),
-                  Container(
-                    width: SizeConfig.screenWidth * 0.6,
-                    height: 7.9 * SizeConfig.heightMulti,
-
-                    child:  Stack(
+          ),
+          Expanded(
+            child: PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: _pageController,
+              children: [
+                /// Page Number One
+                ///
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                            width: SizeConfig.screenWidth * 0.5,
-                            height: 7.8 * SizeConfig.heightMulti,
-                            child: Image.asset('assets/logo_word.png',fit: BoxFit.cover,)),
-                        Positioned(
-                            top: SizeConfig.widhtMulti*2.4,
-                            left: SizeConfig.widhtMulti * 15,
-                            child: Container(
-                                width: SizeConfig.widhtMulti * 7.2,
-                                height: SizeConfig.widhtMulti * 7.2,
-                                child: SvgPicture.asset('assets/2.svg')) ),
+                          height: SizeConfig.screenHeight * 0.25,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.screenWidth * 0.2),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 10,),
 
-                        Positioned(
-                            top: 10,
-                            right: SizeConfig.widhtMulti * 5,
-                            child: Container(
-                                width:  SizeConfig.widhtMulti * 8,
-                                height: SizeConfig.widhtMulti * 8,
-                                child: SvgPicture.asset('assets/2.svg')) ),
-
-                      ],
-                    ),
-                    //  child: Row(
-                    //    mainAxisAlignment: MainAxisAlignment.center,
-                    //    children: [
-                    //      Stack(
-                    //        children: [
-                    //  Container(
-                    //  width: SizeConfig.screenWidth * 0.5,
-                    //      height: 7.8 * SizeConfig.heightMulti,
-                    //      child: Image.asset('assets/logo_word.png',fit: BoxFit.cover,)),
-                    //      Positioned(
-                    //        top: 10,
-                    //          left: 55,
-                    //          child: Container(
-                    //          width: 25,
-                    //          height: 25,
-                    //          child: SvgPicture.asset('assets/2.svg')) )
-                    //
-                    //  ],
-                    //      ),
-                    // //  Image.asset('assets/logo1.png',fit: BoxFit.fitWidth,)),
-                    //      Container(
-                    //          height: 7.8 * SizeConfig.heightMulti,
-                    //          width: SizeConfig.screenWidth * 0.1,
-                    //          child: SvgPicture.asset('assets/1.svg'))
-                    //    ],
-                    //  ),
-                  ),
-                  SizedBox(height: 5,),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text('create your account and start ordering water now',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.lato(
-                            fontSize: SizeConfig.titleSize * 2.1,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black38
-                        )),
-                  )
-                ],
-              ),
-            ),
-          ],),
-
-
-                    Form(
-                      key: _registerFormKey,
-                      child: Flex(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        direction: Axis.vertical,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: ListTile(
-                                title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('Email Address', style:GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.5
-                                    ))),
-                                subtitle: Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                                  ),
-                                  child: TextFormField(
+                              Text('Create New\n Account',
+                                  textAlign:TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: SizeConfig.titleSize * 5)),
+                              SizedBox(
+                                height:SizeConfig.screenHeight * 0.03,
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Already have one !  ',
+                                      style: TextStyle(
+                                          fontSize: SizeConfig.titleSize * 3,
+                                          color: Colors.black45,
+                                          fontWeight: FontWeight.w800
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, AuthorizationRoutes.LOGIN_SCREEN);
+                                      },
+                                      child: Text('Login',
+                                          style:  GoogleFonts.lato(
+                                              fontSize: SizeConfig.titleSize * 2.5,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Form(
+                          key: _registerFormKey,
+                          child: Flex(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            direction: Axis.vertical,
+                            children: [
+                              ListTile(
+                                  title: Padding(
+                                      padding: EdgeInsets.only(bottom: 8),
+                                      child: Text('EMAIL', style:GoogleFonts.lato(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54,
+                                          fontSize: SizeConfig.titleSize * 2.7
+                                      ))),
+                                  subtitle: TextFormField(
+                                    style: TextStyle(fontSize: 20),
                                     keyboardType: TextInputType.emailAddress,
                                     controller: _registerEmailController,
                                     decoration: InputDecoration(
-                                        errorStyle: GoogleFonts.lato(
-                                          color: Colors.red.shade700,
-                                          fontWeight: FontWeight.w800,
 
 
+                                        border:OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                width: 2,
+                                                style:BorderStyle.solid ,
+                                                color: Colors.black87
+                                            )
                                         ),
-                                        prefixIcon: Icon(Icons.email),
-                                        border:InputBorder.none,
-                                        hintText: 'Email Address'
+                                        hintText: 'Email'
                                         ,
                                         hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                         //S.of(context).name,
@@ -221,51 +178,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     // Move focus to next
                                     validator: (result) {
                                       if (result!.isEmpty) {
-                                        return 'Email Address is Required'; //S.of(context).nameIsRequired;
+                                        return 'Email is Required'; //S.of(context).nameIsRequired;
                                       }
                                       if (!_validateEmailStructure(result))
-                                        return 'Must write an email address';
+                                        return 'Must write an email';
                                       return null;
                                     },
-                                  ),
-                                )),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: ListTile(
-                              title: Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
-                                  child: Text('Password', style:GoogleFonts.lato(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.5
-                                  ))),
-                              subtitle: BlocBuilder<PasswordHiddinCubit,
-                                  PasswordHiddinCubitState>(
-                                bloc: cubit1,
-                                builder: (context, state) {
-                                  return Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                                    ),
-                                    child: TextFormField(
+                                  )),
+                              SizedBox(
+                                height:SizeConfig.screenHeight * 0.015,
+                              ),
+                              ListTile(
+                                title: Padding(
+                                    padding: EdgeInsets.only(bottom: 8),
+                                    child: Text('PASSWORD', style:GoogleFonts.lato(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black54,
+                                        fontSize: SizeConfig.titleSize * 2.5
+                                    ))),
+                                subtitle: BlocBuilder<PasswordHiddinCubit,
+                                    PasswordHiddinCubitState>(
+                                  bloc: cubit1,
+                                  builder: (context, state) {
+                                    return TextFormField(
                                       controller: _registerPasswordController,
                                       decoration: InputDecoration(
-                                          errorStyle: GoogleFonts.lato(
-                                            color: Colors.red.shade700,
-                                            fontWeight: FontWeight.w800,
 
-
-                                          ),
-                                          prefixIcon: Icon(Icons.lock),
                                           suffixIcon: IconButton(
                                               onPressed: () {
                                                 cubit1.changeState();
@@ -275,7 +213,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                           .VISIBILITY
                                                   ? Icon(Icons.visibility)
                                                   : Icon(Icons.visibility_off)),
-                                          border: InputBorder.none,
+                                          border:OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  style:BorderStyle.solid ,
+                                                  color: Colors.black87
+                                              )
+                                          ),
                                           hintText:
                                               'Password' // S.of(context).email,
                                         , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
@@ -299,49 +243,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           return '* It must be made up of numbers, letters and signs';
                                         return null;
                                       },
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: ListTile(
-                              title: Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
-                                  child: Text('Confirm Password',style:GoogleFonts.lato(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.5
-                                  ))),
-                              subtitle: BlocBuilder<PasswordHiddinCubit,
-                                  PasswordHiddinCubitState>(
-                                bloc: cubit2,
-                                builder: (context, state) {
-                                  return Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                                    ),
-                                    child: TextFormField(
+                              SizedBox(
+                                height:SizeConfig.screenHeight * 0.015,
+                              ),
+                              ListTile(
+                                title: Padding(
+                                    padding: EdgeInsets.only(bottom: 8),
+                                    child: Text('CONFIRM',style:GoogleFonts.lato(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black54,
+                                        fontSize: SizeConfig.titleSize * 2.5
+                                    ))),
+                                subtitle: BlocBuilder<PasswordHiddinCubit,
+                                    PasswordHiddinCubitState>(
+                                  bloc: cubit2,
+                                  builder: (context, state) {
+                                    return TextFormField(
                                       controller:
                                           _registerConfirmPasswordController,
                                       decoration: InputDecoration(
-                                          errorStyle: GoogleFonts.lato(
-                                            color: Colors.red.shade700,
-                                            fontWeight: FontWeight.w800,
 
-
-                                          ),
-                                          prefixIcon: Icon(Icons.lock),
                                           suffixIcon: IconButton(
                                               onPressed: () {
                                                 cubit2.changeState();
@@ -351,7 +276,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                           .VISIBILITY
                                                   ? Icon(Icons.visibility)
                                                   : Icon(Icons.visibility_off)),
-                                          border: InputBorder.none,
+                                          border:OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  style:BorderStyle.solid ,
+                                                  color: Colors.black87
+                                              )
+                                          ),
                                           hintText:
                                               'Confirm Password' // S.of(context).password,
                                         , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
@@ -374,255 +305,204 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       textInputAction: TextInputAction.done,
                                       onFieldSubmitted: (_) => node
                                           .unfocus(), // Submit and hide keyboard
-                                    ),
-                                  );
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height:SizeConfig.screenHeight * 0.04,
+                              ),
+                              Center(
+                                child: SmoothPageIndicator(
+                                  controller: _pageController,
+                                  count: 2,
+                                  effect: ExpandingDotsEffect(
+                                      dotColor: Colors.black12,
+                                      dotHeight: 10,
+                                      dotWidth: 10,
+                                      spacing: 2,
+                                      activeDotColor: ColorsConst.mainColor),
+                                ),
+                              ),
+                              SizedBox(
+                                height:SizeConfig.screenHeight * 0.05,
+                              ),
+                              BlocConsumer<RegisterBloc, RegisterStates>(
+                                bloc: widget._bloc,
+                                listener: (context, state) {
+                                  if (state is RegisterSuccessState) {
+                                    _pageController.jumpToPage(1);
+                                  } else if (state is RegisterErrorState) {
+                                    snackBarErrorWidget(context, state.message);
+                                  }
+                                },
+                                builder: (context, state) {
+                                  if (state is RegisterLoadingState)
+                                    return Center(
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                            width: 50,
+                                            height: 50,
+                                            child: CircularProgressIndicator()));
+                                  else
+                                    return ListTile(
+                                      title: Container(
+                                        height: SizeConfig.heightMulti * 10,
+
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+
+                                              primary:
+                                                  Color.fromARGB(255, 28, 174, 147),
+                                            ),
+                                            onPressed: () {
+                                              if (_registerFormKey.currentState!
+                                                  .validate()) {
+                                                String email =
+                                                    _registerEmailController.text
+                                                        .trim();
+                                                String password =
+                                                    _registerPasswordController.text
+                                                        .trim();
+                                                widget._bloc.register(
+                                                    userRole: userRole,
+                                                    email: email,
+                                                    password: password);
+                                              }
+                                            },
+                                            child: Text('Next',
+                                                style: TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize:
+                                                        SizeConfig.titleSize * 2.6,
+                                                    fontWeight: FontWeight.w700))),
+                                      ),
+                                    );
                                 },
                               ),
-                            ),
+
+                            ],
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Center(
-                            child: SmoothPageIndicator(
-                              controller: _pageController,
-                              count: 2,
-                              effect: ExpandingDotsEffect(
-                                  dotColor: Colors.black12,
-                                  dotHeight: 10,
-                                  dotWidth: 10,
-                                  spacing: 2,
-                                  activeDotColor: ColorsConst.mainColor),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          BlocConsumer<RegisterBloc, RegisterStates>(
-                            bloc: widget._bloc,
-                            listener: (context, state) {
-                              if (state is RegisterSuccessState) {
-                                _pageController.jumpToPage(1);
-                              } else if (state is RegisterErrorState) {
-                                snackBarErrorWidget(context, state.message);
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is RegisterLoadingState)
-                                return Center(
-                                    child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        child: CircularProgressIndicator()));
-                              else
-                                return ListTile(
-                                  title: Container(
-                                    height: 70,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          primary:
-                                              Color.fromARGB(255, 28, 174, 147),
-                                        ),
-                                        onPressed: () {
-                                          if (_registerFormKey.currentState!
-                                              .validate()) {
-                                            String email =
-                                                _registerEmailController.text
-                                                    .trim();
-                                            String password =
-                                                _registerPasswordController.text
-                                                    .trim();
-                                            widget._bloc.register(
-                                                userRole: userRole,
-                                                email: email,
-                                                password: password);
-                                          }
-                                        },
-                                        child: Text('Next',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize:
-                                                    SizeConfig.titleSize * 2.6,
-                                                fontWeight: FontWeight.w700))),
-                                  ),
-                                );
-                            },
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                        ],
-                      ),
+                        ),
+
+                      ],
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'You have a My com account !',
-                            style: TextStyle(
-                                fontSize: SizeConfig.titleSize * 2.1,
-                                color: Colors.black45,
-                            fontWeight: FontWeight.w800
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AuthorizationRoutes.LOGIN_SCREEN);
-                            },
-                            child: Text('Login',
-                                style:  GoogleFonts.lato(
-                                    fontSize: SizeConfig.titleSize * 2.3,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsConst.mainColor                          )),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
 
-            //////////////////////////
-            //////////////////////////
-            /////////////////////////
-            /// Page Number Tow
+                //////////////////////////
+                //////////////////////////
+                /////////////////////////
+                /// Page Number Tow
 
-            WillPopScope(
-              onWillPop: ()=> _willPop(),
-              child: Container(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Stack(
-                       children: [
-                          Container(
-                            child: ClipPath(
-                              clipper: CustomClipWidget(),
-                              child: Container(
-                                color: ColorsConst.mainColor.withOpacity(0.1),
-                                width: SizeConfig.screenWidth,
-                                height: SizeConfig.screenHeight * (0.3),
-
-
-                              ),
-                            ),
+                WillPopScope(
+                  onWillPop: ()=> _willPop(),
+                  child: Container(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 20,),
+                          Text('Complete your details',
+                              textAlign:TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: SizeConfig.titleSize * 4.5)),
+                          SizedBox(height: SizeConfig.heightMulti * 3,),
+                          // Container(
+                          //   margin: EdgeInsets.symmetric(horizontal: 30),
+                          //   alignment: Alignment.center,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         'When registering, you agree to ! ',
+                          //         style: TextStyle(
+                          //             fontSize: SizeConfig.titleSize * 1.8,
+                          //             color: Colors.black54,
+                          //             fontWeight: FontWeight.w700
+                          //         ),
+                          //       ),
+                          //       SizedBox(width: 5,),
+                          //       Expanded(
+                          //         child: GestureDetector(
+                          //           onTap: () {},
+                          //           child: Container(
+                          //             child: Text('the Privacy and Security Policy',
+                          //                 style: TextStyle(
+                          //                     fontSize: SizeConfig.titleSize * 2,
+                          //                     fontWeight: FontWeight.w800,
+                          //                     color: ColorsConst.mainColor)),
+                          //           ),
+                          //         ),
+                          //       )
+                          //     ],
+                          //   ),
+                          // ),
+                          SizedBox(
+                            height:SizeConfig.screenHeight * 0.07,
                           ),
-                          Positioned(
-                            right: 0,
-                            left: 0,
-                            top: 50,
-                            child:  Center(
-                              child: Text('Complete your details',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: SizeConfig.titleSize * 3.5)),
-                            ),
-                          ),
-
-
-                        ],
-                      ),
-                      Form(
-                        key: _registerCompleteFormKey,
-                        child: Flex(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          direction: Axis.vertical,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Container(
-                                   
-                                child: ListTile(
+                          Form(
+                            key: _registerCompleteFormKey,
+                            child: Flex(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              direction: Axis.vertical,
+                              children: [
+                                ListTile(
                                     title: Padding(
                                       padding: EdgeInsets.only(bottom: 8),
-                                      child: Text('User Name',style:GoogleFonts.lato(
+                                      child: Text('NAME',style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.5
+                                          fontSize: SizeConfig.titleSize * 2.7
                                       ))),
-                                    subtitle: Container(
-                                      height: 50,
-                                         clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                                    ),
-                                      child: TextFormField(
-                                        controller: _registerUserNameController,
-                                        decoration: InputDecoration(
-                                            errorStyle: GoogleFonts.lato(
-                                              color: Colors.red.shade700,
-                                              fontWeight: FontWeight.w800,
+                                    subtitle: TextFormField(
+                                      controller: _registerUserNameController,
+                                      decoration: InputDecoration(
+                                          errorStyle: GoogleFonts.lato(
+                                            color: Colors.red.shade700,
+                                            fontWeight: FontWeight.w800,
 
 
-                                            ),
-                                            prefixIcon: Icon(Icons.person),
-                                            border:InputBorder.none,
-                                            hintText: 'Mohammed .'
-                                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-
-                                            //S.of(context).name,
-                                            ),
-                                        textInputAction: TextInputAction.next,
-                                        onEditingComplete: () => node.nextFocus(),
-                                        // Move focus to next
-                                        validator: (result) {
-                                          if (result!.isEmpty) {
-                                            return 'User Name is Required'; //S.of(context).nameIsRequired;
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    )),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: ListTile(
-                                  title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('Address', style:GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.5
-                                    ))),
-                                  subtitle: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                              boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))],
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(10)
                                           ),
+                                          border:OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  style:BorderStyle.solid ,
+                                                  color: Colors.black87
+                                              )
+                                          ),                                          hintText: 'Mohammed .'
+                                            , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                          //S.of(context).name,
+                                          ),
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () => node.nextFocus(),
+                                      // Move focus to next
+                                      validator: (result) {
+                                        if (result!.isEmpty) {
+                                          return 'User Name is Required'; //S.of(context).nameIsRequired;
+                                        }
+                                        return null;
+                                      },
+                                    )),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                ListTile(
+                                    title: Padding(
+                                      padding: EdgeInsets.only(bottom: 8),
+                                      child: Text('ADDRESS', style:GoogleFonts.lato(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54,
+                                          fontSize: SizeConfig.titleSize * 2.7
+                                      ))),
+                                    subtitle: Row(
+                                      children: [
+                                        Expanded(
                                           child: TextFormField(
                                             controller:
                                                 _registerAddressController,
@@ -638,8 +518,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 ),
                                                 prefixIcon:
                                                     Icon(Icons.location_on),
-                                                border:InputBorder.none,
-                                                hintText: 'Burj Al Arab',
+                                                border:OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        style:BorderStyle.solid ,
+                                                        color: Colors.black87
+                                                    )
+                                                ),                                                hintText: 'Burj Al Arab',
                                                 hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
                                                 ),
 
@@ -656,246 +541,209 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             },
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                        onTap: (){
-                                          Navigator.pushNamed(
-                                              context, MapRoutes.MAP_SCREEN)
-                                              .then((value) {
-                                            if (value != null) {
-                                              addressModel = (value as AddressModel);
-                                              _registerAddressController.text =
-                                                  addressModel.description;
-                                            }
-                                          });
-                                        },
-                                        child: Container(
-
-                                          width: SizeConfig.heightMulti * 8.5,
-                                          height: SizeConfig.heightMulti * 8.5,
-                                          decoration: BoxDecoration(
-                                              color: ColorsConst.mainColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Icon(
-                                              Icons.my_location_outlined,
-                                              size: SizeConfig.heightMulti * 4,
-                                              color: Colors.white),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                      )
-                                    ],
-                                  )),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: ListTile(
-                                title: Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
-                                  child: Text('Phone Number',style:GoogleFonts.lato(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.5
-                                  ))),
-                                subtitle: Container(
-                                  
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                       horizontal: 10),
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                                    ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.phone),
-                                      CountryCodePicker(
-                                        initialSelection:
-                                            'دولة الإمارات العربية المتحدة',
-                                        showOnlyCountryWhenClosed: false,
-                                        favorite: [
-                                          '+971',
-                                          'دولة الإمارات العربية المتحدة'
-                                        ],
-                                        onChanged: (c) {
-                                          print(c);
-                                        },
-                                      ),
-                                      Divider(
-                                        height: 30,
-                                        color: Colors.black,
-                                        thickness: 10,
-                                      ),
-                                      Expanded(
-                                          child: TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        controller:
-                                            _registerPhoneNumberController,
-                                        decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText:
-                                                '(0)123412212' // S.of(context).email,
-                                , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                        GestureDetector(
+                                          onTap: (){
+                                            Navigator.pushNamed(
+                                                context, MapRoutes.MAP_SCREEN)
+                                                .then((value) {
+                                              if (value != null) {
+                                                addressModel = (value as AddressModel);
+                                                _registerAddressController.text =
+                                                    addressModel.description;
+                                              }
+                                            });
+                                          },
+                                          child: Container(
 
-                                            ),
-                                        validator: (result) {
-                                          if (result!.isEmpty) {
-                                            return 'Phone Number Is Required !';
-                                          } else if (!_validatePhoneNumberStructure(
-                                              result)) {
-                                            return 'Enter Valid Phone Number';
-                                          } else
-                                            return null;
-                                        },
-                                      ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Center(
-                              child: SmoothPageIndicator(
-                                controller: _pageController,
-                                count: 2,
-                                effect: ExpandingDotsEffect(
-                                    dotColor: Colors.black12,
-                                    dotHeight: 10,
-                                    dotWidth: 10,
-                                    spacing: 2,
-                                    activeDotColor: ColorsConst.mainColor),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            BlocConsumer<RegisterBloc, RegisterStates>(
-                              bloc: widget._bloc,
-                              listener: (context, state) {
-                                if (state is CompleteErrorState) {
-                                  snackBarErrorWidget(context, state.message);
-                                } else if (state is CompleteSuccessState) {
-                                  snackBarSuccessWidget(context, state.data);
-                                  if(userRole == UserRole.ROLE_USER){
-                                    Navigator.pushNamed(
-                                        context, NavigatorRoutes.NAVIGATOR_SCREEN);
-                                  }else{
-                                    Navigator.pop(context);
-                                  }
-
-                                }
-                              },
-                              builder: (context, state) {
-                                if (state is CompleteLoadingState)
-                                  return Center(
-                                    child: Container(
-                                        height: 40,
-                                        width: 40,
-                                        child: CircularProgressIndicator()),
-                                  );
-                                else
-                                  return ListTile(
-                                    title: Container(
-                                      height: 70,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      padding: EdgeInsets.symmetric(vertical: 10),
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
+                                            width: SizeConfig.heightMulti * 8.5,
+                                            height: SizeConfig.heightMulti * 8.5,
+                                            decoration: BoxDecoration(
+                                                color: ColorsConst.mainColor,
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
-                                            primary:
-                                                Color.fromARGB(255, 28, 174, 147),
+                                            child: Icon(
+                                                Icons.my_location_outlined,
+                                                size: SizeConfig.heightMulti * 4,
+                                                color: Colors.white),
                                           ),
-                                          onPressed: () {
-
-                                            if (_registerCompleteFormKey
-                                                .currentState!
-                                                .validate()) {
-                                              String name =
-                                                  _registerUserNameController.text
-                                                      .trim();
-                                              String phone =
-                                                  _registerPhoneNumberController
-                                                      .text
-                                                      .trim();
-                                              ProfileRequest profileRequest =
-                                                  ProfileRequest(
-                                                      userName: name,
-                                                      address: addressModel,
-                                                      phone: phone);
-                                              widget._bloc
-                                                  .createProfile(profileRequest);
-                                            }
-                                          },
-                                          child: Text('Register',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      SizeConfig.titleSize * 2.6,
-                                                  fontWeight: FontWeight.w700))),
-                                    ),
-                                  );
-                              },
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 40),
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'When registering, you agree to !',
-                              style: TextStyle(
-                                  fontSize: SizeConfig.titleSize * 1.8,
-                                  color: Colors.black54,
-                              fontWeight: FontWeight.w700
-                              ),
-                            ),
-                            SizedBox(width: 5,),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  child: Text('the Privacy and Security Policy',
-                                      style: TextStyle(
-                                          fontSize: SizeConfig.titleSize * 2,
-                                          fontWeight: FontWeight.w800,
-                                          color: ColorsConst.mainColor)),
+                                        )
+                                      ],
+                                    )),
+                                SizedBox(
+                                  height: 8,
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
+                                ListTile(
+                                  title: Padding(
+                                    padding: EdgeInsets.only(bottom: 8),
+                                    child: Text('PHONE',style:GoogleFonts.lato(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black54,
+                                        fontSize: SizeConfig.titleSize * 2.7
+                                    ))),
+                                  subtitle: Container(
+height: SizeConfig.heightMulti * 8.5,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                         horizontal: 10),
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black45,
+                                            width: 1
+                                          )
+                                      ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.phone),
+                                        CountryCodePicker(
+                                          initialSelection:
+                                              'دولة الإمارات العربية المتحدة',
+                                          showOnlyCountryWhenClosed: false,
+                                          favorite: [
+                                            '+971',
+                                            'دولة الإمارات العربية المتحدة'
+                                          ],
+                                          onChanged: (c) {
+                                            print(c);
+                                          },
+                                        ),
+                                        Divider(
+                                          height: 30,
+                                          color: Colors.black,
+                                          thickness: 10,
+                                        ),
+                                        Expanded(
+                                            child: TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          controller:
+                                              _registerPhoneNumberController,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText:
+                                                  '(0)123412212' // S.of(context).email,
+                                  , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                              ),
+                                          validator: (result) {
+                                            if (result!.isEmpty) {
+                                              return 'Phone Number Is Required !';
+                                            } else if (!_validatePhoneNumberStructure(
+                                                result)) {
+                                              return 'Enter Valid Phone Number';
+                                            } else
+                                              return null;
+                                          },
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Center(
+                                  child: SmoothPageIndicator(
+                                    controller: _pageController,
+                                    count: 2,
+                                    effect: ExpandingDotsEffect(
+                                        dotColor: Colors.black12,
+                                        dotHeight: 10,
+                                        dotWidth: 10,
+                                        spacing: 2,
+                                        activeDotColor: ColorsConst.mainColor),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                BlocConsumer<RegisterBloc, RegisterStates>(
+                                  bloc: widget._bloc,
+                                  listener: (context, state) {
+                                    if (state is CompleteErrorState) {
+                                      snackBarErrorWidget(context, state.message);
+                                    } else if (state is CompleteSuccessState) {
+                                      snackBarSuccessWidget(context, state.data);
+                                      if(userRole == UserRole.ROLE_USER){
+                                        Navigator.pushNamed(
+                                            context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                                      }else{
+                                        Navigator.pop(context);
+                                      }
+
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    if (state is CompleteLoadingState)
+                                      return Center(
+                                        child: Container(
+                                          margin: EdgeInsets.all(20),
+                                            height: 50,
+                                            width: 50,
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    else
+                                      return ListTile(
+                                        title: Container(
+                                          height: SizeConfig.heightMulti * 10.5,
+
+                                          padding: EdgeInsets.symmetric(vertical: 10),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary:
+                                                    Color.fromARGB(255, 28, 174, 147),
+                                              ),
+                                              onPressed: () {
+
+                                                if (_registerCompleteFormKey
+                                                    .currentState!
+                                                    .validate()) {
+                                                  String name =
+                                                      _registerUserNameController.text
+                                                          .trim();
+                                                  String phone =
+                                                      _registerPhoneNumberController
+                                                          .text
+                                                          .trim();
+                                                  ProfileRequest profileRequest =
+                                                      ProfileRequest(
+                                                          userName: name,
+                                                          address: addressModel,
+                                                          phone: phone);
+                                                  widget._bloc
+                                                      .createProfile(profileRequest);
+                                                }
+                                              },
+                                              child: Text('REGISTER',
+                                                  style: TextStyle(
+                                                      color: Colors.black87,
+                                                      fontSize:
+                                                          SizeConfig.titleSize * 2.6,
+                                                      fontWeight: FontWeight.w700))),
+                                        ),
+                                      );
+                                  },
+                                ),
+
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 20,),
+
+                        ],
                       ),
-                      SizedBox(height: 20,)
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+
+          ),
+
+        ],
       ),
     );
   }

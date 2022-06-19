@@ -55,75 +55,144 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
   Widget build(BuildContext context) {
  //   ShopCartBloc shopCartBlocProvided = context.read<ShopCartBloc>();
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorsConst.mainColor,
+        title: Text('Store Detail'),
+      ),
       body: BlocBuilder<StoreDetailBloc,StoreDetailStates>(
         bloc: _storeDetailBloc,
         builder: (context,state) {
           if(state is StoreDetailSuccessState){
             StoreModel storeModel = state.data;
-            return Column(
-              children: [
-                SizedBox(height: 50,),
-                Text(storeModel.name),
-                Text(storeModel.locationName),
-                Text(storeModel.location.lat.toString()),
-                ...storeModel.zones.map((e) => Text(e.name)),
-                SizedBox(height: 50,),
-                GestureDetector(
-                    onTap: (){
-                      showCompany = ! showCompany;
-                      setState(() {
-                      });
-                      _storeCompanyDetailBloc.getDetailCompanyStore(storeModel.id);
-                    },
-                      child: Text('show companies')),
-                  if(showCompany)
-                  BlocBuilder<StoreCompanyDetailBloc,StoreCompanyDetailStates>(
-                 bloc: _storeCompanyDetailBloc,
-                  builder: (context,state2) {
-                    if(state2 is StoreCompanyDetailSuccessState){
-                      List<CompanyModel> list = state2.data;
-                      return Column(
-                        children: [
-                          ...list.map((e) => GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=> StoreCompanyProductScreen(companyId:e.id, storeID: widget.storeID)));
-
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [BoxShadow(color: Colors.black12)]
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Text('name : '+e.name),
-                                Text(e.description)
-                              ],),
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 50,),
+                  Row(
+                    children: [
+                      Icon(Icons.drive_file_rename_outline),
+                      SizedBox(width: 8,),
+                      Text('Store Name : ' ,style: GoogleFonts.lato(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.w800),),
+                      Text(storeModel.name,style: GoogleFonts.lato(fontSize: 18,color: Colors.black54,fontWeight: FontWeight.w800),),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on_outlined),
+                      SizedBox(width: 8,),
+                      Text('Location : ' ,style: GoogleFonts.lato(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.w800),),
+                      Text(storeModel.locationName,style: GoogleFonts.lato(fontSize: 16,color: Colors.black54,fontWeight: FontWeight.w800),),
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+                    children: [
+                      Icon(Icons.map_outlined),
+                      SizedBox(width: 8,),
+                      Text('Regions : ' ,style: GoogleFonts.lato(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.w800),),
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Container(
+                    height: SizeConfig.screenHeight*0.23,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+          itemCount:storeModel.zones.length,
+                        itemBuilder: (context,index){
+                      return  Container(
+                        margin: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all()
+                        ),
+                          height:140,
+                          width: SizeConfig.screenWidth * 0.4,
+                          child: Expanded(
+                            child: Column(
+                              children: [
+                                Container(height:100,
+                                  child: Image.asset('assets/zone.png',fit: BoxFit.cover,),
+                                ),
+                                SizedBox(height: 8,),
+                                Text(storeModel.zones[index].name,style: TextStyle(fontSize: SizeConfig.heightMulti * 2.2),),
+                              ],
                             ),
-                          ))
-                        ],
-                      );
-                    }else if(state2 is StoreCompanyDetailErrorState){
-                      return Center(
-                        child: Container(
+                          ));
+                    }),
+                  ),
 
-                          child: Text(state2.message),
+                  SizedBox(height: 30,),
+                  GestureDetector(
+                      onTap: (){
+                        showCompany = ! showCompany;
+                        setState(() {
+                        });
+                        _storeCompanyDetailBloc.getDetailCompanyStore(storeModel.id);
+                      },
+                        child:  Row(
+                          children: [
+                            Text('Show Companies : ' ,style: GoogleFonts.lato(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.w800),),
+                          Text('Click here ',style: TextStyle(color: Colors.blue),)
+                          ],
                         ),
-                      );
-                    }else {
-                      return Center(
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-          })
-              ],
+                  ),
+                    SizedBox(height: 20,),
+                    if(showCompany)
+                    BlocBuilder<StoreCompanyDetailBloc,StoreCompanyDetailStates>(
+                   bloc: _storeCompanyDetailBloc,
+                    builder: (context,state2) {
+                      if(state2 is StoreCompanyDetailSuccessState){
+                        List<CompanyModel> list = state2.data;
+                      return  Container(
+                          height: 200,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount:list.length,
+                              itemBuilder: (context,index){
+                                return  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        border: Border.all()
+                                    ),
+                                    height:140,
+                                    width: 150,
+                                    child: Expanded(
+                                      child: Column(
+                                        children: [
+                                          Container(height:100,
+                                            child: Image.asset('assets/company.png',fit: BoxFit.cover,),
+                                          ),
+                                          SizedBox(height: 8,),
+                                          Expanded(child: Text(list[index].name,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w800,color: Colors.black54),)),
+                                        ],
+                                      ),
+                                    ));
+                              }),
+                        );
+
+                      }else if(state2 is StoreCompanyDetailErrorState){
+                        return Center(
+                          child: Container(
+
+                            child: Text(state2.message),
+                          ),
+                        );
+                      }else {
+                        return Center(
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+          }),
+                  SizedBox(height: 20,),
+                ],
+              ),
             );
             
           }else if(state is StoreDetailErrorState){

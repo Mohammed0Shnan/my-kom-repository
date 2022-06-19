@@ -100,4 +100,13 @@ class AuthRepository {
     return true;
   }
 
+  Future<bool> getNewPassword(String email) async{
+    try{
+      _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    }catch(e){
+      throw e;
+    }
+  }
+
 }

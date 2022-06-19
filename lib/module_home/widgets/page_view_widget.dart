@@ -108,7 +108,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         SmoothPageIndicator(
           controller: _pageController,
           count: widget.itemCount,
-          effect: const JumpingDotEffect(
+          effect:  JumpingDotEffect(
               dotColor: Colors.black12,
               dotHeight:  4,
               dotWidth: 20,

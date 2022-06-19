@@ -1,13 +1,13 @@
 class ProductModel {
   late final String id;
-  late final String companyId;
+  late final String? companyId;
   late final String title;
   late final String description;
   late final double price;
   late final double? old_price;
   late final int quantity;
   late final imageUrl;
-  late final int? orderQuantity;
+  late  int? orderQuantity;
   late bool  isRecommended;
   late final List<SpecificationsModel> specifications;
 
@@ -30,7 +30,7 @@ class ProductModel {
     this.companyId = map['company_id'];
     this.title = map['title'];
     this.description = map['description'];
-    this.price = map['price'];
+    this.price = 1.0 * map['price'];
     this.old_price = map['old_price'] ;
     this.quantity = map['quantity'];
     this.orderQuantity = map['order_quantity'];
@@ -46,6 +46,7 @@ class ProductModel {
   Map<String, dynamic>? toJson() {
     Map<String, dynamic> map = {};
     map['id'] = this.id;
+    map['company_id'] = this.companyId;
     map['title'] = this.title;
     map['description'] = this.description;
     map['price'] = this.price;

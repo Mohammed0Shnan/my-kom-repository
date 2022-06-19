@@ -7,44 +7,50 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/products_company_bloc.dart';
+import 'package:my_kom/module_company/company_routes.dart';
+import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_company/screen/products_detail_screen.dart';
-import 'package:my_kom/module_company/screen/widgets/login_sheak_alert.dart';
+import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_company/screen/widgets/product_shimmer.dart';
-import 'package:my_kom/module_home/bloc/open_close_shop_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/shoping_routes.dart';
-import 'package:my_kom/utils/auth_guard/auth_gard.dart';
 import 'dart:io' show Platform;
 
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class CompanyProductScreen extends StatefulWidget {
-  final CompanyModel? company;
+
   final AuthService _authService = AuthService();
 
-  CompanyProductScreen({required this.company, Key? key}) : super(key: key);
+  CompanyProductScreen({Key? key}) : super(key: key);
 
   @override
   State<CompanyProductScreen> createState() => _CompanyProductScreenState();
 }
 
 class _CompanyProductScreenState extends State<CompanyProductScreen> {
-  late String company_id;
   final TextEditingController _serachController = TextEditingController();
+  late final  CompanyModel company;
   @override
   void initState() {
-    //     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-    //   company_id = ModalRoute.of(context)!.settings.arguments.toString();
-    // });
-    super.initState();
-    productsCompanyBloc.getProducts(widget.company!.id);
-  }
 
+    super.initState();
+  }
+  
+ bool isInit =true;
   @override
   Widget build(BuildContext context) {
+
+    CompanyArgumentsRoute argumentsRoute =   (ModalRoute.of(context)!.settings.arguments) as CompanyArgumentsRoute;
+    company = CompanyModel(id: argumentsRoute.companyId, name: argumentsRoute.companyName, imageUrl: argumentsRoute.companyImage, description: 'description');
+    if(isInit){
+      productsCompanyBloc.getProducts( company.id);
+      setState(() {
+        isInit = !isInit;
+      });
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -58,29 +64,40 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                     children: [
                       IconButton(
                           onPressed: () {
+                            
                             Navigator.of(context).pop();
                           },
                           icon: Icon(Platform.isIOS
                               ? Icons.arrow_back_ios
                               : Icons.arrow_back)),
                       Hero(
-                        tag: 'company' + widget.company!.id,
+                        tag: 'company' + company.id,
                         child: Container(
                           height: SizeConfig.imageSize * 12,
                           width: SizeConfig.imageSize * 12,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
+                          
+                            // child: Image.network( widget.company!.imageUrl,
+                            // fit: BoxFit.cover,
+                            // )
                             child: CachedNetworkImage(
-                              maxHeightDiskCache: 5,
-                              imageUrl: widget.company!.imageUrl,
+                              imageUrl: company.imageUrl,
                               progressIndicatorBuilder:
                                   (context, l, ll) =>
-                                  CircularProgressIndicator(
-                                    value: ll.progress,
+                                  Center(
+                                    child: Container(
+                                      height: 10,
+                                      width: 10,
+                                      child: CircularProgressIndicator(
+                                        value: ll.progress,
+                                        color: Colors.black12,
+                                      ),
+                                    ),
                                   ),
                               errorWidget: (context, s, l) =>
                                   Icon(Icons.error),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),
@@ -89,9 +106,10 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                         width: 10,
                       ),
                       Text(
-                        widget.company!.name,
+                     company.name,
                         style: TextStyle(
-                            fontSize: SizeConfig.titleSize * 3.5,
+                            fontSize: SizeConfig.titleSize * 3.3,
+                            color: Colors.black54,
                             fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -120,7 +138,14 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                             child: IconButton(
                                 icon: Icon(Icons.shopping_cart_outlined,color: Colors.black,),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+                                  widget._authService.isLoggedIn.then((value) {
+                                    if(value){
+                                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+
+                                    }else{
+                                      loginCheakAlertWidget(context);
+                                    }
+                                  });
                                 }),
                           ),
                         );
@@ -180,67 +205,68 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                   },
                 ),
               ),
-              Container(height: 80,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-                ),
-                boxShadow: [BoxShadow(
-                  offset:Offset(0,-5),
-                  color: Colors.black12,
-                  blurRadius: 3
-                )]
 
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('Minimum order 200 AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      color: ColorsConst.mainColor,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                   child: MaterialButton(
-                     onPressed: (){
-                       widget._authService.isLoggedIn.then((value) {
-                         if(value){
-                           Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
-
-                         }else{
-                           loginCheakAlertWidget(context);
-                         }
-                       });
-                     },
-                     child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('See the cart',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
-                            BlocBuilder<ShopCartBloc,CartState>(
-                              bloc: shopCartBloc,
-                              builder: (context,state) {
-                                if(state is CartLoaded ){
-
-                                  return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
-                                }
-                                else{
-                                return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
-                                }
-
-                              }
-                            )
-                          ],
-                        ),
-                   ),
-                  ),
-                ],
-              ),
-              )
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar:  Container(height: 80,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            boxShadow: [BoxShadow(
+                offset:Offset(0,-5),
+                color: Colors.black12,
+                blurRadius: 3
+            )]
+
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text('Minimum order 200 AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                  color: ColorsConst.mainColor,
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              child: MaterialButton(
+                onPressed: (){
+                  widget._authService.isLoggedIn.then((value) {
+                    if(value){
+                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+
+                    }else{
+                      loginCheakAlertWidget(context);
+                    }
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('See the cart',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+                    BlocBuilder<ShopCartBloc,CartState>(
+                        bloc: shopCartBloc,
+                        builder: (context,state) {
+                          if(state is CartLoaded ){
+
+                            return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                          }
+                          else{
+                            return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                          }
+
+                        }
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -250,9 +276,24 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
     if (items.length == 0) {
       return Center(
-          child: Container(
-        child: Text('Empty !!!'),
-      ));
+        child:  Container(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      height: SizeConfig.screenHeight * 0.3,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30)
+                      ),
+                      child: Image.asset('assets/empity.png',fit: BoxFit.fill,)),
+                  SizedBox(height: 10,),
+                  Text('No data to display',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
+                ],
+              ),
+            )),
+      );
     } else {
 
             return AnimationLimiter(
@@ -278,16 +319,10 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                 child: FadeInAnimation(
                                   child: GestureDetector(
                                     onTap: () {
+                                      print('product id clicked');
+                                      print(items[index].id );
+                                      Navigator.pushNamed(context, CompanyRoutes.PRODUCTS_DETAIL_SCREEN,arguments:items[index].id );
 
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BlocProvider.value(
-                                                    value: shopCartBloc,
-                                                    child:   PriductDetailScreen(productModel: items[index],)),
-                                          )
-                                      );
                                     },
                                     child: Container(
                                       clipBehavior: Clip.antiAlias,
@@ -315,19 +350,28 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       child: ClipRRect(
                                                         borderRadius:
                                                         BorderRadius.circular(10),
+                                                          // child: Image.network( items[index].imageUrl,
+                                                          //   fit: BoxFit.fitHeight,
+                                                          // )
                                                         child:  CachedNetworkImage(
-                                                          maxHeightDiskCache: 10,
                                                           imageUrl: items[index]
                                                               .imageUrl,
                                                           progressIndicatorBuilder:
                                                               (context, l, ll) =>
-                                                              CircularProgressIndicator(
-                                                                value: ll.progress,
+                                                              Center(
+                                                                child: Container(
+                                                                  height: 30,
+                                                                  width: 30,
+                                                                  child: CircularProgressIndicator(
+                                                                    value: ll.progress,
+                                                                    color: Colors.black12,
+                                                                  ),
+                                                                ),
                                                               ),
                                                           errorWidget: (context,
                                                               s, l) =>
                                                               Center(child: Icon(Icons.error,size: 40,color: Colors.black45,)),
-                                                          fit: BoxFit.cover,
+                                                          fit: BoxFit.fill,
                                                         ),
                                                       ),
                                                     ),
@@ -352,7 +396,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                       .circular(
                                                                       10))),
                                                           child: Text(
-                                                            'خصم',
+                                                            'ٌRival',
                                                             style: TextStyle(
                                                                 color: Colors.white,
                                                                 fontWeight:
@@ -521,7 +565,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
                                                       },
                                                       label: Text(
-                                                        'اضف',
+                                                        'ِAdd',
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .white,
@@ -646,6 +690,6 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
   }
 
  Future<void> onRefresh()async {
-    productsCompanyBloc.getProducts(widget.company!.id);
+    productsCompanyBloc.getProducts(company.id);
   }
 }

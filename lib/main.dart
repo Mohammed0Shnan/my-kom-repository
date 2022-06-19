@@ -1,17 +1,18 @@
 
-import 'dart:collection';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_dashbord/dashboard_module.dart';
+import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
+import 'package:my_kom/module_notifications/service/fire_notification_service/fire_notification_service.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_shoping/shoping_module.dart';
@@ -22,11 +23,38 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'module_map/map_module.dart';
+
+Future<void> backgroundHandler(RemoteMessage message)async{
+  print('============= backgroundHandler ============');
+  FirebaseMessaging.instance.subscribeToTopic('puppies');
+  print(message.data.toString());
+  print(message.notification!.title);
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+ // FirebaseMessaging messaging = FirebaseMessaging.instance;
+ //
+ //  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+ //    alert: true,
+ //    announcement: false,
+ //    badge: true,
+ //    carPlay: false,
+ //    criticalAlert: false,
+ //    provisional: false,
+ //    sound: true,
+ //  );
+  // print('User granted permission: ${settings.authorizationStatus}');
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   print('Got a message whilst in the foreground!');
+  //   print('Message data: ${message.data}');
+  //
+  //   if (message.notification != null) {
+  //     print('Message also contained a notification: ${message.notification!.title}');
+  //   }
+  // });
   final container = await AppComponent.create();
-
 
   BlocOverrides.runZoned(
     () {
@@ -60,6 +88,39 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
+  void initState() {
+  FireNotificationService().init(context);
+
+  FirebaseMessaging.instance.getInitialMessage().then((value) {
+    if(value != null){
+      final routeFromMessage = value.data['route'];
+      Navigator.of(context).pushNamed( DashboardRoutes.DASHBOARD_SCREEN);
+    }
+  });
+  ///
+
+
+  FirebaseMessaging.onMessage.listen((event) {
+    print('##############  notification #############');
+    if(event.notification != null){
+      print(event.notification!.body);
+      print(event.notification!.title);
+
+    }
+    FireNotificationService().display(event);
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    print('##############  notification #############');
+        final routeFromMessage = event.data['route'];
+    Navigator.of(context).pushNamed( DashboardRoutes.DASHBOARD_SCREEN);
+    print(routeFromMessage);
+  });
+
+
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     Map<String, WidgetBuilder> routes = {};
     routes.addAll(widget._wapperModule.getRoutes());
@@ -69,7 +130,7 @@ class _MyAppState extends State<MyApp> {
     routes.addAll(widget._authorizationModule.getRoutes());
     routes.addAll(widget._mapModule.getRoutes());
     routes.addAll(widget._companyModule.getRoutes());
-        routes.addAll(widget._shopingModule.getRoutes());
+    routes.addAll(widget._shopingModule.getRoutes());
     routes.addAll(widget._ordersModule.getRoutes());
     routes.addAll(widget._profileModule.getRoutes());
     routes.addAll(widget._dashBoardModule.getRoutes());

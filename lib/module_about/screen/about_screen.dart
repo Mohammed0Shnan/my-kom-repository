@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
@@ -40,22 +41,21 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   final List<String> LottieUrls = [
-    'https://assets4.lottiefiles.com/packages/lf20_lv0auvzz.json',
-    'https://assets10.lottiefiles.com/packages/lf20_2h7yicxc.json',
-    'https://assets1.lottiefiles.com/packages/lf20_HBXF2O.json',
-    'https://assets9.lottiefiles.com/packages/lf20_yZpLO2.json'
+    'assets/page2.png',
+    'assets/page3.png',
+  'assets/page1.png'
+
   ];
   final List<String> pageTitleInformations = [
-    'About MyKom',
+    'BRINGS YOUR IDEA LIFE',
     'Pay easily',
     'Shipping',
-    'Wallet'
+
   ];
   final List<String> pageSubTitleInformations = [
     'It is an application dedicated to helping you order your water from all companies and provides delivery to all Emirates',
     'Payment in MyKom is easy and safe because it is through the application ',
     'MyKom can deliver you anywhere in the Emirates quickly and easily',
-    'you can keep the money in your wallet inside the application'
   ];
 
   int currentIndex =0;
@@ -63,12 +63,20 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: Background(
-        child: Stack(
-          
-          alignment: Alignment.center,
-          children: [
-            Positioned.fill(
+      body: Stack(
+
+        alignment: Alignment.center,
+        children: [
+          Container(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            color: Colors.white,
+          ),
+          Positioned(
+            top: SizeConfig.screenHeight * 0.25,
+            child: Container(
+              height: SizeConfig.screenHeight,
+              width: SizeConfig.screenWidth,
               child: PageView.builder(
                 onPageChanged: (index){
                   currentIndex = index;
@@ -77,74 +85,155 @@ class _AboutScreenState extends State<AboutScreen> {
                   });
                 },
                 controller: _pageController,
-                itemCount: 4,
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   return BlocBuilder<PageViewAnimationBloc, double>(
                     bloc: bloc,
                     builder: (context, state) {
                       return Opacity(
                         opacity: max(1 - (state - index).abs(), 0),
-                        child: Page(
-                          title: index == 0 ? Container(
-                            height: SizeConfig.titleSize * 5,
-                            child: Image.asset('assets/logo1.png',fit: BoxFit.contain,)): Text(''),
-                          lottieUrl: LottieUrls[index],
-                          color: Colors.transparent,
-                          infoTitle: pageTitleInformations[index],
-                          infoSubTitle: pageSubTitleInformations[index],
+                        child: Container(
+                            height: SizeConfig.screenHeight,
+                            width: SizeConfig.screenWidth,
+                            child: Page(
+
+                              title: Text(pageTitleInformations[index]),
+                              lottieUrl: LottieUrls[index],
+                              color: Colors.transparent,
+                              infoTitle: pageTitleInformations[index],
+                              infoSubTitle: pageSubTitleInformations[index],
+                            ),
+                           // child: Image.asset(LottieUrls[index],fit: BoxFit.fill,)
+
                         ),
+                        // child: Page(
+                        //
+                        //   title: index == 0 ? Container(
+                        //     height: SizeConfig.titleSize * 5,
+                        //     child: Image.asset('assets/logo1.png',fit: BoxFit.contain,)): Text(''),
+                        //   lottieUrl: LottieUrls[index],
+                        //   color: Colors.transparent,
+                        //   infoTitle: pageTitleInformations[index],
+                        //   infoSubTitle: pageSubTitleInformations[index],
+                        // ),
                       );
                     },
                   );
                 },
               ),
             ),
-            Positioned(
-                top: 20,
-                right: 20,
-                child: TextButton(
-                  child: Text('Skip'),
-                  onPressed: () async{
-                      AboutService().setInited();
-                    // Navigator.pushNamed(
-                    //     context, NavigatorRoutes.NAVIGATOR_SCREEN);
-                    Navigator.pushNamed(
-                        context, AuthorizationRoutes.REGISTER_SCREEN);
-                  },
-                )),
-            Positioned(
-              bottom: SizeConfig.screenHeight * 0.16,
-              child: SmoothPageIndicator(
-                controller: _pageController,
-                count: 4,
-                effect: JumpingDotEffect(
-                    dotColor: Colors.black12,
-                    dotHeight: 8,
-                    dotWidth: 25,
-                    spacing: 2,
-                    jumpScale: 2,
-                    activeDotColor: ColorsConst.mainColor),
+          ),
+          Positioned(top: -SizeConfig.screenHeight* 0.4,
+          right: 0,
+          left: 0,
+            child: Container(
+              height: SizeConfig.screenHeight* 0.6,
+              width: SizeConfig.screenWidth,
+              decoration: BoxDecoration(
+                color: ColorsConst.mainColor,
+                shape: BoxShape.circle
+
               ),
+
             ),
-            Positioned(
-                bottom: 20,
-                right: 20,
-                child: TextButton(
-                  child:currentIndex == 3? Text('Get Started',style: TextStyle(color: Colors.white)) :Text('Next',style: TextStyle(color: Colors.white),),
-                  onPressed: () async{
-                    if (_pageController.page == 3) {
-                      AboutService().setInited();
+          ),
+          Positioned(top: SizeConfig.screenHeight* 0.05,
+            right: SizeConfig.screenWidth * 0.24,
+            left: SizeConfig.screenWidth * 0.24,
+            child:Container(
+              height:55,
+              child: Image.asset('assets/new_logo.png',fit: BoxFit.fill,),
+            )
+          ),
+          // Positioned(
+          //     top: 100,
+          //
+          //     child: Container(
+          //     width:  SizeConfig.screenWidth * 0.4,
+          //       child: Image.asset('assets/new_logo.png',
+          //         fit: BoxFit.cover,
+          //       ),
+          //     ),
+          // ),
+          Positioned(
+            bottom: SizeConfig.screenHeight * 0.12,
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: 3,
+              effect: JumpingDotEffect(
+                  dotColor: Colors.grey.shade400,
+                  dotHeight:7,
+                  dotWidth: 25,
+                  spacing: 2,
+                  jumpScale: 2,
+                  activeDotColor:ColorsConst.mainColor),
+            ),
+          ),
+          Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: (){
                       Navigator.pushNamed(
                           context, NavigatorRoutes.NAVIGATOR_SCREEN);
-                    } else {
-                      _pageController.nextPage(
-                          duration: Duration(milliseconds: 400),
-                          curve: Curves.ease);
-                    }
-                  },
-                ))
-          ],
-        ),
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        height: 60,
+                        width: SizeConfig.screenWidth * 0.2,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30),
+                                topRight: Radius.circular(30)
+                            ),
+                            color: ColorsConst.mainColor
+                        ),
+                        child: Text('SKIP',style: GoogleFonts.lato(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold
+                        ),)
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: (){
+                      if (_pageController.page == 2) {
+                        AboutService().setInited();
+                        Navigator.pushNamed(
+                            context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                      } else {
+                        _pageController.nextPage(
+                            duration: Duration(milliseconds: 400),
+                            curve: Curves.ease);
+                      }
+
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+
+                        height: 60,
+                        width: SizeConfig.screenWidth * 0.2,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                bottomLeft: Radius.circular(30)
+                            ),
+                            color: ColorsConst.mainColor
+                        ),
+                        child: Text('NEXT',style: GoogleFonts.lato(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold
+                        ))
+                    ),
+                  ),
+                ],
+              )),
+
+        ],
       ),
     );
   }
@@ -156,12 +245,14 @@ class Page extends StatelessWidget {
   final String infoTitle;
   final String infoSubTitle;
   final String lottieUrl;
+
   const Page(
       {required this.title,
       required this.infoTitle,
       required this.infoSubTitle,
       required this.lottieUrl,
       required this.color,
+
       Key? key})
       : super(key: key);
 
@@ -169,65 +260,99 @@ class Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.4,
-      color: color,
-      child: Column(children: [
-        Flexible(
-          flex: 4,
-          child: Column(
-            children: [
-              Container(
-                  height: SizeConfig.screenHeight * .4,
-                  child: Lottie.network(lottieUrl)),
-                  title
-            ,
-              Spacer()
-            ],
+      height: SizeConfig.screenHeight ,
+      child:Column(
+        children: [
+          Container(
+            height: SizeConfig.screenHeight * 0.3,
+            child: Image.asset(lottieUrl),
           ),
-        ),
-       
-        Flexible(
-          flex: 3,
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.02,
-                ),
-                Text(
-                  infoTitle,
-                  style: GoogleFonts.lato(
-                    fontSize: SizeConfig.titleSize * 3.5,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red
+          SizedBox(height: 40,),
+                    Text(
+                      infoTitle,
+                      style: GoogleFonts.lato(
+                        fontSize: SizeConfig.titleSize * 3.5,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87
 
-                  )
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.heightMulti * 6),
-                  child: Text(
-                    infoSubTitle,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.lato(
-
-                      fontSize: SizeConfig.titleSize * 2.4,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black54
-
-
+                      )
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
+                    SizedBox(height: 20,),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.heightMulti * 6),
+                      child: Text(
+                        infoSubTitle,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.lato(
+
+                          fontSize: SizeConfig.titleSize * 2.4,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black54
+
+
+                        ),
+                      ),
+                    ),
+        ],
+      )
+      // child: Column(children: [
+      //   Flexible(
+      //     flex: 4,
+      //     child: Column(
+      //       children: [
+      //         Container(
+      //             height: SizeConfig.screenHeight * .4,
+      //             child: Lottie.network(lottieUrl)),
+      //
+      //
+      //         Spacer()
+      //       ],
+      //     ),
+      //   ),
+      //
+      //   Flexible(
+      //     flex: 3,
+      //     child: Container(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         children: [
+      //           SizedBox(
+      //             height: SizeConfig.screenHeight * 0.02,
+      //           ),
+      //           Text(
+      //             infoTitle,
+      //             style: GoogleFonts.lato(
+      //               fontSize: SizeConfig.titleSize * 3.5,
+      //               fontWeight: FontWeight.bold,
+      //               color: Colors.white
+      //
+      //             )
+      //           ),
+      //           SizedBox(
+      //             height: 20,
+      //           ),
+      //           Container(
+      //             padding: EdgeInsets.symmetric(
+      //                 horizontal: SizeConfig.heightMulti * 6),
+      //             child: Text(
+      //               infoSubTitle,
+      //               textAlign: TextAlign.center,
+      //               style: GoogleFonts.lato(
+      //
+      //                 fontSize: SizeConfig.titleSize * 2.4,
+      //                 fontWeight: FontWeight.w600,
+      //                 color: Colors.white.withOpacity(0.7)
+      //
+      //
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+         // ),
+      //  ),
+      //]),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/module_about/animations/fade_animation.dart';
 import 'package:my_kom/module_company/bloc/all_company_bloc.dart';
 import 'package:my_kom/module_company/company_routes.dart';
+import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:my_kom/module_company/screen/company_products_screen.dart';
@@ -51,12 +52,15 @@ class DescoveryListWidget extends StatelessWidget {
                     child: FadeInAnimation(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CompanyProductScreen(company: data[index])));
-
-                          //    Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: data[index].id);
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => CompanyProductScreen(company: data[index])));
+                          CompanyArgumentsRoute argumentsRoute = CompanyArgumentsRoute();
+                          argumentsRoute.companyId = data[index].id;
+                          argumentsRoute.companyImage = data[index].imageUrl;
+                          argumentsRoute.companyName = data[index].name;
+                             Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: argumentsRoute);
                         },
                         child: Container(
                           margin: EdgeInsets.symmetric(

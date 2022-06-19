@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_dashbord/models/store_model.dart';
+import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
+import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_dashbord/response/company_store_detail_response.dart';
+import 'package:my_kom/module_dashbord/response/store_detail_response.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CompanyService {
@@ -17,8 +20,64 @@ class CompanyService {
   final PublishSubject<List<ProductModel>?> productCompanyStoresPublishSubject =
   new PublishSubject();
 
+
+  final PublishSubject<List<AdvertisementModel>?> advertisementsCompanyStoresPublishSubject =
+  new PublishSubject();
+
+  final SharedPreferencesHelper _preferencesHelper =SharedPreferencesHelper();
+
+
+
+ Future<String?> checkStore(String zone)async{
+    try {
+      String storeId = '';
+      /// Get Store From Zone
+      List<StoreDetailResponse> list = await _firestore.collection('stores')
+          .get()
+          .then((value) =>
+          value.docs.map((entry) {
+            StoreDetailResponse response = StoreDetailResponse.storeDetail(
+                entry.data() as Map<String, dynamic>);
+            response.id = entry.id;
+            return response;
+          }
+          ).toList());
+
+      /// Default Store
+      // storeId = list[0].id;
+
+      list.forEach((store) {
+        List<ZoneModel> zones = store.zones;
+        zones.forEach((element) {
+          if (element.name == zone) {
+            storeId = store.id;
+          }
+        });
+      });
+
+      if(storeId == ''){
+        print(' store not found !!!!!');
+        return null;
+      }else{
+        /// Save Current Store For Check Address Delivery
+        ///
+        _preferencesHelper.setCurrentStore(storeId);
+        _preferencesHelper.setCurrentSubArea(zone);
+        print(' store found !!!!!');
+
+        return storeId;
+      }
+
+
+    }catch(e){
+      return null;
+    }
+
+  }
+
   Future<void> getAllCompanies(String storeId) async {
     try {
+
       /// store detail
       await _firestore
           .collection('companies').where('store_id',isEqualTo: storeId)
@@ -44,36 +103,6 @@ class CompanyService {
 
 
 
-    // return <CompanyModel>[
-    //   CompanyModel(
-    //       id: '1',
-    //       name: 'الوطنية',
-    //       imageUrl: "assets/waten.png",
-    //   description: '',
-    //
-    //   ),
-    //   CompanyModel(
-    //       id: '2',
-    //       name: 'العين',
-    //       imageUrl: "assets/ayen.png",
-    //       description: ''),
-    //   CompanyModel(
-    //       id: '3',
-    //       name: 'ماي دبي',
-    //       imageUrl: "assets/may_dubai.png",
-    //       description: ''),
-    //   CompanyModel(
-    //       id: '4',
-    //       name: 'القطرة',
-    //       imageUrl: "assets/qatraa.png",
-    //       description: ''),
-    //   CompanyModel(
-    //       id: '5',
-    //       name: 'اليرموك',
-    //       imageUrl: "assets/yarmook.png",
-    //       description: ''),
-
-   // ];
   }
 
   Future<void> getCompanyProducts(String company_id) async {
@@ -89,86 +118,24 @@ class CompanyService {
           print(map);
           map['id'] = element.id;
           ProductModel productModel = ProductModel.fromJson(map);
+         // if(!productModel.isRecommended)
           productsList.add(productModel);
         });
+
         productCompanyStoresPublishSubject.add(productsList);
       });
     }catch(e){
       productCompanyStoresPublishSubject.add(null);
 
     }
-    // return <ProductModel>[
-    //   ProductModel(
-    //       id: '1',
-    //       title: 'Al Wataneia 200 ml',
-    //       imageUrl: "assets/product1.png",
-    //       description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
-    //       old_price: 100.5,
-    //       price: 100.0,
-    //       quantity: 5,
-    //     isRecommended: true,
-    //     specifications: [
-    //       SpecificationsModel(name: 'potassium', value: '12 g'),
-    //       SpecificationsModel(name: 'sodium', value: '12 g'),
-    //       SpecificationsModel(name: 'iron', value: '12 g'),
-    //     ]
-    //
-    //
-    //   ),
-    //   ProductModel(
-    //       id: '2',
-    //       title: 'Al Wataneia 200 ml',
-    //       imageUrl: "assets/product2.png",
-    //       description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
-    //       old_price: null,
-    //       isRecommended: true,
-    //
-    //       price: 100.0,
-    //       quantity: 5,
-    //       specifications: [
-    //         SpecificationsModel(name: 'potassium', value: '12 g'),
-    //         SpecificationsModel(name: 'sodium', value: '12 g'),
-    //         SpecificationsModel(name: 'iron', value: '12 g'),
-    //       ]
-    //   ),
-    //   ProductModel(
-    //       id: '3',
-    //       title: 'Al Wataneia 200 ml',
-    //       imageUrl:  "assets/produt3.png",
-    //       description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
-    //       old_price: 100.5,
-    //       price: 100.0,
-    //       quantity: 5,
-    //       isRecommended: false,
-    //
-    //       specifications: [
-    //         SpecificationsModel(name: 'potassium', value: '12 g'),
-    //         SpecificationsModel(name: 'sodium', value: '12 g'),
-    //         SpecificationsModel(name: 'iron', value: '12 g'),
-    //       ]
-    //   ),
-    //   ProductModel(
-    //       id: '4',
-    //       title: 'Al Wataneia 200 ml',
-    //       imageUrl: "assets/product4.png",
-    //       description: 'Enjoy the pure, balanced and healthy taste of Ain water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water Enjoy the pure, balanced and healthy taste of Ain Water',
-    //       old_price: null,
-    //       price: 100.0,
-    //       quantity: 5,
-    //       isRecommended: false,
-    //
-    //       specifications: [
-    //         SpecificationsModel(name: 'potassium', value: '12 g'),
-    //         SpecificationsModel(name: 'sodium', value: '12 g'),
-    //         SpecificationsModel(name: 'iron', value: '12 g'),
-    //       ]
-    //   ),
-    //
-    // ];
+
   }
 
- Future<void> getRecommendedProducts(String storeId)async {
+ Future<void> getRecommendedProducts(String? storeId)async {
      try {
+       if(storeId ==null ){
+         throw Exception();
+       }
        await _firestore
            .collection('companies').where('store_id',isEqualTo: storeId)
            .snapshots()
@@ -198,9 +165,51 @@ class CompanyService {
        recommendedProductsPublishSubject.add(null);
 
      }
+  }
+
+
+  Future<void> getAdvertisements(String? storeId)async {
+    try {
+      if(storeId ==null ){
+        throw Exception();
+      }
+      await _firestore
+          .collection('advertisements').where('storeID',isEqualTo: storeId)
+          .snapshots()
+          .forEach((element) {
+        List<AdvertisementModel> advertisements=[];
+        element.docs.forEach((a) {
+
+          Map<String, dynamic> map = a.data() as Map<String, dynamic>;
+          print(map);
+          map['id'] = a.id;
+          AdvertisementModel advertisementModel = AdvertisementModel.fromJson(map);
+          advertisements.add(advertisementModel);
+        });
+        advertisementsCompanyStoresPublishSubject.add(advertisements);
+  });
+    }catch(e){
+      advertisementsCompanyStoresPublishSubject.add(null);
+    }
+    }
+
+  Future<ProductModel?> getProductDetail(String productId) async{
+   try{
+     return  await _firestore.collection('products').doc(productId).get().then((value) {
+       Map<String, dynamic> map = value.data() as Map<String, dynamic>;
+       map['id'] = value.id;
+       ProductModel productModel = ProductModel.fromJson(map);
+       return productModel;
+     });
+
+   }catch(e){
+     return null;
+   }
 
 
   }
+
+
 
 
 }

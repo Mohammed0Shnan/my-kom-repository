@@ -95,3 +95,30 @@ class OrderModel {
 
 
 }
+
+class NotificationModel {
+ late String id;
+ late String title;
+ late int offerId;
+ late String storeId;
+ late List<String> imageUrl;
+ late DateTime? startDate;
+ late String description;
+ late double price;
+
+ NotificationModel.fromJson(Map<String, dynamic> not) {
+   this.id = not['id'];
+   this.storeId = not['storeId'];
+   List<String> images = [];
+   not['imageUrl'].forEach((v) {
+    images.add(v);
+   });
+   this.imageUrl = images;
+   this.startDate = not['startDate'].toDate();
+   this.price = not['price']* 1.0;
+   this.description = not['description'];
+   this.offerId = not['offer_id'];
+   this.title = not['title'];
+  }
+}
+

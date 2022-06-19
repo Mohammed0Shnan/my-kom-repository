@@ -48,7 +48,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             Icon(Icons.baby_changing_station_sharp, color: Colors.white),
             Icon(Icons.person, color: Colors.white),
             Icon(
-              Icons.notifications,
+              Icons.logout,
               color: Colors.white,
             ),
           ],

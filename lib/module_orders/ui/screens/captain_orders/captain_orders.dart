@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_authorization/bloc/is_loggedin_cubit.dart';
+import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/module_orders/state_manager/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
-import 'package:my_kom/module_orders/ui/state/owner_orders/orders.state.dart';
-import 'package:my_kom/module_orders/ui/widgets/delete_order_sheak_alert.dart';
+import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 
@@ -24,51 +25,76 @@ class CaptainOrdersScreen extends StatefulWidget {
 class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
   final CaptainOrdersListBloc _ordersListBloc = CaptainOrdersListBloc();
   final NewOrderBloc _orderBloc = NewOrderBloc();
+   late final IsLogginCubit isLogginCubit;
   final String CURRENT_ORDER = 'current';
   final String PREVIOUS_ORDER = 'previous';
   late String current_tap ;
   @override
   void initState() {
     current_tap = CURRENT_ORDER;
+
+    isLogginCubit = IsLogginCubit();
     super.initState();
-    _ordersListBloc.getMyOrders();
+  }
+  @override
+  void dispose() {
+    isLogginCubit.close();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
-  return BlocProvider.value(
-    value: _ordersListBloc,
-    child: Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-              child: Text('Orders',style: GoogleFonts.lato(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.black45
-              ),),
-            ),
-            SizedBox(height: 8,),
-            getAccountSwitcher(),
-            SizedBox(height: 8,),
+  return BlocConsumer<IsLogginCubit,IsLogginCubitState>(
+    bloc: isLogginCubit,
+      listener: (context,state){
+      if(state ==IsLogginCubitState.LoggedIn)
+        _ordersListBloc.getMyOrders();
+      if(state == IsLogginCubitState.NotLoggedIn)
+        loginCheakAlertWidget(context);
+      },
+      builder: (context,state){
+        if(state == IsLogginCubitState.LoggedIn){
+          return  BlocProvider.value(
+            value: _ordersListBloc,
+            child: Scaffold(
+              backgroundColor: Colors.grey.shade50,
+              body: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+                      child: Text('Orders',style: GoogleFonts.lato(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black45
+                      ),),
+                    ),
+                    SizedBox(height: 8,),
+                    getAccountSwitcher(),
+                    SizedBox(height: 8,),
 
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                child: current_tap == CURRENT_ORDER
-                    ? getCurrentOrders()
-                    : getPreviousOrders(),
+                    Expanded(
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 500),
+                        child: current_tap == CURRENT_ORDER
+                            ? getCurrentOrders()
+                            : getPreviousOrders(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
 
-    ),
-  );
+            ),
+          );
+        }else{
+          return Scaffold(
+            backgroundColor: Colors.white,
+          );
+        }
+      });
+
+
   }
   Widget getAccountSwitcher() {
     return Padding(
@@ -185,7 +211,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
 
            if(orders.isEmpty)
              return Center(
-               child: Container(child: Text('Empty !!'),),
+               child:   NoDataForDisplayWidget()
              );
            else
           return RefreshIndicator(
@@ -197,7 +223,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
             },
             itemBuilder: (context,index){
               return Container(
-                height: 150,
+                height: 155,
                 width: double.infinity,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.symmetric(horizontal: 16,vertical: 5),
@@ -218,57 +244,76 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Container(width: 50,height: 50,
+                        child: Image.asset('assets/user_order.png'),),
+                        SizedBox(width: 15,),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Details',style: GoogleFonts.lato(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w800
+                                  ),),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: ColorsConst.mainColor.withOpacity(0.1)
+                                    ),
+                                    child: Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                        color: ColorsConst.mainColor,
+                                        fontSize: 18,
+                                        letterSpacing: 1,
+                                        fontWeight: FontWeight.bold
+                                    ),),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 8,),
+                               Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                    fontSize: 12,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w800
+                                ),
+                              ),
 
-                        Text('Details',style: GoogleFonts.lato(
-                          fontSize: 16,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w800
-                        ),),
-                        Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
-                          color: ColorsConst.mainColor,
-                          fontSize: 18,
-                          letterSpacing: 1,
-                          fontWeight: FontWeight.bold
-                        ),)
-                        // InkWell(
-                        //     onTap: (){
-                        //
-                        //      deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                        //     },
-                        //     child: Icon(Icons.close,color:Colors.black54 ,)),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.location_on_outlined , color: Colors.black45,),
+                                  Expanded(
+                                    child: Text(orders[index].addressName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.w800,
+
+                                    )),
+                                  )
+
+                                ],),
+                              SizedBox(height: 4,),
+                              Text(orders[index].orderValue.toString() + '    AED',style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  color: ColorsConst.mainColor,
+                                  fontWeight: FontWeight.bold
+                              )),
+
+                            ],
+                          ),
+                        ),
+
                       ],
                     ),
-                    SizedBox(height: 8,),
-                    Expanded(
-                      child: Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                          fontSize: 12,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w800
-                      )),
-                    ),
-                    SizedBox(height: 4,),
 
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                      Icon(Icons.location_on_outlined , color: Colors.black45,),
-                      Expanded(
-                        child: Text(orders[index].addressName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                            fontSize: 12,
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w800,
 
-                        )),
-                      )
 
-                    ],),
-                    SizedBox(height: 4,),
-                    Text(orders[index].orderValue.toString() + '    AED',style: GoogleFonts.lato(
-                        fontSize: 14,
-                        color: ColorsConst.mainColor,
-                        fontWeight: FontWeight.bold
-                    )),
+
                     SizedBox(height: 4,),
                     Container(
                       height: 30,
@@ -376,7 +421,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
 
             if(orders.isEmpty)
               return Center(
-                child: Container(child: Text('Empty !!'),),
+                child:  NoDataForDisplayWidget(),
               );
             else
               return RefreshIndicator(

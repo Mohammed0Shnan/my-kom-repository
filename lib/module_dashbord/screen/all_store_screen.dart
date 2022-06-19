@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_dashbord/bloc/all_store_bloc.dart';
@@ -64,69 +65,85 @@ class _AllStoreScreenState extends State<AllStoreScreen> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-
-                              Text('Details',style: GoogleFonts.lato(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w800
-                              ),),
-
-                            ],
+                          SvgPicture.asset('assets/icons/in_store.svg',
+                          color: Colors.green,
+                          height: 100,
                           ),
-                          SizedBox(height: 8,),
+                          SizedBox(width: 10,),
                           Expanded(
-                            child: Text('Store Name :  ' +stores[index].name,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                                fontSize: 12,
-                                color: Colors.black45,
-                                fontWeight: FontWeight.w800
-                            )),
-                          ),
-                          SizedBox(height: 4,),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(Icons.location_on_outlined , color: Colors.black45,),
-                              Expanded(
-                                child: Text(stores[index].locationName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  color: Colors.black45,
-                                  fontWeight: FontWeight.w800,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                )),
-                              )
+                                    Text('Details',style: GoogleFonts.lato(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.w800
+                                    ),),
 
-                            ],),
-                          SizedBox(height: 8,),
-                      Container(
-                        height: 30,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                            color: Colors.white
-                            ,
-                            border: Border.all(
-                                color: ColorsConst.mainColor,
-                                width: 2
+                                  ],
+                                ),
+                                SizedBox(height: 8,),
+                                Expanded(
+                                  child: Text('Store Name :  ' +stores[index].name,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                      fontSize: 15,
+                                      color: Colors.black45,
+                                      fontWeight: FontWeight.w800
+                                  )),
+                                ),
+                                SizedBox(height: 4,),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.location_on_outlined , color: Colors.black45,),
+                                    Expanded(
+                                      child: Text(stores[index].locationName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
+                                        fontSize: 12,
+                                        color: Colors.black45,
+                                        fontWeight: FontWeight.w800,
+
+                                      )),
+                                    )
+
+                                  ],),
+                                SizedBox(height: 8,),
+                            Row(
+                              children: [
+                                Spacer(),
+                                Container(
+                                  height: 30,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white
+                                      ,
+                                      border: Border.all(
+                                          color: ColorsConst.mainColor,
+                                          width: 2
+                                      ),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen(storeID: stores[index].id)));
+                                    },
+                                    child: Text('Details', style: TextStyle(
+                                        color: ColorsConst.mainColor,
+                                        fontSize: SizeConfig.titleSize * 2.6),),
+
+                                  ),
+                                ),
+                              ],
                             ),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: MaterialButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreDetailScreen(storeID: stores[index].id)));
-                          },
-                          child: Text('Details', style: TextStyle(
-                              color: ColorsConst.mainColor,
-                              fontSize: SizeConfig.titleSize * 2.6),),
 
-                        ),
-                      ),
-
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     );

@@ -37,8 +37,6 @@ class OrderDetailResponse {
     this.payment = json['payment'];
     this.phone = json['phone'];
     this.customerOrderID = json['customer_order_id'];
-
-
     this.products_ides = json['products_ides'].cast<String>();
 
     List<ProductModel> productFromResponse = [];
@@ -47,7 +45,7 @@ class OrderDetailResponse {
     });
     this.products = productFromResponse;
 
-    this.startDate = json['start_date'];
+    this.startDate = json['start_date'].toString();
 
     OrderStatus state = OrderStatus.INIT;
     if(json['status'] == OrderStatus.IN_STORE.name){

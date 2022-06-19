@@ -6,12 +6,14 @@ import 'package:my_kom/consts/order_status.dart';
 
 class OrderStatusResponse {
   late String id;
+  late int customerOrderID;
   late OrderStatus  status;
   late String payment;
   OrderStatusResponse(
       {
         required this.id,
         required this.status
+
       });
 
   // CreateOrderRequest.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class OrderStatusResponse {
   OrderStatusResponse.fromJson(Map<String, dynamic> json) {
     this.id = json['id']  ;
     this.payment = json['payment']  ;
+    this.customerOrderID = json['customer_order_id'];
     OrderStatus state = OrderStatus.INIT;
     if(json['status'] == OrderStatus.IN_STORE.name){
       state = OrderStatus.IN_STORE;

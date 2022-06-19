@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ColorsConst{
-  static const Color mainColor = Color.fromARGB(255, 28, 174, 147);
-  static const Color Splash = Color.fromARGB(255, 28, 174, 147);
+  static  Color mainColor =  HexColor("#469e7c");
+  static  Color Splash =HexColor("#469e7c");
   static const Color BACKGROUND = Colors.white;
 }
