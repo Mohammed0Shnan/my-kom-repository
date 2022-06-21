@@ -416,20 +416,33 @@ class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
 
-                                Text('Details',style: GoogleFonts.lato(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w800
-                                ),),
-                                InkWell(
-                                    onTap: (){
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          color: ColorsConst.mainColor.withOpacity(0.1)
+                                      ),
+                                      child: Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                          color: ColorsConst.mainColor,
+                                          fontSize: 18,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                    ),
+                                    SizedBox(width: 8,),
+                                    InkWell(
+                                        onTap: (){
 
-                                      deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                                    },
-                                    child: Icon(Icons.close,color:Colors.black54 ,)),
+                                          deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
+                                        },
+                                        child: Icon(Icons.close,color:Colors.black54 ,)),
+                                  ],
+                                ),
                               ],
                             ),
                             SizedBox(height: 8,),

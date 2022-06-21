@@ -10,6 +10,7 @@ import 'package:my_kom/module_dashbord/screen/all_store_screen.dart';
 import 'package:my_kom/module_dashbord/screen/statistacses_screen.dart';
 import 'package:my_kom/module_dashbord/screen/users_screen.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
+import 'package:my_kom/module_notifications/service/fire_notification_service/fire_notification_service.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/ui/screens/owner_orders.dart';
 
@@ -80,14 +81,27 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       }
       case 6 : {
         return Scaffold(
-          body: Center(child: TextButton(
-            onPressed: (){
-              AuthService().logout().then((value) {
-                Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
-              });
-            },
-            child: Text('Logout'),
-          ),),
+          body: Column(
+            children: [
+
+              Center(child: TextButton(
+                onPressed: (){
+                  FireNotificationService().sendNotif().then((value) {
+                    print('******** sending notificatios *************');
+                  });
+                },
+                child: Text('send'),
+              ),),
+              Center(child: TextButton(
+                onPressed: (){
+                  AuthService().logout().then((value) {
+                    Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
+                  });
+                },
+                child: Text('Logout'),
+              ),),
+            ],
+          ),
         );
       }
 

@@ -28,10 +28,11 @@ class _MapScreenState extends State<MapScreen> {
 
   final CameraPosition _kGooglePlex =CameraPosition(target: LatLng(37.42796, -122.08574), zoom: 1.0);
   late final TextEditingController _searchController;
+   bool? register =null;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
+      register = ModalRoute.of(context)!.settings.arguments as bool;
     });
     super.initState();
     _searchController = TextEditingController(text: '');
@@ -230,10 +231,10 @@ class _MapScreenState extends State<MapScreen> {
 
                           },
                           child:  Text(
-                            'Save',
+                           register == null?'':register!?'Save':'Delivery here',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: SizeConfig.titleSize * 3.8,
+                                fontSize: SizeConfig.titleSize * 3,
                                 fontWeight: FontWeight.w500),
                           ),
                         ),

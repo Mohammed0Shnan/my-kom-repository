@@ -8,12 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_authorization/enums/user_role.dart';
+import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_company/screen/products_detail_screen.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/state_manager/order_detail_bloc.dart';
 import 'package:my_kom/module_orders/util/whatsapp_link_helper.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailScreen extends StatefulWidget {
 
@@ -94,14 +99,37 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   letterSpacing: 1,
                                   fontWeight: FontWeight.w600),),
                               Spacer(),
-                              IconButton(onPressed: (){
+                              FutureBuilder(
+                                future: AuthPrefsHelper().getRole(),
+                                builder: (context,role) {
+                                  if(role.data == UserRole.ROLE_OWNER)
+                                  return GestureDetector(
+                                    onTap: (){
+                                      double late = order.destination.lat;
+                                      double lon = order.destination.lon;
 
-                                double late = order.destination.lat;
-                                double lon = order.destination.lon;
+                                      var url = WhatsAppLinkHelper.getMapsLink(late,lon);
+                                      launchUrl(Uri.parse(url));
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text('Go To Delivery',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
+                                          SizedBox(width: 5,),
+                                          Icon(Icons.arrow_forward,color: Colors.white,),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                  else return SizedBox.shrink();
+                                }
 
-                                var url = WhatsAppLinkHelper.getMapsLink(late,lon);
-                               // launch(url);
-                              }, icon: Icon(Icons.arrow_forward))
+                              )
                             ],
                           ),
                           SizedBox(height: 8,),

@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
+import 'package:my_kom/module_company/bloc/products_company_bloc.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_dashbord/bloc/add_advertisement_bloc.dart';
@@ -52,6 +53,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController _priceProductController =
   TextEditingController();
 
+  final TextEditingController _titleNotificationController =
+  TextEditingController();
+
+  final TextEditingController _subTitleNotificationController =
+  TextEditingController();
 
   final TextEditingController _quantityProductController =
   TextEditingController();
@@ -60,6 +66,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   TextEditingController();
   //final ZoneBloc zoneBloc = ZoneBloc();
   final AllStoreBloc allStoreBloc = AllStoreBloc();
+  final ProductsCompanyBloc productsCompanyBloc = ProductsCompanyBloc();
   final UploadBloc _uploadCompanyImageBloc = UploadBloc();
   final UploadBloc _uploadAdvertisementImageBloc = UploadBloc();
   final UploadBloc _uploadProductImageBloc = UploadBloc();
@@ -91,6 +98,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool AdvertisementFormOpen  =false;
 
   String? advertisementType = null;
+
+
+  /// for advertisemnet
+  String? _productID = null;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -248,7 +260,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   onChanged: (s) {
 
                                     _companyID = s;
-                                    print(_companyID);
+                                    productsCompanyBloc.getProducts(_companyID!);
                                   },
                                 );
                               }
@@ -547,8 +559,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
               /// Add Product Section
               ///
-            ,
-              Divider(color: Colors.black45,height: 5,thickness:3,endIndent: 20,indent: 20,),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             , Divider(color: Colors.black45,height: 5,thickness:3,endIndent: 20,indent: 20,),
 
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 20),
@@ -1152,52 +1183,134 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       ),
                     ),
-                      SizedBox(height: 15,),
+                      SizedBox(height: 15,)
+                      , Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Container(
 
-                    Text('Advertisement Name'),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Container(
+                          child: ListTile(
 
-                        child: ListTile(
-
-                            subtitle: Container(
-                              height: 50,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
-                              ),
-                              child: TextFormField(
-                                controller: _routeController,
-                                decoration: InputDecoration(
-                                    errorStyle: GoogleFonts.lato(
-                                      color: Colors.red.shade700,
-                                      fontWeight: FontWeight.w800,
-
-
-                                    ),
-                                    prefixIcon: Icon(Icons.store),
-                                    border:InputBorder.none,
-                                    hintText: 'Advertisement route .'
-                                    , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-
-                                  //S.of(context).name,
+                              subtitle: Container(
+                                height: 50,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
                                 ),
-                                // Move focus to next
-                                validator: (result) {
-                                  if (result!.isEmpty) {
-                                    return 'Advertisement route is Required'; //S.of(context).nameIsRequired;
-                                  }
-                                  return null;
-                                },
-                              ),
-                            )),
+                                child: BlocBuilder<ProductsCompanyBloc, ProductsCompanyStates> (
+                                    bloc:productsCompanyBloc,
+                                    builder: (context, state) {
+                                      if(state is ProductsCompanySuccessState){
+                                        print('state is success');
+                                        return DropdownButtonFormField<String>(
+                                          onTap: () {},
+                                          validator: (s) {
+                                            return s == null
+                                                ? 'Product Is Required !'
+                                                : null;
+                                          },
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Products',
+                                            hintStyle: TextStyle(fontSize: 16),
+                                          ),
+                                          items: _getProductsDropDownList(
+                                              state.data
+                                          ),
+                                          onChanged: (s) {
+
+                                            _productID = s;
+                                            setState(() {
+
+                                            });
+                                          },
+                                        );
+                                      }
+                                      else if (state is ProductsCompanyErrorState) {
+                                        return ElevatedButton(
+                                          child: Text(
+                                              'Error in fetch products .. Click to Try Again'),
+                                          onPressed: () {
+                                            allStoreBloc.getAllStore();
+                                          },
+                                        );
+                                      }
+                                      else  if(state is ProductsCompanyInitState){
+                                        return Container(
+                                          child: Row(children: [
+                                            Text('products'),
+                                          ],)
+                                        );
+                                      }
+                                      else {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('Product'),
+                                            Container(
+                                              width: 50,
+                                              child: CircularProgressIndicator(),
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    }),
+                              )),
+                        ),
                       ),
-                    ),
+
+
+                      ///
+                      ///  All PRODUCT
+
+
+                    // Text('Advertisement Name'),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(15),
+                    //   ),
+                    //   child: Container(
+                    //
+                    //     child: ListTile(
+                    //
+                    //         subtitle: Container(
+                    //           height: 50,
+                    //           clipBehavior: Clip.antiAlias,
+                    //           decoration: BoxDecoration(
+                    //               color: Colors.white,
+                    //               borderRadius: BorderRadius.circular(10),
+                    //               boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                    //           ),
+                    //           child: TextFormField(
+                    //             controller: _routeController,
+                    //             decoration: InputDecoration(
+                    //                 errorStyle: GoogleFonts.lato(
+                    //                   color: Colors.red.shade700,
+                    //                   fontWeight: FontWeight.w800,
+                    //
+                    //
+                    //                 ),
+                    //                 prefixIcon: Icon(Icons.store),
+                    //                 border:InputBorder.none,
+                    //                 hintText: 'Advertisement route .'
+                    //                 , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                    //
+                    //               //S.of(context).name,
+                    //             ),
+                    //             // Move focus to next
+                    //             validator: (result) {
+                    //               if (result!.isEmpty) {
+                    //                 return 'Advertisement route is Required'; //S.of(context).nameIsRequired;
+                    //               }
+                    //               return null;
+                    //             },
+                    //           ),
+                    //         )),
+                    //   ),
+                    // ),
                     SizedBox(height: 10,),
                       Text('Advertisement image'),
                     BlocConsumer<UploadBloc, UploadStates>(
@@ -1314,7 +1427,102 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             ),
                           );
                         }),
+                    SizedBox(height:20,),
+                    Text('Notification Information'),
+                      SizedBox(height:10,),
 
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Container(
+
+                          child: ListTile(
+
+                              subtitle: Container(
+
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                                ),
+                                child: TextFormField(
+                                  controller: _titleNotificationController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+
+                                      errorStyle: GoogleFonts.lato(
+                                        color: Colors.red.shade700,
+                                        fontWeight: FontWeight.w800,
+
+
+                                      ),
+                                      prefixIcon: Icon(Icons.store),
+                                      border:InputBorder.none,
+                                      hintText: 'Title Notification'
+                                      , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                    //S.of(context).name,
+                                  ),
+                                  // Move focus to next
+                                  validator: (result) {
+                                    if (result!.isEmpty) {
+                                      return 'Title Notification is Required'; //S.of(context).nameIsRequired;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              )),
+                        ),
+                      ),
+                      SizedBox(height:10,),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Container(
+
+                          child: ListTile(
+
+                              subtitle: Container(
+
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [BoxShadow(color: Colors.black26,blurRadius: 8,offset: Offset(0,3))]
+                                ),
+                                child: TextFormField(
+                                  controller: _subTitleNotificationController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+
+                                      errorStyle: GoogleFonts.lato(
+                                        color: Colors.red.shade700,
+                                        fontWeight: FontWeight.w800,
+
+
+                                      ),
+                                      prefixIcon: Icon(Icons.store),
+                                      border:InputBorder.none,
+                                      hintText: 'Sub Title Notification'
+                                      , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                    //S.of(context).name,
+                                  ),
+                                  // Move focus to next
+                                  validator: (result) {
+                                    if (result!.isEmpty) {
+                                      return 'Sub Title Notification is Required'; //S.of(context).nameIsRequired;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              )),
+                        ),
+                      ),
                     SizedBox(height: 20,),
                     BlocConsumer<AddAdvertisementBloc, AddAdvertisementStates>(
                         bloc: _addAdvertisementBloc,
@@ -1354,10 +1562,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Store !!!!')));
                                 }
                                 else {
-                                  String route = _routeController.text.trim();
+                                //  String route = _routeController.text.trim();
                                   if(advertisementType != null){
-                                    String query =advertisementType.toString()+'/'+route;
-                                    AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!);
+                                    String query =advertisementType.toString()+'/'+_productID!;
+                                    String title = _titleNotificationController.text.trim();
+                                    String body = _subTitleNotificationController.text.trim();
+                                    AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!,title:title,body: body );
                                     _addAdvertisementBloc.addAdvertisement(request);
                                   }
 
@@ -1472,6 +1682,33 @@ else
         value: element.id,
         child: Text(
           '${element.name}',
+          style: TextStyle(fontSize: 16),
+        ),
+      ));
+    });
+    print(items);
+    return items;
+  }
+
+
+
+
+  ////
+  List<DropdownMenuItem<String>> _getProductsDropDownList(
+      List<ProductModel> products) {
+    var items = <DropdownMenuItem<String>>[];
+    if (products.length == 0) {
+      return [
+        DropdownMenuItem<String>(
+          child: Text(''),
+        )
+      ];
+    }
+    products.forEach((element) {
+      items.add(DropdownMenuItem<String>(
+        value: element.id,
+        child: Text(
+          '${element.title}',
           style: TextStyle(fontSize: 16),
         ),
       ));

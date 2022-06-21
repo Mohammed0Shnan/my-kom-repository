@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,9 @@ class FireNotificationService {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin=
       FlutterLocalNotificationsPlugin();
   final ProfileService _profileService = ProfileService();
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
 
   static final PublishSubject<String> _onNotificationRecieved =
@@ -34,6 +38,7 @@ class FireNotificationService {
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: (String? route)async{
       Navigator.pushNamed(context, route!);
     });
+    FirebaseMessaging.instance.subscribeToTopic('advertisements');
 
     // if (Platform.isIOS) {
     //   iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {});
@@ -88,6 +93,13 @@ class FireNotificationService {
       //   },
       // );
     }
+  Future<void> sendNotif()async{
+   await  _firestore.collection('advertisements/').add({'title':'title from function cloud',
+   'body':'body from function cloud',
+     'imageUrl':''
+   });
+  }
+
   }
 
   Future<void> setCaptainActive(bool active) async {
@@ -101,18 +113,20 @@ class FireNotificationService {
 
 
 Future sendNotification(String body, String title, bool isAdm) async {
-  final String url = 'https://fcm.googleapis.com/fcm/send';
-  var notification;
-  notification =
-  '{"notification": {"body": "${body}", "title": "${title}", "content_available": "true", "click_action": "FLUTTER_NOTIFICATION_CLICK"}, "priority": "high", "to": "MYTOPIC"}';
-  final response = await http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        "Content-Type": "application/json",
-        "Keep-Alive": "timeout=5",
-        "Authorization": "key=MYKEY"
-      },
-      body: notification
-  );
-  print(response.body);
+
+
+  // final String url = 'https://fcm.googleapis.com/fcm/send';
+  // var notification;
+  // notification =
+  // '{"notification": {"body": "${body}", "title": "${title}", "content_available": "true", "click_action": "FLUTTER_NOTIFICATION_CLICK"}, "priority": "high", "to": "MYTOPIC"}';
+  // final response = await http.post(
+  //     Uri.parse(url),
+  //     headers: <String, String>{
+  //       "Content-Type": "application/json",
+  //       "Keep-Alive": "timeout=5",
+  //       "Authorization": "key=MYKEY"
+  //     },
+  //     body: notification
+  // );
+  // print(response.body);
 }

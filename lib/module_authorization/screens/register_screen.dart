@@ -547,7 +547,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         GestureDetector(
                                           onTap: (){
                                             Navigator.pushNamed(
-                                                context, MapRoutes.MAP_SCREEN)
+                                                context, MapRoutes.MAP_SCREEN,arguments: true)
                                                 .then((value) {
                                               if (value != null) {
                                                 addressModel = (value as AddressModel);

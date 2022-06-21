@@ -26,7 +26,7 @@ import 'module_map/map_module.dart';
 
 Future<void> backgroundHandler(RemoteMessage message)async{
   print('============= backgroundHandler ============');
-  FirebaseMessaging.instance.subscribeToTopic('puppies');
+  FirebaseMessaging.instance.subscribeToTopic('advertisements');
   print(message.data.toString());
   print(message.notification!.title);
 }
@@ -34,26 +34,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
- // FirebaseMessaging messaging = FirebaseMessaging.instance;
- //
- //  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
- //    alert: true,
- //    announcement: false,
- //    badge: true,
- //    carPlay: false,
- //    criticalAlert: false,
- //    provisional: false,
- //    sound: true,
- //  );
-  // print('User granted permission: ${settings.authorizationStatus}');
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   print('Got a message whilst in the foreground!');
-  //   print('Message data: ${message.data}');
-  //
-  //   if (message.notification != null) {
-  //     print('Message also contained a notification: ${message.notification!.title}');
-  //   }
-  // });
   final container = await AppComponent.create();
 
   BlocOverrides.runZoned(
@@ -89,6 +69,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+
   FireNotificationService().init(context);
 
   FirebaseMessaging.instance.getInitialMessage().then((value) {
@@ -111,8 +92,8 @@ class _MyAppState extends State<MyApp> {
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print('##############  notification #############');
-        final routeFromMessage = event.data['route'];
+    print('##############  notification Clicked 000000000#############');
+    final routeFromMessage = event.data['route'];
     Navigator.of(context).pushNamed( DashboardRoutes.DASHBOARD_SCREEN);
     print(routeFromMessage);
   });

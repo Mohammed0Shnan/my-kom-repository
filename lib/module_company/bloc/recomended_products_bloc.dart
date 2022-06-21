@@ -39,7 +39,7 @@ class RecommendedProductsCompanyBloc extends Bloc<RecommendedProductsCompanyEven
       if (value != null) {
         this.add(RecommendedProductsCompanySuccessEvent(data: value));
       } else{
-        this.add(RecommendedProductsCompanyErrorEvent(message: 'Error in fetch recommended products'));
+        this.add(RecommendedProductsCompanyErrorEvent(message: 'Error in fetch advertisements'));
       }
     });
     service.getAdvertisements(storeId).onError((error, stackTrace) {

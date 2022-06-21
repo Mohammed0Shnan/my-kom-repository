@@ -10,7 +10,7 @@ class ProductsCompanyBloc extends Bloc<ProductsCompanyEvent, ProductsCompanyStat
   final CompanyService _service = CompanyService();
   // final ShopCartBloc shopBloc = shopCartBloc;
   // late StreamSubscription streamSubscription ;
-  ProductsCompanyBloc() : super(ProductsCompanyLoadingState()) {
+  ProductsCompanyBloc() : super(ProductsCompanyInitState()) {
 
     on<ProductsCompanyEvent>((ProductsCompanyEvent event, Emitter<ProductsCompanyStates> emit) {
       if (event is ProductsCompanyLoadingEvent)

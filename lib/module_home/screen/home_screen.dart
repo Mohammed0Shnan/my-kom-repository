@@ -128,7 +128,7 @@ final MapService mapService = MapService();
                 backgroundColor: Colors.white,
                 title:  GestureDetector(
                   onTap: (){
-                    Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN).then((value) {
+                    Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN,arguments: false).then((value) {
                       if (value != null) {
                         AddressModel addressModel = (value as AddressModel);
                         widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: addressModel.subArea));
@@ -209,19 +209,19 @@ final MapService mapService = MapService();
               ),
               body: BlocConsumer<CheckZoneBloc,CheckZoneStates>(
                 bloc: widget.checkZoneBloc,
-                listener: (context,state){
-                  if(state is CheckZoneSuccessState){
+                listener: (context,checkZoneState){
+                  if(checkZoneState is CheckZoneSuccessState){
 
-                    widget.allCompanyBloc.getAllCompany(state.storeId);
-                    widget.recommendedProductsCompanyBloc.getRecommendedProducts(state.storeId);
+                    widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
+                    widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
                   }
-                  else if(state is CheckZoneErrorState){
+                  else if(checkZoneState is CheckZoneErrorState){
                     print('@@@@@@@@@@@@@@@ zone error');
                     widget.allCompanyBloc.setInit();
                   }
                 },
-                builder: (context,state) {
-                  if(state is CheckZoneSuccessState){
+                builder: (context,checkZoneState) {
+                  if(checkZoneState is CheckZoneSuccessState){
                     return Material(
                       child: SafeArea(
                           child: Column(
@@ -306,7 +306,20 @@ final MapService mapService = MapService();
                                         }
                                         else if (state is RecommendedProductsCompanyErrorState){
                                           return Center(
-                                            child: Text(state.message),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: 20,),
+                                                Text(state.message),
+                                                SizedBox(height: 8,),
+                                                GestureDetector(
+                                                    onTap: (){
+                                                      widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
+
+                                                    },
+                                                    child: Text('refresh',style: TextStyle(color: Colors.blue,decoration: TextDecoration.underline),)),
+                                                SizedBox(height: 20,),
+                                              ],
+                                            ),
                                           );
                                         }
                                         else if (state is RecommendedProductsCompanyZoneErrorState){
@@ -387,7 +400,7 @@ final MapService mapService = MapService();
                                       return DescoveryGridWidget(
                                         data: state.data,
                                         onRefresh: () {
-                                          _onRefresh();
+                                          _onRefresh(checkZoneState.storeId);
                                         },
                                       );
                                     } else if (state is AllCompanyErrorState) {
@@ -403,7 +416,7 @@ final MapService mapService = MapService();
                             ],
                           )),
                     );
-                  }else if(state is CheckZoneLoadingState){
+                  }else if(checkZoneState is CheckZoneLoadingState){
                    return Center(
                       child: Material(
 
@@ -603,8 +616,9 @@ final MapService mapService = MapService();
   //   print(items);
   //   return items;
   // }
-  Future<void> _onRefresh() async {
-    await widget.allCompanyBloc.getAllCompany( widget.filterZoneCubit.state.searchModel.storeId);
+  Future<void> _onRefresh(String storeId) async {
+
+    await widget.allCompanyBloc.getAllCompany( storeId);
   }
 }
 class CompanySearch extends SearchDelegate<SearchModel?>{

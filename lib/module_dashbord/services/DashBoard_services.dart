@@ -464,8 +464,7 @@ return   await _firestore.collection('orders').where('start_date',isEqualTo: tim
 
  Future<bool> addAdvertisementToStore(AdvertisementModel request) async{
     try{
-
-      await _firestore.collection('advertisements').add(request.toJson());
+      await _firestore.collection('advertisements/').add(request.toJson());
       return true;
     }catch(e){
       return false;

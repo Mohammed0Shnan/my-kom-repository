@@ -981,7 +981,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                           TextButton(onPressed: (){
                             Navigator.pushNamed(
-                                context, MapRoutes.MAP_SCREEN)
+                                context, MapRoutes.MAP_SCREEN,arguments: false)
                                 .then((value) {
                               if (value != null) {
                                 addressModel = (value as AddressModel);

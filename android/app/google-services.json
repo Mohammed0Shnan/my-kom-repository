@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1097157093940",
-    "project_id": "my-kom-4f364",
-    "storage_bucket": "my-kom-4f364.appspot.com"
+    "project_number": "686046357650",
+    "project_id": "mykom-tech-dist",
+    "storage_bucket": "mykom-tech-dist.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1097157093940:android:90c1e1e64608269da53861",
+        "mobilesdk_app_id": "1:686046357650:android:abd1b804de4194d5685e4b",
         "android_client_info": {
           "package_name": "com.example.my_kom"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1097157093940-97ps2tasrfpmad9ps0g2nsc04alnjc0o.apps.googleusercontent.com",
+          "client_id": "686046357650-20paprn35nbtqud64gg3dgiejml08m6j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDUcKTl_ba_UnG59BnTEj9GLG6wal8IbDU"
+          "current_key": "AIzaSyD2mHkT8_abpMD9LJl307Qhk7GHWuKqMJw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1097157093940-97ps2tasrfpmad9ps0g2nsc04alnjc0o.apps.googleusercontent.com",
+              "client_id": "686046357650-20paprn35nbtqud64gg3dgiejml08m6j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

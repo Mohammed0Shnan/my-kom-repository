@@ -24,7 +24,7 @@ class CaptainOrdersScreen extends StatefulWidget {
 
 class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
   final CaptainOrdersListBloc _ordersListBloc = CaptainOrdersListBloc();
-  final NewOrderBloc _orderBloc = NewOrderBloc();
+   final NewOrderBloc _orderBloc = NewOrderBloc();
    late final IsLogginCubit isLogginCubit;
   final String CURRENT_ORDER = 'current';
   final String PREVIOUS_ORDER = 'previous';

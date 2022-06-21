@@ -64,8 +64,7 @@ addRemoveBloc.close();
                     SliverAppBar(
                       automaticallyImplyLeading: false,
                       toolbarHeight: 11.9 * SizeConfig.heightMulti,
-                      pinned: true
-                      ,
+                      pinned: true,
                       backgroundColor: ColorsConst.mainColor,
                       expandedHeight: SizeConfig.screenHeight * 0.35,
                       title: Row(
@@ -117,6 +116,7 @@ addRemoveBloc.close();
                       ),
                       flexibleSpace: FlexibleSpaceBar(
                         background:     Container(
+                          margin: EdgeInsets.only(bottom: 30),
                           width: double.infinity,
                           //child: Image.network(productModel.imageUrl,fit: BoxFit.fill,),
                           child:CachedNetworkImage(
@@ -125,8 +125,8 @@ addRemoveBloc.close();
                             progressIndicatorBuilder: (context, l, ll) =>
                                 Center(
                                   child: Container(
-                                    width: 100,
-                                    height: 100,
+                                    // width: 100,
+                                    // height: 100,
                                     child: CircularProgressIndicator(
                                       value: ll.progress,
                                       color: Colors.black45
