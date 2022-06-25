@@ -7,6 +7,7 @@ class CompanyModel {
   late String description;
   late String imageUrl;
   late List<ProductModel> products;
+
   CompanyModel({required this.id, required this.name, required this.imageUrl,required this.description});
 
   CompanyModel.fromJson(Map<String, dynamic> map) {

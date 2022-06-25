@@ -23,9 +23,11 @@ class StoreDetailResponse{
     this.locationName= data['location_name'];
     this.location=GeoJson.fromJson(data['location'] );
     List<ZoneModel> zoneFromResponse = [];
+
     data['zones'].forEach((v) {
       zoneFromResponse.add(ZoneModel.fromJson(v));
     });
+
     this.zones = zoneFromResponse;
     //
     // if( data['companies'] != null){

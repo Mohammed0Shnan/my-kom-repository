@@ -97,7 +97,6 @@ addStore(StoreModel storeModel) async {
       this.add(StoreSuccessEvent());
     } else{
       this.add(StoreErrorEvent(message: 'Error '));
-
     }
   });
 }

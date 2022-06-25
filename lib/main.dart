@@ -27,6 +27,8 @@ import 'module_map/map_module.dart';
 Future<void> backgroundHandler(RemoteMessage message)async{
   print('============= backgroundHandler ============');
   FirebaseMessaging.instance.subscribeToTopic('advertisements');
+  //
+
   print(message.data.toString());
   print(message.notification!.title);
 }
@@ -86,6 +88,7 @@ class _MyAppState extends State<MyApp> {
     if(event.notification != null){
       print(event.notification!.body);
       print(event.notification!.title);
+      print(event.notification!.toMap());
 
     }
     FireNotificationService().display(event);

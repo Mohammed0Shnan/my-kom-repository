@@ -81,27 +81,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       }
       case 6 : {
         return Scaffold(
-          body: Column(
-            children: [
+          body:        Center(child: TextButton(
+            onPressed: (){
+              AuthService().logout().then((value) {
+                Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
+              });
+            },
+            child: Text('Logout'),
+          ),),
 
-              Center(child: TextButton(
-                onPressed: (){
-                  FireNotificationService().sendNotif().then((value) {
-                    print('******** sending notificatios *************');
-                  });
-                },
-                child: Text('send'),
-              ),),
-              Center(child: TextButton(
-                onPressed: (){
-                  AuthService().logout().then((value) {
-                    Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
-                  });
-                },
-                child: Text('Logout'),
-              ),),
-            ],
-          ),
         );
       }
 

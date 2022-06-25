@@ -2,6 +2,8 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:my_kom/consts/order_status.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
@@ -18,6 +20,8 @@ import 'package:my_kom/module_dashbord/requests/add_company_request.dart';
 import 'package:my_kom/module_dashbord/requests/add_product_request.dart';
 import 'package:my_kom/module_dashbord/response/company_store_detail_response.dart';
 import 'package:my_kom/module_dashbord/response/store_detail_response.dart';
+import 'package:my_kom/module_localization/presistance/localization_preferences_helper.dart';
+import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/request/accept_order_request/accept_order_request.dart';
 import 'package:my_kom/module_orders/response/order_status/order_status_response.dart';
@@ -43,10 +47,17 @@ class DashBoardService{
   final PublishSubject<Map<String,List<AppUser>>?> usersPublishSubject =
   new PublishSubject();
 
+  final LocalizationPreferencesHelper _localizationPreferencesHelper = LocalizationPreferencesHelper();
+
   Future<StoreModel?> addStore(StoreModel storeModel)async{
 
     try{
       var document =await _firestore.collection('stores').add(storeModel.toJson());
+      for(int i=0;i < storeModel.zones.length;i++){
+        ZoneModel zoneModel = storeModel.zones[i];
+        zoneModel.storeID =document.id;
+         await _firestore.collection('zones').add(zoneModel.toJson()!);
+      }
       storeModel.id = document.id;
       return storeModel;
     }catch(e){
@@ -61,18 +72,8 @@ class DashBoardService{
         List<StoreModel> list = [];
         for (int i = 0; i < event.docs.length; i++) {
           QueryDocumentSnapshot element2 = event.docs[i];
-          List<Map<String, dynamic>> comp = [];
           Map <String, dynamic> map = element2.data() as Map<String, dynamic>;
-          await _firestore.collection('companies').where('store_id',isEqualTo: element2.id).get().then((value) {
-            value.docs.forEach((com)
-            {
-              Map<String, dynamic> m = com.data();
-              m['id'] = com.id;
-              comp.add(m);
-            });
-          });
           map['id'] = element2.id;
-          map['companies'] = comp;
           StoreModel store = StoreModel.fromJson(map);
           list.add(store);
         }
@@ -82,8 +83,6 @@ class DashBoardService{
       storesPublishSubject.add(null);
 
     }
-
-
 
   }
 
@@ -151,16 +150,28 @@ class DashBoardService{
   Future<StoreModel?> getStoreDetail(String storeId) async{
     try{
       /// store detail
-    return  await  _firestore.collection('stores').doc(storeId).get().then((value) {
+    return  await  _firestore.collection('stores').doc(storeId).get().then((value)async {
        Map <String, dynamic> map = value.data() as Map<String, dynamic>;
-       StoreDetailResponse res = StoreDetailResponse.storeDetail(map);
-       StoreModel storeModel = StoreModel(id: '',zones: []);
-       storeModel.id = storeId;
-       storeModel.name = res.name;
-       storeModel.location = res.location;
-       storeModel.locationName = res.locationName;
-       storeModel.zones = res.zones;
-       return storeModel;
+
+       /// Zones
+      return await _firestore.collection('zones').where('store_id',isEqualTo: storeId).get().then((zones) {
+        List<  Map<String, dynamic>> zoneList = [];
+        zones.docs.forEach((zone)
+         {
+           Map<String, dynamic> z = zone.data();
+           zoneList.add(z);
+         });
+        map['zones'] =zoneList;
+        StoreDetailResponse res = StoreDetailResponse.storeDetail(map);
+         StoreModel storeModel = StoreModel(id: '',zones: []);
+         storeModel.id = storeId;
+         storeModel.name = res.name;
+         storeModel.location = res.location;
+         storeModel.locationName = res.locationName;
+         storeModel.zones = res.zones;
+         return storeModel;
+       });
+
 
       });
      //  print('ssssssssssssssssssssss');
@@ -263,7 +274,7 @@ class DashBoardService{
     _firestore.collection('users').snapshots().listen((event) {
       Map<String,List<AppUser>> userList = {};
       List<AppUser> admins =[];
-      List<AppUser> users =[];
+      List<AppUser> delivers =[];
 
       event.docs.forEach((element2) {
         Map <String, dynamic> u = element2.data() as Map<String,
@@ -271,17 +282,17 @@ class DashBoardService{
         u['id'] = element2.id;
 
         AppUser appUser = AppUser.fromJsom(u);
-        if (appUser.userRole == UserRole.ROLE_USER) {
-          users.add(appUser);
+        if (appUser.userRole == UserRole.ROLE_DELIVERY) {
+          delivers.add(appUser);
         }
-        else {
+        else if(appUser.userRole == UserRole.ROLE_OWNER) {
           admins.add(appUser);
         }
 
 
       }
       );
-      userList['users']= users;
+      userList['users']= delivers;
       userList['admins']= admins;
 
       usersPublishSubject.add(userList);
@@ -469,6 +480,74 @@ return   await _firestore.collection('orders').where('start_date',isEqualTo: tim
     }catch(e){
       return false;
     }
+  }
+
+  Future<CompanyModel?> getCompany(String id)async {
+    try{
+    CompanyModel c =  await _firestore.collection('companies').doc(id).get().then((value) {
+      Map <String, dynamic> map = value.data() as Map<String, dynamic>;
+      map['id'] = value.id;
+      CompanyModel model =CompanyModel(id:  map['id'], name: map['name'], imageUrl:map['imageUrl'], description: '');
+      return model;
+      });
+    return c;
+    }catch(e){
+      return null;
+    }
+  }
+
+
+
+  Future<List<String>> getZoneNames(LatLng latLng)async{
+    List<String> names = [];
+
+    /// arabic name
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        latLng.latitude, latLng.longitude,
+        localeIdentifier: 'ar',
+
+    );
+    Placemark place1 = placemarks[0];
+    print(place1);
+    String zone ='';
+    if(place1.locality == ''){
+      if(place1.subLocality ==''){
+        if(place1.subAdministrativeArea ==''){
+          zone = place1.administrativeArea!;
+        }else{
+          zone = place1.subAdministrativeArea!;
+        }
+      }else{
+        zone = place1.subLocality!;
+      }
+    }else{
+      zone=place1.locality!;
+    }
+    names.add(zone);
+    zone ='';
+
+    /// english name
+  placemarks = await placemarkFromCoordinates(
+        latLng.latitude, latLng.longitude,
+        localeIdentifier: 'en');
+   place1 = placemarks[0];
+    if(place1.locality == ''){
+      if(place1.subLocality ==''){
+        if(place1.subAdministrativeArea ==''){
+          zone = place1.administrativeArea!;
+        }else{
+          zone = place1.subAdministrativeArea!;
+        }
+      }else{
+        zone = place1.subLocality!;
+      }
+    }else{
+      zone=place1.locality!;
+    }
+    names.add(zone);
+   print('================= names ====================');
+   print(names);
+   return names;
   }
   
 }

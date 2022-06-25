@@ -67,8 +67,9 @@ class OrderRepository {
   Stream<QuerySnapshot> getMyOrders(String uid)  {
 
     try{
-      return   _firestore.collection('orders').where('userId',isEqualTo: uid).snapshots();
+      return   _firestore.collection('orders').where('userId',isEqualTo: uid).orderBy('customer_order_id').snapshots();
     }catch(e){
+      print(e);
       throw Exception('Error in get my order !');
     }
   }

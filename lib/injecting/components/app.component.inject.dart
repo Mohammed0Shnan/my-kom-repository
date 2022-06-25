@@ -5,6 +5,8 @@ import 'package:my_kom/module_about/screen/language_screen.dart';
 import 'package:my_kom/module_about/screen/next_splash_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
+import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
+import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
@@ -21,17 +23,14 @@ import 'package:my_kom/module_dashbord/screen/dash_bord_screen.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
-import 'package:my_kom/module_home/screen/shop_navigator_screen.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/map_module.dart';
 import 'package:my_kom/module_map/screen/map_screen.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
-import 'package:my_kom/module_orders/ui/screens/new_order/new_order_screen.dart';
 import 'package:my_kom/module_orders/ui/screens/order_detail.dart';
 import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen.dart';
-import 'package:my_kom/module_orders/ui/screens/orders/owner_orders_screen.dart';
 import 'package:my_kom/module_orders/ui/screens/owner_orders.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
@@ -41,12 +40,12 @@ import 'package:my_kom/module_splash/screen/splash_screen.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_wrapper/wrapper.dart';
 import 'package:my_kom/module_wrapper/wrapper_module.dart';
-import 'package:my_kom/module_orders/orders_module.dart';
 class AppComponentInjector implements AppComponent {
   AppComponentInjector._();
-  LocalizationService? _singeltonLocalizationService;
 
-  CompanyService? _singeltonCompanyService;
+  LocalizationService? _singletonLocalizationService;
+  CompanyService? _singletonCompanyService;
+
   static Future<AppComponent> create() async {
     final injector = AppComponentInjector._();
     return injector;
@@ -68,19 +67,19 @@ class AppComponentInjector implements AppComponent {
       );
 
   LocalizationService _createLocalizationService() =>
-      _singeltonLocalizationService ??= LocalizationService();
+      _singletonLocalizationService ??= LocalizationService();
   WapperModule _createWapperModule() => WapperModule(Wrapper());
-  AboutModule _createAboutModule() => AboutModule(LanguageScreen(localizationService: _singeltonLocalizationService!,));
+  AboutModule _createAboutModule() => AboutModule(LanguageScreen(localizationService: _singletonLocalizationService!,));
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
   NavigatorModule _createNavigatorModule() {
 
-    _singeltonCompanyService ??= CompanyService();
+    _singletonCompanyService ??= CompanyService();
 
     return NavigatorModule( NavigatorScreen(
-        homeScreen: HomeScreen(mapBloc: MapBloc(),filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singeltonCompanyService!),
-            recommendedProductsCompanyBloc: RecommendedProductsCompanyBloc(_singeltonCompanyService!),
-          checkZoneBloc: CheckZoneBloc(_singeltonCompanyService!),
+        homeScreen: HomeScreen(mapBloc: MapBloc(),filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singletonCompanyService!),
+            recommendedProductsCompanyBloc: RecommendedProductsCompanyBloc(_singletonCompanyService!),
+          checkZoneBloc: CheckZoneBloc(_singletonCompanyService!),
           isInit: true,
             ),
         orderScreen:  CaptainOrdersScreen()
@@ -99,6 +98,8 @@ class AppComponentInjector implements AppComponent {
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
   DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(),PriductDetailScreen());
+
+
   MyApp get app {
     return _createApp();
   }

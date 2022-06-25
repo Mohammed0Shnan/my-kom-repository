@@ -43,7 +43,6 @@ class CheckZoneBloc extends Bloc<CheckZoneEvent,CheckZoneStates>{
 
   refreshZone() {
     this.add(CheckZoneLoadingEvent());
-
   }
 
 }

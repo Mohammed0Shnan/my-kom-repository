@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
-import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_dashbord/response/company_store_detail_response.dart';
-import 'package:my_kom/module_dashbord/response/store_detail_response.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -32,33 +30,22 @@ class CompanyService {
     try {
       String storeId = '';
       /// Get Store From Zone
-      List<StoreDetailResponse> list = await _firestore.collection('stores')
-          .get()
-          .then((value) =>
-          value.docs.map((entry) {
-            StoreDetailResponse response = StoreDetailResponse.storeDetail(
-                entry.data() as Map<String, dynamic>);
-            response.id = entry.id;
-            return response;
-          }
-          ).toList());
+      ///
+      late  QuerySnapshot zone_response;
+        zone_response = await _firestore.collection('zones').where('name',arrayContains: zone).get();
 
+     if(zone_response.docs.isNotEmpty){
+       Map<String ,dynamic> res =  zone_response.docs[0].data()as Map <String , dynamic> ;
+       storeId = res['store_id'];
+     }
       /// Default Store
-      // storeId = list[0].id;
-
-      list.forEach((store) {
-        List<ZoneModel> zones = store.zones;
-        zones.forEach((element) {
-          if (element.name == zone) {
-            storeId = store.id;
-          }
-        });
-      });
-
+      ///
       if(storeId == ''){
         print(' store not found !!!!!');
         return null;
+
       }else{
+
         /// Save Current Store For Check Address Delivery
         ///
         _preferencesHelper.setCurrentStore(storeId);
@@ -70,6 +57,8 @@ class CompanyService {
 
 
     }catch(e){
+      print('Exception !!!!!!!!!!!!!!!!!!!!!');
+      print(e);
       return null;
     }
 
@@ -77,7 +66,6 @@ class CompanyService {
 
   Future<void> getAllCompanies(String storeId) async {
     try {
-
       /// store detail
       await _firestore
           .collection('companies').where('store_id',isEqualTo: storeId)
@@ -87,7 +75,6 @@ class CompanyService {
         element.docs.forEach((element) {
           Map<String, dynamic> map = element.data() as Map<String, dynamic>;
           map['id'] = element.id;
-
           CompanyStoreDetailResponse res = CompanyStoreDetailResponse.fromJsom(
               map);
           CompanyModel companyModel = CompanyModel(
@@ -100,9 +87,6 @@ class CompanyService {
     }catch(e){
       companyStoresPublishSubject.add(null);
     }
-
-
-
   }
 
   Future<void> getCompanyProducts(String company_id) async {

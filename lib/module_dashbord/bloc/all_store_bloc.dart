@@ -41,6 +41,11 @@ class AllStoreBloc extends Bloc<AllStoreEvent, AllStoreStates> {
 
     });
   }
+
+  Future<CompanyModel?> getCompanyFromId(String id)async{
+    CompanyModel? res =await   _service.getCompany(id);
+    return res;
+  }
 }
 
 abstract class AllStoreEvent { }

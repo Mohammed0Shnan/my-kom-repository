@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
@@ -29,12 +30,12 @@ class UsersScreen extends StatefulWidget {
 class UsersScreenState extends State<UsersScreen> {
   final UsersBloc _usersBloc = UsersBloc();
   final NewOrderBloc _orderBloc = NewOrderBloc();
-  final String CURRENT_ORDER = 'Admins';
-  final String PREVIOUS_ORDER = 'Users';
+  final String ADMINS = 'Admins';
+  final String DELIVERS = 'Delivers';
   late String current_tap ;
   @override
   void initState() {
-    current_tap = CURRENT_ORDER;
+    current_tap = ADMINS;
     _usersBloc.getsUsers();
     super.initState();
   }
@@ -46,7 +47,51 @@ class UsersScreenState extends State<UsersScreen> {
       backgroundColor: Colors.grey.shade50,
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.pushNamed(context, AuthorizationRoutes.REGISTER_SCREEN,arguments: UserRole.ROLE_OWNER);
+          showMaterialModalBottomSheet(
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+          topRight: Radius.circular(30)
+          ),
+          ),
+          context: context,
+          builder:(context){
+               return Container(
+                 height: 200,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: [
+                     GestureDetector(
+                       onTap: (){
+
+                       },
+                       child: Container(
+                         width: 100,
+                         height: 70,
+                         decoration: BoxDecoration(
+                           borderRadius: BorderRadius.circular(20),
+                           color: Colors.black12
+                         ),
+                         child: Center(child: Text('Delivery')),
+                       ),
+                     ),
+                     GestureDetector(
+                       onTap: (){
+                           Navigator.pushNamed(context, AuthorizationRoutes.REGISTER_SCREEN,arguments: UserRole.ROLE_OWNER);
+                       },
+                       child: Container(
+                         width: 100,
+                         height: 70,
+                         decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(20),
+                             color: Colors.black12
+                         ),
+                         child: Center(child: Text('Admin',)),
+                       ),
+                     )
+                   ],
+                 ),
+               );
+          });
         },
         backgroundColor: ColorsConst.mainColor,
         child: Text('Add',style: GoogleFonts.lato(
@@ -61,7 +106,7 @@ class UsersScreenState extends State<UsersScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-              child: Text('Users',style: GoogleFonts.lato(
+              child: Text('Delivers',style: GoogleFonts.lato(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
                 color: Colors.black45
@@ -74,8 +119,8 @@ class UsersScreenState extends State<UsersScreen> {
             Expanded(
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
-                child: current_tap == CURRENT_ORDER
-                    ? getUsers()
+                child: current_tap == ADMINS
+                    ? getDelivers()
                     : getAdmins(),
               ),
             ),
@@ -103,7 +148,7 @@ class UsersScreenState extends State<UsersScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    current_tap = CURRENT_ORDER;
+                    current_tap = ADMINS;
                     if (mounted) {
                       setState(() {});
                     }
@@ -113,13 +158,13 @@ class UsersScreenState extends State<UsersScreen> {
                       padding: EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: current_tap == CURRENT_ORDER
+                        color: current_tap == ADMINS
                             ? ColorsConst.mainColor
                             : Colors.transparent,
 
                       ),
-                      child: Center(child: Text('Users (${users})',style: TextStyle(
-                        color: current_tap == CURRENT_ORDER ?Colors.white: ColorsConst.mainColor,
+                      child: Center(child: Text('Delivers (${users})',style: TextStyle(
+                        color: current_tap == ADMINS ?Colors.white: ColorsConst.mainColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 16
                       ),))),
@@ -128,7 +173,7 @@ class UsersScreenState extends State<UsersScreen> {
               Expanded(
                 child:GestureDetector(
                   onTap: () {
-                    current_tap = PREVIOUS_ORDER;
+                    current_tap = DELIVERS;
                     if (mounted) {
                       setState(() {});
                     }
@@ -139,12 +184,12 @@ class UsersScreenState extends State<UsersScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
 
-                      color:    current_tap == PREVIOUS_ORDER
+                      color:    current_tap == DELIVERS
                           ? ColorsConst.mainColor
                           : Colors.transparent,
                     ),
                     child:Center(child: Text('Admins (${admins})',style: TextStyle(
-                        color: current_tap == PREVIOUS_ORDER ?Colors.white: ColorsConst.mainColor,
+                        color: current_tap == DELIVERS ?Colors.white: ColorsConst.mainColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 16
                     ))),
@@ -161,7 +206,7 @@ class UsersScreenState extends State<UsersScreen> {
   Future<void> onRefreshMyOrder()async {
    // _ordersListBloc.getMyOrders();
   }
- Widget getUsers(){
+ Widget getDelivers(){
     return BlocConsumer<UsersBloc ,UsersStates >(
       bloc: _usersBloc,
       listener: (context ,state){

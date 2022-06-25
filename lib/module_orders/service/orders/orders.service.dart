@@ -46,12 +46,7 @@ class OrdersService {
         event.docs.forEach((element2) {
           Map <String, dynamic> order = element2.data() as Map<String,
               dynamic>;
-          // if(order['userId'] == uid) {
-          //
-          // }
-
           order['id'] = element2.id;
-
           OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
           if (orderModel.status == OrderStatus.FINISHED) {
             pre.add(orderModel);
@@ -61,8 +56,6 @@ class OrdersService {
           }
         }
         );
-        cur.sort((OrderModel a, OrderModel b)=>a.customerOrderID.compareTo(b.customerOrderID));
-        pre.sort((OrderModel a, OrderModel b)=>a.customerOrderID.compareTo(b.customerOrderID));
         orderList['cur']= cur.reversed.toList();
         orderList['pre']= pre.reversed.toList();
 

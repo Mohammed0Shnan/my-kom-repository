@@ -298,6 +298,7 @@ class _ShopScreenState extends State<ShopScreen> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       height: SizeConfig.heightMulti * 14,
+      width: double.infinity,
       child: Row(
         children: [
           Container(
@@ -350,28 +351,32 @@ class _ShopScreenState extends State<ShopScreen> {
                           ),// Image.asset(productModel.imageUrl),
                         ),
                         SizedBox(width: 10,),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                productModel.title,
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.w600),
-                              ),
-                              Text('${productModel.quantity} حبة \ الكرتون'),
-                              Text(
-                                '${productModel.price} AED',
-                                style: TextStyle(color: ColorsConst.mainColor),
-                              )
-                            ]),
+                        Container(
+                          width: w/2.3,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+
+                                Text(
+                                  productModel.title ,
+                                  style: TextStyle(
+                                      fontSize: SizeConfig.titleSize * 2.3, fontWeight: FontWeight.w600),
+                                ),
+                                Text('${productModel.quantity} حبة \ الكرتون'),
+                                Text(
+                                  '${productModel.price} AED',
+                                  style: TextStyle(color: ColorsConst.mainColor),
+                                )
+                              ]),
+                        ),
                         Spacer(),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              height: h / 3.3,
-                              width: w / 3.4,
+                              height: h / 3,
+                              width: w /4,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                 boxShadow: [BoxShadow(color: Colors.black12)],

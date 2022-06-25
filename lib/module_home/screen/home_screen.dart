@@ -49,23 +49,14 @@ final MapService mapService = MapService();
   final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper();
 @override
   void initState() {
-  // Future.wait([
-  //   _sharedPreferencesHelper.getCurrentSubArea(),
-  //   _sharedPreferencesHelper.getCurrentStore(),
-  // ]).then((value) {
-  //
-  // });
+  print(widget.isInit);
     _sharedPreferencesHelper.getCurrentSubArea().then((value) {
-      print('========== init state home ==============');
-      print(value);
       if(value == null)
         widget.mapBloc.getSubArea();
       else{
         widget.mapBloc.refresh(value);
       }
     });
-   //widget.mapBloc.getSubArea();
-
     super.initState();
   }
 
@@ -85,8 +76,6 @@ final MapService mapService = MapService();
             widget.checkZoneBloc.checkZone(state.data.subArea);
           }
           widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName:state.data.subArea));
-
-          //allCompanyBloc.getAllCompany(state.data.subArea);
         }
       },
       builder: (context, state) {
@@ -106,21 +95,6 @@ final MapService mapService = MapService();
                           onPressed: () {
                             Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
                           }),
-                      // child: Badge(
-                      //   // position: BadgePosition.topEnd(top: 0, end: 3),
-                      //   animationDuration: Duration(milliseconds: 300),
-                      //   animationType: BadgeAnimationType.slide,
-                      //
-                      //   badgeContent: Text(
-                      //     '0',
-                      //     style: TextStyle(color: Colors.white),
-                      //   ),
-                      //   child: IconButton(
-                      //       icon: Icon(Icons.notifications_active_outlined,color: Colors.black,),
-                      //       onPressed: () {
-                      //         Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
-                      //       }),
-                      // ),
                     );
                   },
                 ) ,
@@ -135,12 +109,6 @@ final MapService mapService = MapService();
                         widget.checkZoneBloc.checkZone(addressModel.subArea);
                       }
                     });
-                    // showSearch(context: context, delegate: ZoneSearch()).then((value) {
-                    //   if(value != null){
-                    //     _filterZoneCubit.setFilter(value);
-                    //
-                    //   }
-                    // });
                   },
                   child: Container(
                     child: Column(
@@ -157,33 +125,6 @@ final MapService mapService = MapService();
                             ),
                           ],
                         ),
-                        // BlocBuilder<AllStoreBloc, AllStoreStates>(
-                        //   bloc: allStoreBloc,
-                        //   builder: (context,state) {
-                        //     return DropdownButtonFormField<String>(
-                        //       onTap: () {},
-                        //       validator: (s) {
-                        //         return s == null
-                        //             ? 'company Is Required !'
-                        //             : null;
-                        //       },
-                        //       decoration: InputDecoration(
-                        //         border: InputBorder.none,
-                        //         hintText: 'Store',
-                        //         hintStyle: TextStyle(fontSize: 16),
-                        //       ),
-                        //       items: _getStoresDropDownList(
-                        //           state is AllStoreSuccessState
-                        //               ? state.data
-                        //               : []),
-                        //       onChanged: (s) {
-                        //
-                        //        // _companyID = s;
-                        //
-                        //       },
-                        //     );
-                        //   }
-                        // ),
                         BlocBuilder<FilterZoneCubit,FilterZoneCubitState>(
                             bloc:  widget.filterZoneCubit,
                             builder: (context,state) {
@@ -221,6 +162,7 @@ final MapService mapService = MapService();
                   }
                 },
                 builder: (context,checkZoneState) {
+                  print(checkZoneState);
                   if(checkZoneState is CheckZoneSuccessState){
                     return Material(
                       child: SafeArea(
@@ -241,41 +183,35 @@ final MapService mapService = MapService();
                                                 return GestureDetector(
                                                   onTap: (){
                                                     AdvertisementModel a =  advertisement[index];
-                                                    List<String> route = a.route.split('/') ;
+                                                    List<String> route = a.route.split('|') ;
+                                                    print(route);
                                                     if(route[0] == AdvertisementType.ADVERTISEMENT_PRODUCT.name){
                                                       String productId = route[1];
                                                       Navigator.pushNamed(context, CompanyRoutes.PRODUCTS_DETAIL_SCREEN,arguments:productId );
 
                                                     }else if(route[0] == AdvertisementType.ADVERTISEMENT_COMPANY.name){
+
                                                       List<String> route_arrguments=  route[1].split('&');
                                                       print(route_arrguments);
                                                       String companyId =route_arrguments[0];
                                                       String companyName =route_arrguments[1];
+                                                      String companyImage =route_arrguments[2];
                                                       CompanyArgumentsRoute argumentsRoute = CompanyArgumentsRoute();
                                                       argumentsRoute.companyId = companyId.replaceAll('id=','');
-                                                      argumentsRoute.companyImage = advertisement[index].imageUrl;
                                                       argumentsRoute.companyName = companyName.replaceAll('name=','');
+                                                      argumentsRoute.companyImage = companyImage.replaceAll('image=','');
                                                       print(argumentsRoute.companyId);
                                                       print(argumentsRoute.companyName);
+                                                      print(argumentsRoute.companyImage);
                                                      Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: argumentsRoute);
                                                     }
                                                   },
                                                   child: Container(
+                                                    margin: EdgeInsets.symmetric(horizontal: 5),
                                                     clipBehavior: Clip.antiAlias,
                                                     height: SizeConfig.screenHeight * 0.22,
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(20),
-                                                      //
-                                                      // image: DecorationImage(
-                                                      //
-                                                      //   image:NetworkImage(products[index].imageUrl,
-                                                      //   ),
-                                                      //   fit: BoxFit.fill,
-                                                      //   onError: (s,w){
-                                                      //
-                                                      //   },
-                                                      //
-                                                      // ),
                                                       border:Border.all(
                                                           color: Colors.black12,
                                                           width: 1
@@ -344,38 +280,6 @@ final MapService mapService = MapService();
                               SizedBox(
                                 height: 30,
                               ),
-                              /// Offers
-                              ///
-                              // Container(
-                              //   height: 150,
-                              //   width: double.infinity,
-                              //   color: Colors.black12,
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       Padding(
-                              //           padding: EdgeInsets.symmetric(horizontal: 10),
-                              //           child: Text('Offers',style: GoogleFonts.lato(
-                              //             color: Colors.black45,
-                              //             letterSpacing: 1,
-                              //             fontWeight: FontWeight.bold,
-                              //             fontSize: SizeConfig.titleSize * 2.5
-                              //           ),)),
-                              //       ListView.builder(
-                              //         scrollDirection: Axis.horizontal,
-                              //         shrinkWrap: true,
-                              //           itemCount: 5,
-                              //           itemBuilder: (context,index){
-                              //         return Container(width: 100,
-                              //         height: 100,
-                              //           color: Colors.white,
-                              //         );
-                              //       })
-                              //     ],
-                              //   ),
-                              // ),
-
-
                               /// Companies
                               ///
 
@@ -383,16 +287,6 @@ final MapService mapService = MapService();
                                 child: BlocConsumer<AllCompanyBloc, AllCompanyStates>(
                                   bloc: widget.allCompanyBloc,
                                   listener: (context, state) {
-                                    // print('stteeeeeeeeeeeeeee');
-                                    // print(state);
-                                    // if (state is AllCompanySuccessState){
-                                    //   print('SSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
-                                    //   print(state.data[0].storeId);
-                                    //   _recommendedProductsCompanyBloc.getRecommendedProducts(state.data[0].storeId);
-                                    // }
-                                    // else if(state is AllCompanyZoneErrorState){
-                                    //   _recommendedProductsCompanyBloc.getRecommendedProducts(null);
-                                    // }
 
                                   },
                                   builder: (context, state) {
@@ -405,9 +299,20 @@ final MapService mapService = MapService();
                                       );
                                     } else if (state is AllCompanyErrorState) {
                                       return Center(
-                                          child: Container(
-                                            child: Text(state.message),
-                                          ));
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Center(
+                                                child: Container(
+                                                  child: Text(state.message),
+                                                )),
+                                            IconButton(onPressed: (){
+                                              widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
+                                            }, icon: Icon(Icons.refresh))
+                                          ],
+                                        ),
+                                      );
                                     } else
                                       return ProductShimmerGridWidget();
                                   },
@@ -416,7 +321,8 @@ final MapService mapService = MapService();
                             ],
                           )),
                     );
-                  }else if(checkZoneState is CheckZoneLoadingState){
+                  }
+                  else if(checkZoneState is CheckZoneLoadingState){
                    return Center(
                       child: Material(
 
@@ -451,7 +357,9 @@ final MapService mapService = MapService();
                         ),
                       ),
                     );
-                  }else if(state is CheckZoneErrorState){
+                  }
+                  else if(checkZoneState is CheckZoneErrorState){
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                     return Center(
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -482,7 +390,8 @@ final MapService mapService = MapService();
                       ),
                     );
                   }else{
-                    return Container();
+                    return Container(
+                    );
                   }
 
                 }
@@ -557,20 +466,14 @@ final MapService mapService = MapService();
                      color: ColorsConst.mainColor,
                      child: MaterialButton(
                        onPressed: (){
-                         Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN).then((value) {
+                         Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN,arguments: false).then((value) {
                            if (value != null) {
                              AddressModel addressModel = (value as AddressModel);
-                             mapBloc.setLocationManually(addressModel.subArea);
                              widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: addressModel.subArea));
-                             widget.allCompanyBloc.getAllCompany(addressModel.subArea);
+                             widget.checkZoneBloc.checkZone(addressModel.subArea);
                            }
                          });
-                         // showSearch(context: context, delegate: ZoneSearch()).then((value) {
-                         //   if(value != null){
-                         //     _filterZoneCubit.setFilter(value);
-                         //
-                         //   }
-                         // });
+
                        },
                        child: Icon(Icons.location_on_outlined,size: 30,color: Colors.white,),
                      ),

@@ -1,25 +1,13 @@
-import 'package:badges/badges.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
-import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_company/screen/company_products_screen.dart';
-import 'package:my_kom/module_company/screen/widgets/app_icon.dart';
-import 'package:my_kom/module_company/screen/widgets/expanded_text_widget.dart';
 import 'package:my_kom/module_dashbord/bloc/store_company_detail_bloc.dart';
 import 'package:my_kom/module_dashbord/bloc/store_detail_bloc.dart';
 import 'package:my_kom/module_dashbord/models/store_model.dart';
-import 'package:my_kom/module_dashbord/screen/company_products_screen.dart';
-import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart';
-import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
-import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-
-
 
 class StoreDetailScreen extends StatefulWidget {
   final String storeID;
@@ -30,12 +18,11 @@ class StoreDetailScreen extends StatefulWidget {
 }
 
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
+
   final StoreDetailBloc _storeDetailBloc = StoreDetailBloc();
-
   final StoreCompanyDetailBloc _storeCompanyDetailBloc = StoreCompanyDetailBloc();
-
-
   late final String storeId;
+
   @override
   void initState() {
     //     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -46,6 +33,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     super.initState();
     
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -82,8 +70,8 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     children: [
                       Icon(Icons.location_on_outlined),
                       SizedBox(width: 8,),
-                      Text('Location : ' ,style: GoogleFonts.lato(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.w800),),
-                      Text(storeModel.locationName,style: GoogleFonts.lato(fontSize: 16,color: Colors.black54,fontWeight: FontWeight.w800),),
+                      Text('Location : ' ,style: GoogleFonts.lato(fontSize: 18,color: Colors.black54,fontWeight: FontWeight.w800),),
+                      Container(child: Text(storeModel.locationName,style: GoogleFonts.lato(fontSize: 14,color: Colors.black54,fontWeight: FontWeight.w800),)),
                     ],
                   ),
                   SizedBox(height: 20,),
@@ -116,7 +104,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                                   child: Image.asset('assets/zone.png',fit: BoxFit.cover,),
                                 ),
                                 SizedBox(height: 8,),
-                                Text(storeModel.zones[index].name,style: TextStyle(fontSize: SizeConfig.heightMulti * 2.2),),
+                                Text(storeModel.zones[index].name.toString(),style: TextStyle(fontSize: SizeConfig.heightMulti * 2.2),),
                               ],
                             ),
                           ));

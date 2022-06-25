@@ -17,7 +17,7 @@ class PageViewWidget extends StatefulWidget {
 }
 
 class _PageViewWidgetState extends State<PageViewWidget> {
-  final PageController _pageController = PageController(viewportFraction: 0.9);
+  final PageController _pageController = PageController(viewportFraction: 0.93);
   double currentPage = 0.0;
   double scaleFactor = 0.8;
   late final double containerHieght;

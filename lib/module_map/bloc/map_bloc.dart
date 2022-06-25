@@ -3,7 +3,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
-import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
   final MapService _service = MapService();
@@ -45,7 +44,6 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
       map.subArea = value;
         this.add(MapSuccessEvent(map,false));
       }
-
     });
   }
 
@@ -71,16 +69,16 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
  //  }
 
   Future<void> saveLocation(LatLng latLng, String description) async {
-    this.add(MapLoadingEvent());
-  
-    _service.saveLocation(latLng,description).then((value) {
-      if(value == true)
         this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !" , latitude: latLng.latitude,longitude: latLng.longitude));
-    else
-        this.add(MapErrorEvent(error_message: 'error in save location !'));
+
+    // _service.saveLocation(latLng,description).then((value) {
+    //   if(value == true)
+    //     this.add(MapSuccessSavePositionEvent(message: "Your address has been saved !" , latitude: latLng.latitude,longitude: latLng.longitude));
+    // else
+    //     this.add(MapErrorEvent(error_message: 'error in save location !'));
 
 
-    });
+    // });
   }
 
   void refresh(String subArea) {
@@ -91,9 +89,6 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     MapData newState = MapData(latitude: 0.0, longitude: 0.0, name: '', message:'', isError:false);
     newState.subArea = subArea;
     add(MapSuccessEvent(newState,true));
-
-
-
   }
 }
 
@@ -151,6 +146,7 @@ class MapErrorState extends MapStates {
 class MapData{
   late double longitude,latitude;
  late String name;
+ late String subTitle;
  late String subArea;
  late String? message ;
  late bool isError;

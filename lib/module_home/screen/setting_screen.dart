@@ -49,15 +49,17 @@ class _SettingScreenState extends State<SettingScreen> {
                   }else{
                     lang = 'en';
                   }
-                  return DropdownButton(
+                  return DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                          border: InputBorder.none),
 
                       items: [
                         DropdownMenuItem(
-                          child: Text('arabic',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.7 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
+                          child: Text('arabic',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.5 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
                           value: 'ar',
                         ),
                         DropdownMenuItem(
-                          child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.7 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
+                          child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.5 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
                           value: 'en',
                         ),
                       ],
@@ -77,7 +79,7 @@ class _SettingScreenState extends State<SettingScreen> {
               onTap: (){
                 AuthService().logout().then((value) {
                   //AboutService().setInited();
-                  Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
+                  Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN,(route)=>false);
                 });
               },
               child: menuItem(

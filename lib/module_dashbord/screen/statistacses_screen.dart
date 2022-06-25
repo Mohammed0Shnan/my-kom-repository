@@ -184,7 +184,6 @@ class _StatistacsesScreenState extends State<StatistacsesScreen> {
                                                 borderRadius:
                                                 BorderRadius.circular(10),
                                                 child:  CachedNetworkImage(
-                                                  maxHeightDiskCache: 10,
                                                   imageUrl: items[index].imageUrl,
                                                   progressIndicatorBuilder:
                                                       (context, l, ll) =>
@@ -194,7 +193,7 @@ class _StatistacsesScreenState extends State<StatistacsesScreen> {
                                                   errorWidget: (context,
                                                       s, l) =>
                                                       Icon(Icons.error),
-                                                  fit: BoxFit.cover,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ),

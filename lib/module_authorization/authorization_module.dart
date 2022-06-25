@@ -1,4 +1,5 @@
 import 'package:my_kom/abstracts/module/my_module.dart';
+import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,8 @@ class AuthorizationModule extends MyModule {
   Map<String, WidgetBuilder> getRoutes() {
     return {
        AuthorizationRoutes.LOGIN_SCREEN : (context) => _loginScreen,
-       AuthorizationRoutes.REGISTER_SCREEN : (context)=> _registerScreen
+       AuthorizationRoutes.REGISTER_SCREEN : (context)=> _registerScreen,
+
     };
   }
 }

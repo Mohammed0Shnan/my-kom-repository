@@ -1449,7 +1449,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                                 child: TextFormField(
                                   controller: _titleNotificationController,
-                                  keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
 
                                       errorStyle: GoogleFonts.lato(
@@ -1496,7 +1495,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                                 child: TextFormField(
                                   controller: _subTitleNotificationController,
-                                  keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
 
                                       errorStyle: GoogleFonts.lato(
@@ -1557,18 +1555,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 borderRadius: BorderRadius.circular(10)
                             ),
                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
-                              onPressed: () {
+                              onPressed: () async{
                                 if(_storeID == null){
                                   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Please Select Store !!!!')));
                                 }
                                 else {
                                 //  String route = _routeController.text.trim();
                                   if(advertisementType != null){
-                                    String query =advertisementType.toString()+'/'+_productID!;
-                                    String title = _titleNotificationController.text.trim();
-                                    String body = _subTitleNotificationController.text.trim();
-                                    AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!,title:title,body: body );
-                                    _addAdvertisementBloc.addAdvertisement(request);
+                                    if(advertisementType == AdvertisementType.ADVERTISEMENT_PRODUCT.name){
+                                      String query =advertisementType.toString()+'|'+_productID!;
+                                      String title = _titleNotificationController.text.trim();
+                                      String body = _subTitleNotificationController.text.trim();
+                                      AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!,title:title,body: body );
+                                      _addAdvertisementBloc.addAdvertisement(request);
+                                    }else{
+                                     CompanyModel? c =await allStoreBloc.getCompanyFromId(_companyID!);
+                                     String query =advertisementType.toString()+'|'+'id='+_companyID!+'&'+'name='+c!.name+'&'+'image='+c.imageUrl;
+
+                                      String title = _titleNotificationController.text.trim();
+                                      String body = _subTitleNotificationController.text.trim();
+                                      AdvertisementModel request = AdvertisementModel(id: '', imageUrl: _advertisementImage!, route: query,storeID: _storeID!,title:title,body: body );
+                                      _addAdvertisementBloc.addAdvertisement(request);
+                                    }
+
                                   }
 
                                 }
@@ -1592,6 +1601,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ),
     );
   }
+  //
+  //
+  // CompanyModel getCompanyFromID(String id){
+  //   late CompanyModel companyModel ;
+  //   if(allStoreBloc.state is AllStoreSuccessState) {
+  //   List<StoreModel> stores =(allStoreBloc.state as AllStoreSuccessState).data ;
+  //   StoreModel? data = null;
+  //
+  //   stores.forEach((element) {
+  //     print('@@@@@@@@@@@@@@@@@');
+  //     print(element.name);
+  //     if(element.id == _storeID){
+  //       print('stroooooooooooooor founf !!!!!!!!');
+  //       data = element;
+  //     }
+  //     print(_storeID);
+  //     print('***********************');
+  //     print(data);
+  //     List<CompanyModel> companies = data!.companies;
+  //     companies.forEach((element) {
+  //       if(element.id == id)
+  //         companyModel = element;
+  //
+  //     });
+  //
+  //   });
+  //
+  // }
+  // return companyModel;
+  // }
+
+
   List<DropdownMenuItem<String>> _getCompanyDropDownList(
       List<StoreModel> stores) {
     if (stores.length == 0) {

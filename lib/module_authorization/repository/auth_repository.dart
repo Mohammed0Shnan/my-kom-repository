@@ -21,6 +21,7 @@ class AuthRepository {
         .then((UserCredential credential) async {
       User? user = credential.user;
       userId = user!.uid;
+
       if (userId != null)
         await _firestore
             .collection('users')
@@ -29,10 +30,12 @@ class AuthRepository {
             .catchError((error) {
           throw Exception(error.toString());
         });
+      return await user.getIdToken();
     }).catchError((error) {
       throw Exception(error.toString());
     });
-    return userId;
+
+
   }
 
   Future<bool> createProfile(ProfileRequest request) async {

@@ -9,6 +9,7 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
+import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
@@ -474,7 +475,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   style:BorderStyle.solid ,
                                                   color: Colors.black87
                                               )
-                                          ),                                          hintText: 'Mohammed .'
+                                          ),hintText: 'name .'
                                             , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
 
                                           //S.of(context).name,
@@ -524,7 +525,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                         style:BorderStyle.solid ,
                                                         color: Colors.black87
                                                     )
-                                                ),                                                hintText: 'Burj Al Arab',
+                                                ), hintText: 'Burj Al Arab',
                                                 hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
                                                 ),
 
@@ -665,13 +666,13 @@ height: SizeConfig.heightMulti * 8.5,
                                     if (state is CompleteErrorState) {
                                       snackBarErrorWidget(context, state.message);
                                     } else if (state is CompleteSuccessState) {
-                                      snackBarSuccessWidget(context, state.data);
-                                      if(userRole == UserRole.ROLE_USER){
-                                        Navigator.pushNamed(
-                                            context, NavigatorRoutes.NAVIGATOR_SCREEN);
-                                      }else{
-                                        Navigator.pop(context);
-                                      }
+                                      //snackBarSuccessWidget(context, state.data);
+                                       String _email  =_registerEmailController.text.trim();
+                                      String _password  =_registerPasswordController.text.trim();
+
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
+                                      LoginAutomatically(email: _email, password: _password)
+                                      ),(route)=>false);
 
                                     }
                                   },
@@ -756,21 +757,18 @@ height: SizeConfig.heightMulti * 8.5,
   }
 
   bool _validatePasswordStructure(String value) {
-    //     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
     String pattern = r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
 
   bool _validateEmailStructure(String value) {
-    //     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
     String pattern = r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
 
   bool _validatePhoneNumberStructure(String value) {
-    //     String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);

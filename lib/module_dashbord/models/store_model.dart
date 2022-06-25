@@ -15,7 +15,7 @@ class StoreModel{
      data['name'] = this.name;
      data['location_name'] = this.locationName;
      data['location'] = this.location.toJson();
-     data['zones'] = this.zones.map((e) =>e.toJson()).toList();
+  //   data['zones'] = this.zones.map((e) =>e.toJson()).toList();
      return data;
    }
   StoreModel.fromJson(Map<String, dynamic> data){
@@ -25,11 +25,13 @@ class StoreModel{
 
     this.location=GeoJson.fromJson(data['location'] );
     List<ZoneModel> zoneFromResponse = [];
-    data['zones'].forEach((v) {
-      zoneFromResponse.add(ZoneModel.fromJson(v));
-    });
-    this.zones = zoneFromResponse;
+    if( data['zones'] != null){
+      data['zones'].forEach((v) {
+        zoneFromResponse.add(ZoneModel.fromJson(v));
+      });
+    }
 
+    this.zones = zoneFromResponse;
     if( data['companies'] != null){
      List<CompanyModel> companyFromResponse = [];
      data['companies'].forEach((v) {
@@ -40,6 +42,7 @@ class StoreModel{
      this.companies = [];
 
    }
+
 
 
   }

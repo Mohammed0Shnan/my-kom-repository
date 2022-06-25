@@ -15,8 +15,6 @@ import 'package:my_kom/module_orders/util/whatsapp_link_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 class OwnerOrdersScreen extends StatefulWidget {
-
-
   @override
   State<StatefulWidget> createState() => OwnerOrdersScreenState();
 }
@@ -478,7 +476,7 @@ class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                             )),
                             SizedBox(height: 8,),
                             Container(
-                              height: 35,
+                              height: 30,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   color: ColorsConst.mainColor,
@@ -492,9 +490,9 @@ class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
-                                    Text('Update Status To ',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2),),
+                                    Text('Update Status To ',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 1.9),),
                                     Icon(Icons.arrow_forward ,color: Colors.white,),
-                                    Text(_getNextState(orders[index]),style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2))
+                                    Text(_getNextState(orders[index]),style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 1.9))
                                   ],
                                 ),
 

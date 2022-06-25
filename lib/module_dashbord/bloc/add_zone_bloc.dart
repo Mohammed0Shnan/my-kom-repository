@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 
 class ZoneBloc extends Cubit<ZonesState> {
@@ -6,12 +7,12 @@ class ZoneBloc extends Cubit<ZonesState> {
   ZoneBloc() : super(ZonesState(zones: [] ));
 
 
-  addOne(String zone){
+  addOne(ZoneModel zone){
 
     ZonesState newState =  ZonesState(zones: List.from(state.zones)..add(zone));
      return emit(newState);
   }
-  removeOne(String zone) {
+  removeOne(ZoneModel zone) {
     ZonesState newState =  ZonesState(zones: List.from(state.zones)..remove(zone));
     return emit(newState);
   }
@@ -19,6 +20,6 @@ class ZoneBloc extends Cubit<ZonesState> {
 
 }
 class ZonesState{
-  List<String> zones;
+  List<ZoneModel> zones;
   ZonesState({required this.zones });
 }

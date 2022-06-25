@@ -49,36 +49,60 @@ Future<AppUser>  getCurrentUser()async{
     );
 
     try {
-      String? result = await _repository.register(request);
+      String? token = await _repository.register(request);
       // The result may be an error if a private server is connected
+      print('=========== token after register =============');
+      print(token);
+      if(token != null)
+        return RegisterResponse(data:'Error in Register', state: false);
+
       return RegisterResponse(data: 'Success !', state: true);
+
     } catch (e) {
+      String message ='';
       if (e is FirebaseAuthException) {
         {
           switch (e.code) {
             case 'auth/email-already-in-use':
-              Logger()
-                  .info('AuthService', 'Email address $email already in use.');
-              break;
+              {
+                message = 'Email Already In Use';
+                Logger()
+                    .info('AuthService', 'Email address $email already in use.');
+                break;
+              }
+
             case 'auth/invalid-email':
-              Logger().info('AuthService', 'Email address $email is invalid.');
-              break;
+              {
+                message = 'Invalid Email';
+
+                Logger().info('AuthService', 'Email address $email is invalid.');
+                break;
+              }
+
             case 'auth/operation-not-allowed':
-              Logger().info('AuthService', 'Error during sign up.');
-              break;
-            case 'auth/weak-password':
+              {
+                message = 'Operation Not Allowed';
+                Logger().info('AuthService', 'Error during sign up.');
+                break;
+              }
+
+            case 'auth/weak-password':{
+              message = 'Weak Password';
               Logger().info('AuthService',
                   'Password is not strong enough. Add additional characters including special characters and numbers.');
               break;
+            }
+
             default:
               Logger().info('AuthService', '${e.message}');
               break;
           }
         }
         Logger().info('AuthService', 'Got Authorization Error: ${e.message}');
-        return RegisterResponse(data: e.code.toString(), state: false);
+        return RegisterResponse(data:message, state: false);
+
       } else {
-        return RegisterResponse(data: e.toString(), state: false);
+        return RegisterResponse(data: 'Error in Register', state: false);
       }
     }
   }

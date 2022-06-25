@@ -1,6 +1,7 @@
 class AddressModel{
  late final double latitude, longitude;
  late final String description;
+
  late String subArea;
 late  final Map<String , dynamic> geoData;
  AddressModel({required this.description , required this.latitude , required this.longitude , required this.geoData});
@@ -23,4 +24,11 @@ late  final Map<String , dynamic> geoData;
 
  }
 
+
+}
+
+class LocationInformation{
+  late String? title;
+  late String? subTitle;
+  LocationInformation();
 }

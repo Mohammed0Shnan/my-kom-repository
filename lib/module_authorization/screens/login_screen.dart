@@ -258,11 +258,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if(role != null){
 
                                   if (role == UserRole.ROLE_OWNER) {
-                                    Navigator.pushNamed(
-                                        context, DashboardRoutes.DASHBOARD_SCREEN);
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, DashboardRoutes.DASHBOARD_SCREEN,(route)=> false);
                                   }  else{
-                                    Navigator.pushNamed(
-                                        context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
                                   }}
 
                               } else if (state is LoginErrorState) {

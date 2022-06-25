@@ -1,5 +1,5 @@
 enum UserRole {
   ROLE_USER,
-  ROLE_COMPANY,
+  ROLE_DELIVERY,
   ROLE_OWNER
 }

@@ -178,8 +178,8 @@ class _AboutScreenState extends State<AboutScreen> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(
-                          context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
                     },
                     child: Container(
                         alignment: Alignment.center,
@@ -203,8 +203,8 @@ class _AboutScreenState extends State<AboutScreen> {
                     onTap: (){
                       if (_pageController.page == 2) {
                         AboutService().setInited();
-                        Navigator.pushNamed(
-                            context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
                       } else {
                         _pageController.nextPage(
                             duration: Duration(milliseconds: 400),
