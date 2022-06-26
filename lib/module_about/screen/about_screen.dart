@@ -41,9 +41,9 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   final List<String> LottieUrls = [
-    'assets/page2.png',
-    'assets/page3.png',
-  'assets/page1.png'
+    'assets/choices.jpg',
+    'assets/page2.jpg',
+  'assets/Delivery-Cristina.jpg'
 
   ];
   final List<String> pageTitleInformations = [
@@ -73,7 +73,7 @@ class _AboutScreenState extends State<AboutScreen> {
             color: Colors.white,
           ),
           Positioned(
-            top: SizeConfig.screenHeight * 0.25,
+            top: SizeConfig.screenHeight * 0.13,
             child: Container(
               height: SizeConfig.screenHeight,
               width: SizeConfig.screenWidth,
@@ -106,16 +106,6 @@ class _AboutScreenState extends State<AboutScreen> {
                            // child: Image.asset(LottieUrls[index],fit: BoxFit.fill,)
 
                         ),
-                        // child: Page(
-                        //
-                        //   title: index == 0 ? Container(
-                        //     height: SizeConfig.titleSize * 5,
-                        //     child: Image.asset('assets/logo1.png',fit: BoxFit.contain,)): Text(''),
-                        //   lottieUrl: LottieUrls[index],
-                        //   color: Colors.transparent,
-                        //   infoTitle: pageTitleInformations[index],
-                        //   infoSubTitle: pageSubTitleInformations[index],
-                        // ),
                       );
                     },
                   );
@@ -123,40 +113,10 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
           ),
-          Positioned(top: -SizeConfig.screenHeight* 0.4,
-          right: 0,
-          left: 0,
-            child: Container(
-              height: SizeConfig.screenHeight* 0.6,
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
-                color: ColorsConst.mainColor,
-                shape: BoxShape.circle
 
-              ),
 
-            ),
-          ),
-          Positioned(top: SizeConfig.screenHeight* 0.05,
-            right: SizeConfig.screenWidth * 0.24,
-            left: SizeConfig.screenWidth * 0.24,
-            child:Container(
-              height:55,
-              child: Image.asset('assets/new_logo.png',fit: BoxFit.fill,),
-            )
-          ),
-          // Positioned(
-          //     top: 100,
-          //
-          //     child: Container(
-          //     width:  SizeConfig.screenWidth * 0.4,
-          //       child: Image.asset('assets/new_logo.png',
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          // ),
           Positioned(
-            bottom: SizeConfig.screenHeight * 0.12,
+            bottom: SizeConfig.screenHeight * 0.19,
             child: SmoothPageIndicator(
               controller: _pageController,
               count: 3,
@@ -170,68 +130,60 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
           Positioned(
-              bottom: 10,
+            top: 10,
+            right: 8,
+            left: 8,
+            child: Row(
+              children: [
+                Spacer(),
+                GestureDetector(
+                onTap: (){
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
+                },
+                child: Container(
+                    alignment: Alignment.center,
+                    height: 60,
+                    width: SizeConfig.screenWidth * 0.2,
+
+                    child: Text('SKIP',style: GoogleFonts.lato(
+                        color: Colors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold
+                    ),)
+                ),
+          ),
+              ],
+            ),),
+          Positioned(
+              bottom: 20,
               left: 0,
               right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
-                    },
-                    child: Container(
-                        alignment: Alignment.center,
-                        height: 60,
-                        width: SizeConfig.screenWidth * 0.2,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(30),
-                                topRight: Radius.circular(30)
-                            ),
-                            color: ColorsConst.mainColor
-                        ),
-                        child: Text('SKIP',style: GoogleFonts.lato(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold
-                        ),)
+              child:   GestureDetector(
+                onTap: (){
+                  if (_pageController.page == 2) {
+                    AboutService().setInited();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
+                  } else {
+                    _pageController.nextPage(
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.ease);
+                  }
+
+                },
+                child: Container(
+                    alignment: Alignment.center,
+
+                    height: 50,
+                    width: SizeConfig.screenWidth * 0.2,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ColorsConst.mainColor
                     ),
-                  ),
-
-                  GestureDetector(
-                    onTap: (){
-                      if (_pageController.page == 2) {
-                        AboutService().setInited();
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
-                      } else {
-                        _pageController.nextPage(
-                            duration: Duration(milliseconds: 400),
-                            curve: Curves.ease);
-                      }
-
-                    },
-                    child: Container(
-                        alignment: Alignment.center,
-
-                        height: 60,
-                        width: SizeConfig.screenWidth * 0.2,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                                bottomLeft: Radius.circular(30)
-                            ),
-                            color: ColorsConst.mainColor
-                        ),
-                        child: Text('NEXT',style: GoogleFonts.lato(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold
-                        ))
-                    ),
-                  ),
-                ],
-              )),
+                    child: Icon(Icons.arrow_forward,color: Colors.white,)
+                ),
+              ),),
 
         ],
       ),
@@ -264,8 +216,8 @@ class Page extends StatelessWidget {
       child:Column(
         children: [
           Container(
-            height: SizeConfig.screenHeight * 0.3,
-            child: Image.asset(lottieUrl),
+            height: SizeConfig.screenHeight * 0.4,
+            child: Image.asset(lottieUrl,fit: BoxFit.cover),
           ),
           SizedBox(height: 40,),
                     Text(

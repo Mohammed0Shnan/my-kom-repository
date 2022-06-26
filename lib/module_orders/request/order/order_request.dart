@@ -19,6 +19,7 @@ class CreateOrderRequest {
   late String status;
   late String? cardId;
   late int customerOrderID ;
+  late bool vipOrder ;
 
   late List<String> productsIdes;
 
@@ -37,7 +38,8 @@ class CreateOrderRequest {
         required this.addressName,
         required this.cardId,
         required this.customerOrderID
-        ,required this.productsIdes
+        ,required this.productsIdes,
+        required this.vipOrder
       });
 
   // CreateOrderRequest.fromJson(Map<String, dynamic> json) {
@@ -53,7 +55,8 @@ class CreateOrderRequest {
     final Map<String, dynamic> data = <String, dynamic>{};
 
     data['userId'] = this.userId;
-   // data['storeId'] = this.storeId;
+    data['vip_order'] = this.vipOrder;
+    // data['storeId'] = this.storeId;
     data['status'] = this.status;
     data['payment'] = this.payment;
     data['description'] = this.description;
@@ -70,15 +73,13 @@ class CreateOrderRequest {
 
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userId'] = this.userId;
-
+    data['vip_order'] = this.vipOrder;
     data['card_id'] = this.cardId==null ? null : this.cardId ;
     data['products_ides'] = this.productsIdes;
     data['customer_order_id'] =this.customerOrderID;
     // data['storeId'] = this.storeId;
     data['products'] = this.products.map((e) =>e.toJson()).toList();
-
     data['delivery_time'] = this.deliveryTime;
-
     data['number_of_month'] = this.numberOfMonth;
     data['start_date'] = this.startDate;
     data['customer_order_id'] = this.customerOrderID;

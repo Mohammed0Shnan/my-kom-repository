@@ -21,6 +21,7 @@ class OrderDetailResponse {
   late OrderStatus status;
   late int customerOrderID;
   late List<String> products_ides;
+  late bool vipOrder;
 
 
 
@@ -37,6 +38,7 @@ class OrderDetailResponse {
     this.payment = json['payment'];
     this.phone = json['phone'];
     this.customerOrderID = json['customer_order_id'];
+    this.vipOrder = json['vip_order'];
     this.products_ides = json['products_ides'].cast<String>();
 
     List<ProductModel> productFromResponse = [];

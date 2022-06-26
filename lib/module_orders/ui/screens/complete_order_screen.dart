@@ -22,11 +22,11 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: SizeConfig.screenHeight * 0.1,),
+            SizedBox(height: SizeConfig.screenHeight * 0.15,),
             Center(
               child: Container(
-                height: SizeConfig.screenHeight * 0.4,
-                width: SizeConfig.screenWidth * 0.8,
+                height: SizeConfig.screenHeight * 0.35,
+                width: SizeConfig.screenWidth * 0.7,
                 child: Image.asset('assets/complete_order.png',fit: BoxFit.contain,),
               ),
             ),
@@ -35,7 +35,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
             Text('Your request has been received',style: TextStyle(fontSize: 19,fontWeight: FontWeight.w800,color: Colors.black45)),
             Spacer(),
             Container(
-              height: SizeConfig.heightMulti * 7,
+              height: SizeConfig.heightMulti * 6,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 color: ColorsConst.mainColor,
@@ -46,11 +46,11 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                 onPressed: (){
                   Navigator.pushNamed(context, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  widget.orderId);
                 },
-                child: Center(child: Text('Follow The Order',style: TextStyle(color: Colors.white,fontSize: 20),),),
+                child: Center(child: Text('Follow The Order',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),),
               ),
             ),SizedBox(height:10,),
             Container(
-              height: SizeConfig.heightMulti * 7,
+              height: SizeConfig.heightMulti * 6,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -65,7 +65,7 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
                 onPressed: (){
                   Navigator.pushNamed(context, NavigatorRoutes.NAVIGATOR_SCREEN);
                 },
-                child: Center(child: Text('Go To Home',style: TextStyle(color: ColorsConst.mainColor,fontSize: 20),),),
+                child: Center(child: Text('Go To Home',style: TextStyle(color: ColorsConst.mainColor,fontSize: SizeConfig.titleSize * 2.7),),),
               ),
             ),SizedBox(height: 20,),
           ],

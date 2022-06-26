@@ -78,6 +78,7 @@ class OrdersService {
       return null;
     OrderModel orderModel = OrderModel() ;
      orderModel.id = response.id;
+    orderModel.vipOrder = response.vipOrder;
     orderModel.products = response.products;
     orderModel.payment = response.payment;
     orderModel.orderValue = response.orderValue;
@@ -117,7 +118,7 @@ class OrdersService {
 
   Future<OrderModel?> addNewOrder(
       {required List<ProductModel>  products ,required String addressName, required String deliveryTimes,
-        required DateTime date , required GeoJson destination, required String phoneNumber,required String paymentMethod,
+        required bool orderType , required GeoJson destination, required String phoneNumber,required String paymentMethod,
         required  double amount , required String? cardId,required int numberOfMonth,required bool reorder,String? description
         ,required int? customerOrderID,required List<String>? productsIds
       }
@@ -125,7 +126,7 @@ class OrdersService {
 
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
-
+    DateTime date = DateTime.now();
     //await PaymentService().processPayment(cardId!);
 
     // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
@@ -176,7 +177,8 @@ class OrdersService {
 
        orderRequest = CreateOrderRequest(
           userId: uId!,
-          destination: destination,
+           vipOrder: orderType,
+           destination: destination,
           phone: phoneNumber,
           payment: paymentMethod,
           products: newproducts,
@@ -200,6 +202,7 @@ class OrdersService {
 
       orderRequest = CreateOrderRequest(
           userId: uId!,
+          vipOrder: orderType,
           destination: destination,
           phone: phoneNumber,
           payment: paymentMethod,
@@ -263,7 +266,7 @@ class OrdersService {
     }
     else{
 
-      OrderModel? neworder = await addNewOrder(productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, date: order.startDate!, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
+      OrderModel? neworder = await addNewOrder(productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, orderType: order.vipOrder, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
       reorder: true,
         description: order.description
       );

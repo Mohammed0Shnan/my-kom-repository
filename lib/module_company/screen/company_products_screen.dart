@@ -13,11 +13,11 @@ import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_company/screen/widgets/product_shimmer.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'dart:io' show Platform;
-
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class CompanyProductScreen extends StatefulWidget {
@@ -32,6 +32,7 @@ class CompanyProductScreen extends StatefulWidget {
 
 class _CompanyProductScreenState extends State<CompanyProductScreen> {
   final TextEditingController _serachController = TextEditingController();
+  final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
   late final  CompanyModel company;
   @override
   void initState() {
@@ -226,7 +227,15 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text('Minimum order 200 AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),),
+            FutureBuilder<double?>(
+                future: _preferencesHelper.getMinimumPurchaseStore(),
+                builder: (context,AsyncSnapshot<double?> snap){
+                  if(snap.hasData){
+                   return Text('Minimum order ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                  }else{
+                  return Text('Minimum order AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                  }
+            }),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
               clipBehavior: Clip.antiAlias,

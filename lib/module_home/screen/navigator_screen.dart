@@ -5,11 +5,13 @@ import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/setting_screen.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
+import 'package:my_kom/module_shoping/screen/shop_screen.dart';
 
 class NavigatorScreen extends StatefulWidget {
   final HomeScreen homeScreen;
   final CaptainOrdersScreen orderScreen;
   final ProfileScreen _profileScreen = ProfileScreen();
+  final ShopScreen _shopScreen = ShopScreen();
   final SettingScreen _settingScreen = SettingScreen();
   final AuthService _authService = AuthService();
 
@@ -36,14 +38,12 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
 
 
         bottomNavigationBar: Container(
-
+          margin: EdgeInsets.only(bottom: 6,right: 8,left: 8),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
 
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
-            topRight:  Radius.circular(20),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
 
-            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -82,31 +82,14 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               BottomNavigationBarItem(label: 'profile',icon: Icon(Icons.perm_identity),
                 backgroundColor: ColorsConst.mainColor,
               ),
+              BottomNavigationBarItem(label: 'Ship',icon: Icon(Icons.shopping_cart_outlined),
+                backgroundColor: ColorsConst.mainColor,
+              ),
               BottomNavigationBarItem(label: 'More',icon: Icon(Icons.widgets_outlined),
-
                 backgroundColor: ColorsConst.mainColor,),
-
             ],
           ),
         ),
-        // bottomNavigationBar: CurvedNavigationBar(
-        //   color: ColorsConst.mainColor,
-        //   backgroundColor: Colors.grey.shade50,
-        //   onTap: (index) {
-        //     current_index = index;
-        //     setState(() {});
-        //   },
-        //   items: [
-        //     Icon(Icons.home, color: Colors.white),
-        //     Icon(Icons.list, color: Colors.white),
-        //     Icon(
-        //       Icons.notifications,
-        //       color: Colors.white,
-        //     ),
-        //   ],
-        //   animationDuration: Duration(milliseconds: 100),
-        //   animationCurve: Curves.easeIn,
-        // )
 
     );
   }
@@ -128,19 +111,17 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     switch(current_index){
       case 0 : {
         return widget.homeScreen;
-        
       }
        case 1 : {
-
            return widget.orderScreen;
-
-
       }
       case 2 : {
           return widget._profileScreen;
-
       }
-      case 3:{
+      case 3 : {
+        return widget._shopScreen;
+      }
+      case 4:{
         return widget._settingScreen;
       }
     }

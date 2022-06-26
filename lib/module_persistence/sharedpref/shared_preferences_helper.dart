@@ -24,6 +24,38 @@ class SharedPreferencesHelper {
     await SharedPreferences.getInstance();
     return  _sharedPreferences.getString('sub_area');
   }
+
+
+  Future<void> setMinimumPurchaseStore(double minimum_purchase) async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    await _sharedPreferences.setDouble('minimum_purchase', minimum_purchase);
+  }
+  Future<double?> getMinimumPurchaseStore() async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    return  _sharedPreferences.getDouble('minimum_purchase');
+  }
+
+
+  Future<void> setVipStore(bool vip) async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    await _sharedPreferences.setBool('vip_store', vip);
+  }
+  Future<bool> getVipStore() async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    var res =_sharedPreferences.getBool('vip_store');
+    if(res == null)
+    return false;
+    else
+    return  res;
+
+  }
+
+
+
 }
 
 //  Future<String> getCurrentUsername() async {

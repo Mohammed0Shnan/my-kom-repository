@@ -48,20 +48,28 @@ class CompanyService {
 
         /// Save Current Store For Check Address Delivery
         ///
-        _preferencesHelper.setCurrentStore(storeId);
+        /// Save Store Information
+        _getStoreFromZone(storeId);
         _preferencesHelper.setCurrentSubArea(zone);
         print(' store found !!!!!');
-
         return storeId;
       }
-
-
     }catch(e){
       print('Exception !!!!!!!!!!!!!!!!!!!!!');
       print(e);
       return null;
     }
+  }
 
+  _getStoreFromZone(String storeId){
+     _firestore.collection('stores').doc(storeId).get().then((value) {
+       Map<String , dynamic> map = value.data() as  Map<String , dynamic>;
+       double minimumPurchase =(1.0) * map['minimum_purchase'] ;
+        bool vip =  map['vip'];
+       _preferencesHelper.setCurrentStore(storeId);
+       _preferencesHelper.setMinimumPurchaseStore(minimumPurchase);
+       _preferencesHelper.setVipStore(vip);
+     });
   }
 
   Future<void> getAllCompanies(String storeId) async {
