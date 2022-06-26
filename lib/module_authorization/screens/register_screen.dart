@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
@@ -11,7 +10,6 @@ import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
-import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -153,21 +151,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       child: Text('EMAIL', style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.7
+                                          fontSize: SizeConfig.titleSize * 2.4
                                       ))),
                                   subtitle: TextFormField(
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextStyle(fontSize: 16,
+                                    height: 0.6
+                                    ),
                                     keyboardType: TextInputType.emailAddress,
                                     controller: _registerEmailController,
                                     decoration: InputDecoration(
-
-
                                         border:OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 width: 2,
                                                 style:BorderStyle.solid ,
                                                 color: Colors.black87
-                                            )
+                                            ),
+                                          borderRadius: BorderRadius.circular(10)
                                         ),
                                         hintText: 'Email'
                                         ,
@@ -187,7 +186,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     },
                                   )),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.015,
+                                height:SizeConfig.screenHeight * 0.01,
                               ),
                               ListTile(
                                 title: Padding(
@@ -195,7 +194,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     child: Text('PASSWORD', style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.5
+                                        fontSize: SizeConfig.titleSize * 2.3
                                     ))),
                                 subtitle: BlocBuilder<PasswordHiddinCubit,
                                     PasswordHiddinCubitState>(
@@ -203,6 +202,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   builder: (context, state) {
                                     return TextFormField(
                                       controller: _registerPasswordController,
+                                      style: TextStyle(fontSize: 16,
+                                          height: 0.6
+                                      ),
                                       decoration: InputDecoration(
 
                                           suffixIcon: IconButton(
@@ -219,7 +221,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   width: 2,
                                                   style:BorderStyle.solid ,
                                                   color: Colors.black87
-                                              )
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+
                                           ),
                                           hintText:
                                               'Password' // S.of(context).email,
@@ -249,7 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.015,
+                                height:SizeConfig.screenHeight * 0.01,
                               ),
                               ListTile(
                                 title: Padding(
@@ -257,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     child: Text('CONFIRM',style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.5
+                                        fontSize: SizeConfig.titleSize * 2.3
                                     ))),
                                 subtitle: BlocBuilder<PasswordHiddinCubit,
                                     PasswordHiddinCubitState>(
@@ -266,6 +270,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return TextFormField(
                                       controller:
                                           _registerConfirmPasswordController,
+                                      style: TextStyle(fontSize: 16,
+                                          height: 0.6
+                                      ),
                                       decoration: InputDecoration(
 
                                           suffixIcon: IconButton(
@@ -282,7 +289,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   width: 2,
                                                   style:BorderStyle.solid ,
                                                   color: Colors.black87
-                                              )
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+
                                           ),
                                           hintText:
                                               'Confirm Password' // S.of(context).password,
@@ -349,35 +358,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return ListTile(
                                       title: Container(
                                         height: SizeConfig.heightMulti * 10,
-
                                         padding: EdgeInsets.symmetric(vertical: 10),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: ClipRRect(
+                                          clipBehavior: Clip.antiAlias,
+                                            borderRadius: BorderRadius.circular(10)
+,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
 
-                                              primary:
-                                                  Color.fromARGB(255, 28, 174, 147),
-                                            ),
-                                            onPressed: () {
-                                              if (_registerFormKey.currentState!
-                                                  .validate()) {
-                                                String email =
-                                                    _registerEmailController.text
-                                                        .trim();
-                                                String password =
-                                                    _registerPasswordController.text
-                                                        .trim();
-                                                widget._bloc.register(
-                                                    userRole: userRole,
-                                                    email: email,
-                                                    password: password);
-                                              }
-                                            },
-                                            child: Text('Next',
-                                                style: TextStyle(
-                                                    color: Colors.black87,
-                                                    fontSize:
-                                                        SizeConfig.titleSize * 2.6,
-                                                    fontWeight: FontWeight.w700))),
+                                                primary:
+                                                Color.fromARGB(255, 28, 174, 147),
+                                              ),
+                                              onPressed: () {
+                                                if (_registerFormKey.currentState!
+                                                    .validate()) {
+                                                  String email =
+                                                  _registerEmailController.text
+                                                      .trim();
+                                                  String password =
+                                                  _registerPasswordController.text
+                                                      .trim();
+                                                  widget._bloc.register(
+                                                      userRole: userRole,
+                                                      email: email,
+                                                      password: password);
+                                                }
+                                              },
+                                              child: Text('Next',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                      SizeConfig.titleSize * 2.6,
+                                                      fontWeight: FontWeight.w700))),
+                                        )
                                       ),
                                     );
                                 },
@@ -458,10 +474,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       child: Text('NAME',style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.7
+                                          fontSize: SizeConfig.titleSize * 2.3
                                       ))),
                                     subtitle: TextFormField(
                                       controller: _registerUserNameController,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        height: 0.6
+                                      ),
                                       decoration: InputDecoration(
                                           errorStyle: GoogleFonts.lato(
                                             color: Colors.red.shade700,
@@ -474,7 +494,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   width: 2,
                                                   style:BorderStyle.solid ,
                                                   color: Colors.black87
-                                              )
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+
                                           ),hintText: 'name .'
                                             , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
 
@@ -499,7 +521,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       child: Text('ADDRESS', style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.7
+                                          fontSize: SizeConfig.titleSize * 2.3
                                       ))),
                                     subtitle: Row(
                                       children: [
@@ -507,6 +529,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           child: TextFormField(
                                             controller:
                                                 _registerAddressController,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                height: 0.6
+                                            ),
                                             readOnly: true,
                                             enableInteractiveSelection: true,
 
@@ -524,7 +550,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                         width: 2,
                                                         style:BorderStyle.solid ,
                                                         color: Colors.black87
-                                                    )
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(10)
+
                                                 ), hintText: 'Burj Al Arab',
                                                 hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
                                                 ),
@@ -559,8 +587,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           },
                                           child: Container(
 
-                                            width: SizeConfig.heightMulti * 8.5,
-                                            height: SizeConfig.heightMulti * 8.5,
+                                            width: SizeConfig.heightMulti * 7.4,
+                                            height: SizeConfig.heightMulti * 7.4,
                                             decoration: BoxDecoration(
                                                 color: ColorsConst.mainColor,
                                                 borderRadius:
@@ -585,7 +613,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         fontSize: SizeConfig.titleSize * 2.7
                                     ))),
                                   subtitle: Container(
-height: SizeConfig.heightMulti * 8.5,
+height: SizeConfig.heightMulti * 7,
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                          horizontal: 10),
@@ -594,7 +622,9 @@ height: SizeConfig.heightMulti * 8.5,
                                           border: Border.all(
                                             color: Colors.black45,
                                             width: 1
-                                          )
+                                          ),
+                                          borderRadius: BorderRadius.circular(10)
+
                                       ),
                                     child: Row(
                                       children: [
@@ -688,41 +718,48 @@ height: SizeConfig.heightMulti * 8.5,
                                     else
                                       return ListTile(
                                         title: Container(
-                                          height: SizeConfig.heightMulti * 10.5,
-
+                                          height: SizeConfig.heightMulti * 10,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10)
+                                          ),
                                           padding: EdgeInsets.symmetric(vertical: 10),
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                primary:
-                                                    Color.fromARGB(255, 28, 174, 147),
-                                              ),
-                                              onPressed: () {
+                                          child: ClipRRect(
+                                            clipBehavior: Clip.antiAlias
+                                          ,
+                                            borderRadius:BorderRadius.circular(10),
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary:
+                                                  Color.fromARGB(255, 28, 174, 147),
+                                                ),
+                                                onPressed: () {
 
-                                                if (_registerCompleteFormKey
-                                                    .currentState!
-                                                    .validate()) {
-                                                  String name =
-                                                      _registerUserNameController.text
-                                                          .trim();
-                                                  String phone =
-                                                      _registerPhoneNumberController
-                                                          .text
-                                                          .trim();
-                                                  ProfileRequest profileRequest =
-                                                      ProfileRequest(
-                                                          userName: name,
-                                                          address: addressModel,
-                                                          phone: phone);
-                                                  widget._bloc
-                                                      .createProfile(profileRequest);
-                                                }
-                                              },
-                                              child: Text('REGISTER',
-                                                  style: TextStyle(
-                                                      color: Colors.black87,
-                                                      fontSize:
-                                                          SizeConfig.titleSize * 2.6,
-                                                      fontWeight: FontWeight.w700))),
+                                                  if (_registerCompleteFormKey
+                                                      .currentState!
+                                                      .validate()) {
+                                                    String name =
+                                                    _registerUserNameController.text
+                                                        .trim();
+                                                    String phone =
+                                                    _registerPhoneNumberController
+                                                        .text
+                                                        .trim();
+                                                    ProfileRequest profileRequest =
+                                                    ProfileRequest(
+                                                        userName: name,
+                                                        address: addressModel,
+                                                        phone: phone);
+                                                    widget._bloc
+                                                        .createProfile(profileRequest);
+                                                  }
+                                                },
+                                                child: Text('REGISTER',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                        SizeConfig.titleSize * 2.6,
+                                                        fontWeight: FontWeight.w700))),
+                                          ),
                                         ),
                                       );
                                   },

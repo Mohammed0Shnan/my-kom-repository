@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
+import 'package:my_kom/module_home/screen/about_my_kom_screen.dart';
+import 'package:my_kom/module_home/screen/connect_us_screen.dart';
+import 'package:my_kom/module_home/screen/privacy_my_kom_screen.dart';
+import 'package:my_kom/module_home/screen/usage_policy_screen.dart';
 import 'package:my_kom/module_home/widgets/menu_item.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
-import 'package:my_kom/module_map/test/screens/search_places_screen.dart';
-import 'package:my_kom/module_shoping/screen/wallet_screen.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -73,19 +74,53 @@ class _SettingScreenState extends State<SettingScreen> {
             SizedBox(height: 10,),
             menuItem(
                 icon: Icons.settings,
-                title: 'Setting'
+                title: 'Setting',
+              onTap: (){
+
+              }
             ),
-            InkWell(
+
+            SizedBox(height: 10,),
+            menuItem(
+                icon: Icons.info,
+                title: 'About My Kom',
+              onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AboutMyKomScreen()));
+              }
+            ),
+            SizedBox(height: 10,),
+            menuItem(
+                icon: Icons.lock,
+                title: 'Privacy',
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> PrivacyMyKomScreen()));
+                }
+            ),
+            SizedBox(height: 10,),
+            menuItem(
+                icon: Icons.description,
+                title: 'Usage Policy',
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> UsagePolicyScreen()));
+                }
+            ),
+            SizedBox(height: 10,),
+            menuItem(
+                icon: Icons.phone,
+                title: 'Connect Us',
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ConnectUsScreen()));
+                }
+            ),
+            menuItem(
+                icon: Icons.edit,
+                title: 'Logout',
               onTap: (){
                 AuthService().logout().then((value) {
                   //AboutService().setInited();
                   Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN,(route)=>false);
                 });
-              },
-              child: menuItem(
-                  icon: Icons.edit,
-                  title: 'Logout'
-              ),
+              }
             ),
           ],
         ),
