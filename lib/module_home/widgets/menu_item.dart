@@ -6,10 +6,10 @@ Widget menuItem({required IconData icon , required String title,required Functio
   return GestureDetector(
     onTap:()=>onTap() ,
     child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(6),
         child: Row(  children: [
-          Icon(icon,color: ColorsConst.mainColor,size: 4.8 * SizeConfig.heightMulti,),
+          Icon(icon,color: ColorsConst.mainColor,size: 4 * SizeConfig.heightMulti,),
           SizedBox(width: 20,),
           Text(title,
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.7 * SizeConfig.heightMulti,color: Colors.black45),             )           ],         )),
+            style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.9 * SizeConfig.heightMulti,color: Colors.black45),             )           ],         )),
   );    }

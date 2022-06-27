@@ -45,6 +45,7 @@ class MapService {
 
           LocationInformation s = await getPositionDetail(
               LatLng(position.latitude, position.longitude));
+
           return MapData(name: "${s.title!} ${s.subTitle!}",
               longitude: position.longitude,
               latitude: position.latitude,

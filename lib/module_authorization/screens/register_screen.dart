@@ -9,6 +9,7 @@ import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
+import 'package:my_kom/module_authorization/screens/phone_code_sent_screen.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
@@ -64,6 +65,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   late AddressModel addressModel;
+  
+  late String countryCode;
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
@@ -630,15 +633,19 @@ height: SizeConfig.heightMulti * 7,
                                       children: [
                                         Icon(Icons.phone),
                                         CountryCodePicker(
+
                                           initialSelection:
                                               'دولة الإمارات العربية المتحدة',
                                           showOnlyCountryWhenClosed: false,
+                                          onInit: (initC){
+                                            countryCode =initC!.dialCode!;
+                                          },
                                           favorite: [
                                             '+971',
                                             'دولة الإمارات العربية المتحدة'
                                           ],
                                           onChanged: (c) {
-                                            print(c);
+                                            countryCode =c.dialCode!;
                                           },
                                         ),
                                         Divider(
@@ -703,7 +710,12 @@ height: SizeConfig.heightMulti * 7,
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
                                       LoginAutomatically(email: _email, password: _password)
                                       ),(route)=>false);
-
+                                     // Str ing phone_number = countryCode+ _registerPhoneNumberController
+                                     //       .text
+                                     //       .trim().substring(1);
+                                     //   Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                     //       PhoneCodeSentScreen(phoneNumber: phone_number,email:_email,password: _password ,)
+                                     //   ));
                                     }
                                   },
                                   builder: (context, state) {
@@ -778,9 +790,7 @@ height: SizeConfig.heightMulti * 7,
                 ),
               ],
             ),
-
           ),
-
         ],
       ),
     );

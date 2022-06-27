@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/module_about/screen/about_screen.dart';
 import 'package:my_kom/module_about/widgets/language_drop_down.dart';
-import 'package:my_kom/module_about/widgets/wave_loading.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
@@ -28,8 +27,8 @@ class LanguageScreen extends StatelessWidget {
                   tag: 'logo',
                   child: Center(
                     child: Container(
-                           height: 31.25 * SizeConfig.heightMulti,
-                           width: 31.25 * SizeConfig.heightMulti,
+                           height: 30 * SizeConfig.heightMulti,
+                           width: 30 * SizeConfig.heightMulti,
                       child: Image.asset('assets/new_oval_logo.png',fit: BoxFit.contain,),
                     ),
                   ),
@@ -53,11 +52,11 @@ class LanguageScreen extends StatelessWidget {
                     ),
                     subtitle: LangugeDropDownWidget(localizationService: localizationService,)),
                 SizedBox(
-                  height: SizeConfig.heightMulti * 3.3,
+                  height: SizeConfig.heightMulti ,
                 ),
                 ListTile(
                   title: Container(
-                    height: 11.8 *  SizeConfig.heightMulti ,
+                    height: 9.5*  SizeConfig.heightMulti ,
                     clipBehavior: Clip.antiAlias,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),

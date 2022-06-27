@@ -19,7 +19,7 @@ class AuthService {
 
   final AuthPrefsHelper _prefsHelper = AuthPrefsHelper();
   FirebaseAuth _auth = FirebaseAuth.instance;
-
+   String _verificationCode ='';
   // Delegates
   Future<bool> get isLoggedIn => _prefsHelper.isSignedIn();
 
@@ -135,8 +135,34 @@ Future<AppUser>  getCurrentUser()async{
     } catch (e) {
       if (e is FirebaseAuthException) {
         Logger().info('AuthService', e.code.toString());
+        String message ='';
+        switch (e.code) {
+          case 'user-not-found':
+            {
+              message = 'User not found !';
+              Logger()
+                  .info('AuthService', 'User Not Found');
+              break;
+            }
+
+          case 'wrong-password':
+            {
+              message = 'The password is incorrect';
+
+              Logger().info('AuthService', 'The password is incorrect');
+              break;
+            }
+
+
+          default:{
+            message = 'Error in Login!';
+            Logger().info('AuthService', '${e.message}');
+            break;
+          }
+
+        }
         return AuthResponse(
-            message:e.code.toString() +'\n (There Is No Internet)', status: AuthStatus.UNAUTHORIZED);
+            message:message , status: AuthStatus.UNAUTHORIZED);
       }
       else if(e is GetProfileException)
         {
@@ -148,7 +174,7 @@ Future<AppUser>  getCurrentUser()async{
 
 
       return AuthResponse(
-          message: e.toString(), status: AuthStatus.UNAUTHORIZED);
+          message: 'Error in Login!', status: AuthStatus.UNAUTHORIZED);
     }
   }
 
@@ -199,4 +225,56 @@ Future<AppUser>  getCurrentUser()async{
           message: e.toString(), status: AuthStatus.UNAUTHORIZED);
     }
   }
+
+
+  Future<AuthResponse> confirmWithCode(String code) async {
+
+  try{
+    AuthCredential authCredential = PhoneAuthProvider.credential(
+      verificationId: _verificationCode,
+      smsCode: code,
+    );
+   await _auth.signInWithCredential(authCredential);
+    return AuthResponse(
+        message: 'Success Verification', status: AuthStatus.AUTHORIZED);
+  }catch(e){
+    print(e);
+    return AuthResponse(
+        message: 'Error Verification', status: AuthStatus.UNAUTHORIZED);
+  }
+
+  }
+
+  Future<bool> verifyWithPhone(String phone) async{
+  try{
+    bool res = false;
+    await _auth.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (authCredentials) {
+          _auth.signInWithCredential(authCredentials).then((credential) {
+          });
+        },
+        verificationFailed: (err) {
+          res = false;
+          // _authSubject.addError(err);
+        },
+        codeSent: (String? verificationId, int? forceResendingToken) {
+          print('ccccccccccccccccccccc');
+          print(verificationId!);
+          _verificationCode = verificationId!;
+          res =true;
+          //_authSubject.add(AuthStatus.CODE_SENT);
+        },
+        codeAutoRetrievalTimeout: (verificationId) {
+          res = false;
+          // _authSubject.add(AuthStatus.CODE_TIMEOUT);
+        });
+    return res;
+  }catch(e){
+    return false;
+  }
+
+  }
+
+
 }

@@ -307,6 +307,7 @@ final MapService mapService = MapService();
                                                   child: Text(state.message),
                                                 )),
                                             IconButton(onPressed: (){
+                                              print('on click');
                                               widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
                                             }, icon: Icon(Icons.refresh))
                                           ],

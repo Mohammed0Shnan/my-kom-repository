@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
+import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class LangugeDropDownWidget extends StatefulWidget {
   final LocalizationService localizationService ;
@@ -23,7 +24,8 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(8),
+      height: SizeConfig.heightMulti * 7,
       decoration: BoxDecoration(
           border: Border.all(width: 1, color: Colors.grey),
           borderRadius: BorderRadius.circular(10)),

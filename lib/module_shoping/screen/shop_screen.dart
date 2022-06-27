@@ -974,7 +974,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     //     child: Image.asset('assets/summary_shopping.png')),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text('Order Type',
+                                  Text('MyKom Express Service',
                                       style: GoogleFonts.lato(
                                           fontSize: SizeConfig.titleSize * 2.5,
                                           fontWeight: FontWeight.w800,
@@ -984,8 +984,9 @@ class _ShopScreenState extends State<ShopScreen> {
                               ),
 
                               SizedBox(height: 12,),
-                              Text('Activating the express order feature increases the payment fee  10.0  ِAED ', style: GoogleFonts.lato(
-                                  fontSize: SizeConfig.titleSize * 2.2,
+
+                              Text('Activating the mykom express feature will speed up the delivery of your order and increase the payment fee of 10.0 ِAED', style: GoogleFonts.lato(
+                                  fontSize: SizeConfig.titleSize * 1.9,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black54),),
                               SizedBox(height:
@@ -993,7 +994,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Express My Kom', style: GoogleFonts.lato(
+                                  Text('MyKom Express', style: GoogleFonts.lato(
                                       fontSize: SizeConfig.titleSize * 2.2,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black54),),
@@ -1056,7 +1057,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     //     child: Image.asset('assets/summary_shopping.png')),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text('Order Type',
+                                  Text('MyKom Express Service',
                                       style: GoogleFonts.lato(
                                           fontSize: SizeConfig.titleSize * 2.5,
                                           fontWeight: FontWeight.w800,
@@ -1066,7 +1067,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               ),
 
                               SizedBox(height: 12,),
-                              Text('The speed dial feature is currently disabled', style: GoogleFonts.lato(
+                              Text('MyKom express service feature is currently disabled', style: GoogleFonts.lato(
                                   fontSize: SizeConfig.titleSize * 2.2,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black54),),
@@ -1075,7 +1076,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Express My Kom', style: GoogleFonts.lato(
+                                  Text('MyKom Express', style: GoogleFonts.lato(
                                       fontSize: SizeConfig.titleSize * 2.2,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black54),),
@@ -1816,11 +1817,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                               listener: (context,state)async{
                                                 if(state is CreateOrderSuccessState)
                                                 {
-                                                  shopCartBloc.startedShop();
-
                                                   snackBarSuccessWidget(context, 'Order Created Successfully!!');
                                                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
-                                                  //  Navigator.pushNamedAndRemoveUntil(context, NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
+                                                  shopCartBloc.startedShop();
                                                 }
                                                 else if(state is CreateOrderErrorState)
                                                 {
@@ -1903,11 +1902,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     listener: (context,state)async{
                       if(state is CreateOrderSuccessState)
                       {
-                        shopCartBloc.startedShop();
 
                         snackBarSuccessWidget(context, 'Order Created Successfully!!');
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
-                        //  Navigator.pushNamedAndRemoveUntil(context, NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
+                        shopCartBloc.startedShop();
                       }
                       else if(state is CreateOrderErrorState)
                       {

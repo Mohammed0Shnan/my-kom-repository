@@ -24,104 +24,233 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
             SizedBox(height: 30,),
+            Expanded(
+              child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+              childAspectRatio: 1,
+                crossAxisSpacing: 30,
+                mainAxisSpacing: 20
+              ),
 
-            // InkWell(
-            //   onTap: (){
-            //     Navigator.push(context, MaterialPageRoute(builder:(context)=> WalletScreen()));
-            //   },
-            //   child: menuItem(
-            //       icon: Icons.shopping_basket,
-            //       title: 'My Wallet'
-            //   ),
-            // ),
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 8,left: 4,right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                    boxShadow: [BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 2,
+                      offset: Offset(0,1)
+                    )]
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(Icons.language_outlined ,color: ColorsConst.mainColor,size: 7* SizeConfig.heightMulti),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: BlocBuilder<LocalizationService,LocalizationState>(
+                            bloc: _localizationService ,
+                            builder: (context, state){
+                              String lang ;
+                              if(state is LocalizationArabicState){
+                                lang = 'ar';
+                              }else{
+                                lang = 'en';
+                              }
+                              return DropdownButtonFormField<String>(
 
-            ListTile(
-              leading: Icon(Icons.language ,color: ColorsConst.mainColor,size: 4.8 * SizeConfig.heightMulti),
-              title: BlocBuilder<LocalizationService,LocalizationState>(
-                bloc: _localizationService ,
-                builder: (context, state){
-                  String lang ;
-                  if(state is LocalizationArabicState){
-                    lang = 'ar';
-                  }else{
-                    lang = 'en';
-                  }
-                  return DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                          border: InputBorder.none),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
 
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('arabic',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.5 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
-                          value: 'ar',
+                                  ),
+
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text('arabic',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
+                                      value: 'ar',
+                                    ),
+                                    DropdownMenuItem(
+                                      child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
+                                      value: 'en',
+                                    ),
+                                  ],
+                                  value: lang,
+                                  onChanged: (String? newLang) {
+                                    _localizationService.setLanguage(newLang!);
+                                  });
+                            },
+                          ),
                         ),
-                        DropdownMenuItem(
-                          child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  3.5 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
-                          value: 'en',
-                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: (){},
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('Setting', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
-                      value: lang,
-                      onChanged: (String? newLang) {
-                       _localizationService.setLanguage(newLang!);
-                      });
-                },
+                    ),
+
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> AboutMyKomScreen() ));
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.info_outline ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('About', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                      ],
+                    ),
+
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> PrivacyMyKomScreen() ));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('Privacy', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                      ],
+                    ),
+
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> UsagePolicyScreen() ));
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('Policy', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                      ],
+                    ),
+
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ConnectUsScreen() ));
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('Connect', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                      ],
+                    ),
+
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    _authService.logout().then((value) {
+                      Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN,(route)=>false);
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 2,
+                            offset: Offset(0,1)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        SizedBox(height: 10,),
+                        Expanded(child: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                      ],
+                    ),
+
+                  ),
+                ),
+
+              ],
               ),
             ),
-            SizedBox(height: 10,),
-            menuItem(
-                icon: Icons.settings,
-                title: 'Setting',
-              onTap: (){
 
-              }
-            ),
-
-            SizedBox(height: 10,),
-            menuItem(
-                icon: Icons.info,
-                title: 'About My Kom',
-              onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AboutMyKomScreen()));
-              }
-            ),
-            SizedBox(height: 10,),
-            menuItem(
-                icon: Icons.lock,
-                title: 'Privacy',
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> PrivacyMyKomScreen()));
-                }
-            ),
-            SizedBox(height: 10,),
-            menuItem(
-                icon: Icons.description,
-                title: 'Usage Policy',
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> UsagePolicyScreen()));
-                }
-            ),
-            SizedBox(height: 10,),
-            menuItem(
-                icon: Icons.phone,
-                title: 'Connect Us',
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ConnectUsScreen()));
-                }
-            ),
-            menuItem(
-                icon: Icons.edit,
-                title: 'Logout',
-              onTap: (){
-                AuthService().logout().then((value) {
-                  //AboutService().setInited();
-                  Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN,(route)=>false);
-                });
-              }
-            ),
           ],
         ),
       ),

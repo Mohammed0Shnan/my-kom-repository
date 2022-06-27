@@ -2,14 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/is_loggedin_cubit.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
-import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/module_profile/bloc/profile_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -56,8 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late AddressModel addressModel ;
   @override
   Widget build(BuildContext context) {
-    final node = FocusScope.of(context);
 
+    final node = FocusScope.of(context);
     return BlocConsumer<IsLogginCubit,IsLogginCubitState>(
         bloc: isLogginCubit,
         listener: (context,state){
@@ -111,12 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  onPressed: (){
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon( Icons.arrow_back , color: Colors.black54,),
-                                ),
+                                Spacer(),
                                 IconButton(
                                   onPressed: (){
                                     if(!isEditingProfile){
@@ -125,9 +117,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     }else{
                                       request = ProfileRequest
                                         (userName: _profileUserNameController.text.trim(), address:
-
                                       addressModel
-                                          , phone: _profilePhoneController.text.trim());
+                                          , phone: _profilePhoneController.text.trim(),
+                                      );
                                       profileBloc.editProfile(request!);
                                     }
 
@@ -201,13 +193,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   // Move focus to next
                                                 ),
                                               ),
-
-                                              SizedBox(height: 8,),
-                                              Text(state.data.userRole.name.toString(),style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey[700]
-                                              )),
+                                              //
+                                              // SizedBox(height: 8,),
+                                              // Text(state.data.userRole.name.toString(),style: TextStyle(
+                                              //     fontSize: 15,
+                                              //     fontWeight: FontWeight.bold,
+                                              //     color: Colors.grey[700]
+                                              // )),
 
                                             ],),
                                         ),
@@ -378,15 +370,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                       SizedBox(height: 5,),
+
                                       Row(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(Icons.phone , color: ColorsConst.mainColor),
                                           SizedBox(width: 10,),
-                                          Text(state.data.phone,style:  TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey[600]
-                                          ),),
+                                          Expanded(
+                                            child: TextFormField(
+
+                                              controller: _profilePhoneController,
+                                              keyboardType: TextInputType.number,
+                                              style: TextStyle(
+                                                  fontSize:16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[700]
+                                              ),
+
+                                              decoration: InputDecoration(
+                                                suffixIcon: (!isEditingProfile)?null:Icon(Icons.edit,color: Colors.black,),
+                                                border: InputBorder.none,
+                                                //S.of(context).name,
+                                              ),
+                                              textInputAction: TextInputAction.next,
+                                              // Move focus to next
+                                            ),
+                                          ),
+
                                         ],
                                       )
                                     ],
@@ -414,101 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       );
-      return Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            Container(
-              color: Colors.grey,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 40, left: 20),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ),
 
-                  _getHeader(context),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Status',
-                      style: TextStyle(
-                          color: Colors.brown.shade800,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          letterSpacing: 1),
-                    ),
-                    subtitle: Padding(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Text(
-                          // profileModel.status,
-                          'the user status',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
-                      color: Colors.brown.shade600,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Description',
-                      style: TextStyle(
-                          color: Colors.brown.shade800,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          letterSpacing: 1),
-                    ),
-                    subtitle: Padding(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Text(
-                          // profileModel.description,
-                          'the user description information information and summry',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
-                      color: Colors.brown.shade600,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
     }
     else{
       return Scaffold(
