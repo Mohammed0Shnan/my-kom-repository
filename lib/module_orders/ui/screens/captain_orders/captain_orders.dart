@@ -13,10 +13,9 @@ import 'package:my_kom/module_orders/state_manager/captain_orders/captain_orders
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-
+import 'package:my_kom/generated/l10n.dart';
 
 class CaptainOrdersScreen extends StatefulWidget {
-
 
   @override
   State<StatefulWidget> createState() => CaptainOrdersScreenState();
@@ -63,10 +62,10 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
-                      child: Text('Orders',style: GoogleFonts.lato(
+                      child: Text(S.of(context)!.orders,style: GoogleFonts.lato(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black45
+                          color: Colors.black54
                       ),),
                     ),
                     SizedBox(height: 8,),
@@ -120,7 +119,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                   },
                   child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: current_tap == CURRENT_ORDER
@@ -128,7 +127,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                             : Colors.transparent,
 
                       ),
-                      child: Center(child: Text('Current Orders (${curNumber})',style: TextStyle(
+                      child: Center(child: Text('${S.of(context)!.currentOrders} (${curNumber})',style: TextStyle(
                         color: current_tap == CURRENT_ORDER ?Colors.white: ColorsConst.mainColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 16
@@ -145,7 +144,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                   },
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical:6),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
 
@@ -153,7 +152,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                           ? ColorsConst.mainColor
                           : Colors.transparent,
                     ),
-                    child:Center(child: Text('Previous Orders (${preNumber})',style: TextStyle(
+                    child:Center(child: Text('${S.of(context)!.previousOrders} (${preNumber})',style: TextStyle(
                         color: current_tap == PREVIOUS_ORDER ?Colors.white: ColorsConst.mainColor,
                         fontWeight: FontWeight.w600,
                         fontSize: 16
@@ -223,7 +222,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
             },
             itemBuilder: (context,index){
               return Container(
-                height: 155,
+                height: 150,
                 width: double.infinity,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.symmetric(horizontal: 16,vertical: 5),
@@ -245,7 +244,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(width: 50,height: 50,
-                        child: Image.asset('assets/user_order.png'),),
+                        child: Image.asset('assets/order_icon.png'),),
                         SizedBox(width: 15,),
                         Expanded(
                           child: Column(
@@ -254,20 +253,21 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Details',style: GoogleFonts.lato(
-                                    fontSize: 16,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w800
-                                  ),),
+                                  // Text('Details',style: GoogleFonts.lato(
+                                  //   fontSize: 16,
+                                  //   color: Colors.black54,
+                                  //   fontWeight: FontWeight.w800
+                                  // ),),
+                                  Spacer(),
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                                    padding: EdgeInsets.symmetric(horizontal: 8,vertical: 2),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
                                       color: ColorsConst.mainColor.withOpacity(0.1)
                                     ),
-                                    child: Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                    child: Text('${S.of(context)!.orderNumber} : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
                                         color: ColorsConst.mainColor,
-                                        fontSize: 18,
+                                        fontSize: 14,
                                         letterSpacing: 1,
                                         fontWeight: FontWeight.bold
                                     ),),
@@ -277,16 +277,17 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               SizedBox(height: 8,),
                                Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
                                     fontSize: 12,
+
                                     color: Colors.black45,
                                     fontWeight: FontWeight.w800
                                 ),
                               ),
-
+                              SizedBox(height: 4,),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(Icons.location_on_outlined , color: Colors.black45,),
+                                  Icon(Icons.location_on_outlined , color: Colors.black45,size: 12,),
                                   Expanded(
                                     child: Text(orders[index].addressName,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
                                       fontSize: 12,
@@ -303,6 +304,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                   color: ColorsConst.mainColor,
                                   fontWeight: FontWeight.bold
                               )),
+                              SizedBox(height: 4,),
 
                             ],
                           ),
@@ -310,9 +312,6 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
 
                       ],
                     ),
-
-
-
 
                     SizedBox(height: 4,),
                     Container(
@@ -335,9 +334,9 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 onPressed: () {
                                   Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_DETAIL_SCREEN,arguments: orders[index].id);
                                 },
-                                child: Text('Details', style: TextStyle(
+                                child: Text(S.of(context)!.orderDetail, style: TextStyle(
                                     color: ColorsConst.mainColor,
-                                    fontSize: SizeConfig.titleSize * 2.6),),
+                                    fontSize: SizeConfig.titleSize * 2.4),),
 
                               ),
                             ),
@@ -354,8 +353,8 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
 
                               Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
                               },
-                              child: Text('Track Shipment', style: TextStyle(color: Colors.white,
-                                  fontSize: SizeConfig.titleSize * 2.6),),
+                              child: Text(S.of(context)!.trackShipment, style: TextStyle(color: Colors.white,
+                                  fontSize: SizeConfig.titleSize * 2.4),),
 
                             ),
                           ))
@@ -457,12 +456,12 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Text('Details',style: GoogleFonts.lato(
+                                  Text(S.of(context)!.orderDetail,style: GoogleFonts.lato(
                                       fontSize: 16,
                                       color: Colors.black54,
                                       fontWeight: FontWeight.w800
                                   ),),
-                                  Text('Num : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                  Text('${S.of(context)!.orderNumber} : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
                                       color: ColorsConst.mainColor,
                                       fontSize: 18,
                                       letterSpacing: 1,
@@ -528,7 +527,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                           onPressed: () {
                                             Navigator.pushNamed(context, OrdersRoutes.ORDER_DETAIL_SCREEN,arguments: orders[index].id);
                                           },
-                                          child: Text('Details', style: TextStyle(
+                                          child: Text(S.of(context)!.orderDetail, style: TextStyle(
                                               color: ColorsConst.mainColor,
                                               fontSize: SizeConfig.titleSize * 2.6),),
 
@@ -547,7 +546,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                         onPressed: () {
                                           _orderBloc.reorder(orders[index].id);
                                         },
-                                        child: Text('Reorder', style: TextStyle(color: Colors.white,
+                                        child: Text(S.of(context)!.reOrder, style: TextStyle(color: Colors.white,
                                             fontSize: SizeConfig.titleSize * 2.6),),
 
                                       ),

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
+import 'package:my_kom/module_authorization/bloc/phone_verification_bloc.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
+import 'package:my_kom/generated/l10n.dart';
+
 class PhoneCodeSentScreen extends StatefulWidget {
   final String phoneNumber ;
   final String email;
@@ -17,86 +19,121 @@ class PhoneCodeSentScreen extends StatefulWidget {
 
 class _PhoneCodeSentScreenState extends State<PhoneCodeSentScreen> {
    final _confirmationController = TextEditingController();
-   final RegisterBloc _registerBloc = RegisterBloc();
+   final PhoneVerificationBloc _phoneVerificationBloc = PhoneVerificationBloc();
+
    bool retryEnabled = false;
    bool loading = false;
 
    @override
   void initState() {
-     _registerBloc.registerPhoneNumber(widget.phoneNumber);
+     _phoneVerificationBloc.registerPhoneNumber(widget.phoneNumber);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:     Form(
+      body:  Form(
     child: Flex(
     direction: Axis.vertical,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(height: 30,),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextFormField(
               controller: _confirmationController,
               decoration: InputDecoration(
-                labelText:'Confirm Code',
-                hintText: '123456',
+                labelText: S.of(context)!.code,
+                hintText: 'OTP',
               ),
               keyboardType: TextInputType.number,
               validator: (v) {
                 if (v!.isEmpty) {
-                  return 'Please Input Phone Number';
+                  return  S.of(context)!.codeIsRequired;
                 }
                 return null;
               }),
         ),
+        SizedBox(height: 10,),
         OutlinedButton(
-          onPressed: retryEnabled
-              ? () {
-          //  screen.retryPhone();
-          }
-              : null,
-          child: Text('Resend Code'),
+          onPressed: (){
+            _phoneVerificationBloc.registerPhoneNumber(widget.phoneNumber);
+          },
+          child: Text( S.of(context)!.resendCode),
         ),
+       Spacer(),
+        BlocConsumer<PhoneVerificationBloc, PhoneVerificationStates>(
+          bloc: _phoneVerificationBloc,
+          listener: (context,state){
+           if(state is PhoneVerificationCurrentState )
+             {
+               if(state.message == 'CODE SENT'){
+                 Scaffold.of(context).showBottomSheet((context) => Container(
+                   child: Text('Code sent by text message'),
+                 ));
+               }else if (state.message == 'CODE TIMEOUT'){
+                 Scaffold.of(context).showBottomSheet((context) => Container(
+                   child: Text('If the code is not received, redial the code'),
+                 ));
+               }else if(state.message == 'UNAUTHORIZED'){
+                 Scaffold.of(context).showBottomSheet((context) => Container(
+                   child: Text('There was an error !!!'),
+                 ));
+               }
+             }
+           else if(state is PhoneVerificationSuccessState){
+             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
+             LoginAutomatically(email:widget.email, password:widget.password)
+             ),(route)=>false);
+           }
 
-        loading ? Text('Loading') : Container(
-          decoration: BoxDecoration(color:ColorsConst.mainColor),
-          child: GestureDetector(
-            onTap: () {
-              loading = true;
-              Future.delayed(Duration(seconds: 10), () {
-                loading = false;
-              });
-              //screen.refresh();
-              print(_confirmationController.text);
-              _registerBloc.confirmCaptainCode(_confirmationController.text).then((value) {
-                print(value);
-                if(value == true){
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
-                  LoginAutomatically(email:widget.email, password:widget.password)
-                  ),(route)=>false);
-                }
-              });
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                   'Confirm',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+          }
+          ,
+            builder:(context,state){
+
+            if(state is PhoneVerificationLoadingState)
+              return Container(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(),
+              );
+            else
+            return Container(
+              decoration: BoxDecoration(color:ColorsConst.mainColor),
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: GestureDetector(
+                onTap: () {
+                  loading = true;
+                  Future.delayed(Duration(seconds: 10), () {
+                    loading = false;
+                  });
+
+                  setState((){});
+                  _phoneVerificationBloc.confirmCaptainCode(_confirmationController.text);
+
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        S.of(context)!.confirmCode,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+            }
         ),
+        SizedBox(height: 30,),
+
       ],
     ),
     ),

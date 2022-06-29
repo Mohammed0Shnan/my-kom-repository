@@ -15,7 +15,7 @@ import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-
+import 'package:my_kom/generated/l10n.dart';
 
 
 class PriductDetailScreen extends StatefulWidget {
@@ -169,7 +169,7 @@ addRemoveBloc.close();
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 20,),
-                            Text('Description',style: TextStyle(
+                            Text(S.of(context)!.description,style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black54,
                                 fontWeight: FontWeight.w600),),
@@ -328,7 +328,7 @@ addRemoveBloc.close();
                               onPressed: () {
                                 if(addRemoveBloc.state == 0){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                    content:  Text(S.of(context)!.selectTheNumberOfItemsRequired,style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
                                     backgroundColor: Colors.black54,
                                     duration: const Duration(seconds: 1),
 
@@ -338,7 +338,7 @@ addRemoveBloc.close();
                                   shopCartBloc.addProductsToCart(productModel,addRemoveBloc.state).then((value) {
 
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                      content:  Text('${addRemoveBloc.state} Items have been added',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                      content:  Text('${addRemoveBloc.state} ${S.of(context)!.itemsHaveBeenAdded}',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
                                       backgroundColor: Colors.black54,
                                       duration: const Duration(seconds: 1),
 
@@ -352,7 +352,7 @@ addRemoveBloc.close();
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Add to cart',
+                                    S.of(context)!.addToCart,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,

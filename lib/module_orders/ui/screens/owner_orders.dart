@@ -20,9 +20,9 @@ class OwnerOrdersScreen extends StatefulWidget {
 }
 
 class OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
+
   final CaptainOrdersListBloc _ordersListBloc = CaptainOrdersListBloc();
   final UpdateStatusBloc _updateStatusBloc = UpdateStatusBloc();
-
   final String PENDING_ORDER = 'pending';
   final String FINISHED_ORDER = 'finished';
   late String current_tap ;

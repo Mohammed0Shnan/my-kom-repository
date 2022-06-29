@@ -1,8 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/module_orders/util/whatsapp_link_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:my_kom/generated/l10n.dart';
+
 class ConnectUsScreen extends StatefulWidget {
   const ConnectUsScreen({Key? key}) : super(key: key);
 
@@ -17,7 +20,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
       appBar: AppBar(
         backgroundColor: ColorsConst.mainColor,
         elevation: 0,
-        title: Text('Connect Us'),
+        title: Text(S.of(context)!.contactUs),
         centerTitle: true,
       ),
       body: Column(
@@ -48,14 +51,51 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
                       primary:Colors.white,
                     ),
                     onPressed: () {
-
+                      launchUrl( Uri.parse('https://mykom.app/') );
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.phone,color: Colors.blue,),
+                        Icon(Icons.mail,color: Colors.blue,),
                         SizedBox(width: 10,),
-                        Text('05554434232',
+                        Text('info@mykom.app',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize:
+                                SizeConfig.titleSize * 3,
+                                fontWeight: FontWeight.w700)),
+                      ],
+                    )),
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              height: SizeConfig.heightMulti * 9.5,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10)),
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ClipRRect(
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.circular(10),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+
+                      primary:Colors.white,
+                    ),
+                    onPressed: () {
+                      double late =  25.1288099;
+                      double lon = 56.3264849;
+                      var url = WhatsAppLinkHelper.getMapsLink(late,lon);
+                      launchUrl(Uri.parse(url));
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.location_on,color: Colors.blue,),
+                        SizedBox(width: 10,),
+                        Text('Fujairah, United Arab Emrates',
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontSize:

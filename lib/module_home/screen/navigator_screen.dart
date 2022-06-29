@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/setting_screen.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class NavigatorScreen extends StatefulWidget {
   final HomeScreen homeScreen;
   final CaptainOrdersScreen orderScreen;
-  final ProfileScreen _profileScreen = ProfileScreen();
-  final ShopScreen _shopScreen = ShopScreen();
-  final SettingScreen _settingScreen = SettingScreen();
-  final AuthService _authService = AuthService();
+  final ProfileScreen profileScreen ;
+  final ShopScreen shopScreen ;
+  final SettingScreen settingScreen ;
 
   NavigatorScreen(
-      {required this.homeScreen,required this.orderScreen, Key? key})
+      {required this.homeScreen,required this.orderScreen,required this.profileScreen,
+        required this.settingScreen,required this.shopScreen,
+        Key? key})
       : super(key: key);
 
   @override
@@ -55,6 +56,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           ),
           child: BottomNavigationBar(
             selectedItemColor: Colors.white,
+
               unselectedItemColor: Colors.white,
               selectedIconTheme:IconThemeData(
                 size: 30
@@ -74,18 +76,18 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             items: [
               BottomNavigationBarItem(
                 backgroundColor: ColorsConst.mainColor,
-                label: 'Home',
+                label: S.of(context)!.home,
                 icon: Icon(Icons.home_outlined)),
-              BottomNavigationBarItem(label: 'Orders',icon: Icon(Icons.description_outlined),
+              BottomNavigationBarItem(label:  S.of(context)!.orders,icon: Icon(Icons.description_outlined),
                 backgroundColor: ColorsConst.mainColor,
               ),
-              BottomNavigationBarItem(label: 'profile',icon: Icon(Icons.perm_identity),
+              BottomNavigationBarItem(label:  S.of(context)!.profile,icon: Icon(Icons.perm_identity),
                 backgroundColor: ColorsConst.mainColor,
               ),
-              BottomNavigationBarItem(label: 'Ship',icon: Icon(Icons.shopping_cart_outlined),
+              BottomNavigationBarItem(label:  S.of(context)!.ship,icon: Icon(Icons.shopping_cart_outlined),
                 backgroundColor: ColorsConst.mainColor,
               ),
-              BottomNavigationBarItem(label: 'More',icon: Icon(Icons.widgets_outlined),
+              BottomNavigationBarItem(label:  S.of(context)!.more,icon: Icon(Icons.widgets_outlined),
                 backgroundColor: ColorsConst.mainColor,),
             ],
           ),
@@ -116,13 +118,13 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
            return widget.orderScreen;
       }
       case 2 : {
-          return widget._profileScreen;
+          return widget.profileScreen;
       }
       case 3 : {
-        return widget._shopScreen;
+        return widget.shopScreen;
       }
       case 4:{
-        return widget._settingScreen;
+        return widget.settingScreen;
       }
     }
   }

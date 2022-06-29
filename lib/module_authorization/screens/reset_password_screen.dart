@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
 import 'package:my_kom/module_authorization/bloc/reset_password_bloc.dart';
-import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_dashbord/dashboard_routes.dart';
-import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class RestPasswordScreen extends StatefulWidget {
   final RestPasswordBloc _restPasswordBloc = RestPasswordBloc();
@@ -62,7 +59,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                   ],
                 ),
                 SizedBox(height: SizeConfig.screenHeight * 0.05,),
-                Text('Forgot \n Password',
+                Text( S.of(context)!.forgotPassword,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         color: Colors.black,
@@ -75,7 +72,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal:SizeConfig.screenWidth * 0.2),
                   child:Text(
-                    'Create new password for your account here',
+                    S.of(context)!.newPassword,
                     textAlign: TextAlign.center,
                     style:  GoogleFonts.lato(
                       fontWeight: FontWeight.w800,
@@ -95,7 +92,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                           child: ListTile(
                             title: Padding(
                               padding: EdgeInsets.only(bottom: 8),
-                              child: Text('EMAIL',style:GoogleFonts.lato(
+                              child: Text(S.of(context)!.email,style:GoogleFonts.lato(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black54,
                                   fontSize: SizeConfig.titleSize * 2.5
@@ -114,7 +111,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                                       )
                                     ),
 
-                                    hintText: 'Email',
+                                    hintText: S.of(context)!.email,
                                     hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                   //S.of(context).name,
                                 ),
@@ -123,7 +120,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
 
                                 validator: (result) {
                                   if (result!.isEmpty) {
-                                    return 'Email Address is Required'; //S.of(context).nameIsRequired;
+                                    return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
                                   }
                                   if (!_validateEmailStructure(result))
                                     return 'Must write an email address';
@@ -181,7 +178,7 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                                                 .resetPassword(email);
                                           }
                                         },
-                                        child: Text('RESET',
+                                        child: Text(S.of(context)!.confirmCode,
                                             style: TextStyle(
                                                 color: Colors.black87,
                                                 fontSize:

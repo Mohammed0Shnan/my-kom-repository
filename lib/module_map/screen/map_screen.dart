@@ -223,6 +223,7 @@ class _MapScreenState extends State<MapScreen> {
                                     location_from_search!['po'] as LatLng;
                                 String n =
                                     location_from_search!['name'] as String;
+
                                 mapBloc.saveLocation(latLan, n);
                               } else {
                                 if (state is MapGestureSuccessState) {

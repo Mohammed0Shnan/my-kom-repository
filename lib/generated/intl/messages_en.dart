@@ -21,31 +21,190 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+
+    /// Login Page
+    "login": MessageLookupByLibrary.simpleMessage("LOGIN"),
+    "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "createAccount": MessageLookupByLibrary.simpleMessage("Create an account"),
+    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
+    "signInToContinue": MessageLookupByLibrary.simpleMessage("sign in to continue"),
+    "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
+    "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
+    "dontHaveAnAccount": MessageLookupByLibrary.simpleMessage("Don\'t have an account ?"),
+    "emailAddressIsRequired": MessageLookupByLibrary.simpleMessage("ُmail address is required"),
+    "passwordIsRequired": MessageLookupByLibrary.simpleMessage("Password is required"),
+
+
+    /// Register Page
+
+    "createNewAccount": MessageLookupByLibrary.simpleMessage("Create New \n Account"),
+    "alreadyHaveOne": MessageLookupByLibrary.simpleMessage("Already have one !"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
-    "login": MessageLookupByLibrary.simpleMessage("Login"),
-        "email": MessageLookupByLibrary.simpleMessage("Email"),
-        "password": MessageLookupByLibrary.simpleMessage("Password"),
-        "createAccount": MessageLookupByLibrary.simpleMessage("Create Account"),
-        "confirmPassword":
-            MessageLookupByLibrary.simpleMessage("Confirm Password"),
-        "register": MessageLookupByLibrary.simpleMessage("Register"),
-        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-        "language": MessageLookupByLibrary.simpleMessage("Language"),
-        "english": MessageLookupByLibrary.simpleMessage("English"),
-        "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
-        "setting": MessageLookupByLibrary.simpleMessage("Setting"),
-        "products": MessageLookupByLibrary.simpleMessage("Products"),
-        "myProducts": MessageLookupByLibrary.simpleMessage("My Product"),
-        "filterName": MessageLookupByLibrary.simpleMessage("Name"),
-        "filterCategory": MessageLookupByLibrary.simpleMessage("Category"),
-        "filterDate": MessageLookupByLibrary.simpleMessage("Date"),
-        "detailProduct": MessageLookupByLibrary.simpleMessage("Detail Product"),
-        "productName": MessageLookupByLibrary.simpleMessage("Product Name"),
-        "category": MessageLookupByLibrary.simpleMessage("Category"),
-        "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
-        "expiredDate": MessageLookupByLibrary.simpleMessage("Expired Date"),
-        "price": MessageLookupByLibrary.simpleMessage("Price"),
-        "contectInfo":
-            MessageLookupByLibrary.simpleMessage("Contect Information"),
+    "register": MessageLookupByLibrary.simpleMessage("Register"),
+    "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+    "address": MessageLookupByLibrary.simpleMessage("Address"),
+    "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "completeYourDetail": MessageLookupByLibrary.simpleMessage("Complete Your Detail"),
+    "confirmCode": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "resendCode": MessageLookupByLibrary.simpleMessage("Resend Code"),
+    "nameIsRequired": MessageLookupByLibrary.simpleMessage("Name Is Required"),
+    "addressIsRequired": MessageLookupByLibrary.simpleMessage("Address Is Required"),
+    "phoneIsRequired": MessageLookupByLibrary.simpleMessage("Phone Is Required"),
+    "codeIsRequired": MessageLookupByLibrary.simpleMessage("The code is required"),
+    "code": MessageLookupByLibrary.simpleMessage("OTP"),
+    "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
+
+    /// About Pages
+    "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "titlePageOne": MessageLookupByLibrary.simpleMessage("Multiple Options"),
+    "titlePageTow": MessageLookupByLibrary.simpleMessage("Pay Easily"),
+    "titlePageThree": MessageLookupByLibrary.simpleMessage("Free Delivery"),
+    "subTitlePageOne": MessageLookupByLibrary.simpleMessage("At MyKom, you can find the option that suits you"),
+    "subTitlePageTow": MessageLookupByLibrary.simpleMessage("The payment method in MyKom is multiple, pay the way that suits you"),
+    "subTitlePageThree": MessageLookupByLibrary.simpleMessage("While all applications make their profits from delivery fees, our application connects you for free"),
+
+    /// Home Page
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "orders": MessageLookupByLibrary.simpleMessage("Orders"),
+    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "ship": MessageLookupByLibrary.simpleMessage("Ship"),
+    "more": MessageLookupByLibrary.simpleMessage("More"),
+    "deliveryTo": MessageLookupByLibrary.simpleMessage("Delivery to"),
+    "comingSoon": MessageLookupByLibrary.simpleMessage("The area is currently unavailable select the location manually"),
+    "pleaseWait": MessageLookupByLibrary.simpleMessage("Please Wait"),
+    "notLoggedIN": MessageLookupByLibrary.simpleMessage("You are not subscribed to MyKom"),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+    "determineLocation": MessageLookupByLibrary.simpleMessage("Unable to determine the location, specify the location manually!"),
+
+
+    /// Setting Page
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "aboutApp": MessageLookupByLibrary.simpleMessage("About App"),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "deliveryPolicy": MessageLookupByLibrary.simpleMessage("Delivery Policy"),
+    "contactUs": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "language": MessageLookupByLibrary.simpleMessage("Language"),
+    "english": MessageLookupByLibrary.simpleMessage("English"),
+    "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
+    "aboutAppDescription": MessageLookupByLibrary.simpleMessage("A company owned by young Emiratis proudly deliverys water and consumables to the UAE people"),
+    "privacyAppTitle1": MessageLookupByLibrary.simpleMessage("Effective date: August 22, 2019"),
+    "privacyAppSubTitle": MessageLookupByLibrary.simpleMessage('''MYKOM (“us”, “we”, or “our”) operates the https://mykom.app/ Website & Mobile Applications (the “Service”).
+
+  This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+
+  We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from https://mykom.app/
+
+
+
+  Information Collection And Use
+
+  We collect several different types of information for various purposes to provide and improve our Service to you.
+
+  All credit/debit cards’ details and personally identifiable information will NOT be stored, sold, shared, rented or leased to any third parties’’
+  https://mykom.app will not pass any debit/credit card details to third parties
+  Types of Data Collected
+  Personal Data
+  While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (“Personal Data”). Personally identifiable information may include, but is not limited to:
+
+  *Email address
+  *First name and last name
+  *Phone number
+  *Address, State, Province, ZIP/Postal code, City
+  Legal Requirements
+  mykom.app may disclose your Personal Data in the good faith belief that such action is necessary to:
+
+  *To comply with a legal obligation
+  *To protect and defend the rights or property of mykom.app
+  *To prevent or investigate possible wrongdoing in connection with the Service
+  *To protect the personal safety of users of the Service or the public
+  *To protect against legal liability
+  Service Providers
+
+  We may employ third party companies and individuals to facilitate our Service (“Service Providers”), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used.
+
+  These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
+  Children’s Privacy
+
+  Our Service does not address anyone under the age of 18 (“Children”).
+
+  We do not knowingly collect personally identifiable information from anyone under the age of 18. If you are a parent or guardian and you are aware that your Children has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.
+  Changes To This Privacy Policy
+
+  We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
+
+  We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the “effective date” at the top of this Privacy Policy.'''),
+
+    "privacyDeliveryAppTitleDescription": MessageLookupByLibrary.simpleMessage("Important Delivery Information"),
+
+    "privacyDeliveryAppSubTitleDescription": MessageLookupByLibrary.simpleMessage('''* We deliver our Products within the UAE only. Shipping will be done primarily by us, but we may use a third-party courier when necessary.
+* Delivery within major UAE cities shall be within 1 to 2 working days. For more remote areas in the UAE, delivery shall be from 4 to 10 working days.
+* We offer free delivery. To avoid any delays in delivery, please provide your complete address along with your contact details.
+* Any orders received during the weekend or on holidays will be processed on the next working day.'''),
+
+
+    /// Profile Page
+    "emailAndPhone": MessageLookupByLibrary.simpleMessage("Email And Phone"),
+    "myAddress": MessageLookupByLibrary.simpleMessage("My Address"),
+    "myInformation": MessageLookupByLibrary.simpleMessage("My Information"),
+    "myProfile": MessageLookupByLibrary.simpleMessage("My Profile"),
+
+    /// Orders Page
+    "currentOrders": MessageLookupByLibrary.simpleMessage("Current Orders"),
+    "previousOrders": MessageLookupByLibrary.simpleMessage("previous Orders"),
+    "trackShipment": MessageLookupByLibrary.simpleMessage("Track Shipment"),
+    "orderNumber": MessageLookupByLibrary.simpleMessage("Order Number"),
+    "orderDetail": MessageLookupByLibrary.simpleMessage("Detail"),
+    "reOrder": MessageLookupByLibrary.simpleMessage("Re Order"),
+    "noDataToDisplay": MessageLookupByLibrary.simpleMessage("No Data To Display"),
+
+    /// Ship Pages
+    "shoppingCart": MessageLookupByLibrary.simpleMessage("سلة المشتريات"),
+    "ofStepper": MessageLookupByLibrary.simpleMessage("من"),
+    "stepOneTitle": MessageLookupByLibrary.simpleMessage("Details and price of the shipment"),
+    "stepOneSubTitle": MessageLookupByLibrary.simpleMessage(" Next is the destination ,request type"),
+    "stepTowTitle": MessageLookupByLibrary.simpleMessage("Destination and Request Type"),
+    "stepTowSubTitle": MessageLookupByLibrary.simpleMessage("Next is shipping details and Pay"),
+    "stepThreeTitle": MessageLookupByLibrary.simpleMessage("Shipping details and Pay"),
+    "stepThreeSubTitle": MessageLookupByLibrary.simpleMessage("Next is order confirmation"),
+    "emptyShip": MessageLookupByLibrary.simpleMessage('Empty Ship'),
+    "paymentSummary": MessageLookupByLibrary.simpleMessage("Payment Summary"),
+    "total": MessageLookupByLibrary.simpleMessage("Total"),
+    "back": MessageLookupByLibrary.simpleMessage('back'),
+    "completeTheOrder": MessageLookupByLibrary.simpleMessage('Complete the order'),
+    "orderWasNotAdded": MessageLookupByLibrary.simpleMessage('Order Was Not Added'),
+    "orderAddedSuccessfully": MessageLookupByLibrary.simpleMessage('Order Added Successfully'),
+
+    "addMore": MessageLookupByLibrary.simpleMessage("Add More"),
+    "minimumAlert": MessageLookupByLibrary.simpleMessage("Minimum Order"),
+    "destination": MessageLookupByLibrary.simpleMessage("Destination"),
+    "change": MessageLookupByLibrary.simpleMessage("Change"),
+    "street": MessageLookupByLibrary.simpleMessage("Street"),
+    "myKomExpressService": MessageLookupByLibrary.simpleMessage("MyKom Express Service"),
+    "myKomExpressServiceMessageEnable": MessageLookupByLibrary.simpleMessage("Activating the mykom express feature will speed up the delivery of your order and increase the payment fee of 10.0 ِAED"),
+    "myKomExpressServiceMessageDisable": MessageLookupByLibrary.simpleMessage("MyKom express service feature is currently disabled"),
+    "myKomExpress": MessageLookupByLibrary.simpleMessage("MyKom Express Service"),
+    "extraCharge": MessageLookupByLibrary.simpleMessage("Extra Charge"),
+    "orderValue": MessageLookupByLibrary.simpleMessage("Order Value"),
+    "paymentMethods": MessageLookupByLibrary.simpleMessage("Payment Methods"),
+    "cashMoney": MessageLookupByLibrary.simpleMessage("Cash Money"),
+    "creditCard": MessageLookupByLibrary.simpleMessage("Credit Card"),
+    "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("Please select payment method"),
+    "destinationAlert": MessageLookupByLibrary.simpleMessage("Choose a correct site that belongs to the serviced areas "),
+    "orderConfirmation": MessageLookupByLibrary.simpleMessage("Confirmation"),
+    "payByCard": MessageLookupByLibrary.simpleMessage("Pay By Card"),
+    "addCard": MessageLookupByLibrary.simpleMessage("Add Card"),
+    "selectCardAlert": MessageLookupByLibrary.simpleMessage("Please select a card "),
+
+    /// Products Pages
+
+    "searchForYourProducts": MessageLookupByLibrary.simpleMessage("Search For Your Products"),
+    "added": MessageLookupByLibrary.simpleMessage("Add"),
+    "seeTheCart": MessageLookupByLibrary.simpleMessage("See The Cart"),
+    "addToCart": MessageLookupByLibrary.simpleMessage("Add To Cart"),
+    "description": MessageLookupByLibrary.simpleMessage("Description"),
+    "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("Select the number of items required"),
+    "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("Items have been added"),
       };
 }

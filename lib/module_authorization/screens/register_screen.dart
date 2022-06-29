@@ -8,7 +8,6 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
-import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/phone_code_sent_screen.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/map_routes.dart';
@@ -16,6 +15,7 @@ import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class RegisterScreen extends StatefulWidget {
   final RegisterBloc _bloc = RegisterBloc();
@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           Expanded(
             child: PageView(
-              physics: NeverScrollableScrollPhysics(),
+             // physics: NeverScrollableScrollPhysics(),
               controller: _pageController,
               children: [
                 /// Page Number One
@@ -103,14 +103,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             children: [
                               SizedBox(height: 10,),
 
-                              Text('Create New\n Account',
+                              Text(S.of(context)!.createNewAccount,
                                   textAlign:TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black45,
                                       fontWeight: FontWeight.w900,
-                                      fontSize: SizeConfig.titleSize * 5)),
+                                      fontSize: SizeConfig.titleSize * 4.8)),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.03,
+                                height:SizeConfig.screenHeight * 0.02,
                               ),
                               Container(
                                 alignment: Alignment.center,
@@ -118,9 +118,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Already have one !  ',
+                                      S.of(context)!.alreadyHaveOne,
                                       style: TextStyle(
-                                          fontSize: SizeConfig.titleSize * 3,
+                                          fontSize: SizeConfig.titleSize * 3 ,
                                           color: Colors.black45,
                                           fontWeight: FontWeight.w800
                                       ),
@@ -130,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         Navigator.pushNamed(
                                             context, AuthorizationRoutes.LOGIN_SCREEN);
                                       },
-                                      child: Text('Login',
+                                      child: Text(S.of(context)!.login,
                                           style:  GoogleFonts.lato(
                                               fontSize: SizeConfig.titleSize * 2.5,
                                               fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ListTile(
                                   title: Padding(
                                       padding: EdgeInsets.only(bottom: 8),
-                                      child: Text('EMAIL', style:GoogleFonts.lato(
+                                      child: Text(S.of(context)!.email, style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                           fontSize: SizeConfig.titleSize * 2.4
@@ -171,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             ),
                                           borderRadius: BorderRadius.circular(10)
                                         ),
-                                        hintText: 'Email'
+                                        hintText: S.of(context)!.email
                                         ,
                                         hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                         //S.of(context).name,
@@ -181,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     // Move focus to next
                                     validator: (result) {
                                       if (result!.isEmpty) {
-                                        return 'Email is Required'; //S.of(context).nameIsRequired;
+                                        return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
                                       }
                                       if (!_validateEmailStructure(result))
                                         return 'Must write an email';
@@ -194,7 +194,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ListTile(
                                 title: Padding(
                                     padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('PASSWORD', style:GoogleFonts.lato(
+                                    child: Text(S.of(context)!.password, style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
                                         fontSize: SizeConfig.titleSize * 2.3
@@ -228,9 +228,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               borderRadius: BorderRadius.circular(10)
 
                                           ),
-                                          hintText:
-                                              'Password' // S.of(context).email,
-                                        , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                          hintText:S.of(context)!.password
+                                          , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                           ),
                                       obscureText: state ==
                                               PasswordHiddinCubitState.VISIBILITY
@@ -242,7 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       // Move focus to next
                                       validator: (result) {
                                         if (result!.isEmpty) {
-                                          return '* Password is Required'; //S.of(context).emailAddressIsRequired;
+                                          return S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
                                         }
                                         if (result.length < 8) {
                                           return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
@@ -261,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ListTile(
                                 title: Padding(
                                     padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('CONFIRM',style:GoogleFonts.lato(
+                                    child: Text(S.of(context)!.confirmPassword,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
                                         fontSize: SizeConfig.titleSize * 2.3
@@ -297,7 +296,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                                           ),
                                           hintText:
-                                              'Confirm Password' // S.of(context).password,
+                                          S.of(context)!.confirmPassword // S.of(context).password,
                                         , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                           ),
                                       validator: (result) {
@@ -390,7 +389,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                       password: password);
                                                 }
                                               },
-                                              child: Text('Next',
+                                              child: Text(S.of(context)!.next,
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize:
@@ -425,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 20,),
-                          Text('Complete your details',
+                          Text(S.of(context)!.completeYourDetail,
                               textAlign:TextAlign.center,
                               style: TextStyle(
                                   color: Colors.black45,
@@ -474,7 +473,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ListTile(
                                     title: Padding(
                                       padding: EdgeInsets.only(bottom: 8),
-                                      child: Text('NAME',style:GoogleFonts.lato(
+                                      child: Text(S.of(context)!.name,style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                           fontSize: SizeConfig.titleSize * 2.3
@@ -500,7 +499,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               ),
                                               borderRadius: BorderRadius.circular(10)
 
-                                          ),hintText: 'name .'
+                                          ),hintText: S.of(context)!.name
                                             , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
 
                                           //S.of(context).name,
@@ -510,7 +509,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       // Move focus to next
                                       validator: (result) {
                                         if (result!.isEmpty) {
-                                          return 'User Name is Required'; //S.of(context).nameIsRequired;
+                                          return  S.of(context)!.nameIsRequired; //S.of(context).nameIsRequired;
                                         }
                                         return null;
                                       },
@@ -521,7 +520,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ListTile(
                                     title: Padding(
                                       padding: EdgeInsets.only(bottom: 8),
-                                      child: Text('ADDRESS', style:GoogleFonts.lato(
+                                      child: Text( S.of(context)!.address, style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                           fontSize: SizeConfig.titleSize * 2.3
@@ -556,7 +555,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                     ),
                                                     borderRadius: BorderRadius.circular(10)
 
-                                                ), hintText: 'Burj Al Arab',
+                                                ), hintText: S.of(context)!.address,
                                                 hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
                                                 ),
 
@@ -566,7 +565,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             // Move focus to next
                                             validator: (result) {
                                               if (result!.isEmpty) {
-                                                return 'Address is Required'; //S.of(context).emailAddressIsRequired;
+                                                return  S.of(context)!.addressIsRequired; //S.of(context).emailAddressIsRequired;
                                               }
 
                                               return null;
@@ -610,7 +609,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ListTile(
                                   title: Padding(
                                     padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('PHONE',style:GoogleFonts.lato(
+                                    child: Text( S.of(context)!.phone,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
                                         fontSize: SizeConfig.titleSize * 2.7
@@ -667,7 +666,7 @@ height: SizeConfig.heightMulti * 7,
                                               ),
                                           validator: (result) {
                                             if (result!.isEmpty) {
-                                              return 'Phone Number Is Required !';
+                                              return  S.of(context)!.phoneIsRequired;
                                             } else if (!_validatePhoneNumberStructure(
                                                 result)) {
                                               return 'Enter Valid Phone Number';
@@ -707,15 +706,15 @@ height: SizeConfig.heightMulti * 7,
                                        String _email  =_registerEmailController.text.trim();
                                       String _password  =_registerPasswordController.text.trim();
 
-                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
-                                      LoginAutomatically(email: _email, password: _password)
-                                      ),(route)=>false);
-                                     // Str ing phone_number = countryCode+ _registerPhoneNumberController
-                                     //       .text
-                                     //       .trim().substring(1);
-                                     //   Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                     //       PhoneCodeSentScreen(phoneNumber: phone_number,email:_email,password: _password ,)
-                                     //   ));
+                                      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
+                                      // LoginAutomatically(email: _email, password: _password)
+                                      // ),(route)=>false);
+                                     String phone_number = countryCode+ _registerPhoneNumberController
+                                           .text
+                                           .trim().substring(1);
+                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                           PhoneCodeSentScreen(phoneNumber: phone_number,email:_email,password: _password ,)
+                                       ));
                                     }
                                   },
                                   builder: (context, state) {
@@ -765,7 +764,7 @@ height: SizeConfig.heightMulti * 7,
                                                         .createProfile(profileRequest);
                                                   }
                                                 },
-                                                child: Text('REGISTER',
+                                                child: Text( S.of(context)!.register,
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize:

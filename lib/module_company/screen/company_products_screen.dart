@@ -19,6 +19,7 @@ import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/shoping_routes.dart';
 import 'dart:io' show Platform;
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class CompanyProductScreen extends StatefulWidget {
 
@@ -182,7 +183,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           productsCompanyBloc.search(_serachController.text);
                         },
                       ),
-                      hintText: 'Search for your products',
+                      hintText:S.of(context)!.searchForYourProducts,
                       hintStyle: TextStyle(color: Colors.black26)),
                 ),
               ),
@@ -231,9 +232,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 future: _preferencesHelper.getMinimumPurchaseStore(),
                 builder: (context,AsyncSnapshot<double?> snap){
                   if(snap.hasData){
-                   return Text('Minimum order ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                   return Text('${S.of(context)!.minimumAlert} ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }else{
-                  return Text('Minimum order AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                  return Text('${S.of(context)!.minimumAlert} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }
             }),
             Container(
@@ -257,7 +258,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('See the cart',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+                    Text(S.of(context)!.selectCardAlert,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
                     BlocBuilder<ShopCartBloc,CartState>(
                         bloc: shopCartBloc,
                         builder: (context,state) {
@@ -298,7 +299,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       ),
                       child: Image.asset('assets/empity.png',fit: BoxFit.fill,)),
                   SizedBox(height: 10,),
-                  Text('No data to display',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
+                  Text(S.of(context)!.noDataToDisplay,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
                 ],
               ),
             )),
@@ -315,7 +316,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
-                      childAspectRatio: 0.6,
+                      childAspectRatio: 0.7,
                       children: List.generate(
                           items.length,
                               (index){
@@ -328,8 +329,6 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                 child: FadeInAnimation(
                                   child: GestureDetector(
                                     onTap: () {
-                                      print('product id clicked');
-                                      print(items[index].id );
                                       Navigator.pushNamed(context, CompanyRoutes.PRODUCTS_DETAIL_SCREEN,arguments:items[index].id );
 
                                     },
@@ -516,22 +515,22 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(height: 5,),
-                                                    Expanded(
-                                                      child: Container(
-
-                                                        padding: EdgeInsets.symmetric(horizontal: 10),
-                                                        child: Text(
-                                                          items[index].description,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          maxLines: 3,
-                                                          style: GoogleFonts.lato(
-                                                              fontSize: SizeConfig.titleSize * 2,
-                                                              color: Colors.black54,
-                                                              fontWeight: FontWeight.w600
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Expanded(
+                                                    //   child: Container(
+                                                    //
+                                                    //     padding: EdgeInsets.symmetric(horizontal: 10),
+                                                    //     child: Text(
+                                                    //       items[index].description,
+                                                    //       overflow: TextOverflow.ellipsis,
+                                                    //       maxLines: 3,
+                                                    //       style: GoogleFonts.lato(
+                                                    //           fontSize: SizeConfig.titleSize * 2,
+                                                    //           color: Colors.black54,
+                                                    //           fontWeight: FontWeight.w600
+                                                    //       ),
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
 
 
                                                   ],
@@ -539,6 +538,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                               ),
                                             ),
                                             Container(
+                                              margin: EdgeInsets.symmetric(horizontal: 4),
                                               height: SizeConfig.heightMulti *5,
                                               child: Row(
                                                 mainAxisAlignment:
@@ -574,7 +574,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
                                                       },
                                                       label: Text(
-                                                        'ِAdd',
+                                                        S.of(context)!.added,
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .white,
@@ -630,6 +630,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                       .spaceBetween,
                                                                   children: [
                                                                     Container(
+                                                                      alignment: Alignment.center,
                                                                       color: ColorsConst
                                                                           .mainColor,
                                                                       width: w /
@@ -641,7 +642,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                           icon: Icon(
                                                                             Icons.remove,
                                                                             size:
-                                                                            SizeConfig.imageSize * 5,
+                                                                            SizeConfig.imageSize * 4,
                                                                             color:
                                                                             Colors.white,
                                                                           )),
@@ -654,6 +655,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                           );
                                                                         }),
                                                                     Container(
+                                                                      alignment: Alignment.center,
+
                                                                       width: w /
                                                                           3,
                                                                       color: ColorsConst
@@ -667,7 +670,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                             },
                                                                             icon: Icon(
                                                                               Icons.add,
-                                                                              size: SizeConfig.imageSize * 5,
+                                                                              size: SizeConfig.imageSize * 4,
                                                                               color: Colors.white,
                                                                             )),
                                                                       ),
@@ -681,7 +684,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       ))
                                                 ],
                                               ),
-                                            )
+                                            ),
+                                            SizedBox(height: 8,)
                                           ],
                                         ),
                                       ),

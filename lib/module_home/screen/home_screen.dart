@@ -25,6 +25,8 @@ import 'package:my_kom/module_company/screen/notification_screen.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:my_kom/generated/l10n.dart';
+
 class HomeScreen extends StatefulWidget {
    bool isInit;
    final MapBloc mapBloc ;
@@ -117,7 +119,7 @@ final MapService mapService = MapService();
                           children: [
                             Icon(Icons.location_on_outlined,size: 18,color: Colors.black45,),
                             Text(
-                              'Delivery to',
+                              S.of(context)!.deliveryTo,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: SizeConfig.titleSize * 2),
@@ -156,7 +158,6 @@ final MapService mapService = MapService();
                     widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
                   }
                   else if(checkZoneState is CheckZoneErrorState){
-                    print('@@@@@@@@@@@@@@@ zone error');
                     widget.allCompanyBloc.setInit();
                   }
                 },
@@ -307,7 +308,6 @@ final MapService mapService = MapService();
                                                   child: Text(state.message),
                                                 )),
                                             IconButton(onPressed: (){
-                                              print('on click');
                                               widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
                                             }, icon: Icon(Icons.refresh))
                                           ],
@@ -343,7 +343,7 @@ final MapService mapService = MapService();
                           child: Center(child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text('please wait'),
+                              Text(S.of(context)!.pleaseWait),
                               Container(
                                 height: 20,
                                 width: 20,
@@ -359,7 +359,6 @@ final MapService mapService = MapService();
                     );
                   }
                   else if(checkZoneState is CheckZoneErrorState){
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                     return Center(
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -375,7 +374,7 @@ final MapService mapService = MapService();
                             SizedBox(height: 10,),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.1),
-                              child:   Text('This area is currently unavailable Select the location manually',
+                              child:   Text(S.of(context)!.comingSoon,
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.lato(
                                     fontSize: SizeConfig.titleSize * 2.3,
@@ -421,7 +420,7 @@ final MapService mapService = MapService();
                   child: Center(child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('please wait'),
+                      Text(S.of(context)!.pleaseWait),
                       Container(
                         height: 20,
                         width: 20,
@@ -450,7 +449,7 @@ final MapService mapService = MapService();
                      child: Image.asset('assets/error.png'),
                    ),
                    SizedBox(height: 20,),
-                   Text('Unable to determine the location, specify the location manually',
+                   Text(S.of(context)!.determineLocation,
                    textAlign: TextAlign.center,
                      style: GoogleFonts.lato(
                        fontSize: 18,
@@ -495,30 +494,6 @@ final MapService mapService = MapService();
   }
 
 
-  // List<DropdownMenuItem<String>> _getStoresDropDownList(
-  //     List<StoreModel> stores) {
-  //   print('stoooooooooooooooooreeeeeees');
-  //   print(stores);
-  //   var items = <DropdownMenuItem<String>>[];
-  //   if (stores.length == 0) {
-  //     return [
-  //       DropdownMenuItem<String>(
-  //         child: Text(''),
-  //       )
-  //     ];
-  //   }
-  //   stores.forEach((element) {
-  //     items.add(DropdownMenuItem<String>(
-  //       value: element.id,
-  //       child: Text(
-  //         '${element.name}',
-  //         style: TextStyle(fontSize: 16),
-  //       ),
-  //     ));
-  //   });
-  //   print(items);
-  //   return items;
-  // }
   Future<void> _onRefresh(String storeId) async {
 
     await widget.allCompanyBloc.getAllCompany( storeId);
@@ -530,7 +505,6 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
 
   CompanySearch(AllCompanyBloc bloc){
     _allCompanyBloc = bloc;
-   // allStoreBloc.getAllStore();
   }
 
   @override
@@ -558,18 +532,8 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
      return BlocBuilder<AllCompanyBloc,AllCompanyStates>(
        bloc: _allCompanyBloc,
        builder: (context,state) {
-         print('_______________________');
-         print(state);
          if(state is AllCompanySuccessState){
-
            List<CompanyModel>companies =  state.data;
-           // stores.forEach((store) {
-           //
-           //   store.zones.forEach((element) {
-           //     zones.add(SearchModel(storeId: store.id, zoneName: element.name));
-           //   });
-           // });
-
            final suggestionList = companies.where((element) =>element.name.startsWith(query) ).toList();
 
            return ListView.builder(
@@ -577,7 +541,7 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
                itemBuilder: (context,index){
                  return ListTile(leading: Icon(Icons.location_city),
                    onTap: (){
-                    //close(context, suggestionList[index]);
+                    //close();
                      CompanyArgumentsRoute argumentsRoute = CompanyArgumentsRoute();
                      argumentsRoute.companyId = suggestionList[index].id;
                      argumentsRoute.companyImage = suggestionList[index].imageUrl;

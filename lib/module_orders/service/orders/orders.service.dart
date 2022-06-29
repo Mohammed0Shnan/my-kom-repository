@@ -86,7 +86,7 @@ class OrdersService {
     orderModel.addressName = response.addressName;
     orderModel.destination = response.destination;
     orderModel.phone = response.phone;
-    orderModel.startDate = DateTime.parse(response.startDate) ;
+    orderModel.startDate = DateFormat('yyyy-MM-dd HH-mm').parse(response.startDate) ;
     orderModel.numberOfMonth = response.numberOfMonth;
     orderModel.deliveryTime = response.deliveryTime;
     orderModel.cardId = response.cardId;
@@ -138,6 +138,11 @@ class OrdersService {
 
     late CreateOrderRequest orderRequest;
 
+    /// generate sequence id;
+    ///
+
+    int? customer_order_id = await _orderRepository.generateOrderID();
+
     if(!reorder){
       Map<ProductModel,int> productsMap = Map<ProductModel,int>();
       products.forEach((element) {
@@ -153,8 +158,6 @@ class OrdersService {
       String description = '';
       List<String> products_ides = [];
 
-      print('+++++++++++++++++++++++++++++++++++++');
-
       productsMap.forEach((key, value) {
        key.orderQuantity = value;
 
@@ -163,15 +166,9 @@ class OrdersService {
         products_ides.add(key.id);
 
       });
-      print('+++++++++++++++++++++++++++++++++++++');
 
-      newproducts.forEach((element) {
-        print(element.orderQuantity);
-      });
 
-      /// generate sequence id;
-      ///
-       int? customer_order_id = await _orderRepository.generateOrderID();
+
        if(customer_order_id== null)
          throw Exception();
 
@@ -185,7 +182,7 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate: DateFormat('yyyy-MM-dd').format(date)  ,
+          startDate: DateFormat('yyyy-MM-dd HH-mm').format(date)  ,
           description:description.substring(0 , description.length-2),
           addressName :addressName,
           cardId:cardId,
@@ -195,11 +192,10 @@ class OrdersService {
 
       );
       orderRequest.status = OrderStatus.INIT.name;
-      print('request for create order');
-      print(orderRequest);
     }
     else{
-
+      if(customer_order_id== null)
+        throw Exception();
       orderRequest = CreateOrderRequest(
           userId: uId!,
           vipOrder: orderType,
@@ -210,11 +206,11 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate: DateFormat('yyyy-MM-dd').format(date),
+          startDate: DateFormat('yyyy-MM-dd HH-mm').format(date),
           description:description!,
           addressName :addressName,
           cardId:cardId,
-        customerOrderID: customerOrderID!.bitLength,
+        customerOrderID:customer_order_id ,
         productsIdes: productsIds!
       );
 

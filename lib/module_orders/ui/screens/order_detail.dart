@@ -163,6 +163,46 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         children: [
                           Row(
                             children: [
+                              Icon(Icons.check,color: Colors.blue,),
+                              SizedBox(width: 5,),
+                              Text('Quick order: ',style: GoogleFonts.lato(
+                                  letterSpacing: 1,
+                                  fontSize:18,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w600),),
+                            ],
+                          ),
+                          SizedBox(width: 8,),
+                          Padding(padding: EdgeInsets.symmetric(horizontal: 10),
+                            child:Text(order.vipOrder?'Yes' :'No',style: GoogleFonts.lato(
+                                fontSize: 16,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.bold
+                            )),
+                          )
+
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15,),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          boxShadow: [BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5,
+                              offset: Offset(0,2)
+                          )]
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
                               Icon(Icons.price_change_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
                               Text('Price : ',style: GoogleFonts.lato(
@@ -184,7 +224,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ],
                       ),
                     ),
-
 
                     SizedBox(height: 15,),
                     Container(
@@ -301,7 +340,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           SizedBox(width: 8,),
                           Padding(padding: EdgeInsets.symmetric(horizontal: 10),
-                            child:    Text(DateFormat('yyyy-MM-dd : hh-mm').format(order.startDate!),style: GoogleFonts.lato(
+                            child:    Text(DateFormat('yyyy-MM-dd : HH-mm').format(order.startDate!),style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Colors.black45,
                                 fontWeight: FontWeight.bold
@@ -465,7 +504,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               crossAxisCount: 3,
               crossAxisSpacing: 15,
               mainAxisSpacing: 15,
-              childAspectRatio: 0.6,
+              childAspectRatio: 0.7,
               children: List.generate(
                   items.length,
                       (index){
@@ -481,12 +520,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               },
                               child: Badge(
                                 badgeContent: Container(
-                                  height: SizeConfig.heightMulti * 3.5,
-                                  width: SizeConfig.heightMulti * 3.5,
-                                  child: Center(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  height: SizeConfig.heightMulti * 2.5,
+                                  width: SizeConfig.heightMulti * 2.5,
+                                  child:
+                                  Center(
                                     child: Text(items[index].orderQuantity.toString(),
                                     style: TextStyle(color: Colors.white,
-                                    fontSize: SizeConfig.titleSize * 2.8,
+                                    fontSize: SizeConfig.titleSize * 2.3,
                                       fontWeight: FontWeight.w600
                                     ),
                                     ),

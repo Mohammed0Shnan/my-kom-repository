@@ -13,6 +13,7 @@ import 'package:my_kom/module_authorization/response/login_response.dart';
 import 'package:my_kom/module_authorization/response/register_response.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/utils/logger/logger.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthService {
   final AuthRepository _repository = new AuthRepository();
@@ -26,6 +27,9 @@ class AuthService {
   Future<String?> get userID => _prefsHelper.getUserId();
 
   Future<UserRole?> get userRole => _prefsHelper.getRole();
+
+  final PublishSubject<AuthResponse> phoneVerifyPublishSubject =
+  new PublishSubject();
 
 Future<AppUser>  getCurrentUser()async{
     String? id = await _prefsHelper.getUserId();
@@ -211,6 +215,7 @@ Future<AppUser>  getCurrentUser()async{
   }
 
   void fakeAccount() {
+  print('fake account');
     FirebaseAuth.instance.currentUser!.delete();
   }
 
@@ -245,33 +250,30 @@ Future<AppUser>  getCurrentUser()async{
 
   }
 
-  Future<bool> verifyWithPhone(String phone) async{
+  Future verifyWithPhone(String phone) async{
   try{
-    bool res = false;
     await _auth.verifyPhoneNumber(
         phoneNumber: phone,
         verificationCompleted: (authCredentials) {
           _auth.signInWithCredential(authCredentials).then((credential) {
+          //  phoneVerifyPublishSubject.add(AuthResponse(message:'AUTHORIZED', status: AuthStatus.AUTHORIZED));
+
           });
         },
         verificationFailed: (err) {
-          res = false;
-          // _authSubject.addError(err);
+
+          phoneVerifyPublishSubject.add(AuthResponse(message: err.message!, status: AuthStatus.UNAUTHORIZED));
         },
-        codeSent: (String? verificationId, int? forceResendingToken) {
-          print('ccccccccccccccccccccc');
-          print(verificationId!);
-          _verificationCode = verificationId!;
-          res =true;
-          //_authSubject.add(AuthStatus.CODE_SENT);
+        codeSent: (String verificationId, int? forceResendingToken) {
+          _verificationCode = verificationId;
+
+          phoneVerifyPublishSubject.add(AuthResponse(message: 'CODE SENT', status:AuthStatus.CODE_SENT));
         },
         codeAutoRetrievalTimeout: (verificationId) {
-          res = false;
-          // _authSubject.add(AuthStatus.CODE_TIMEOUT);
+          phoneVerifyPublishSubject.add(AuthResponse(message: 'CODE TIMEOUT', status:AuthStatus.CODE_TIMEOUT));
         });
-    return res;
   }catch(e){
-    return false;
+    phoneVerifyPublishSubject.add(AuthResponse(message:'Error', status: AuthStatus.UNAUTHORIZED));
   }
 
   }

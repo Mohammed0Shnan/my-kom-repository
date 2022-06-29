@@ -5,14 +5,14 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
-class PrivacyMyKomScreen extends StatefulWidget {
-  const PrivacyMyKomScreen({Key? key}) : super(key: key);
+class DeliveryPolicyScreen extends StatefulWidget {
+  const DeliveryPolicyScreen({Key? key}) : super(key: key);
 
   @override
-  State<PrivacyMyKomScreen> createState() => _PrivacyMyKomScreenState();
+  State<DeliveryPolicyScreen> createState() => _DeliveryPolicyScreenState();
 }
 
-class _PrivacyMyKomScreenState extends State<PrivacyMyKomScreen> {
+class _DeliveryPolicyScreenState extends State<DeliveryPolicyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +20,7 @@ class _PrivacyMyKomScreenState extends State<PrivacyMyKomScreen> {
       appBar: AppBar(
         backgroundColor: ColorsConst.mainColor,
         elevation: 0,
-        title: Text(S.of(context)!.privacyPolicy),
+        title: Text(S.of(context)!.deliveryPolicy),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -38,26 +38,25 @@ class _PrivacyMyKomScreenState extends State<PrivacyMyKomScreen> {
 
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.05,),
-              Text(S.of(context)!.privacyAppSubTitle,
-              style: GoogleFonts.lato(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18
+              Text(S.of(context)!.privacyDeliveryAppTitleDescription,
+                style: GoogleFonts.lato(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18
+                ),
               ),
-              ),
-              SizedBox(height: 10,),
-              Text(S.of(context)!.privacyAppSubTitle,
+              SizedBox(height: 10,)
+              ,
+              Text(S.of(context)!.privacyDeliveryAppSubTitleDescription,
                 style: GoogleFonts.lato(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 16
                 ),
-              ),
-
-
+              )
             ],
           ),
-        ),
+        )
       ),
     );
   }

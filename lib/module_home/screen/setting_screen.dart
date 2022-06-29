@@ -6,13 +6,14 @@ import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_home/screen/about_my_kom_screen.dart';
 import 'package:my_kom/module_home/screen/connect_us_screen.dart';
 import 'package:my_kom/module_home/screen/privacy_my_kom_screen.dart';
-import 'package:my_kom/module_home/screen/usage_policy_screen.dart';
-import 'package:my_kom/module_home/widgets/menu_item.dart';
+import 'package:my_kom/module_home/screen/delivery_policy_screen.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  final  LocalizationService localizationService ;
+  const SettingScreen({required this.localizationService,Key? key}) : super(key: key);
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -20,7 +21,6 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   final AuthService _authService = AuthService();
-  final LocalizationService _localizationService = LocalizationService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +31,9 @@ class _SettingScreenState extends State<SettingScreen> {
             SizedBox(height: 30,),
             Expanded(
               child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
-              childAspectRatio: 1,
-                crossAxisSpacing: 30,
-                mainAxisSpacing: 20
+                childAspectRatio:1,
+                crossAxisSpacing: SizeConfig.widhtMulti *6,
+                mainAxisSpacing:  SizeConfig.widhtMulti *5,
               ),
 
               children: [
@@ -49,13 +49,14 @@ class _SettingScreenState extends State<SettingScreen> {
                     )]
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Icon(Icons.language_outlined ,color: ColorsConst.mainColor,size: 7* SizeConfig.heightMulti),
+                      Icon(Icons.language_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: BlocBuilder<LocalizationService,LocalizationState>(
-                            bloc: _localizationService ,
+                            bloc: widget.localizationService ,
                             builder: (context, state){
                               String lang ;
                               if(state is LocalizationArabicState){
@@ -64,25 +65,23 @@ class _SettingScreenState extends State<SettingScreen> {
                                 lang = 'en';
                               }
                               return DropdownButtonFormField<String>(
-
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
 
                                   ),
-
                                   items: [
                                     DropdownMenuItem(
-                                      child: Text('arabic',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
+                                      child: Text('العربية',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
                                       value: 'ar',
                                     ),
                                     DropdownMenuItem(
-                                      child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
+                                      child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
                                       value: 'en',
                                     ),
                                   ],
                                   value: lang,
                                   onChanged: (String? newLang) {
-                                    _localizationService.setLanguage(newLang!);
+                                    widget.localizationService.setLanguage(newLang!);
                                   });
                             },
                           ),
@@ -107,9 +106,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('Setting', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.settings, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 
@@ -133,9 +132,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.info_outline ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.info_outline ,color: ColorsConst.mainColor,size:5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('About', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.aboutApp, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 
@@ -158,9 +157,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('Privacy', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.privacyPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 
@@ -169,7 +168,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
                 GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> UsagePolicyScreen() ));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> DeliveryPolicyScreen() ));
 
                   },
                   child: Container(
@@ -185,9 +184,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('Policy', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.deliveryPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 
@@ -211,9 +210,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('Connect', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.contactUs, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 
@@ -238,9 +237,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 7 * SizeConfig.heightMulti),
+                        Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.6 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.logout, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
                       ],
                     ),
 

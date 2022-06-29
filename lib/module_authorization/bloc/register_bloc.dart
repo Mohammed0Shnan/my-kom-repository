@@ -55,14 +55,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterStates> {
   });
  }
 
-  Future<bool> confirmCaptainCode(String smsCode) async{
-  return  _service.confirmWithCode(smsCode).then((value) {
-      if(value.status == AuthStatus.AUTHORIZED){
-        return true;
-      }else
-        return false;
-    });
-  }
+
 
   void deleteFakeAccount() {
     _service.fakeAccount();
@@ -71,34 +64,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterStates> {
 
   ///
 ///
-  Future<bool> registerPhoneNumber(String phoneNumber)async {
-    // _authService.authListener.listen((event) {
-    //   switch (event) {
-    //     case AuthStatus.AUTHORIZED:
-    //       _aboutService.setInited().then((value) {
-    //         _registerStateSubject.add(
-    //             RegisterStateSuccess(_registerScreenState));
-    //       });
-    //       break;
-    //     case AuthStatus.CODE_SENT:
-    //       _registerStateSubject
-    //           .add(RegisterStatePhoneCodeSent(_registerScreenState));
-    //       break;
-    //     case AuthStatus.CODE_TIMEOUT:
-    //       _registerStateSubject
-    //           .add(RegisterStateError(_registerScreenState, 'Code Timeout'));
-    //       break;
-    //     default:
-    //       _registerStateSubject.add(RegisterStateInit(_registerScreenState));
-    //       break;
-    //   }
-    // }).onError((err) {
-    //   _registerStateSubject
-    //       .add(RegisterStateError(_registerScreenState, err.toString()));
-    // });
 
-  return await _service.verifyWithPhone(phoneNumber);
-  }
 
 }
 

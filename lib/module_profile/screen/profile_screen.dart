@@ -10,6 +10,7 @@ import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/module_profile/bloc/profile_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -131,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                             SizedBox(height: 5,),
-                            Text('My\nProfile',textAlign: TextAlign.center,style: TextStyle(
+                            Text(S.of(context)!.myProfile,textAlign: TextAlign.center,style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold
@@ -248,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   SizedBox(height: 20,),
 
-                                  Text('My Information',style:  TextStyle(
+                                  Text(S.of(context)!.myInformation,style:  TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[600]
@@ -270,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text('My Address',style:  TextStyle(
+                                        Text(S.of(context)!.myAddress,style:  TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey[600]
@@ -350,7 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,                            children: [
-                                      Text('Email And Phone',style:  TextStyle(
+                                      Text(S.of(context)!.emailAndPhone,style:  TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey[600]
@@ -376,26 +377,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         children: [
                                           Icon(Icons.phone , color: ColorsConst.mainColor),
                                           SizedBox(width: 10,),
-                                          Expanded(
-                                            child: TextFormField(
+                                          Text(state.data.phone,style:  TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[600]
+                                          ),),
 
-                                              controller: _profilePhoneController,
-                                              keyboardType: TextInputType.number,
-                                              style: TextStyle(
-                                                  fontSize:16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey[700]
-                                              ),
-
-                                              decoration: InputDecoration(
-                                                suffixIcon: (!isEditingProfile)?null:Icon(Icons.edit,color: Colors.black,),
-                                                border: InputBorder.none,
-                                                //S.of(context).name,
-                                              ),
-                                              textInputAction: TextInputAction.next,
-                                              // Move focus to next
-                                            ),
-                                          ),
 
                                         ],
                                       )

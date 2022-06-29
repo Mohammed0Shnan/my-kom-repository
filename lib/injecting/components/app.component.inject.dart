@@ -2,11 +2,8 @@ import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/main.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_about/screen/language_screen.dart';
-import 'package:my_kom/module_about/screen/next_splash_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
-import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
-import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
@@ -23,6 +20,7 @@ import 'package:my_kom/module_dashbord/screen/dash_bord_screen.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
+import 'package:my_kom/module_home/screen/setting_screen.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/map_module.dart';
@@ -73,33 +71,29 @@ class AppComponentInjector implements AppComponent {
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
   NavigatorModule _createNavigatorModule() {
-
     _singletonCompanyService ??= CompanyService();
-
     return NavigatorModule( NavigatorScreen(
         homeScreen: HomeScreen(mapBloc: MapBloc(),filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singletonCompanyService!),
             recommendedProductsCompanyBloc: RecommendedProductsCompanyBloc(_singletonCompanyService!),
           checkZoneBloc: CheckZoneBloc(_singletonCompanyService!),
           isInit: true,
             ),
-        orderScreen:  CaptainOrdersScreen()
-      //profileScreen: ProfileScreen(),
+        orderScreen: CaptainOrdersScreen(),
+        profileScreen: ProfileScreen(),
+        shopScreen:ShopScreen(),
+        settingScreen: SettingScreen(localizationService:_singletonLocalizationService!),
     ),
-
-
     );
   }
 
   AuthorizationModule _createAuthorizationModule() =>
-      AuthorizationModule(LoginScreen(), RegisterScreen());
+      AuthorizationModule( LoginScreen(), RegisterScreen() );
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
   OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OwnerOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
   DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(),PriductDetailScreen());
-
-
   MyApp get app {
     return _createApp();
   }

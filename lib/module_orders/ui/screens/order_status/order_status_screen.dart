@@ -12,11 +12,6 @@ import 'package:timelines/timelines.dart';
 
 class OrderStatusScreen extends StatefulWidget {
 
-
-  // OrderStatusScreen(
-  //   this._stateManager,
-  // );
-
   @override
   OrderStatusScreenState createState() => OrderStatusScreenState();
 }

@@ -13,6 +13,7 @@ import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginBloc _loginBloc = LoginBloc();
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 10,),
                 Center(
-                  child: Text('Welcome',style: GoogleFonts.lato(
+                  child: Text(S.of(context)!.welcome,style: GoogleFonts.lato(
                     color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 4,),
                 Center(
-                  child: Text('Sign in to continue',style: GoogleFonts.lato(
+                  child: Text(S.of(context)!.signInToContinue,style: GoogleFonts.lato(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 18,
                       fontWeight: FontWeight.bold
@@ -102,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: ListTile(
                                 title: Padding(
                                     padding: EdgeInsets.only(bottom: 8),
-                                    child: Text('EMAIL',style:GoogleFonts.lato(
+                                    child: Text(S.of(context)!.email,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black54,
                                         fontSize: SizeConfig.titleSize * 2.2
@@ -125,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                           borderRadius: BorderRadius.circular(10)
                                         ),
-                                        hintText: 'Email',
+                                        hintText: S.of(context)!.email,
                                         hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                       //S.of(context).name,
                                     ),
@@ -134,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     validator: (result) {
                                       if (result!.isEmpty) {
-                                        return 'Email Address is Required'; //S.of(context).nameIsRequired;
+                                        return  S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
                                       }
                                       if (!_validateEmailStructure(result))
                                         return 'Must write an email address';
@@ -154,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: ListTile(
                               title: Padding(
                                   padding: EdgeInsets.only(bottom: 8),
-                                  child: Text('PASSWORD',style:GoogleFonts.lato(
+                                  child: Text( S.of(context)!.password,style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black54,
                                       fontSize: SizeConfig.titleSize * 2.2
@@ -192,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             ),
                                             borderRadius: BorderRadius.circular(10)
                                         ),
-                                        hintText: 'Password',
+                                        hintText:  S.of(context)!.password,
                                         hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                     ),
                                     obscureText:
@@ -205,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     // Move focus to next
                                     validator: (result) {
                                       if (result!.isEmpty) {
-                                        return '* Password is Required'; //S.of(context).emailAddressIsRequired;
+                                        return  S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
                                       }
                                       if (result.length < 8) {
                                         return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
@@ -232,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Container(
                                 padding: EdgeInsets.only(
                                     right: 2.345 * SizeConfig.heightMulti),
-                                child: Text('Forgot password ?',
+                                child: Text( S.of(context)!.forgotPassword,
                                     style: GoogleFonts.lato(
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black54,
@@ -302,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     .login(email, password);
                                               }
                                             },
-                                            child: Text('LOGIN',
+                                            child: Text( S.of(context)!.login,
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize:
@@ -318,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Don\'t have an account ?  ',
+                                  S.of(context)!.dontHaveAnAccount,
                                   style:  GoogleFonts.lato(
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black45,
@@ -333,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         arguments: UserRole.ROLE_USER
                                     );
                                   },
-                                  child: Text('Create an account',
+                                  child: Text( S.of(context)!.createAccount,
                                       style:  GoogleFonts.lato(
                                           fontSize: SizeConfig.titleSize * 2.5,
                                           fontWeight: FontWeight.bold,

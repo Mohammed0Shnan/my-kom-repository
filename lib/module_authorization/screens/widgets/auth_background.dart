@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:my_kom/module_about/widgets/custom_clipper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
 class AuthBackground extends StatelessWidget {

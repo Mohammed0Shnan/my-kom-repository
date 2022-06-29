@@ -15,7 +15,7 @@ class ProductShimmerList extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 15,
             mainAxisSpacing: 15,
-            childAspectRatio: 0.6,
+            childAspectRatio: 0.7,
             children: List.generate(
               4,
               (index) => Container(

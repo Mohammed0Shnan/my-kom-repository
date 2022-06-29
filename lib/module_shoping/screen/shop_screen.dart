@@ -14,6 +14,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/consts/delivery_times.dart';
 import 'package:my_kom/consts/payment_method.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
@@ -34,6 +35,7 @@ import 'package:my_kom/module_shoping/models/card_model.dart';
 import 'package:my_kom/module_shoping/service/stripe.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class ShopScreen extends StatefulWidget {
    ShopScreen({Key? key}) : super(key: key);
@@ -66,10 +68,6 @@ class _ShopScreenState extends State<ShopScreen> {
         storeId = store;
         AuthPrefsHelper().getAddress().then((address) {
           if(address != null){
-            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-            print(address.description);
-            print('!!!!!!!!!!!!!!!!!!!!!!!!!');
-
             _getSubAreaForAddress(null);
           }
         });
@@ -90,17 +88,7 @@ class _ShopScreenState extends State<ShopScreen> {
   late String storeId;
   int currentIndex = 0;
 
-  List<String> nowTitle = [
-    'Details and price of the shipment',
-    'Destination and Request Type',
-    'Shipping details and Pay',
-  ];
 
-  List<String> nextTitle = [
-    'Next is the destination ,request type',
-    'Next is shipping details and Pay',
-    'Next is order confirmation',
-  ];
   double stateAngle = 0;
   double endAngle = 0;
 
@@ -108,7 +96,6 @@ class _ShopScreenState extends State<ShopScreen> {
   late List<ProductModel> requestProduct;
   String deliveryTimesGroupValue = DeliveryTimesConst.ONE;
   int numberOfMonth = 0;
-  DateTime? _expiry_date = DateTime.now();
   late AddressModel addressModel ;
   late String phoneNumber = '';
   late String paymentGroupValue = '';
@@ -133,6 +120,17 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext maincontext) {
+    List<String> nowTitle = [
+      S.of(context)!.titlePageOne,
+      S.of(context)!.titlePageTow,
+      S.of(context)!.titlePageThree,
+    ];
+
+    List<String> nextTitle = [
+      S.of(context)!.subTitlePageOne,
+      S.of(context)!.subTitlePageTow,
+      S.of(context)!.subTitlePageThree,
+    ];
     switch (currentIndex) {
       case 0:
         {
@@ -176,8 +174,12 @@ class _ShopScreenState extends State<ShopScreen> {
         ),
         elevation: 0,
         title: Text(
-          'Shopping Cart',
-          style: TextStyle(color: Colors.black),
+            S.of(context)!.shoppingCart,
+            style: GoogleFonts.lato(
+        fontSize: 23,
+            fontWeight: FontWeight.bold,
+            color: Colors.black54
+        )
         ),
       ),
 
@@ -186,7 +188,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Column(
               children: [
                 Container(
-                  height: 11 * SizeConfig.heightMulti,
+                  height: 12 * SizeConfig.heightMulti,
                   decoration: BoxDecoration(
 
                       color: Colors.white,
@@ -240,7 +242,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                             shape: BoxShape.circle,
                                             color: Colors.white),
                                         child: Center(child: Text(
-                                          '${currentIndex + 1} of 4',
+                                          '${currentIndex + 1} ${S.of(context)!.ofStepper} 4',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               color: ColorsConst.mainColor),)),
@@ -261,12 +263,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                     fontWeight: FontWeight.w600,
                                     fontSize: SizeConfig.titleSize * 2.5)),
                             SizedBox(
-                              height: 8,
+                              height: 6,
                             ),
-                            Text(nextTitle[currentIndex],
-                                style: TextStyle(
-                                    color: Colors.black45,
-                                    fontSize: SizeConfig.titleSize * 2.1))
+                            Expanded(
+                              child: Text(nextTitle[currentIndex],
+                                  style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: SizeConfig.titleSize * 2.1)),
+                            )
                           ],
                         ),
                       ),
@@ -310,11 +314,17 @@ class _ShopScreenState extends State<ShopScreen> {
             width: 10,
             decoration: BoxDecoration(
                 color: ColorsConst.mainColor,
-                borderRadius: BorderRadius.only(
+                borderRadius:UtilsConst.lang == 'en'? BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
 
-                )),
+                ):
+                BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+
+                )
+            ),
           ),
           Expanded(
             child: Container(
@@ -473,7 +483,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             child: Image.asset('assets/empty_cart.jpg'),
                           ),
                           SizedBox(height: 4,),
-                          Text('Add Products',style: GoogleFonts.lato(
+                          Text( S.of(context)!.emptyShip,style: GoogleFonts.lato(
                             color: Colors.black45,
                             fontSize: 18,
                             fontWeight: FontWeight.bold
@@ -512,7 +522,7 @@ class _ShopScreenState extends State<ShopScreen> {
             children: [
               Divider(height: 1, color: Colors.black38, thickness: 1),
               SizedBox(height: 10,),
-              Text('Payment Summary',
+              Text(S.of(context)!.paymentSummary,
                   style: GoogleFonts.lato(fontSize: SizeConfig.titleSize * 2.5,
                       fontWeight: FontWeight.w800,
                       color: Colors.black54)
@@ -521,7 +531,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total ', style: GoogleFonts.lato(
+                  Text(S.of(context)!.total, style: GoogleFonts.lato(
                       fontSize: SizeConfig.titleSize * 2.3,
                       fontWeight: FontWeight.w800,
                       color: Colors.black54),),
@@ -567,7 +577,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 builder: (context,AsyncSnapshot<double?> snap){
                                   if(snap.hasData){
                                     return      Text(
-                                        'Minimum order is  ${snap.data}  AED ', style: GoogleFonts
+                                        '${S.of(context)!.minimumAlert}  ${snap.data}  AED ', style: GoogleFonts
                                         .lato(fontSize: SizeConfig.titleSize * 2.3,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.red));
@@ -577,7 +587,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                      },
                                      child: Text(
-                                          'Minimum download error Click here to update to complete purchase',
+                                         S.of(context)!.minimumAlert ,
                                          textAlign: TextAlign.center,
                                          style: GoogleFonts
                                           .lato(fontSize: SizeConfig.titleSize * 1.9,
@@ -605,7 +615,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         ),
         Container(
-          height: 6.78 * SizeConfig.heightMulti,
+          height: 6 * SizeConfig.heightMulti,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -628,7 +638,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=>false);
                       },
-                      child: Text('Add More', style: TextStyle(
+                      child: Text(S.of(context)!.addMore, style: TextStyle(
                           color: ColorsConst.mainColor,
                           fontSize: SizeConfig.titleSize * 2.7),),
 
@@ -659,7 +669,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             curve: Curves.ease);
                      // }
                     },
-                    child: Text('Next', style: TextStyle(color: Colors.white,
+                    child: Text(S.of(context)!.next, style: TextStyle(color: Colors.white,
                         fontSize: SizeConfig.titleSize * 2.7),),
 
                   ),
@@ -744,7 +754,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     child: Image.asset('assets/icons/address_delivery_icon.png',fit: BoxFit.contain,)),
                               ),
                               SizedBox(width: 10,),
-                              Text('Destination',style: TextStyle(
+                              Text(S.of(context)!.destination,style: TextStyle(
                                   fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
 
                             ],
@@ -764,12 +774,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                 ///
 
                                 LatLng latlang = LatLng(addressModel.latitude,addressModel.longitude);
-                                print('========== address from map ========');
                                 _getSubAreaForAddress(latlang);
                               }
 
                             });
-                          }, child: Text('Change'))
+                          }, child: Text(S.of(context)!.change))
 
                         ],
                       ),
@@ -779,7 +788,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         children: [
                           Icon(Icons.location_on_outlined,color: Colors.blue,),
                           SizedBox(width: 5,),
-                          Text('street :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
+                          Text('${S.of(context)!.street} :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
                           SizedBox(width: 10,),
                           Expanded(
                             child: Container(
@@ -863,7 +872,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               children: [
                                 Icon(Icons.phone,color: Colors.blue,),
                                 SizedBox(width: 5,),
-                                Text('phone number :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
+                                Text('${S.of(context)!.phone} :',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black45,fontSize: SizeConfig.titleSize * 2.5),),
                                 SizedBox(width: 10,),
 
                                 Text(phoneNumber,style: TextStyle(
@@ -898,7 +907,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             ),
                             child:
                             Center(child: Text(
-                                'Please choose an destination that belongs to the export area',
+                                S.of(context)!.destinationAlert,
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts
                                     .lato(fontSize: SizeConfig.titleSize * 2.3,
@@ -974,7 +983,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     //     child: Image.asset('assets/summary_shopping.png')),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text('MyKom Express Service',
+                                  Text(S.of(context)!.myKomExpressService,
                                       style: GoogleFonts.lato(
                                           fontSize: SizeConfig.titleSize * 2.5,
                                           fontWeight: FontWeight.w800,
@@ -985,7 +994,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                               SizedBox(height: 12,),
 
-                              Text('Activating the mykom express feature will speed up the delivery of your order and increase the payment fee of 10.0 ِAED', style: GoogleFonts.lato(
+                              Text(S.of(context)!.myKomExpressServiceMessageEnable, style: GoogleFonts.lato(
                                   fontSize: SizeConfig.titleSize * 1.9,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black54),),
@@ -994,7 +1003,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('MyKom Express', style: GoogleFonts.lato(
+                                  Text(S.of(context)!.myKomExpress, style: GoogleFonts.lato(
                                       fontSize: SizeConfig.titleSize * 2.2,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black54),),
@@ -1057,7 +1066,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     //     child: Image.asset('assets/summary_shopping.png')),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text('MyKom Express Service',
+                                  Text(S.of(context)!.myKomExpressService,
                                       style: GoogleFonts.lato(
                                           fontSize: SizeConfig.titleSize * 2.5,
                                           fontWeight: FontWeight.w800,
@@ -1067,7 +1076,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               ),
 
                               SizedBox(height: 12,),
-                              Text('MyKom express service feature is currently disabled', style: GoogleFonts.lato(
+                              Text(S.of(context)!.myKomExpressServiceMessageDisable, style: GoogleFonts.lato(
                                   fontSize: SizeConfig.titleSize * 2.2,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black54),),
@@ -1076,7 +1085,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('MyKom Express', style: GoogleFonts.lato(
+                                  Text(S.of(context)!.myKomExpress, style: GoogleFonts.lato(
                                       fontSize: SizeConfig.titleSize * 2.2,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black54),),
@@ -1110,7 +1119,7 @@ class _ShopScreenState extends State<ShopScreen> {
         ),
 
         Container(
-          height: 6.78 * SizeConfig.heightMulti,
+          height: 6 * SizeConfig.heightMulti,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -1136,10 +1145,9 @@ class _ShopScreenState extends State<ShopScreen> {
                         curve: Curves.easeInOut,
                       );
                     },
-                    child: Text('Previous', style: TextStyle(
+                    child: Text(S.of(context)!.back, style: TextStyle(
                         color: ColorsConst.mainColor,
                         fontSize: SizeConfig.titleSize * 2.7),),
-
                   ),
                 ),
               ),
@@ -1166,7 +1174,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           curve: Curves.ease);
                       // }
                     },
-                    child: Text('Next', style: TextStyle(color: Colors.white,
+                    child: Text(S.of(context)!.next, style: TextStyle(color: Colors.white,
                         fontSize: SizeConfig.titleSize * 2.7),),
 
                   ),
@@ -1195,7 +1203,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 8),
                   padding: EdgeInsets.all(8),
-                  height: SizeConfig.screenHeight*0.23,
+                  height: SizeConfig.screenHeight*0.25,
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                       color: Colors.white ,
@@ -1247,7 +1255,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             ),
                           ),
                           SizedBox(width: 10,),
-                          Text('Payment Summary',
+                          Text(S.of(context)!.paymentSummary,
                               style: GoogleFonts.lato(
                                   fontSize: SizeConfig.titleSize * 2.5,
                                   fontWeight: FontWeight.w800,
@@ -1260,7 +1268,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total ', style: GoogleFonts.lato(
+                          Text(S.of(context)!.total, style: GoogleFonts.lato(
                               fontSize: SizeConfig.titleSize * 2.2,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),),
@@ -1288,7 +1296,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Extra charge ', style: GoogleFonts.lato(
+                          Text(S.of(context)!.extraCharge, style: GoogleFonts.lato(
                               fontSize: SizeConfig.titleSize * 2.2,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),),
@@ -1317,7 +1325,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(' Order Value ', style: GoogleFonts.lato(
+                          Text(S.of(context)!.orderValue, style: GoogleFonts.lato(
                               fontSize: SizeConfig.titleSize * 2.2,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),),
@@ -1377,7 +1385,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   builder: (context,AsyncSnapshot<double?> snap){
                                     if(snap.hasData){
                                       return      Text(
-                                          'Minimum order is  ${snap.data}  AED ', style: GoogleFonts
+                                          '${S.of(context)!.minimumAlert}  ${snap.data}  AED ', style: GoogleFonts
                                           .lato(fontSize: SizeConfig.titleSize * 2.3,
                                           fontWeight: FontWeight.w800,
                                           color: Colors.red));
@@ -1387,7 +1395,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                         },
                                         child: Text(
-                                            'Minimum download error Click here to update to complete purchase',
+                                            S.of(context)!.minimumAlert,
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts
                                                 .lato(fontSize: SizeConfig.titleSize * 1.9,
@@ -1460,7 +1468,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
                           ),
                           SizedBox(width: 10,),
-                          Text('Payment Methods',
+                          Text(S.of(context)!.paymentMethods,
 
                               style: GoogleFonts.lato(
                                   fontSize: SizeConfig.titleSize * 2.5,
@@ -1529,7 +1537,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     Container(
                                         padding: EdgeInsets.all(3),
 
-                                        child:    Text('Cash Money', style: GoogleFonts.lato(
+                                        child:    Text(S.of(context)!.cashMoney, style: GoogleFonts.lato(
                                                   color: Colors.black54,
                                                   fontSize: SizeConfig.titleSize * 2.2,
                                                   fontWeight: FontWeight.bold
@@ -1593,7 +1601,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     Container(
                                         padding: EdgeInsets.all(3),
 
-                                        child:    Text('Credit card', style: GoogleFonts.lato(
+                                        child:    Text(S.of(context)!.creditCard, style: GoogleFonts.lato(
                                             color: Colors.black54,
                                             fontSize: SizeConfig.titleSize * 2.2,
                                             fontWeight: FontWeight.bold
@@ -1619,7 +1627,7 @@ class _ShopScreenState extends State<ShopScreen> {
         ),
 
         Container(
-          height: 6.78 * SizeConfig.heightMulti,
+          height: 6* SizeConfig.heightMulti,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -1645,7 +1653,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         curve: Curves.easeInOut,
                       );
                     },
-                    child: Text('Previous', style: TextStyle(
+                    child: Text(S.of(context)!.back, style: TextStyle(
                         color: ColorsConst.mainColor,
                         fontSize: SizeConfig.titleSize * 2.7),),
 
@@ -1662,13 +1670,13 @@ class _ShopScreenState extends State<ShopScreen> {
                 child:paymentGroupValue != PaymentMethodConst.CASH_MONEY? MaterialButton(
                     onPressed: () {
                       if(paymentGroupValue ==''){
-                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Select Payment Method')));
+                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
                       }
                       else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
-                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Choose a correct destination')));
+                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
                       }
                       else if(orderNotComplete){
-                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Complete The Order')));
+                        _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
                       }
                       else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
                         GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
@@ -1799,7 +1807,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                   Icon(Icons.add),
                                                   SizedBox(width: 10,),
 
-                                                  Text('Add a card', style: GoogleFonts.lato(
+                                                  Text(S.of(context)!.addCard, style: GoogleFonts.lato(
                                                       color: Colors.black54,
                                                       fontSize: SizeConfig.titleSize * 2.6,
                                                       fontWeight: FontWeight.bold
@@ -1817,13 +1825,13 @@ class _ShopScreenState extends State<ShopScreen> {
                                               listener: (context,state)async{
                                                 if(state is CreateOrderSuccessState)
                                                 {
-                                                  snackBarSuccessWidget(context, 'Order Created Successfully!!');
+                                                  snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
                                                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
                                                   shopCartBloc.startedShop();
                                                 }
                                                 else if(state is CreateOrderErrorState)
                                                 {
-                                                  snackBarSuccessWidget(context, 'The Order Was Not Created!!');
+                                                  snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
                                                 }
                                               },
                                               builder: (context,state) {
@@ -1844,7 +1852,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                       cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
                                                       if(cardId ==''){
                                                         Fluttertoast.showToast(
-                                                            msg: "Select a card to pay",
+                                                            msg: S.of(context)!.selectCardAlert,
                                                             toastLength: Toast.LENGTH_LONG,
                                                             gravity: ToastGravity.TOP,
                                                             timeInSecForIosWeb: 1,
@@ -1854,29 +1862,13 @@ class _ShopScreenState extends State<ShopScreen> {
                                                         );
                                                       }
                                                       else{
-                                                        print('============= request =================');
-                                                        print('products : ');
-                                                        print(requestProduct);
-                                                        print('delivery time : ${deliveryTimesGroupValue}');
-                                                        print('month : ${numberOfMonth}');
-                                                        print('start date  : ${_expiry_date}');
-                                                        print('address date  : ${addressModel.description}');
-                                                        print('address date  : ${addressModel.latitude}');
-                                                        print('address date  : ${addressModel.longitude}');
-                                                        print('phone  : ${phoneNumber}');
-                                                        print('payment method : ${paymentGroupValue}');
-                                                        print('order value  : ${orderValue}');
-                                                        print('card id  : ${paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue}');
-                                                        print('============= request =================');
-
                                                         GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-                                                        _expiry_date = DateTime.now();
                                                         _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId);
 
                                                       }
 
                                                     },
-                                                    child: Text('Confirmation', style: TextStyle(color: Colors.white,
+                                                    child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
                                                         fontSize: SizeConfig.titleSize * 2.7),),
 
                                                   ),
@@ -1894,7 +1886,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         );
                       //  }
                     },
-                    child: Text('Next', style: TextStyle(color: Colors.white,
+                    child: Text(S.of(context)!.next, style: TextStyle(color: Colors.white,
                         fontSize: SizeConfig.titleSize * 2.7),)
 
                 ):BlocConsumer<NewOrderBloc,CreateOrderStates>(
@@ -1903,13 +1895,13 @@ class _ShopScreenState extends State<ShopScreen> {
                       if(state is CreateOrderSuccessState)
                       {
 
-                        snackBarSuccessWidget(context, 'Order Created Successfully!!');
+                        snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
                         shopCartBloc.startedShop();
                       }
                       else if(state is CreateOrderErrorState)
                       {
-                        snackBarSuccessWidget(context, 'The Order Was Not Created!!');
+                        snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
                       }
                     },
                     builder: (context,state) {
@@ -1928,35 +1920,21 @@ class _ShopScreenState extends State<ShopScreen> {
                         child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
                           onPressed: () {
                             if(orderNotComplete){
-                              _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Complete The Order')));
+                              _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
 
                             }
                             else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
-                              _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text('Choose a correct address')));
+                              _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
 
                             }
                             else{
-                              print('============= request =================');
-                              print('products : ');
-                              print(requestProduct);
-                              print('delivery time : ${deliveryTimesGroupValue}');
-                              print('month : ${numberOfMonth}');
-                              print('start date  : ${_expiry_date}');
-                              print('address date  : ${addressModel.description}');
-                              print('phone  : ${phoneNumber}');
-                              print('payment method : ${paymentGroupValue}');
-                              print('order value  : ${orderValue}');
-                              print('card id  : ${paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue}');
-                              print('============= request =================');
-
                               GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-                              _expiry_date = DateTime.now();
                               _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId);
 
                             }
 
                           },
-                          child: Text('Confirmation', style: TextStyle(color: Colors.white,
+                          child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
                               fontSize: SizeConfig.titleSize * 2.5
 
                           ),),

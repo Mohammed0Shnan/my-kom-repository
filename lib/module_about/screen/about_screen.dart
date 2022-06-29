@@ -2,17 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
-import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_about/bloc/page_view_animation_bloc.dart';
-import 'package:my_kom/module_about/widgets/background.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:lottie/lottie.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -46,21 +43,24 @@ class _AboutScreenState extends State<AboutScreen> {
   'assets/Delivery-Cristina.jpg'
 
   ];
-  final List<String> pageTitleInformations = [
-    'BRINGS YOUR IDEA LIFE',
-    'Pay easily',
-    'Shipping',
 
-  ];
-  final List<String> pageSubTitleInformations = [
-    'It is an application dedicated to helping you order your water from all companies and provides delivery to all Emirates',
-    'Payment in MyKom is easy and safe because it is through the application ',
-    'MyKom can deliver you anywhere in the Emirates quickly and easily',
-  ];
 
   int currentIndex =0;
   @override
   Widget build(BuildContext context) {
+
+    final List<String> pageTitleInformations = [
+      S.of(context)!.titlePageOne,
+      S.of(context)!.titlePageTow,
+      S.of(context)!.titlePageThree,
+
+    ];
+    final List<String> pageSubTitleInformations = [
+      S.of(context)!.subTitlePageOne,
+       S.of(context)!.subTitlePageTow,
+      S.of(context)!.subTitlePageThree,
+    ];
+
     return Scaffold(
 
       body: Stack(
@@ -138,6 +138,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 Spacer(),
                 GestureDetector(
                 onTap: (){
+                  AboutService().setInited();
                   Navigator.pushNamedAndRemoveUntil(
                       context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
                 },
@@ -146,7 +147,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     height: 60,
                     width: SizeConfig.screenWidth * 0.2,
 
-                    child: Text('SKIP',style: GoogleFonts.lato(
+                    child: Text( S.of(context)!.skip,style: GoogleFonts.lato(
                         color: Colors.blue,
                         fontSize: 16,
                         fontWeight: FontWeight.bold
@@ -248,63 +249,6 @@ class Page extends StatelessWidget {
                     ),
         ],
       )
-      // child: Column(children: [
-      //   Flexible(
-      //     flex: 4,
-      //     child: Column(
-      //       children: [
-      //         Container(
-      //             height: SizeConfig.screenHeight * .4,
-      //             child: Lottie.network(lottieUrl)),
-      //
-      //
-      //         Spacer()
-      //       ],
-      //     ),
-      //   ),
-      //
-      //   Flexible(
-      //     flex: 3,
-      //     child: Container(
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         children: [
-      //           SizedBox(
-      //             height: SizeConfig.screenHeight * 0.02,
-      //           ),
-      //           Text(
-      //             infoTitle,
-      //             style: GoogleFonts.lato(
-      //               fontSize: SizeConfig.titleSize * 3.5,
-      //               fontWeight: FontWeight.bold,
-      //               color: Colors.white
-      //
-      //             )
-      //           ),
-      //           SizedBox(
-      //             height: 20,
-      //           ),
-      //           Container(
-      //             padding: EdgeInsets.symmetric(
-      //                 horizontal: SizeConfig.heightMulti * 6),
-      //             child: Text(
-      //               infoSubTitle,
-      //               textAlign: TextAlign.center,
-      //               style: GoogleFonts.lato(
-      //
-      //                 fontSize: SizeConfig.titleSize * 2.4,
-      //                 fontWeight: FontWeight.w600,
-      //                 color: Colors.white.withOpacity(0.7)
-      //
-      //
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-         // ),
-      //  ),
-      //]),
     );
   }
 }

@@ -6,3 +6,4 @@ class ColorsConst{
   static  Color Splash =HexColor("#469e7c");
   static const Color BACKGROUND = Colors.white;
 }
+

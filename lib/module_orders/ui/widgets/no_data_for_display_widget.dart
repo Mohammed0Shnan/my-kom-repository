@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class NoDataForDisplayWidget extends StatelessWidget {
   const NoDataForDisplayWidget({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class NoDataForDisplayWidget extends StatelessWidget {
                 ),
                 child: Image.asset('assets/empity.png',fit: BoxFit.fill,)),
             SizedBox(height: 10,),
-            Text('No data to display',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
+            Text(S.of(context)!.noDataToDisplay,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
           ],
         ));
   }

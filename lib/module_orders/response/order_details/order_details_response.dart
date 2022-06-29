@@ -48,7 +48,6 @@ class OrderDetailResponse {
     this.products = productFromResponse;
 
     this.startDate = json['start_date'].toString();
-
     OrderStatus state = OrderStatus.INIT;
     if(json['status'] == OrderStatus.IN_STORE.name){
       state = OrderStatus.IN_STORE;
