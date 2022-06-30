@@ -14,9 +14,7 @@ import 'package:my_kom/module_company/company_module.dart';
 import 'package:my_kom/module_company/screen/company_products_screen.dart';
 import 'package:my_kom/module_company/screen/products_detail_screen.dart';
 import 'package:my_kom/module_company/service/company_service.dart';
-import 'package:my_kom/module_dashbord/bloc/filter_zone_bloc.dart';
-import 'package:my_kom/module_dashbord/dashboard_module.dart';
-import 'package:my_kom/module_dashbord/screen/dash_bord_screen.dart';
+import 'package:my_kom/module_home/bloc/filter_zone_bloc.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
 import 'package:my_kom/module_home/screen/home_screen.dart';
 import 'package:my_kom/module_home/screen/navigator_screen.dart';
@@ -29,15 +27,12 @@ import 'package:my_kom/module_orders/orders_module.dart';
 import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/ui/screens/order_detail.dart';
 import 'package:my_kom/module_orders/ui/screens/order_status/order_status_screen.dart';
-import 'package:my_kom/module_orders/ui/screens/owner_orders.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_profile/screen/profile_screen.dart';
 import 'package:my_kom/module_shoping/screen/shop_screen.dart';
 import 'package:my_kom/module_shoping/shoping_module.dart';
 import 'package:my_kom/module_splash/screen/splash_screen.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
-import 'package:my_kom/module_wrapper/wrapper.dart';
-import 'package:my_kom/module_wrapper/wrapper_module.dart';
 class AppComponentInjector implements AppComponent {
   AppComponentInjector._();
 
@@ -51,7 +46,6 @@ class AppComponentInjector implements AppComponent {
 
   MyApp _createApp() => MyApp(
       _createLocalizationService(),
-      _createWapperModule(),
       _createAboutModule(),
       _createSplashModule(),
       _createNavigatorModule(),
@@ -61,12 +55,10 @@ class AppComponentInjector implements AppComponent {
       _createShopingModule(),
       _createOrderModule(),
       _createProfileModule(),
-      _createDashBoard()
       );
 
   LocalizationService _createLocalizationService() =>
       _singletonLocalizationService ??= LocalizationService();
-  WapperModule _createWapperModule() => WapperModule(Wrapper());
   AboutModule _createAboutModule() => AboutModule(LanguageScreen(localizationService: _singletonLocalizationService!,));
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
@@ -90,9 +82,8 @@ class AppComponentInjector implements AppComponent {
       AuthorizationModule( LoginScreen(), RegisterScreen() );
   MapModule _createMapModule() => MapModule(MapScreen());
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
-  OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OwnerOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
+  OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());
-  DashBoardModule _createDashBoard()=> DashBoardModule(DashBoardScreen());
   CompanyModule _createCompanyModule()=> CompanyModule(CompanyProductScreen(),PriductDetailScreen());
   MyApp get app {
     return _createApp();

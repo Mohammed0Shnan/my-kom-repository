@@ -5,7 +5,6 @@ import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
-import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 
 class LoginAutomatically extends StatefulWidget {
@@ -36,13 +35,8 @@ class _LoginAutomaticallyState extends State<LoginAutomatically> {
               UserRole? role = await AuthService().userRole;
               if(role != null){
 
-                if (role == UserRole.ROLE_OWNER) {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, DashboardRoutes.DASHBOARD_SCREEN,(route)=> false);
-                }  else{
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
-                }}
+                Navigator.pushNamedAndRemoveUntil(
+                    context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);}
 
             } else if (state is LoginErrorState) {
               snackBarErrorWidget(context, state.message);

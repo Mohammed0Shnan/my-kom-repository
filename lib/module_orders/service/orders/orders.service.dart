@@ -93,6 +93,7 @@ class OrdersService {
     orderModel.status = response.status;
     orderModel.customerOrderID = response.customerOrderID;
     orderModel.productIds = response.products_ides;
+
     return orderModel;
     }catch(e){
       return null;

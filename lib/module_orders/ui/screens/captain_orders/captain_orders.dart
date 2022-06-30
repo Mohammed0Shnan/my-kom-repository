@@ -125,7 +125,6 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                         color: current_tap == CURRENT_ORDER
                             ? ColorsConst.mainColor
                             : Colors.transparent,
-
                       ),
                       child: Center(child: Text('${S.of(context)!.currentOrders} (${curNumber})',style: TextStyle(
                         color: current_tap == CURRENT_ORDER ?Colors.white: ColorsConst.mainColor,

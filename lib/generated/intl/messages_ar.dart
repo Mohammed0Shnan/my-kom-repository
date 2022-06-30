@@ -153,7 +153,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shoppingCart": MessageLookupByLibrary.simpleMessage("سلة المشتريات"),
     "ofStepper": MessageLookupByLibrary.simpleMessage("من"),
     "stepOneTitle": MessageLookupByLibrary.simpleMessage("تفاصيل وسعر الشحنة"),
-    "stepOneSubTitle": MessageLookupByLibrary.simpleMessage("لتالي هو الوجهة ، نوع الطلب"),
+    "stepOneSubTitle": MessageLookupByLibrary.simpleMessage("التالي هو الوجهة ، نوع الطلب"),
     "stepTowTitle": MessageLookupByLibrary.simpleMessage("الوجهة ونوع الطلب"),
     "stepTowSubTitle": MessageLookupByLibrary.simpleMessage("التالي هو تفاصيل الشحن والدفع"),
     "stepThreeTitle": MessageLookupByLibrary.simpleMessage("تفاصيل الشحن والدفع"),
@@ -196,7 +196,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "description": MessageLookupByLibrary.simpleMessage("الوصف"),
     "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("قم بتحديدعدد المنتجات ثم أضف"),
     "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("تم أضافة المنتجات الى العربة "),
+    "rival": MessageLookupByLibrary.simpleMessage("خصم"),
 
 
-      };
+    /// Order Pages
+
+    "trackingOrder": MessageLookupByLibrary.simpleMessage("تتبع الطلب"),
+    "orderTrackingNumber": MessageLookupByLibrary.simpleMessage("رقم الطلب"),
+    "gotCaption": MessageLookupByLibrary.simpleMessage("استلام الطلب"),
+    "gotCaptionDes": MessageLookupByLibrary.simpleMessage("تم استلام الطلب , تتم المعالجة"),
+    "inStore": MessageLookupByLibrary.simpleMessage("في المخزن"),
+    "inStoreDes": MessageLookupByLibrary.simpleMessage("يتم الان تجهيز طلبك في المستودع"),
+    "delivery": MessageLookupByLibrary.simpleMessage("التوصيل"),
+    "deliveryDes": MessageLookupByLibrary.simpleMessage("الطلب في الطريق اليك"),
+    "gotCash": MessageLookupByLibrary.simpleMessage("مرحلة التسليم"),
+    "gotCashDes": MessageLookupByLibrary.simpleMessage("استلام الطلب ودفع النقود "),
+    "finished": MessageLookupByLibrary.simpleMessage("النهاية"),
+    "finishedDes": MessageLookupByLibrary.simpleMessage("تم استلام الطلب بنجاح"),
+
+    "quickOrder": MessageLookupByLibrary.simpleMessage("طلب سريع"),
+    "price": MessageLookupByLibrary.simpleMessage("سعر الشحنة"),
+    "orderDate": MessageLookupByLibrary.simpleMessage("تاريخ طلب الشحنة"),
+    "orderProducts": MessageLookupByLibrary.simpleMessage("محتوى الشحنة"),
+    "no": MessageLookupByLibrary.simpleMessage("لا"),
+    "yes": MessageLookupByLibrary.simpleMessage("نعم"),
+
+  };
 }

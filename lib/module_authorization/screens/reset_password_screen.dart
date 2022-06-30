@@ -7,7 +7,7 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
 import 'package:my_kom/module_authorization/bloc/reset_password_bloc.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
-import 'package:my_kom/module_dashbord/dashboard_routes.dart';
+import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -140,8 +140,8 @@ class _RestPasswordState extends State<RestPasswordScreen> {
                             listener: (context,  state) {
                               if (state is RestPasswordSuccessState) {
                                 snackBarSuccessWidget(context, state.message);
-                                Navigator.pushNamed(
-                                    context, DashboardRoutes.DASHBOARD_SCREEN);
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
 
                               } else if (state is RestPasswordErrorState) {
                                 snackBarErrorWidget(context, state.message);

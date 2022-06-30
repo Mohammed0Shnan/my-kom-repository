@@ -121,15 +121,15 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext maincontext) {
     List<String> nowTitle = [
-      S.of(context)!.titlePageOne,
-      S.of(context)!.titlePageTow,
-      S.of(context)!.titlePageThree,
+      S.of(context)!.stepOneTitle,
+      S.of(context)!.stepTowTitle,
+      S.of(context)!.stepThreeTitle,
     ];
 
     List<String> nextTitle = [
-      S.of(context)!.subTitlePageOne,
-      S.of(context)!.subTitlePageTow,
-      S.of(context)!.subTitlePageThree,
+      S.of(context)!.stepOneSubTitle,
+      S.of(context)!.stepTowSubTitle,
+      S.of(context)!.stepThreeSubTitle,
     ];
     switch (currentIndex) {
       case 0:
@@ -188,7 +188,7 @@ class _ShopScreenState extends State<ShopScreen> {
             child: Column(
               children: [
                 Container(
-                  height: 12 * SizeConfig.heightMulti,
+                  height:11 * SizeConfig.heightMulti,
                   decoration: BoxDecoration(
 
                       color: Colors.white,
@@ -227,8 +227,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                             ]).createShader(rect);
                                       },
                                       child: Container(
-                                        width: 13 * SizeConfig.heightMulti,
-                                        height: 13 * SizeConfig.heightMulti,
+                                        width: 11 * SizeConfig.heightMulti,
+                                        height: 11 * SizeConfig.heightMulti,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: Colors.white),
@@ -265,12 +265,11 @@ class _ShopScreenState extends State<ShopScreen> {
                             SizedBox(
                               height: 6,
                             ),
-                            Expanded(
-                              child: Text(nextTitle[currentIndex],
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontSize: SizeConfig.titleSize * 2.1)),
-                            )
+                            Text('  '+nextTitle[currentIndex],
+                                style: TextStyle(
+                                    color: Colors.black45,
+                                    fontSize: SizeConfig.titleSize * 2.1))
+
                           ],
                         ),
                       ),

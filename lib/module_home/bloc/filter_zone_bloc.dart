@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_dashbord/models/store_model.dart';
-import 'package:my_kom/module_dashbord/models/zone_models.dart';
 import 'package:my_kom/module_home/models/search_model.dart';
 
 class FilterZoneCubit extends Cubit<FilterZoneCubitState> {

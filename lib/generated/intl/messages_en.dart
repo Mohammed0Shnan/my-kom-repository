@@ -206,5 +206,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "description": MessageLookupByLibrary.simpleMessage("Description"),
     "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("Select the number of items required"),
     "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("Items have been added"),
-      };
+    "rival": MessageLookupByLibrary.simpleMessage("ٌRival"),
+
+
+    /// Order Pages
+
+    "trackingOrder": MessageLookupByLibrary.simpleMessage("Tracking Order"),
+    "orderTrackingNumber": MessageLookupByLibrary.simpleMessage("Order Number"),
+    "gotCaption": MessageLookupByLibrary.simpleMessage("Receipt of the request"),
+    "gotCaptionDes": MessageLookupByLibrary.simpleMessage("The request has been received, it is being processed"),
+    "inStore": MessageLookupByLibrary.simpleMessage("In the store"),
+    "inStoreDes": MessageLookupByLibrary.simpleMessage("Your order is now being processed in the warehouse"),
+    "delivery": MessageLookupByLibrary.simpleMessage("Delivery"),
+    "deliveryDes": MessageLookupByLibrary.simpleMessage("The order is on your way"),
+    "gotCash": MessageLookupByLibrary.simpleMessage("Delivery stage"),
+    "gotCashDes": MessageLookupByLibrary.simpleMessage("Submit the order and pay the cash"),
+    "finished": MessageLookupByLibrary.simpleMessage("Finished"),
+    "finishedDes": MessageLookupByLibrary.simpleMessage("Request received successfully"),
+    "quickOrder": MessageLookupByLibrary.simpleMessage("Quick Order"),
+    "price": MessageLookupByLibrary.simpleMessage("Price"),
+    "orderDate": MessageLookupByLibrary.simpleMessage("Order Date"),
+    "orderProducts": MessageLookupByLibrary.simpleMessage("Order Products"),
+    "no": MessageLookupByLibrary.simpleMessage("No"),
+    "yes": MessageLookupByLibrary.simpleMessage("Yes"),
+  };
 }

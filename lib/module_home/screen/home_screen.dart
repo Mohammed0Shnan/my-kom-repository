@@ -10,9 +10,9 @@ import 'package:my_kom/module_company/bloc/recomended_products_bloc.dart';
 import 'package:my_kom/module_company/company_routes.dart';
 import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
-import 'package:my_kom/module_dashbord/bloc/filter_zone_bloc.dart';
-import 'package:my_kom/module_dashbord/enum/advertisement_type.dart';
-import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
+import 'package:my_kom/module_home/models/advertisement_model.dart';
+import 'package:my_kom/module_home/bloc/filter_zone_bloc.dart';
+import 'package:my_kom/module_home/enums/advertisement_type.dart';
 import 'package:my_kom/module_home/models/search_model.dart';
 import 'package:my_kom/module_home/widgets/descovary_grid_widget.dart';
 import 'package:my_kom/module_home/widgets/page_view_widget.dart';
@@ -523,7 +523,6 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     throw UnimplementedError();
   }
 
@@ -565,7 +564,7 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
                  );
                });
          }else{
-           return CircularProgressIndicator();
+           return CircularProgressIndicator(color: ColorsConst.mainColor,);
          }
 
        }

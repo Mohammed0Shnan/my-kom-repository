@@ -26,7 +26,7 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-/// Login Page
+  /// Login Page
 
   /// `Login`
   String get login {
@@ -118,6 +118,7 @@ class S {
       args: [],
     );
   }
+
   /// `Email Address is Required`
   String get emailAddressIsRequired {
     return Intl.message(
@@ -127,6 +128,7 @@ class S {
       args: [],
     );
   }
+
   /// `Password is Required`
   String get passwordIsRequired {
     return Intl.message(
@@ -189,6 +191,7 @@ class S {
       args: [],
     );
   }
+
   /// `Address`
   String get address {
     return Intl.message(
@@ -198,6 +201,7 @@ class S {
       args: [],
     );
   }
+
   /// `Name`
   String get name {
     return Intl.message(
@@ -250,6 +254,7 @@ class S {
       args: [],
     );
   }
+
   /// `Address Is Required`
   String get addressIsRequired {
     return Intl.message(
@@ -259,6 +264,7 @@ class S {
       args: [],
     );
   }
+
   /// `Phone Is Required`
   String get phoneIsRequired {
     return Intl.message(
@@ -278,6 +284,7 @@ class S {
       args: [],
     );
   }
+
   /// `Code Is Required`
   String get codeIsRequired {
     return Intl.message(
@@ -297,6 +304,7 @@ class S {
       args: [],
     );
   }
+
   /// `English`
   String get english {
     return Intl.message(
@@ -329,6 +337,7 @@ class S {
       args: [],
     );
   }
+
   /// `Title Page One`
   String get titlePageOne {
     return Intl.message(
@@ -338,6 +347,7 @@ class S {
       args: [],
     );
   }
+
   /// `Title Page Tow`
   String get titlePageTow {
     return Intl.message(
@@ -347,8 +357,9 @@ class S {
       args: [],
     );
   }
+
   /// `Title Page Three`
-  String get titlePageThree{
+  String get titlePageThree {
     return Intl.message(
       'Title Page Three ',
       name: 'titlePageThree',
@@ -356,6 +367,7 @@ class S {
       args: [],
     );
   }
+
   /// `Sub Title Page One`
   String get subTitlePageOne {
     return Intl.message(
@@ -375,6 +387,7 @@ class S {
       args: [],
     );
   }
+
   /// `Sub Title Page Three`
   String get subTitlePageThree {
     return Intl.message(
@@ -386,7 +399,7 @@ class S {
   }
 
 
- /// Home
+  /// Home
   ///Nav Bar
   /// `Home`
   String get home {
@@ -429,7 +442,6 @@ class S {
   }
 
 
-
   /// `Profile`
   String get profile {
     return Intl.message(
@@ -439,6 +451,7 @@ class S {
       args: [],
     );
   }
+
   /// `Ship`
   String get ship {
     return Intl.message(
@@ -478,6 +491,7 @@ class S {
       args: [],
     );
   }
+
   /// `Please Wait`
   String get pleaseWait {
     return Intl.message(
@@ -497,8 +511,9 @@ class S {
       args: [],
     );
   }
+
   /// `Determine Location`
-  String get determineLocation  {
+  String get determineLocation {
     return Intl.message(
       'Determine Location',
       name: 'determineLocation',
@@ -506,6 +521,7 @@ class S {
       args: [],
     );
   }
+
   /// `Refresh`
   String get refresh {
     return Intl.message(
@@ -538,6 +554,7 @@ class S {
       args: [],
     );
   }
+
   /// `Privacy Policy`
   String get privacyPolicy {
     return Intl.message(
@@ -547,6 +564,7 @@ class S {
       args: [],
     );
   }
+
   /// `Delivery Policy`
   String get deliveryPolicy {
     return Intl.message(
@@ -556,6 +574,7 @@ class S {
       args: [],
     );
   }
+
   /// `Contact Us`
   String get contactUs {
     return Intl.message(
@@ -575,6 +594,7 @@ class S {
       args: [],
     );
   }
+
   /// Logout`
   String get logout {
     return Intl.message(
@@ -638,7 +658,6 @@ class S {
   }
 
 
-
   /// Profile Page
 
   /// `My Profile`
@@ -650,6 +669,7 @@ class S {
       args: [],
     );
   }
+
   /// `My Information`
   String get myInformation {
     return Intl.message(
@@ -669,6 +689,7 @@ class S {
       args: [],
     );
   }
+
   /// `Email And Phone`
   String get emailAndPhone {
     return Intl.message(
@@ -689,6 +710,7 @@ class S {
       args: [],
     );
   }
+
   /// `Previous Orders`
   String get previousOrders {
     return Intl.message(
@@ -698,6 +720,7 @@ class S {
       args: [],
     );
   }
+
   /// `Order Detail`
   String get orderDetail {
     return Intl.message(
@@ -707,6 +730,7 @@ class S {
       args: [],
     );
   }
+
   /// `Track Shipment`
   String get trackShipment {
     return Intl.message(
@@ -738,6 +762,7 @@ class S {
       args: [],
     );
   }
+
   /// `Of`
   String get ofStepper {
     return Intl.message(
@@ -757,6 +782,7 @@ class S {
       args: [],
     );
   }
+
   /// `Step One Sub Title`
   String get stepOneSubTitle {
     return Intl.message(
@@ -766,6 +792,7 @@ class S {
       args: [],
     );
   }
+
   /// `Step Tow Title`
   String get stepTowTitle {
     return Intl.message(
@@ -856,6 +883,7 @@ class S {
       args: [],
     );
   }
+
   /// `Payment Summary`
   String get paymentSummary {
     return Intl.message(
@@ -875,6 +903,7 @@ class S {
       args: [],
     );
   }
+
   /// `Add More`
   String get addMore {
     return Intl.message(
@@ -904,6 +933,7 @@ class S {
       args: [],
     );
   }
+
   /// `Change`
   String get change {
     return Intl.message(
@@ -913,6 +943,7 @@ class S {
       args: [],
     );
   }
+
   /// `Street`
   String get street {
     return Intl.message(
@@ -942,6 +973,7 @@ class S {
       args: [],
     );
   }
+
   /// `MyKom Express Service Message Enable`
   String get myKomExpressServiceMessageEnable {
     return Intl.message(
@@ -961,6 +993,7 @@ class S {
       args: [],
     );
   }
+
   /// `Extra Charge`
   String get extraCharge {
     return Intl.message(
@@ -980,6 +1013,7 @@ class S {
       args: [],
     );
   }
+
   /// `Payment Methods`
   String get paymentMethods {
     return Intl.message(
@@ -999,6 +1033,7 @@ class S {
       args: [],
     );
   }
+
   /// `Credit Card`
   String get creditCard {
     return Intl.message(
@@ -1028,6 +1063,7 @@ class S {
       args: [],
     );
   }
+
   /// `Order Confirmation`
   String get orderConfirmation {
     return Intl.message(
@@ -1047,6 +1083,7 @@ class S {
       args: [],
     );
   }
+
   /// `Add Card`
   String get addCard {
     return Intl.message(
@@ -1056,6 +1093,7 @@ class S {
       args: [],
     );
   }
+
   /// `Select Card Alert`
   String get selectCardAlert {
     return Intl.message(
@@ -1077,6 +1115,7 @@ class S {
       args: [],
     );
   }
+
   /// `Added`
   String get added {
     return Intl.message(
@@ -1087,7 +1126,7 @@ class S {
     );
   }
 
-    /// `See The Cart`
+  /// `See The Cart`
   String get seeTheCart {
     return Intl.message(
       'See The Cart',
@@ -1116,6 +1155,7 @@ class S {
       args: [],
     );
   }
+
   /// `Items have been added`
   String get itemsHaveBeenAdded {
     return Intl.message(
@@ -1125,6 +1165,7 @@ class S {
       args: [],
     );
   }
+
   /// `Select the number of items required`
   String get selectTheNumberOfItemsRequired {
     return Intl.message(
@@ -1135,9 +1176,203 @@ class S {
     );
   }
 
+  /// `Rival`
+  String get rival {
+    return Intl.message(
+      'Rival',
+      name: 'rival',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// Orders List
+
+  /// `Tracking Order`
+  String get trackingOrder {
+    return Intl.message(
+      'Tracking Order',
+      name: 'trackingOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Tracking Number`
+  String get orderTrackingNumber {
+    return Intl.message(
+      'Order Tracking Number',
+      name: 'orderTrackingNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Got Caption`
+  String get gotCaption {
+    return Intl.message(
+      'Got Caption',
+      name: 'gotCaption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Got Caption Des`
+  String get gotCaptionDes {
+    return Intl.message(
+      'Got Caption Des',
+      name: 'gotCaptionDes',
+      desc: '',
+      args: [],
+    );
+  }
 
 
+  /// `In Store`
+  String get inStore {
+    return Intl.message(
+      'In Store',
+      name: 'inStore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Store Des`
+  String get inStoreDes {
+    return Intl.message(
+      'In Store Des',
+      name: 'inStoreDes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery`
+  String get delivery {
+    return Intl.message(
+      'Delivery',
+      name: 'delivery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delivery Des`
+  String get deliveryDes {
+    return Intl.message(
+      'Delivery Des',
+      name: 'deliveryDes',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Got Cash`
+  String get gotCash {
+    return Intl.message(
+      'Got Cash',
+      name: 'gotCash',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Got Cash Des`
+  String get gotCashDes {
+    return Intl.message(
+      'Got Cash Des',
+      name: 'gotCashDes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finished`
+  String get finished {
+    return Intl.message(
+      'Finished',
+      name: 'finished',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finished Des`
+  String get finishedDes {
+    return Intl.message(
+      'Finished Des',
+      name: 'finishedDes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// Order Detail
+
+  /// `Quick Order`
+  String get quickOrder {
+    return Intl.message(
+      'Quick Order',
+      name: 'quickOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+
+  /// `Price`
+  String get price {
+    return Intl.message(
+      'Price',
+      name: 'price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Date`
+  String get orderDate {
+    return Intl.message(
+      'Order Date',
+      name: 'orderDate',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Order Products`
+  String get orderProducts {
+    return Intl.message(
+      'Order Products',
+      name: 'orderProducts',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
 }
+
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();

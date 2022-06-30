@@ -5,16 +5,12 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_about/about_routes.dart';
 import 'package:my_kom/module_about/animations/fade_animation.dart';
 import 'package:my_kom/module_about/bloc/splash_animation_bloc.dart';
-import 'package:my_kom/module_about/screen/language_screen.dart';
 import 'package:my_kom/module_about/service/about_service.dart';
-import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
-import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 class SplashScreen extends StatefulWidget {
   final AuthService _authService;
    final AboutService _aboutService;
@@ -110,19 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
      // Is LoggedIn
       UserRole? role = await widget._authService.userRole;
       if(role != null){
-
-        if (role == UserRole.ROLE_OWNER) {
-
-          print('login as admin!!!!!!');
-          print(role.name);
-          return DashboardRoutes.DASHBOARD_SCREEN;
-          // return OrdersRoutes.OWNER_ORDERS_SCREEN;
-        }  else{
-          print('login as user!!!!!!');
-          print(role.name);
-          return NavigatorRoutes.NAVIGATOR_SCREEN;
-          //return OrdersRoutes.CAPTAIN_ORDERS_SCREEN;
-        }
+        return NavigatorRoutes.NAVIGATOR_SCREEN;
       }
 
       // Is Not LoggedInt

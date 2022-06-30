@@ -125,8 +125,8 @@ addRemoveBloc.close();
                             progressIndicatorBuilder: (context, l, ll) =>
                                 Center(
                                   child: Container(
-                                    // width: 100,
-                                    // height: 100,
+                                    width: 100,
+                                    height: 100,
                                     child: CircularProgressIndicator(
                                       value: ll.progress,
                                       color: Colors.black45
@@ -336,7 +336,6 @@ addRemoveBloc.close();
                                 }
                                 else{
                                   shopCartBloc.addProductsToCart(productModel,addRemoveBloc.state).then((value) {
-
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                       content:  Text('${addRemoveBloc.state} ${S.of(context)!.itemsHaveBeenAdded}',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
                                       backgroundColor: Colors.black54,

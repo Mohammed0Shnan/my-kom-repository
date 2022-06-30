@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/products_company_bloc.dart';
 import 'package:my_kom/module_company/company_routes.dart';
@@ -13,6 +13,7 @@ import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_company/screen/widgets/product_shimmer.dart';
+import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/module_shoping/bloc/add_remove_product_quantity_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
@@ -159,6 +160,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 height: 20,
               ),
               Container(
+                height: SizeConfig.heightMulti * 6,
+                alignment: Alignment.center,
                 margin: EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -166,8 +169,12 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                     boxShadow: [
                       BoxShadow(color: Colors.black26, blurRadius: 2)
                     ]),
-                child: TextField(
+                child: TextFormField(
+
                   controller: _serachController,
+                  style: TextStyle(
+                    height: 0.6
+                  ),
                   onChanged: (String query){
                     productsCompanyBloc.search(query);
                   },
@@ -176,7 +183,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       prefixIcon: IconButton(
                         icon: Icon(
                           Icons.search,
-                          size: 28,
+                          size: 25,
                           color: Colors.black38,
                         ),
                         onPressed: () {
@@ -212,7 +219,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
           ),
         ),
       ),
-      bottomNavigationBar:  Container(height: 80,
+      bottomNavigationBar:  Container(height: 75,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
@@ -238,7 +245,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                   }
             }),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              height: 40,
+              margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                   color: ColorsConst.mainColor,
@@ -258,7 +266,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(S.of(context)!.selectCardAlert,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+                    Text(S.of(context)!.seeTheCart,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
                     BlocBuilder<ShopCartBloc,CartState>(
                         bloc: shopCartBloc,
                         builder: (context,state) {
@@ -288,19 +296,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
       return Center(
         child:  Container(
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                      height: SizeConfig.screenHeight * 0.3,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30)
-                      ),
-                      child: Image.asset('assets/empity.png',fit: BoxFit.fill,)),
-                  SizedBox(height: 10,),
-                  Text(S.of(context)!.noDataToDisplay,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black45),)
-                ],
+              child:       Center(
+                  child:   NoDataForDisplayWidget()
               ),
             )),
       );
@@ -384,18 +381,19 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       ),
                                                     ),
                                                     (items[index].old_price != null)
-                                                        ? Positioned(
+                                                        ?  (UtilsConst.lang == 'ar')?Positioned(
                                                         top: 0,
+
                                                         right: 0,
                                                         child: Container(
                                                           alignment:
                                                           Alignment.center,
                                                           width: SizeConfig
                                                               .widhtMulti *
-                                                              15,
+                                                              13,
                                                           height: SizeConfig
                                                               .heightMulti *
-                                                              5,
+                                                              4.5,
                                                           decoration: BoxDecoration(
                                                               color: Colors.orange,
                                                               borderRadius:
@@ -404,14 +402,42 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                       .circular(
                                                                       10))),
                                                           child: Text(
-                                                            'ٌRival',
+                                                           S.of(context)!.rival,
                                                             style: TextStyle(
                                                                 color: Colors.white,
                                                                 fontWeight:
-                                                                FontWeight.w400,
+                                                                FontWeight.w500,
                                                                 fontSize: SizeConfig
                                                                     .titleSize *
-                                                                    3),
+                                                                    2.6),
+                                                          ),
+                                                        )):Positioned(
+                                                        top: 0,
+                                                        left: 0,
+                                                        child: Container(
+                                                          alignment:
+                                                          Alignment.center,
+                                                          width: SizeConfig
+                                                              .widhtMulti *
+                                                              13,
+                                                          height: SizeConfig
+                                                              .heightMulti *
+                                                              4.5,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.orange,
+                                                              borderRadius:(UtilsConst.lang == 'ar')?
+                                                              BorderRadius.only(bottomLeft: Radius.circular(10)):
+                                                              BorderRadius.only(bottomRight: Radius.circular(10))
+                                                          ),
+                                                          child: Text(
+                                                            S.of(context)!.rival,
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontWeight:
+                                                                FontWeight.w500,
+                                                                fontSize: SizeConfig
+                                                                    .titleSize *
+                                                                    2.6),
                                                           ),
                                                         ))
                                                         : SizedBox.shrink()
@@ -487,6 +513,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
                                                               child: Text(
                                                                 items[index].title,
+                                                                maxLines: 2,
                                                                 style: TextStyle(
                                                                     fontSize: SizeConfig
                                                                         .titleSize *
@@ -515,23 +542,6 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(height: 5,),
-                                                    // Expanded(
-                                                    //   child: Container(
-                                                    //
-                                                    //     padding: EdgeInsets.symmetric(horizontal: 10),
-                                                    //     child: Text(
-                                                    //       items[index].description,
-                                                    //       overflow: TextOverflow.ellipsis,
-                                                    //       maxLines: 3,
-                                                    //       style: GoogleFonts.lato(
-                                                    //           fontSize: SizeConfig.titleSize * 2,
-                                                    //           color: Colors.black54,
-                                                    //           fontWeight: FontWeight.w600
-                                                    //       ),
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
-
 
                                                   ],
                                                 ),
@@ -545,55 +555,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                 MainAxisAlignment
                                                     .spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    // height: 10,
-                                                    child: ElevatedButton
-                                                        .icon(
-                                                      onPressed: () {
-                                                        widget._authService.isLoggedIn.then((value) {
-                                                          if(value){
-                                                            if(addRemoveBloc.state == 0){
 
-                                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                                content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
-                                                                backgroundColor: Colors.black54,
-                                                                duration: const Duration(seconds: 1),
-
-                                                              ));
-                                                            }
-                                                            else{
-                                                              shopCartBloc.addProductsToCart(items[index],addRemoveBloc.state).then((value) {
-                                                                addRemoveBloc.clear();
-                                                              });
-                                                            }
-
-                                                          }else{
-                                                            loginCheakAlertWidget(context);
-                                                          }
-                                                        });
-
-                                                      },
-                                                      label: Text(
-                                                        S.of(context)!.added,
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .white,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w900),
-                                                      ),
-                                                      icon: Icon(
-                                                        Icons
-                                                            .shopping_cart_outlined,
-                                                        size: SizeConfig
-                                                            .imageSize *
-                                                            5,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
                                                   Expanded(
                                                       child: LayoutBuilder(
                                                         builder: (BuildContext
@@ -681,7 +643,54 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                             ),
                                                           );
                                                         },
-                                                      ))
+                                                      )),
+                                                  SizedBox(width: 8,),
+                                                  Container(
+                                                    // height: 10,
+                                                    child: ElevatedButton
+                                                        .icon(
+                                                      onPressed: () {
+                                                        widget._authService.isLoggedIn.then((value) {
+                                                          if(value){
+                                                            if(addRemoveBloc.state == 0){
+
+                                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                                content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                                                backgroundColor: Colors.black54,
+                                                                duration: const Duration(seconds: 1),
+
+                                                              ));
+                                                            }
+                                                            else{
+                                                              shopCartBloc.addProductsToCart(items[index],addRemoveBloc.state).then((value) {
+                                                                addRemoveBloc.clear();
+                                                              });
+                                                            }
+
+                                                          }else{
+                                                            loginCheakAlertWidget(context);
+                                                          }
+                                                        });
+
+                                                      },
+                                                      label: Text(
+                                                        S.of(context)!.added,
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .white,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w900),
+                                                      ),
+                                                      icon: Icon(
+                                                        Icons
+                                                            .shopping_cart_outlined,
+                                                        size: SizeConfig
+                                                            .imageSize *
+                                                            5,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                             ),

@@ -26,6 +26,7 @@ class OrderDetailResponse {
 
 
   OrderDetailResponse.fromJson(Map<String, dynamic> json) {
+    print(json);
     this.id = json['id'];
     this.cardId = json['card_id'];
     this.customerOrderID =json['customer_order_id'] ;

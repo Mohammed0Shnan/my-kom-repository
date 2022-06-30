@@ -1,8 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_company/service/company_service.dart';
-import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
+import 'package:my_kom/module_home/models/advertisement_model.dart';
 
 class RecommendedProductsCompanyBloc extends Bloc<RecommendedProductsCompanyEvent, RecommendedProductsCompanyStates> {
   final CompanyService service ;

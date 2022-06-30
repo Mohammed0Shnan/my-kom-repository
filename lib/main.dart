@@ -8,9 +8,8 @@ import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_company/company_module.dart';
-import 'package:my_kom/module_dashbord/dashboard_module.dart';
-import 'package:my_kom/module_dashbord/dashboard_routes.dart';
 import 'package:my_kom/module_home/navigator_module.dart';
+import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_notifications/service/fire_notification_service/fire_notification_service.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
@@ -18,7 +17,6 @@ import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_shoping/shoping_module.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_splash/splash_routes.dart';
-import 'package:my_kom/module_wrapper/wrapper_module.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -50,7 +48,6 @@ class MyApp extends StatefulWidget {
   // This widget is the root of your application.
 
  final LocalizationService _localizationService;
-  final WapperModule _wapperModule;
   final SplashModule _splashModule;
   final AboutModule _aboutModule;
   final NavigatorModule _navigatorModule;
@@ -60,9 +57,8 @@ class MyApp extends StatefulWidget {
   final ShopingModule _shopingModule;
   final OrdersModule _ordersModule;
   final ProfileModule _profileModule;
-  final DashBoardModule _dashBoardModule;
-  MyApp(this._localizationService,this._wapperModule, this._aboutModule,this._splashModule, this._navigatorModule,
-      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule,this._dashBoardModule);
+  MyApp(this._localizationService, this._aboutModule,this._splashModule, this._navigatorModule,
+      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -77,7 +73,7 @@ class _MyAppState extends State<MyApp> {
   FirebaseMessaging.instance.getInitialMessage().then((value) {
     if(value != null){
       final routeFromMessage = value.data['route'];
-      Navigator.of(context).pushNamed( DashboardRoutes.DASHBOARD_SCREEN);
+      Navigator.of(context).pushNamed( NavigatorRoutes.NAVIGATOR_SCREEN);
     }
   });
   ///
@@ -97,7 +93,7 @@ class _MyAppState extends State<MyApp> {
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
     print('##############  notification Clicked 000000000#############');
     final routeFromMessage = event.data['route'];
-    Navigator.of(context).pushNamed( DashboardRoutes.DASHBOARD_SCREEN);
+    Navigator.of(context).pushNamed( NavigatorRoutes.NAVIGATOR_SCREEN);
     print(routeFromMessage);
   });
 
@@ -107,7 +103,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     Map<String, WidgetBuilder> routes = {};
-    routes.addAll(widget._wapperModule.getRoutes());
     routes.addAll(widget._aboutModule.getRoutes());
     routes.addAll(widget._splashModule.getRoutes());
     routes.addAll(widget._navigatorModule.getRoutes());
@@ -117,7 +112,6 @@ class _MyAppState extends State<MyApp> {
     routes.addAll(widget._shopingModule.getRoutes());
     routes.addAll(widget._ordersModule.getRoutes());
     routes.addAll(widget._profileModule.getRoutes());
-    routes.addAll(widget._dashBoardModule.getRoutes());
 
     return FutureBuilder<Widget>(
       initialData: Container(color: Colors.green),

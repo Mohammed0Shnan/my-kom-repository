@@ -9,7 +9,6 @@ class ProductModel {
   late final imageUrl;
   late  int? orderQuantity;
   late bool  isRecommended;
-  late final List<SpecificationsModel> specifications;
 
   ProductModel(
       {required this.id,
@@ -19,7 +18,6 @@ class ProductModel {
       required this.old_price,
       required this.imageUrl,
       required this.quantity,
-      required this.specifications,
         required this.isRecommended
       });
 
@@ -31,16 +29,11 @@ class ProductModel {
     this.title = map['title'];
     this.description = map['description'];
     this.price = 1.0 * map['price'];
-    this.old_price = map['old_price'] ;
+    this.old_price = map['old_price'] == null? null: 1.0 * map['old_price'];
     this.quantity = map['quantity'];
     this.orderQuantity = map['order_quantity'];
     this.imageUrl = map['imageUrl'];
     this.isRecommended = map['isRecommended']==null? false:true;
-   // List<SpecificationsModel> specifications = [];
-   //  map['specifications'].forEach((v) {
-   //    specifications.add(SpecificationsModel.fromJson(v));
-   //  });
-   //  this.specifications = specifications;
   }
 
   Map<String, dynamic>? toJson() {
@@ -54,7 +47,6 @@ class ProductModel {
     map['quantity'] = this.quantity;
     map['order_quantity'] = this.orderQuantity;
     map['imageUrl'] = this.imageUrl;
-  //  map['specifications'] = this.specifications.map((e) => e.toJson()).toList();
     map['isRecommended'] = this.isRecommended;
     return map;
   }

@@ -9,6 +9,7 @@ import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/state_manager/order_status/order_status.state_manager.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:timelines/timelines.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class OrderStatusScreen extends StatefulWidget {
 
@@ -51,10 +52,12 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
             ),
             SizedBox(width: 10,),
             Text(
-             'Tracking Order',
-              style: TextStyle(
-                color: Colors.white
-              ),
+            S.of(context)!.trackingOrder,
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white..withOpacity(0.8)
+            ),
             ),
           ],
         ),
@@ -79,44 +82,44 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
 
            if(stepNumber == 4){
              items =[
-               DeliveryInfo(subTitle:  'The receipt of the order',
-                   title: 'Got Captain',
+               DeliveryInfo(subTitle:  S.of(context)!.gotCaptionDes,
+                   title: S.of(context)!.gotCaption,
                    isNext: (currentIndex == 0)? true:false,
                    image: 'got_captain.svg', isComplete: (currentIndex > 0)? true:false),
-               DeliveryInfo(subTitle:  'In-store order processing',
+               DeliveryInfo(subTitle: S.of(context)!.inStoreDes,
                    isNext: (currentIndex == 1)? true:false,
-                   title: 'In Store',
+                   title:  S.of(context)!.inStore,
                    image: 'in_store.svg', isComplete: (currentIndex > 1)? true:false),
-               DeliveryInfo(subTitle:  'On the road',
+               DeliveryInfo(subTitle:  S.of(context)!.deliveryDes,
                    isNext: (currentIndex == 2)? true:false,
-                   title: 'Delivery',
+                   title:  S.of(context)!.delivery,
                    image: 'delivery.png', isComplete: (currentIndex > 2)? true:false),
-               DeliveryInfo(title:  'The order has been delivered',
+               DeliveryInfo(title:  S.of(context)!.finishedDes,
                    isNext: (currentIndex == 3)? true:false,
-                   subTitle: '',
+                   subTitle: S.of(context)!.finished,
                    image: 'finished.svg', isComplete: (currentIndex >3)? true:false),
              ];
            }else{
              items =[
-               DeliveryInfo(subTitle:  'The receipt of the order',
+               DeliveryInfo(subTitle:   S.of(context)!.gotCaptionDes,
                    isNext: (currentIndex == 0)? true:false,
-                   title: 'Got Captain',
+                   title:  S.of(context)!.gotCaption,
                    image: 'got_captain.svg', isComplete: (currentIndex > 0)? true:false),
-               DeliveryInfo(subTitle:  'In-store order processing',
+               DeliveryInfo(subTitle:   S.of(context)!.inStoreDes,
                    isNext: (currentIndex == 1)? true:false,
-                   title: 'In Store',
+                   title:  S.of(context)!.inStore,
                    image: 'in_store.svg', isComplete: (currentIndex > 1)? true:false),
-               DeliveryInfo(subTitle:  'On the road',
+               DeliveryInfo(subTitle: S.of(context)!.deliveryDes,
                    isNext: (currentIndex == 2)? true:false,
-                   title: 'Delivery',
+                   title:S.of(context)!.delivery,
                    image: 'delivery.png', isComplete: (currentIndex > 2)? true:false),
-               DeliveryInfo(subTitle:  'Pay the order value',
+               DeliveryInfo(subTitle: S.of(context)!.gotCashDes,
                    isNext: (currentIndex == 3)? true:false,
-                   title: 'Got Cash',
+                   title:S.of(context)!.gotCash,
                    image: 'got_cash.svg', isComplete: (currentIndex > 3)? true:false),
-               DeliveryInfo(subTitle:  'The order has been delivered',
+               DeliveryInfo(subTitle: S.of(context)!.finishedDes,
                    isNext: (currentIndex == 4)? true:false,
-                   title: 'Finished',
+                   title: S.of(context)!.finished,
                    image: 'finished.svg', isComplete: (currentIndex > 4)? true:false),
              ];
            }
@@ -128,7 +131,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                   Container(
                     color: Colors.black12.withOpacity(0.1),
                     height: SizeConfig.titleSize * 7,
-                    child: Center(child: Text('Order Number # '+currentOrder.customerOrderID.toString(),
+                    child: Center(child: Text(S.of(context)!.orderTrackingNumber+'  # '+currentOrder.customerOrderID.toString(),
                     style: GoogleFonts.lato(
                       fontSize: SizeConfig.titleSize  * 2.4,
                       fontWeight: FontWeight.bold,

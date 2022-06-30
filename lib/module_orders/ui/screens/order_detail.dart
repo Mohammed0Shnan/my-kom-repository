@@ -8,17 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
-import 'package:my_kom/module_authorization/enums/user_role.dart';
-import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_company/screen/products_detail_screen.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/state_manager/order_detail_bloc.dart';
-import 'package:my_kom/module_orders/util/whatsapp_link_helper.dart';
-import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class OrderDetailScreen extends StatefulWidget {
 
@@ -45,8 +39,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title:   Text('Details',style: GoogleFonts.lato(
-            fontSize: 20,
+        title:   Text(S.of(context)!.orderDetail,style: GoogleFonts.lato(
+            fontSize: 22,
             color: Colors.white,
             fontWeight: FontWeight.bold
         ),),
@@ -93,43 +87,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.location_on_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Destination',style: GoogleFonts.lato(
+                              Text(S.of(context)!.destination,style: GoogleFonts.lato(
                                   fontSize:18,
                                   color: Colors.black54,
                                   letterSpacing: 1,
                                   fontWeight: FontWeight.w600),),
-                              Spacer(),
-                              FutureBuilder(
-                                future: AuthPrefsHelper().getRole(),
-                                builder: (context,role) {
-                                  if(role.data == UserRole.ROLE_OWNER)
-                                  return GestureDetector(
-                                    onTap: (){
-                                      double late = order.destination.lat;
-                                      double lon = order.destination.lon;
 
-                                      var url = WhatsAppLinkHelper.getMapsLink(late,lon);
-                                      launchUrl(Uri.parse(url));
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(5)
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Text('Go To Delivery',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
-                                          SizedBox(width: 5,),
-                                          Icon(Icons.arrow_forward,color: Colors.white,),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                  else return SizedBox.shrink();
-                                }
 
-                              )
                             ],
                           ),
                           SizedBox(height: 8,),
@@ -162,10 +126,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.check,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Quick order: ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.quickOrder,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -174,7 +139,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           SizedBox(width: 8,),
                           Padding(padding: EdgeInsets.symmetric(horizontal: 10),
-                            child:Text(order.vipOrder?'Yes' :'No',style: GoogleFonts.lato(
+                            child:Text(order.vipOrder?S.of(context)!.yes :S.of(context)!.no,style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Colors.black45,
                                 fontWeight: FontWeight.bold
@@ -205,7 +170,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.price_change_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Price : ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.price,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -248,7 +213,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.phone_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Phone : ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.phone,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -289,7 +254,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.payments_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Payment : ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.paymentMethods,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -298,7 +263,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           SizedBox(width: 8,),
                           Padding(padding: EdgeInsets.symmetric(horizontal: 10,),
-                            child:    Text(order.payment.toString(),style: GoogleFonts.lato(
+                            child:    Text(order.payment == 'Cash Money'?S.of(context)!.cashMoney:S.of(context)!.creditCard,style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Colors.black45,
                                 fontWeight: FontWeight.bold
@@ -331,7 +296,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.history_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Order Date : ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.orderDate,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -372,7 +337,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             children: [
                               Icon(Icons.description_outlined,color: Colors.blue,),
                               SizedBox(width: 5,),
-                              Text('Description : ',style: GoogleFonts.lato(
+                              Text(S.of(context)!.description,style: GoogleFonts.lato(
                                   letterSpacing: 1,
                                   fontSize:18,
                                   color: Colors.black54,
@@ -428,7 +393,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               children: [
                                 Icon(Icons.shopping_cart_outlined,color: Colors.blue,),
                                 SizedBox(width: 5,),
-                                Text('Products : ',style: GoogleFonts.lato(
+                                Text(S.of(context)!.orderProducts,style: GoogleFonts.lato(
                                     letterSpacing: 1,
                                     fontSize:18,
                                     color: Colors.black54,
@@ -437,15 +402,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             ),
                             Spacer(),
                             Container(
-
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.blue
                               ),
                               child:  Icon(Icons.arrow_drop_up,color: Colors.white,size: 26,)
-
                             )
-
                           ],
                         ),
                       ),

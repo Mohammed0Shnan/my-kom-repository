@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_dashbord/models/advertisement_model.dart';
-import 'package:my_kom/module_dashbord/response/company_store_detail_response.dart';
+import 'package:my_kom/module_company/response/company_store_detail_response.dart';
+import 'package:my_kom/module_home/models/advertisement_model.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
