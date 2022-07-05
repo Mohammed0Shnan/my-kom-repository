@@ -155,7 +155,7 @@ addRemoveBloc.close();
                             ))
                             ,child: Center(child: Text(productModel.title,style: GoogleFonts.lato(
                             fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.titleSize * 3.5,
+                            fontSize: SizeConfig.titleSize * 3,
                             color: Colors.black87
 
                         )
@@ -170,47 +170,14 @@ addRemoveBloc.close();
                           children: [
                             SizedBox(height: 20,),
                             Text(S.of(context)!.description,style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black54,
+                                fontSize: SizeConfig.titleSize * 2.2,
+                                color: Colors.black87,
                                 fontWeight: FontWeight.w600),),
                             SizedBox(height: 10,),
                             ExpadedTextWidget(text: productModel.description),
                             SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
-                            // Text(
-                            //   'Specifications',
-                            //   style: TextStyle(
-                            //       fontSize: 20,
-                            //       color: Colors.black54,
-                            //       fontWeight: FontWeight.w600),
-                            // ),
-                            //
-                            // Container(
-                            //   padding: EdgeInsets.symmetric(horizontal: 10),
-                            //   child: Column(children: [
-                            //     Divider(
-                            //       color: Colors.black,
-                            //
-                            //       endIndent: 10,
-                            //     ),
-                            //    ...widget.productModel.specifications.map((e) =>       Container(
-                            //      margin: EdgeInsets.symmetric(vertical: 5),
-                            //      child: Row(
-                            //        children: [
-                            //          Text(
-                            //            '${e.name} : ',
-                            //            style: TextStyle(fontWeight: FontWeight.w800),
-                            //          ),
-                            //          Text('${e.value}  '),
-                            //
-                            //        ],
-                            //      ),
-                            //    ),),
-                            //     SizedBox(height: 20,)
-                            //
-                            //   ]),
-                            // ),
                           ],
                         ),
                       ),
@@ -236,8 +203,8 @@ addRemoveBloc.close();
                           children: [
 
                             Container(
-                                width: SizeConfig.widhtMulti * 30
-                                ,height: 6 * SizeConfig.heightMulti
+                                width: SizeConfig.widhtMulti * 25
+                                ,height: 5 * SizeConfig.heightMulti
                                 ,  child: LayoutBuilder(
                               builder:
                                   (BuildContext context, BoxConstraints constraints) {
@@ -310,7 +277,7 @@ addRemoveBloc.close();
                             Text('${productModel.price}  AED',
                               style: GoogleFonts.lato(
                                   color: ColorsConst.mainColor,
-                                  fontSize: SizeConfig.titleSize * 2.8,
+                                  fontSize: SizeConfig.titleSize * 2.3,
                                   fontWeight: FontWeight.bold
                               ),
                             ),
@@ -320,7 +287,7 @@ addRemoveBloc.close();
                         Builder(
                           builder:(context)=> Container(
                             clipBehavior: Clip.antiAlias,
-                            height: 7.3 * SizeConfig.heightMulti,
+                            height: 6 * SizeConfig.heightMulti,
                             decoration: BoxDecoration(
                                 color: ColorsConst.mainColor,
                                 borderRadius: BorderRadius.circular(10)),
@@ -355,7 +322,7 @@ addRemoveBloc.close();
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: SizeConfig.titleSize * 2.7),
+                                        fontSize: SizeConfig.titleSize * 2.2),
                                   ),
                                   SizedBox(
                                     width: 10,

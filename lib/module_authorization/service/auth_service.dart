@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/enums/auth_status.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
@@ -17,7 +18,6 @@ import 'package:rxdart/rxdart.dart';
 
 class AuthService {
   final AuthRepository _repository = new AuthRepository();
-
   final AuthPrefsHelper _prefsHelper = AuthPrefsHelper();
   FirebaseAuth _auth = FirebaseAuth.instance;
    String _verificationCode ='';
@@ -51,6 +51,7 @@ Future<AppUser>  getCurrentUser()async{
       password: password,
       userRole: role,
     );
+    final bool currentLangIsArabic = UtilsConst.lang == 'ar'?true:false;
 
     try {
       String? token = await _repository.register(request);
@@ -58,7 +59,7 @@ Future<AppUser>  getCurrentUser()async{
       print('=========== token after register =============');
       print(token);
       if(token != null)
-        return RegisterResponse(data:'Error in Register', state: false);
+        return RegisterResponse(data:currentLangIsArabic?'حدث خطأ في عملية التسجيل':'Error in Register', state: false);
 
       return RegisterResponse(data: 'Success !', state: true);
 
@@ -69,7 +70,7 @@ Future<AppUser>  getCurrentUser()async{
           switch (e.code) {
             case 'auth/email-already-in-use':
               {
-                message = 'Email Already In Use';
+                message =currentLangIsArabic?'البريد الاليكتروني قيد الاستخدام': 'Email Already In Use';
                 Logger()
                     .info('AuthService', 'Email address $email already in use.');
                 break;
@@ -77,7 +78,7 @@ Future<AppUser>  getCurrentUser()async{
 
             case 'auth/invalid-email':
               {
-                message = 'Invalid Email';
+                message = currentLangIsArabic?'الايميل غير صحيح':'Invalid Email';
 
                 Logger().info('AuthService', 'Email address $email is invalid.');
                 break;
@@ -85,13 +86,13 @@ Future<AppUser>  getCurrentUser()async{
 
             case 'auth/operation-not-allowed':
               {
-                message = 'Operation Not Allowed';
+                message = currentLangIsArabic?'العملية غير مسموح بها':'Operation Not Allowed';
                 Logger().info('AuthService', 'Error during sign up.');
                 break;
               }
 
             case 'auth/weak-password':{
-              message = 'Weak Password';
+              message = currentLangIsArabic?'كلمة السر ضعيفة':'Weak Password';
               Logger().info('AuthService',
                   'Password is not strong enough. Add additional characters including special characters and numbers.');
               break;
@@ -106,15 +107,16 @@ Future<AppUser>  getCurrentUser()async{
         return RegisterResponse(data:message, state: false);
 
       } else {
-        return RegisterResponse(data: 'Error in Register', state: false);
+        return RegisterResponse(data:  currentLangIsArabic?'خطأ في عملية التسجيل':'Error in Register', state: false);
       }
     }
   }
 
   Future<RegisterResponse> createProfile(ProfileRequest profileRequest) async {
+    final bool currentLangIsArabic = UtilsConst.lang == 'ar'?true:false;
     try {
       bool result = await _repository.createProfile(profileRequest);
-      return RegisterResponse(data: 'Success Register !', state: true);
+      return RegisterResponse(data: currentLangIsArabic?'تم التسجيل بنجاح': 'Success Register !', state: true);
     } catch (e) {
       return RegisterResponse(data: e.toString(), state: false);
     }
@@ -124,6 +126,8 @@ Future<AppUser>  getCurrentUser()async{
     String email,
     String password,
   ) async {
+    final bool currentLangIsArabic = UtilsConst.lang == 'ar'?true:false;
+
     try {
       LoginRequest request = LoginRequest(email, password);
       LoginResponse response = await _repository.signIn(request);
@@ -135,7 +139,7 @@ Future<AppUser>  getCurrentUser()async{
       ]);
 
       return AuthResponse(
-          message: 'Login Success', status: AuthStatus.AUTHORIZED);
+          message:  currentLangIsArabic?'تم تسجيل الدخول بنجاح':'Login Success', status: AuthStatus.AUTHORIZED);
     } catch (e) {
       if (e is FirebaseAuthException) {
         Logger().info('AuthService', e.code.toString());
@@ -143,7 +147,7 @@ Future<AppUser>  getCurrentUser()async{
         switch (e.code) {
           case 'user-not-found':
             {
-              message = 'User not found !';
+              message =  currentLangIsArabic?'الحساب غير موجود':'User not found !';
               Logger()
                   .info('AuthService', 'User Not Found');
               break;
@@ -151,7 +155,7 @@ Future<AppUser>  getCurrentUser()async{
 
           case 'wrong-password':
             {
-              message = 'The password is incorrect';
+              message = currentLangIsArabic?'كلمة السر غير صحيحة':'The password is incorrect';
 
               Logger().info('AuthService', 'The password is incorrect');
               break;
@@ -178,7 +182,7 @@ Future<AppUser>  getCurrentUser()async{
 
 
       return AuthResponse(
-          message: 'Error in Login!', status: AuthStatus.UNAUTHORIZED);
+          message:currentLangIsArabic?'خطأ في عملية تسجيل الدخول': 'Error in Login!', status: AuthStatus.UNAUTHORIZED);
     }
   }
 
@@ -192,7 +196,6 @@ Future<AppUser>  getCurrentUser()async{
     // Change This
      try{
        ProfileResponse profileResponse = await _repository.getProfile(user!.uid);
-       print('profile!!!!!!!!!!!!!!!');
        print(profileResponse.userRole);
        await Future.wait([
          _prefsHelper.setUserId(user.uid),
@@ -221,9 +224,11 @@ Future<AppUser>  getCurrentUser()async{
 
  Future<AuthResponse> resetPassword(String email) async{
     try {
+      final bool currentLangIsArabic = UtilsConst.lang == 'ar'?true:false;
+
       bool response = await _repository.getNewPassword(email);
       return AuthResponse(
-          message: 'The new code has been sent', status: AuthStatus.AUTHORIZED);
+          message:currentLangIsArabic?'تم ارسال الرمز ': 'The new code has been sent', status: AuthStatus.AUTHORIZED);
     } catch (e) {
 
       return AuthResponse(
@@ -233,19 +238,21 @@ Future<AppUser>  getCurrentUser()async{
 
 
   Future<AuthResponse> confirmWithCode(String code) async {
+    final bool currentLangIsArabic = UtilsConst.lang == 'ar'?true:false;
 
   try{
+
     AuthCredential authCredential = PhoneAuthProvider.credential(
       verificationId: _verificationCode,
       smsCode: code,
     );
    await _auth.signInWithCredential(authCredential);
     return AuthResponse(
-        message: 'Success Verification', status: AuthStatus.AUTHORIZED);
+        message: currentLangIsArabic?'تم التحقق بنجاح':'Success Verification', status: AuthStatus.AUTHORIZED);
   }catch(e){
     print(e);
     return AuthResponse(
-        message: 'Error Verification', status: AuthStatus.UNAUTHORIZED);
+        message: currentLangIsArabic?'خطأ في عملية التحقق':'Error Verification', status: AuthStatus.UNAUTHORIZED);
   }
 
   }

@@ -87,6 +87,7 @@ class CompanyService {
               map);
           CompanyModel companyModel = CompanyModel(
               id: res.id, name: res.name, imageUrl: res.imageUrl,description:res.description );
+          companyModel.isActive = res.isActive;
           companyModel.storeId = res.storeId;
           companyList.add(companyModel);
         });

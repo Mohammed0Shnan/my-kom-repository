@@ -26,6 +26,7 @@ class CreateOrderRequest {
   CreateOrderRequest(
       {
      required this.userId,
+        required this.storeId,
      required this.destination,
      required this.phone,
      required this.payment,
@@ -39,7 +40,7 @@ class CreateOrderRequest {
         required this.cardId,
         required this.customerOrderID
         ,required this.productsIdes,
-        required this.vipOrder
+        required this.vipOrder,
       });
 
   // CreateOrderRequest.fromJson(Map<String, dynamic> json) {
@@ -56,7 +57,7 @@ class CreateOrderRequest {
 
     data['userId'] = this.userId;
     data['vip_order'] = this.vipOrder;
-    // data['storeId'] = this.storeId;
+     data['store_Id'] = this.storeId;
     data['status'] = this.status;
     data['payment'] = this.payment;
     data['description'] = this.description;
@@ -77,7 +78,7 @@ class CreateOrderRequest {
     data['card_id'] = this.cardId==null ? null : this.cardId ;
     data['products_ides'] = this.productsIdes;
     data['customer_order_id'] =this.customerOrderID;
-    // data['storeId'] = this.storeId;
+     data['store_Id'] = this.storeId;
     data['products'] = this.products.map((e) =>e.toJson()).toList();
     data['delivery_time'] = this.deliveryTime;
     data['number_of_month'] = this.numberOfMonth;

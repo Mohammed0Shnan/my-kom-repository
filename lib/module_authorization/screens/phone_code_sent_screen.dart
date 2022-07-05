@@ -6,6 +6,8 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/bloc/phone_verification_bloc.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/generated/l10n.dart';
+import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class PhoneCodeSentScreen extends StatefulWidget {
   final String phoneNumber ;
@@ -69,15 +71,15 @@ class _PhoneCodeSentScreenState extends State<PhoneCodeSentScreen> {
              {
                if(state.message == 'CODE SENT'){
                  Scaffold.of(context).showBottomSheet((context) => Container(
-                   child: Text('Code sent by text message'),
+                   child: Text( S.of(context)!.codeSend),
                  ));
                }else if (state.message == 'CODE TIMEOUT'){
                  Scaffold.of(context).showBottomSheet((context) => Container(
-                   child: Text('If the code is not received, redial the code'),
+                   child: Text(S.of(context)!.codeTimeOut),
                  ));
                }else if(state.message == 'UNAUTHORIZED'){
                  Scaffold.of(context).showBottomSheet((context) => Container(
-                   child: Text('There was an error !!!'),
+                   child: Text(S.of(context)!.errorInLogin),
                  ));
                }
              }
@@ -99,7 +101,11 @@ class _PhoneCodeSentScreenState extends State<PhoneCodeSentScreen> {
               );
             else
             return Container(
-              decoration: BoxDecoration(color:ColorsConst.mainColor),
+              height: 40,
+              width: SizeConfig.screenWidth * 0.4,
+              decoration: BoxDecoration(color:ColorsConst.mainColor,
+              borderRadius: BorderRadius.circular(10)
+              ),
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: GestureDetector(
                 onTap: () {
@@ -112,22 +118,14 @@ class _PhoneCodeSentScreenState extends State<PhoneCodeSentScreen> {
                   _phoneVerificationBloc.confirmCaptainCode(_confirmationController.text);
 
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        S.of(context)!.confirmCode,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child:  Center(child: Text(
+                  S.of(context)!.confirmCode,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),)
               ),
             );
             }

@@ -118,7 +118,7 @@ class OrdersService {
   }
 
   Future<OrderModel?> addNewOrder(
-      {required List<ProductModel>  products ,required String addressName, required String deliveryTimes,
+      {required List<ProductModel>  products ,required String storeId,required String addressName, required String deliveryTimes,
         required bool orderType , required GeoJson destination, required String phoneNumber,required String paymentMethod,
         required  double amount , required String? cardId,required int numberOfMonth,required bool reorder,String? description
         ,required int? customerOrderID,required List<String>? productsIds
@@ -175,6 +175,7 @@ class OrdersService {
 
        orderRequest = CreateOrderRequest(
           userId: uId!,
+           storeId: storeId,
            vipOrder: orderType,
            destination: destination,
           phone: phoneNumber,
@@ -199,6 +200,7 @@ class OrdersService {
         throw Exception();
       orderRequest = CreateOrderRequest(
           userId: uId!,
+          storeId: storeId,
           vipOrder: orderType,
           destination: destination,
           phone: phoneNumber,
@@ -263,7 +265,7 @@ class OrdersService {
     }
     else{
 
-      OrderModel? neworder = await addNewOrder(productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, orderType: order.vipOrder, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
+      OrderModel? neworder = await addNewOrder(storeId:order.storeId,productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, orderType: order.vipOrder, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
       reorder: true,
         description: order.description
       );

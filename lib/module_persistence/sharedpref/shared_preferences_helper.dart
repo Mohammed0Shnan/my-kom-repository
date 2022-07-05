@@ -1,6 +1,7 @@
 
-// import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
@@ -9,22 +10,43 @@ class SharedPreferencesHelper {
     await SharedPreferences.getInstance();
     await _sharedPreferences.setString('storeID', store);
   }
+
   Future<String?> getCurrentStore() async {
     SharedPreferences _sharedPreferences =
     await SharedPreferences.getInstance();
      return  _sharedPreferences.getString('storeID');
   }
-  Future<void> setCurrentSubArea(String store) async {
+
+  Future<void> removeCurrentStore() async {
+
     SharedPreferences _sharedPreferences =
     await SharedPreferences.getInstance();
-    await _sharedPreferences.setString('sub_area', store);
+    _sharedPreferences.remove('storeID');
   }
+
+  Future<void> setCurrentSubArea(String subArea) async {
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+    await _sharedPreferences.setString('sub_area', subArea);
+  }
+
+
   Future<String?> getCurrentSubArea() async {
+   await EasyLoading.show(
+      status: UtilsConst.lang == 'en'?'Please Wait':'انتظر قليلا',
+      maskType: EasyLoadingMaskType.black,
+    );
+
     SharedPreferences _sharedPreferences =
     await SharedPreferences.getInstance();
     return  _sharedPreferences.getString('sub_area');
   }
+  Future<void> removeCurrentSubArea() async {
 
+    SharedPreferences _sharedPreferences =
+    await SharedPreferences.getInstance();
+      _sharedPreferences.remove('sub_area');
+  }
 
   Future<void> setMinimumPurchaseStore(double minimum_purchase) async {
     SharedPreferences _sharedPreferences =
@@ -53,6 +75,8 @@ class SharedPreferencesHelper {
     return  res;
 
   }
+
+
 
 
 

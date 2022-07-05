@@ -3,6 +3,7 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class CompleteOrderScreen extends StatefulWidget {
   final String orderId;
@@ -25,14 +26,14 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
             SizedBox(height: SizeConfig.screenHeight * 0.15,),
             Center(
               child: Container(
-                height: SizeConfig.screenHeight * 0.35,
-                width: SizeConfig.screenWidth * 0.7,
+                height: SizeConfig.screenHeight * 0.3,
+                width: SizeConfig.screenWidth * 0.6,
                 child: Image.asset('assets/complete_order.png',fit: BoxFit.contain,),
               ),
             ),
-            Text('Thank you !',style: TextStyle(fontSize: 25,fontWeight: FontWeight.w800,color: Colors.black54),),
+            Text(S.of(context)!.thankYou,style: TextStyle(fontSize: SizeConfig.titleSize * 3.2,fontWeight: FontWeight.w800,color: Colors.black54),),
             SizedBox(height: 8,),
-            Text('Your request has been received',style: TextStyle(fontSize: 19,fontWeight: FontWeight.w800,color: Colors.black45)),
+            Text(S.of(context)!.orderReceived,style: TextStyle(fontSize: SizeConfig.titleSize * 2.2,fontWeight: FontWeight.w800,color: Colors.black45)),
             Spacer(),
             Container(
               height: SizeConfig.heightMulti * 6,
@@ -44,9 +45,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
               width: SizeConfig.screenWidth,
               child: MaterialButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  widget.orderId);
+                  Navigator.pushNamed(context, OrdersRoutes.ORDER_STATUS_SCREEN ,arguments:  widget.orderId);
                 },
-                child: Center(child: Text('Follow The Order',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),),
+                child: Center(child: Text(S.of(context)!.trackingOrder,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.5),),),
               ),
             ),SizedBox(height:10,),
             Container(
@@ -63,9 +64,9 @@ class _CompleteOrderScreenState extends State<CompleteOrderScreen> {
               width: SizeConfig.screenWidth,
               child: MaterialButton(
                 onPressed: (){
-                  Navigator.pushNamed(context, NavigatorRoutes.NAVIGATOR_SCREEN);
+                  Navigator.pushNamedAndRemoveUntil(context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=>false);
                 },
-                child: Center(child: Text('Go To Home',style: TextStyle(color: ColorsConst.mainColor,fontSize: SizeConfig.titleSize * 2.7),),),
+                child: Center(child: Text(S.of(context)!.goToHome,style: TextStyle(color: ColorsConst.mainColor,fontSize: SizeConfig.titleSize * 2.5),),),
               ),
             ),SizedBox(height: 20,),
           ],

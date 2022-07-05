@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 
 loginCheakAlertWidget(context){
@@ -13,8 +14,8 @@ loginCheakAlertWidget(context){
       borderRadius: BorderRadius.circular(20)
     ),
     content: Container(
-      height: SizeConfig.screenHeight * 0.5,
-      width: SizeConfig.screenWidth * 0.8,
+      height: SizeConfig.screenHeight * 0.4,
+      width: SizeConfig.screenWidth * 0.6,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20)
@@ -37,13 +38,13 @@ loginCheakAlertWidget(context){
           SizedBox(height: 10,),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            height: SizeConfig.screenHeight * 0.25,
+            height: SizeConfig.screenHeight * 0.2,
             width: double.infinity,
 
             child: Image.asset('assets/not_login.png',fit: BoxFit.fill,),
           ),
-          Center(child: Text('You are not subscribed to May Kom',style: GoogleFonts.lato(
-              fontSize: SizeConfig.titleSize * 2.5,fontWeight: FontWeight.bold,color: Colors.black54
+          Center(child: Text(S.of(context)!.notLoggedIN,style: GoogleFonts.lato(
+              fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.bold,color: Colors.black54
           ),)),
           Spacer(),
           Container(
@@ -59,7 +60,7 @@ loginCheakAlertWidget(context){
               onPressed: (){
                 Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
               },
-              child:Text('Login',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+              child:Text(S.of(context)!.login,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
 
             ),
           ),

@@ -5,8 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
-  final MapService _service = MapService();
-  MapBloc() : super(MapInitState()) {
+  final MapService service = MapService();
+  MapBloc() : super(MapLoadingState()) {
     on<MapEvents>((MapEvents event, Emitter<MapStates> emit) {
       if (event is MapLoadingEvent)
         emit(MapLoadingState());
@@ -19,6 +19,8 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
         emit(MapSuccessSavePositionState(message: event.message,
         latitude: event.latitude,longitude: event.longitude
         ));
+      }else {
+        emit(MapInitState());
       }
     });
   }
@@ -26,7 +28,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
   Future<void> getCurrentPosition() async {
 
     this.add(MapLoadingEvent());
-    _service.getCurrentLocation().then((value) {
+    service.getCurrentLocation().then((value) {
       if(value.isError)
         this.add(MapErrorEvent(error_message: value.message.toString()));
       else
@@ -36,7 +38,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
 
   getSubArea(){
     this.add(MapLoadingEvent());
-    _service.getSubAreaPosition(null).then((value) {
+    service.getSubAreaPosition(null).then((value) {
       if(value == null)
         this.add(MapErrorEvent(error_message: 'Error Get Current Location '));
       else{
@@ -82,13 +84,13 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
   }
 
   void refresh(String subArea) {
-    // SharedPreferencesHelper().getCurrentStore().then((value) {
-    //
-    //
-    // });
     MapData newState = MapData(latitude: 0.0, longitude: 0.0, name: '', message:'', isError:false);
     newState.subArea = subArea;
-    add(MapSuccessEvent(newState,true));
+    this.add(MapSuccessEvent(newState,true));
+  }
+  void init() {
+
+    add(MapInitEvent());
   }
 }
 

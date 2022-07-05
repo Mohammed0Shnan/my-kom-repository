@@ -833,6 +833,154 @@ class S {
     );
   }
 
+  /// `Service Coming Soon`
+  String get serviceComingSoon {
+    return Intl.message(
+      'Service Coming Soon',
+      name: 'serviceComingSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Another Address`
+  String get anotherAddress {
+    return Intl.message(
+      'Another Address',
+      name: 'anotherAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Save Another Address`
+  String get saveAnotherAddress {
+    return Intl.message(
+      'Save Another Address',
+      name: 'saveAnotherAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Enter the name of the bookmark`
+  String get enterTheNameOfTheBookmark {
+    return Intl.message(
+      'Enter the name of the bookmark',
+      name: 'enterTheNameOfTheBookmark',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `please wait for save location`
+  String get pleaseWaitForSaveLocation {
+    return Intl.message(
+      'please wait for save location',
+      name: 'pleaseWaitForSaveLocation',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Success save location`
+  String get successSaveLocation {
+    return Intl.message(
+      'Success save location',
+      name: 'successSaveLocation',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Error save location`
+  String get errorSaveLocation {
+    return Intl.message(
+      'Error save location',
+      name: 'errorSaveLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name book Mark`
+  String get nameBookMark {
+    return Intl.message(
+      'Name book Mark',
+      name: 'nameBookMark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `After Save Location`
+  String get afterSaveLocation {
+    return Intl.message(
+      'After Save Location',
+      name: 'afterSaveLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error Load Location`
+  String get errorLoadLocation {
+    return Intl.message(
+      'Error Load Location',
+      name: 'errorLoadLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To`
+  String get to {
+    return Intl.message(
+      'To',
+      name: 'to',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove`
+  String get remove {
+    return Intl.message(
+      'Remove',
+      name: 'remove',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Signed out successfully`
+  String get signedOutSuccessfully {
+    return Intl.message(
+      'Signed Out Successfully',
+      name: 'signedOutSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+
+  /// `Removed`
+  String get removed {
+    return Intl.message(
+      'removed',
+      name: 'removed',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Hint Text Book Mark Field`
+  String get hintTextBookMarkField {
+    return Intl.message(
+      'Hint Text Book Mark Field',
+      name: 'hintTextBookMarkField',
+      desc: '',
+      args: [],
+    );
+  }
   /// `Empty Ship`
   String get emptyShip {
     return Intl.message(
@@ -1367,6 +1515,191 @@ class S {
     return Intl.message(
       'No',
       name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success Login`
+  String get successLogin {
+    return Intl.message(
+      'Success Login',
+      name: 'successLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email Is Already`
+  String get emailIsAlready {
+    return Intl.message(
+      'Email Is Already',
+      name: 'emailIsAlready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account Not Found`
+  String get accountNotFound {
+    return Intl.message(
+      'Email Is Already',
+      name: 'emailIsAlready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Incorrect Password`
+  String get incorrectPassword {
+    return Intl.message(
+      'Incorrect Password',
+      name: 'incorrectPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error In Login`
+  String get errorInLogin {
+    return Intl.message(
+      'Error In Login',
+      name: 'errorInLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error In Register`
+  String get errorInRegister {
+    return Intl.message(
+      'Error In Register',
+      name: 'errorInRegister',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go To Home`
+  String get goToHome {
+    return Intl.message(
+      'Go To Home',
+      name: 'goToHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Success Added`
+  String get orderSuccessAdded {
+    return Intl.message(
+      'Order Success Added',
+      name: 'orderSuccessAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Error Added`
+  String get orderErrorAdded {
+    return Intl.message(
+      'Order Error Added',
+      name: 'orderErrorAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map Save`
+  String get mapSave {
+    return Intl.message(
+      'Map Save',
+      name: 'mapSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map Delivery`
+  String get mapDelivery {
+    return Intl.message(
+      'Map Delivery',
+      name: 'mapDelivery',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Thank You`
+  String get thankYou {
+    return Intl.message(
+      'Thank You',
+      name: 'thankYou',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Order received`
+  String get orderReceived {
+    return Intl.message(
+      'Order received',
+      name: 'orderReceived',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Select And Save `
+  String get selectAndSave {
+    return Intl.message(
+      'Select And Save',
+      name: 'selectAndSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error In Get Current Location `
+  String get errorInGetCurrentLocation {
+    return Intl.message(
+      'Error In Get Current Location',
+      name: 'errorInGetCurrentLocation',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Code Send `
+  String get codeSend {
+    return Intl.message(
+      'Code Send',
+      name: 'codeSend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Code Time Out`
+  String get codeTimeOut {
+    return Intl.message(
+      'Code Time Out',
+      name: 'codeTimeOut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UnAuth`
+  String get unAuth {
+    return Intl.message(
+      'UnAuth',
+      name: 'unAuth',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Credit Coming Soon`
+  String get creditComingSoon {
+    return Intl.message(
+      'Credit Coming Soon',
+      name: 'creditComingSoon',
       desc: '',
       args: [],
     );

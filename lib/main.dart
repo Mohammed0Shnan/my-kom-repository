@@ -1,5 +1,8 @@
 
 
+
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,31 +22,41 @@ import 'package:my_kom/module_splash/splash_module.dart';
 import 'package:my_kom/module_splash/splash_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'module_map/map_module.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> backgroundHandler(RemoteMessage message)async{
-  print('============= backgroundHandler ============');
-  FirebaseMessaging.instance.subscribeToTopic('advertisements');
-  //
-
-  print(message.data.toString());
-  print(message.notification!.title);
+  await Firebase.initializeApp();
+  FireNotificationService().display(message.notification!);
 }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   final container = await AppComponent.create();
-
   BlocOverrides.runZoned(
     () {
       return runApp(container.app);
     },
     blocObserver: AppObserver(),
   );
+  configLoading();
 }
-
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+}
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
 
@@ -65,41 +78,54 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+Timer? _timer;
+  FirebaseMessaging messaging =  FirebaseMessaging.instance;
   @override
   void initState() {
-
+    EasyLoading.addStatusCallback((status) {
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
   FireNotificationService().init(context);
-
-  FirebaseMessaging.instance.getInitialMessage().then((value) {
-    if(value != null){
-      final routeFromMessage = value.data['route'];
-      Navigator.of(context).pushNamed( NavigatorRoutes.NAVIGATOR_SCREEN);
-    }
-  });
-  ///
-
-
-  FirebaseMessaging.onMessage.listen((event) {
-    print('##############  notification #############');
+    FirebaseMessaging.instance.subscribeToTopic('advertisements');
+    FirebaseMessaging.onMessage.listen((event) {
+    print('++++++++++++++++++++++++++++++++++ on Message  ++++++++++++++++++++++++++++++++++');
     if(event.notification != null){
-      print(event.notification!.body);
-      print(event.notification!.title);
       print(event.notification!.toMap());
-
+      FireNotificationService().display(event.notification!);
     }
-    FireNotificationService().display(event);
+
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print('##############  notification Clicked 000000000#############');
-    final routeFromMessage = event.data['route'];
-    Navigator.of(context).pushNamed( NavigatorRoutes.NAVIGATOR_SCREEN);
-    print(routeFromMessage);
+    print('++++++++++++++++++++++++++++++++++ on open app ++++++++++++++++++++++++++++++++++');
+    print(event.toMap());
+    Navigator.of(context).pushNamedAndRemoveUntil( NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
   });
 
-
+  messaging.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    provisional: false,
+    criticalAlert: false,
+    carPlay: false,
+  );
     super.initState();
   }
+
+@override
+void deactivate() {
+
+  EasyLoading.dismiss();
+  super.deactivate();
+}
   @override
   Widget build(BuildContext context) {
     Map<String, WidgetBuilder> routes = {};
@@ -146,8 +172,10 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: S.delegate.supportedLocales,
-              initialRoute: SplashRoutes.SPLASH_SCREEN
+              initialRoute: SplashRoutes.SPLASH_SCREEN,
+            builder: EasyLoading.init(),
           );
+
         });
   }
   @override

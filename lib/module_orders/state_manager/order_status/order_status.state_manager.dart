@@ -5,7 +5,6 @@ import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/service/orders/orders.service.dart';
 class OrderStatusBloc extends Bloc<OrderStatusEvent,OrderStatusStates> {
   final OrdersService _ordersService = OrdersService();
-  final AuthService _authService = AuthService();
 
   OrderStatusBloc() : super(OrderStatusLoadingState()) {
 

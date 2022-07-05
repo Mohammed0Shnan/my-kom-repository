@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
@@ -71,11 +72,11 @@ class _SettingScreenState extends State<SettingScreen> {
                                   ),
                                   items: [
                                     DropdownMenuItem(
-                                      child: Text('العربية',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45)),//Text(S.of(context).arabic),
+                                      child: Text('العربية',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87)),//Text(S.of(context).arabic),
                                       value: 'ar',
                                     ),
                                     DropdownMenuItem(
-                                      child:Text('english', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black45)),//, Text(S.of(context).english),
+                                      child:Text('English', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.2 * SizeConfig.heightMulti,color: Colors.black87)),//, Text(S.of(context).english),
                                       value: 'en',
                                     ),
                                   ],
@@ -108,7 +109,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.settings, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.settings, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -134,7 +135,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.info_outline ,color: ColorsConst.mainColor,size:5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.aboutApp, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.aboutApp, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -159,7 +160,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.privacyPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.privacyPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.1 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -186,7 +187,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.deliveryPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.deliveryPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.1 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -212,17 +213,26 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.contactUs, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.contactUs, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
-                    _authService.logout().then((value) {
-                      Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN,(route)=>false);
-                    });
+                  onTap: ()async{
+                  await  EasyLoading.show(status: S.of(context)!.pleaseWait);
+                 bool res = await _authService.isLoggedIn;
+                 if(res){
+                   _authService.logout().then((value) {
+                     Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
+                     EasyLoading.showSuccess(S.of(context)!.signedOutSuccessfully);
+
+                   });
+                 }else{
+                   await  EasyLoading.showError(S.of(context)!.notLoggedIN);
+                 }
+
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -239,7 +249,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.logout, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.3 * SizeConfig.heightMulti,color: Colors.black45),  ))
+                        Expanded(child: Text(S.of(context)!.logout, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
                       ],
                     ),
 

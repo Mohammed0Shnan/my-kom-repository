@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,11 @@ import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
-import 'package:my_kom/module_company/screen/notification_screen.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:my_kom/generated/l10n.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeScreen extends StatefulWidget {
    bool isInit;
@@ -45,42 +46,66 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
 final MapService mapService = MapService();
-  final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper();
+final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper();
 @override
   void initState() {
-  print(widget.isInit);
     _sharedPreferencesHelper.getCurrentSubArea().then((value) {
-      if(value == null)
+      if(value == null ){
         widget.mapBloc.getSubArea();
+      }
       else{
         widget.mapBloc.refresh(value);
       }
     });
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+@override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.inactive){
+      _sharedPreferencesHelper.removeCurrentSubArea();
+    }
+  }
+
+@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
-    
+
     return BlocConsumer<MapBloc,MapStates>(
       bloc:  widget.mapBloc,
       listener: (context , state){
         if(state is MapSuccessState){
-          if(state.isRefresh){
+
+           if(state.isRefresh){
             if(widget.isInit){
               widget.isInit = !widget.isInit;
               widget.checkZoneBloc.checkZone(state.data.subArea);
+            }else{
+              EasyLoading.dismiss();
             }
-          }else{
+          }
+          else{
             widget.checkZoneBloc.checkZone(state.data.subArea);
           }
           widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName:state.data.subArea));
         }
+         else if(state is MapErrorState)
+          EasyLoading.dismiss();
+
       },
       builder: (context, state) {
-
+        print(state);
         if(state is MapSuccessState){
             return Scaffold(
               backgroundColor: Colors.white,
@@ -94,7 +119,7 @@ final MapService mapService = MapService();
                       child:  IconButton(
                           icon: Icon(Icons.notifications_active_outlined,color: Colors.black,),
                           onPressed: () {
-                            Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
+                           // Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
                           }),
                     );
                   },
@@ -103,7 +128,7 @@ final MapService mapService = MapService();
                 backgroundColor: Colors.white,
                 title:  GestureDetector(
                   onTap: (){
-                    Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN,arguments: false).then((value) {
+                    Navigator.of(context).pushNamed(MapRoutes.MAP_SCREEN,arguments: false).then((value) async{
                       if (value != null) {
                         AddressModel addressModel = (value as AddressModel);
                         widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: addressModel.subArea));
@@ -117,11 +142,11 @@ final MapService mapService = MapService();
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.location_on_outlined,size: 18,color: Colors.black45,),
+                            Icon(Icons.location_on_outlined,size: 18,color: Colors.black87,),
                             Text(
                               S.of(context)!.deliveryTo,
                               style: TextStyle(
-                                  color: Colors.black45,
+                                  color: Colors.black87,
                                   fontSize: SizeConfig.titleSize * 2),
                             ),
                           ],
@@ -151,18 +176,20 @@ final MapService mapService = MapService();
               ),
               body: BlocConsumer<CheckZoneBloc,CheckZoneStates>(
                 bloc: widget.checkZoneBloc,
-                listener: (context,checkZoneState){
+                listener: (context,checkZoneState)async{
                   if(checkZoneState is CheckZoneSuccessState){
-
                     widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
                     widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
+
+                  EasyLoading.dismiss();
                   }
                   else if(checkZoneState is CheckZoneErrorState){
+                    EasyLoading.dismiss();
                     widget.allCompanyBloc.setInit();
                   }
+
                 },
                 builder: (context,checkZoneState) {
-                  print(checkZoneState);
                   if(checkZoneState is CheckZoneSuccessState){
                     return Material(
                       child: SafeArea(
@@ -175,7 +202,6 @@ final MapService mapService = MapService();
                                       builder: (context,state) {
                                         if(state is RecommendedProductsCompanySuccessState){
                                           List<AdvertisementModel> advertisement = state.data;
-                                          print(advertisement);
                                           return PageViewWidget(
                                               itemCount: advertisement.length,
                                               hieght: SizeConfig.screenHeight * 0.22,
@@ -184,7 +210,6 @@ final MapService mapService = MapService();
                                                   onTap: (){
                                                     AdvertisementModel a =  advertisement[index];
                                                     List<String> route = a.route.split('|') ;
-                                                    print(route);
                                                     if(route[0] == AdvertisementType.ADVERTISEMENT_PRODUCT.name){
                                                       String productId = route[1];
                                                       Navigator.pushNamed(context, CompanyRoutes.PRODUCTS_DETAIL_SCREEN,arguments:productId );
@@ -192,7 +217,6 @@ final MapService mapService = MapService();
                                                     }else if(route[0] == AdvertisementType.ADVERTISEMENT_COMPANY.name){
 
                                                       List<String> route_arrguments=  route[1].split('&');
-                                                      print(route_arrguments);
                                                       String companyId =route_arrguments[0];
                                                       String companyName =route_arrguments[1];
                                                       String companyImage =route_arrguments[2];
@@ -200,9 +224,7 @@ final MapService mapService = MapService();
                                                       argumentsRoute.companyId = companyId.replaceAll('id=','');
                                                       argumentsRoute.companyName = companyName.replaceAll('name=','');
                                                       argumentsRoute.companyImage = companyImage.replaceAll('image=','');
-                                                      print(argumentsRoute.companyId);
-                                                      print(argumentsRoute.companyName);
-                                                      print(argumentsRoute.companyImage);
+
                                                      Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: argumentsRoute);
                                                     }
                                                   },
@@ -252,7 +274,7 @@ final MapService mapService = MapService();
                                                       widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
 
                                                     },
-                                                    child: Text('refresh',style: TextStyle(color: Colors.blue,decoration: TextDecoration.underline),)),
+                                                    child: Text(S.of(context)!.refresh,style: TextStyle(color: Colors.blue,decoration: TextDecoration.underline),)),
                                                 SizedBox(height: 20,),
                                               ],
                                             ),
@@ -323,40 +345,41 @@ final MapService mapService = MapService();
                     );
                   }
                   else if(checkZoneState is CheckZoneLoadingState){
-                   return Center(
-                      child: Material(
-
-                        elevation: 8,
-                        clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                          ),
-                          padding: EdgeInsets.all(10),
-
-                          width: 140,
-                          height: 70,
-                          child: Center(child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(S.of(context)!.pleaseWait),
-                              Container(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-
-                                  color: Colors.black54,),
-
-                              ),
-                            ],
-                          ),),
-                        ),
-                      ),
-                    );
+                    return SizedBox.shrink();
+                   // return Center(
+                   //    child: Material(
+                   //
+                   //      elevation: 8,
+                   //      clipBehavior: Clip.antiAlias,
+                   //      shape: RoundedRectangleBorder(
+                   //          borderRadius: BorderRadius.circular(10)
+                   //
+                   //      ),
+                   //      child: Container(
+                   //        decoration: BoxDecoration(
+                   //          color: Colors.white.withOpacity(0.5),
+                   //        ),
+                   //        padding: EdgeInsets.all(10),
+                   //
+                   //        width: 140,
+                   //        height: 70,
+                   //        child: Center(child: Row(
+                   //          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   //          children: [
+                   //            Text(S.of(context)!.pleaseWait),
+                   //            Container(
+                   //              height: 20,
+                   //              width: 20,
+                   //              child: CircularProgressIndicator(
+                   //
+                   //                color: Colors.black54,),
+                   //
+                   //            ),
+                   //          ],
+                   //        ),),
+                   //      ),
+                   //    ),
+                   //  );
                   }
                   else if(checkZoneState is CheckZoneErrorState){
                     return Center(
@@ -397,43 +420,9 @@ final MapService mapService = MapService();
               )
             );
 
-        }else if(state is MapLoadingState){
+        }
+        else if(state is MapLoadingState){
           return Scaffold(
-            backgroundColor: Colors.black12.withOpacity(0.1),
-            body: Center(
-              child: Material(
-
-                elevation: 8,
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
-
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                  padding: EdgeInsets.all(10),
-
-                  width: 140,
-                  height: 70,
-                  child: Center(child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(S.of(context)!.pleaseWait),
-                      Container(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-
-                          color: Colors.black54,),
-
-                      ),
-                    ],
-                  ),),
-                ),
-              ),
-            ),
           );
         }
         else if(state is MapErrorState){
@@ -498,6 +487,8 @@ final MapService mapService = MapService();
 
     await widget.allCompanyBloc.getAllCompany( storeId);
   }
+
+
 }
 class CompanySearch extends SearchDelegate<SearchModel?>{
   late AllCompanyBloc _allCompanyBloc ;
@@ -540,7 +531,6 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
                itemBuilder: (context,index){
                  return ListTile(leading: Icon(Icons.location_city),
                    onTap: (){
-                    //close();
                      CompanyArgumentsRoute argumentsRoute = CompanyArgumentsRoute();
                      argumentsRoute.companyId = suggestionList[index].id;
                      argumentsRoute.companyImage = suggestionList[index].imageUrl;

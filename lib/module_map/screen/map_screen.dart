@@ -7,18 +7,19 @@ import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_localization/presistance/localization_preferences_helper.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
-import 'package:my_kom/module_map/service/map_service.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 class MapScreen extends StatefulWidget {
+  final MapBloc mapBloc;
   final LocalizationPreferencesHelper _preferencesHelper =
   LocalizationPreferencesHelper();
-   MapScreen({Key? key}) : super(key: key);
+   MapScreen({required this.mapBloc,Key? key}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -29,23 +30,20 @@ const kGoogleApiKey = 'AIzaSyD2mHkT8_abpMD9LJl307Qhk7GHWuKqMJw';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _MapScreenState extends State<MapScreen> {
-  final MapService _mapService = MapService();
 
   Completer<GoogleMapController> _controller = Completer();
 
   final CameraPosition _kGooglePlex = CameraPosition(
       target: LatLng(24.46515637636609, 54.351306818425655), zoom: 13.0);
   late final TextEditingController _searchController;
-  bool? register = null;
+  bool? register= null;
   String language ='en';
   @override
   void initState() {
     widget._preferencesHelper.getLanguage().then((value) {
       language = value!;
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      register = ModalRoute.of(context)!.settings.arguments as bool;
-    });
+
     super.initState();
     _searchController = TextEditingController(text: '');
     mapBloc.getCurrentPosition();
@@ -57,6 +55,10 @@ class _MapScreenState extends State<MapScreen> {
   final Mode _mode = Mode.overlay;
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      register = ModalRoute.of(context)!.settings.arguments as bool;
+      setState((){});
+    });
     return BlocConsumer<MapBloc, MapStates>(
       bloc: mapBloc,
       listener: (context, state) async {
@@ -73,7 +75,7 @@ class _MapScreenState extends State<MapScreen> {
             context,
             CustomSnackBar.error(
                 icon: Icon(Icons.location_off_sharp),
-                message: state.error_message),
+                message: S.of(context)!.errorInGetCurrentLocation),
           );
         } else if (state is MapSuccessSavePositionState) {
           late AddressModel addressModel;
@@ -85,7 +87,7 @@ class _MapScreenState extends State<MapScreen> {
                 latitude: latLan.latitude,
                 longitude: latLan.longitude,
                 geoData: {});
-            String subArea = await _mapService
+            String subArea = await widget.mapBloc.service
                 .getSubArea(LatLng(latLan.latitude, latLan.longitude));
             addressModel.subArea = subArea;
           } else {
@@ -94,7 +96,7 @@ class _MapScreenState extends State<MapScreen> {
                 latitude: state.latitude,
                 longitude: state.longitude,
                 geoData: {});
-            String subArea = await _mapService
+            String subArea = await widget.mapBloc.service
                 .getSubArea(LatLng(state.latitude, state.longitude));
             addressModel.subArea = subArea;
           }
@@ -103,7 +105,7 @@ class _MapScreenState extends State<MapScreen> {
           location_from_search = null;
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
           getDetailFromLocation(latLng);
-          _mapService.getSubArea(latLng);
+          widget.mapBloc.service.getSubArea(latLng);
         }
       },
       builder: (context, state) {
@@ -176,18 +178,23 @@ class _MapScreenState extends State<MapScreen> {
                                           color: ColorsConst.mainColor,
                                         ),
                                       ),
-                                     
                                       Expanded(
                                         child: Container(
                                             padding: EdgeInsets.all(4),
                                             alignment: Alignment.centerLeft,
                                             height: SizeConfig.heightMulti * 6,
                                             child: Text(
-                                              _searchController.text,
-                                              style: GoogleFonts.lato(
+                                              _searchController.text == ''?
+                                              'Search': _searchController.text
+                                              ,
+                                              style:_searchController.text == ''? GoogleFonts.lato(
+                                                  color: Colors.black38,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: SizeConfig.titleSize * 2)
+                                              :GoogleFonts.lato(
                                                   color: Colors.black87,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 12),
+                                                  fontSize: SizeConfig.titleSize * 1.6),
                                             )),
                                       ),
                                       SizedBox(
@@ -215,7 +222,7 @@ class _MapScreenState extends State<MapScreen> {
                         color: ColorsConst.mainColor,
                         elevation: 10,
                         child: Container(
-                          height: SizeConfig.heightMulti * 7,
+                          height: SizeConfig.heightMulti * 6,
                           child: TextButton(
                             onPressed: () {
                               if (location_from_search != null) {
@@ -236,7 +243,7 @@ class _MapScreenState extends State<MapScreen> {
                                     CustomSnackBar.info(
                                       backgroundColor: ColorsConst.mainColor,
                                       icon: Icon(Icons.location_on),
-                                      message: "Select the address and save !",
+                                      message: S.of(context)!.selectAndSave,
                                     ),
                                     displayDuration: Duration(seconds: 1),
                                   );
@@ -247,8 +254,8 @@ class _MapScreenState extends State<MapScreen> {
                               register == null
                                   ? ''
                                   : register!
-                                      ? 'Save'
-                                      : 'Delivery here',
+                                      ? S.of(context)!.mapSave
+                                      : S.of(context)!.mapDelivery,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: SizeConfig.titleSize * 2.8,
@@ -275,7 +282,7 @@ class _MapScreenState extends State<MapScreen> {
 
   getDetailFromLocation(LatLng latLng) async {
     LocationInformation _currentAddress =
-        await _mapService.getPositionDetail(latLng);
+        await widget.mapBloc.service.getPositionDetail(latLng);
     Marker marker = Marker(
         markerId: MarkerId('_current_position'),
         infoWindow: InfoWindow(
@@ -288,7 +295,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _move(LatLng latLng) async {
-    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 1);
+    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 13.0);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
@@ -327,8 +334,7 @@ class _MapScreenState extends State<MapScreen> {
         .showSnackBar(SnackBar(content: Text(response.errorMessage!)));
   }
 
-  Future<void> displayPrediction(
-      Prediction p, ScaffoldState? currentState) async {
+  Future<void> displayPrediction(Prediction p, ScaffoldState? currentState) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
         apiKey: kGoogleApiKey,
         apiHeaders: await const GoogleApiHeaders().getHeaders());

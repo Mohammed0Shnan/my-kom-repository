@@ -33,11 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       userId =  ModalRoute.of(context)!.settings.arguments as String? ;
-      // if(userId == null){
-      //   profileBloc.getMyProfile();
-      // }else{
-      //   profileBloc.getUserProfile(userId: userId!);
-      // }
 
     });
     super.initState();
@@ -54,8 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late AddressModel addressModel ;
   @override
   Widget build(BuildContext context) {
-
-    final node = FocusScope.of(context);
     return BlocConsumer<IsLogginCubit,IsLogginCubitState>(
         bloc: isLogginCubit,
         listener: (context,state){
@@ -134,14 +127,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             SizedBox(height: 5,),
                             Text(S.of(context)!.myProfile,textAlign: TextAlign.center,style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 30,
+                                fontSize: SizeConfig.titleSize * 3.2,
                                 fontWeight: FontWeight.bold
 
 
                             ),),
                             SizedBox(height: 20,),
                             Container(
-                              height: SizeConfig.screenHeight * 0.35,
+                              height: SizeConfig.screenHeight * 0.27,
                               child: LayoutBuilder(
                                 builder: (context,constraints){
                                   double innerHeight  = constraints.maxHeight;
@@ -155,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         bottom: 0,
                                         child: Container(
                                           alignment: Alignment.center,
-                                          height:innerHeight * 0.65,
+                                          height:innerHeight * 0.55,
                                           width:innerWidth ,
                                           decoration: BoxDecoration(
                                               color: Colors.white,
@@ -171,16 +164,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             children: [
 
                                               SizedBox(
-                                                height: SizeConfig.heightMulti * 7,
+                                                height: SizeConfig.heightMulti * 4.5,
                                               ),
                                               Center(
                                                 child: TextFormField(
                                                   textAlign: TextAlign.center,
+
                                                   controller: _profileUserNameController,
 
                                                   style: TextStyle(
 
-                                                      fontSize: 27,
+                                                      fontSize: SizeConfig.titleSize * 2.8,
                                                       fontWeight: FontWeight.bold,
                                                       color: Colors.grey[700]
                                                   ),
@@ -194,13 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   // Move focus to next
                                                 ),
                                               ),
-                                              //
-                                              // SizedBox(height: 8,),
-                                              // Text(state.data.userRole.name.toString(),style: TextStyle(
-                                              //     fontSize: 15,
-                                              //     fontWeight: FontWeight.bold,
-                                              //     color: Colors.grey[700]
-                                              // )),
+
 
                                             ],),
                                         ),
@@ -222,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                             child: Image.asset('assets/profile.png',
                                               fit: BoxFit.fitWidth,
-                                              width: innerWidth *0.45,
+                                              width: innerWidth *0.35,
                                             ),
                                           ),
                                         ),
@@ -235,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             SizedBox(height: 25,),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 15),
-                              height: SizeConfig.screenHeight * 0.55,
+                              height: SizeConfig.screenHeight * 0.43,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 color: Colors.white,
@@ -250,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(height: 20,),
 
                                   Text(S.of(context)!.myInformation,style:  TextStyle(
-                                      fontSize: 24,
+                                      fontSize: SizeConfig.titleSize * 2.3,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[600]
                                   ),),
@@ -260,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(height: 10,),
 
                                   Container(
-                                    height: SizeConfig.screenHeight *0.17,
+                                    height: SizeConfig.screenHeight *0.14,
                                     padding: EdgeInsets.symmetric(horizontal: 20),
                                     decoration: BoxDecoration(
 
@@ -271,15 +259,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
+                                        SizedBox(height: 8,),
                                         Text(S.of(context)!.myAddress,style:  TextStyle(
-                                            fontSize: 18,
+                                            fontSize: SizeConfig.titleSize * 2,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey[600]
                                         ),),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.location_on , color: ColorsConst.mainColor,),
+                                            Icon(Icons.location_on , color: ColorsConst.mainColor,size: 17,),
                                             SizedBox(width: 10,),
                                             Expanded(
                                               child: Container(
@@ -289,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   controller: _profileAddressController,
                                                   maxLines: 2,
                                                   style:  TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize:SizeConfig.titleSize * 1.7,
 
                                                       fontWeight: FontWeight.bold,
                                                       color: Colors.grey[600]
@@ -321,15 +310,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  width: SizeConfig.heightMulti * 6,
-                                                  height: SizeConfig.heightMulti * 6,
+                                                  width: SizeConfig.heightMulti * 5,
+                                                  height: SizeConfig.heightMulti * 5,
                                                   decoration: BoxDecoration(
                                                       color: ColorsConst.mainColor,
                                                       borderRadius:
                                                       BorderRadius.circular(10)),
                                                   child: Icon(
                                                       Icons.my_location_outlined,
-                                                      size: SizeConfig.heightMulti * 4,
+                                                      size: SizeConfig.heightMulti *3,
                                                       color: Colors.white),
                                                 ),
                                               )
@@ -343,7 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 20),
 
-                                    height: SizeConfig.screenHeight *0.20,
+                                    height: SizeConfig.screenHeight *0.15,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(30),
                                         color: Colors.grey.shade200
@@ -352,18 +341,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,                            children: [
                                       Text(S.of(context)!.emailAndPhone,style:  TextStyle(
-                                          fontSize: 18,
+                                          fontSize: SizeConfig.titleSize * 2,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey[600]
                                       ),),
-                                      SizedBox(height: 10,),
+                                      SizedBox(height: 8,),
 
                                       Row(
                                         children: [
-                                          Icon(Icons.email , color: ColorsConst.mainColor),
+                                          Icon(Icons.email , color: ColorsConst.mainColor,size: 17,),
                                           SizedBox(width: 10,),
                                           Text(state.data.email,style:  TextStyle(
-                                              fontSize: 16,
+                                              fontSize: SizeConfig.titleSize * 1.7,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.grey[600]
                                           ),),
@@ -375,10 +364,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(Icons.phone , color: ColorsConst.mainColor),
+                                          Icon(Icons.phone , color: ColorsConst.mainColor,size: 17,),
                                           SizedBox(width: 10,),
                                           Text(state.data.phone,style:  TextStyle(
-                                              fontSize: 16,
+                                              fontSize: SizeConfig.titleSize * 1.7,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.grey[600]
                                           ),),
@@ -424,136 +413,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
   }
-  Widget _getHeader(context) {
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              height: 150,
-              width: 150,
-              decoration: BoxDecoration(shape: BoxShape.circle),
-              child: Stack(alignment: Alignment.center, children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Container(
-                  height: 130,
 
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image:
-                    DecorationImage(image: AssetImage('assets/person.png')),
-                  ),
-
-                  // widget.request == null
-
-                  //     ? Container()
-
-                  //     : widget.request.image == null
-
-                  //         ? Container()
-
-                  //         : Container(
-
-                  //             height: 96,
-
-                  //             decoration: BoxDecoration(
-
-                  //               shape: BoxShape.circle,
-
-                  //               image: DecorationImage(
-
-                  //                   image: NetworkImage(
-
-                  //                       widget.request.image.contains('http')
-
-                  //                           ? widget.request.image
-
-                  //                           : Urls.IMAGES_ROOT +
-
-                  //                               widget.request.image),
-
-                  //                   fit: BoxFit.contain,
-
-                  //                   onError: (e, s) {
-
-                  //                     return AssetImage(
-
-                  //                         'assets/images/logo.png');
-
-                  //                   }),
-
-                  //             ),
-
-                  //           )
-                ),
-                Positioned(
-                    left: -5,
-                    bottom: 20,
-                    child: IconButton(
-                        icon: Icon(
-                          Icons.camera,
-                          size: 40,
-                        ),
-                        onPressed: () {
-                          // ImagePicker()
-                          //     .getImage(source: ImageSource.gallery)
-                          //     .then((value) {
-                          //   onImageChange(value.path);
-                            // widget.onImageUpload(
-
-                            //   ProfileRequest(
-
-                            //     userName: _firstNameController.text,
-
-                            //     lastName: _lastNameController.text,
-
-                            //     phone: _phoneController.text,
-
-                            //     location: _locationController.text,
-
-                            //     image: value.path,
-
-                            //   ),
-
-                            // );
-                          })
-                        )
-              ]),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    // Navigator.of(context)
-                    //     .pushNamed(ProfileRoutes.EDIT_PROFILE_SCREEN);
-                  }),
-              Text(
-                //profileModel.name,
-                'user name',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
 

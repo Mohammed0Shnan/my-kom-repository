@@ -111,7 +111,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       Text(
                      company.name,
                         style: TextStyle(
-                            fontSize: SizeConfig.titleSize * 3.3,
+                            fontSize: SizeConfig.titleSize * 2.8,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500),
                       ),
@@ -239,9 +239,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 future: _preferencesHelper.getMinimumPurchaseStore(),
                 builder: (context,AsyncSnapshot<double?> snap){
                   if(snap.hasData){
-                   return Text('${S.of(context)!.minimumAlert} ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                   return Text('${S.of(context)!.minimumAlert} ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }else{
-                  return Text('${S.of(context)!.minimumAlert} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.w600,color: Colors.black54),);
+                  return Text('${S.of(context)!.minimumAlert} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }
             }),
             Container(
@@ -266,16 +266,16 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(S.of(context)!.seeTheCart,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+                    Text(S.of(context)!.seeTheCart,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4),),
                     BlocBuilder<ShopCartBloc,CartState>(
                         bloc: shopCartBloc,
                         builder: (context,state) {
                           if(state is CartLoaded ){
 
-                            return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                            return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
                           }
                           else{
-                            return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7));
+                            return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
                           }
 
                         }
@@ -337,8 +337,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                                 color: Colors.black12,
-                                                blurRadius: 3,
-                                                offset: Offset(0, 5))
+                                                blurRadius: 2,
+                                                offset: Offset(0, 2))
                                           ]),
                                       child: Hero(
                                         tag:'product'+items[index].id,
@@ -477,7 +477,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 fontSize:
                                                                 SizeConfig
                                                                     .titleSize *
-                                                                    3),
+                                                                    2.4),
                                                           )
                                                               : SizedBox.shrink(),
                                                           SizedBox(width: 8,),
@@ -494,7 +494,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                   FontWeight.w700,
                                                                   fontSize: SizeConfig
                                                                       .titleSize *
-                                                                      4),
+                                                                      2.8),
                                                             ),
                                                           ),
 
@@ -510,7 +510,6 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                           Expanded(
                                                             child: Padding(
                                                               padding: EdgeInsets.symmetric(horizontal: 5),
-
                                                               child: Text(
                                                                 items[index].title,
                                                                 maxLines: 2,
@@ -536,7 +535,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 FontWeight.w700,
                                                                 fontSize: SizeConfig
                                                                     .titleSize *
-                                                                    2.2),
+                                                                    2),
                                                           ),
                                                         ],
                                                       ),

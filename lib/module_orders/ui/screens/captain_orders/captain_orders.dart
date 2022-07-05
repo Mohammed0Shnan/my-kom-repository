@@ -173,20 +173,6 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
     return BlocConsumer<CaptainOrdersListBloc ,CaptainOrdersListStates >(
       bloc: _ordersListBloc,
       listener: (context ,state){
-        // print(state);
-        // if (state is CaptainOrderDeletedErrorState){
-        //   if(state.message == 'Error'){
-        //    snackBarErrorWidget(context, 'Error in deleted !!');
-        //   }
-        //   else{
-        //     snackBarSuccessWidget(context, 'Success Deleted , Refresh !!');
-        //   }
-        // }
-        // else if(state is CaptainOrdersListSuccessState ){
-        //   if(state.message !=null){
-        //     snackBarSuccessWidget(context, 'Success Deleted , Refresh !!');
-        //   }
-        // }
       },
       builder: (maincontext,state) {
 
@@ -229,7 +215,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
-                      blurRadius:2,
+                      blurRadius:1,
                       spreadRadius: 1
                     )
                   ],
@@ -252,11 +238,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Text('Details',style: GoogleFonts.lato(
-                                  //   fontSize: 16,
-                                  //   color: Colors.black54,
-                                  //   fontWeight: FontWeight.w800
-                                  // ),),
+
                                   Spacer(),
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 8,vertical: 2),
@@ -277,7 +259,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
                                     fontSize: 12,
 
-                                    color: Colors.black45,
+                                    color: Colors.black87,
                                     fontWeight: FontWeight.w800
                                 ),
                               ),
@@ -335,7 +317,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 },
                                 child: Text(S.of(context)!.orderDetail, style: TextStyle(
                                     color: ColorsConst.mainColor,
-                                    fontSize: SizeConfig.titleSize * 2.4),),
+                                    fontSize: SizeConfig.titleSize * 2.1),),
 
                               ),
                             ),
@@ -353,7 +335,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
                               },
                               child: Text(S.of(context)!.trackShipment, style: TextStyle(color: Colors.white,
-                                  fontSize: SizeConfig.titleSize * 2.4),),
+                                  fontSize: SizeConfig.titleSize * 2.1),),
 
                             ),
                           ))
@@ -369,8 +351,8 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
         );}
         else  return Center(
              child: Container(
-               width: 40,
-               height: 40,
+               width: 30,
+               height: 30,
                child: CircularProgressIndicator(color: ColorsConst.mainColor,),
              ),
            );
@@ -383,20 +365,6 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
     return BlocConsumer<CaptainOrdersListBloc ,CaptainOrdersListStates >(
         bloc: _ordersListBloc,
         listener: (context ,state){
-          // print(state);
-          // if (state is CaptainOrderDeletedErrorState){
-          //   if(state.message == 'Error'){
-          //    snackBarErrorWidget(context, 'Error in deleted !!');
-          //   }
-          //   else{
-          //     snackBarSuccessWidget(context, 'Success Deleted , Refresh !!');
-          //   }
-          // }
-          // else if(state is CaptainOrdersListSuccessState ){
-          //   if(state.message !=null){
-          //     snackBarSuccessWidget(context, 'Success Deleted , Refresh !!');
-          //   }
-          // }
         },
         builder: (maincontext,state) {
 
@@ -441,7 +409,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                             boxShadow: [
                               BoxShadow(
                                   color: Colors.black12,
-                                  blurRadius:2,
+                                  blurRadius:1,
                                   spreadRadius: 1
                               )
                             ],
@@ -466,19 +434,13 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                       letterSpacing: 1,
                                       fontWeight: FontWeight.bold
                                   ),)
-                                  // InkWell(
-                                  //     onTap: (){
-                                  //
-                                  //       deleteOrderCheckAlertWidget(maincontext, orderID: orders[index].id);
-                                  //     },
-                                  //     child: Icon(Icons.close,color:Colors.black54 ,)),
                                 ],
                               ),
                               SizedBox(height: 8,),
                               Expanded(
                                 child: Text(orders[index].description,overflow: TextOverflow.ellipsis,style: GoogleFonts.lato(
                                     fontSize: 12,
-                                    color: Colors.black45,
+                                    color: Colors.black87,
                                     fontWeight: FontWeight.w800
                                 )),
                               ),

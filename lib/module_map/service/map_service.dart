@@ -5,13 +5,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
+import 'package:my_kom/module_profile/model/quick_location_model.dart';
 
 
 class MapService {
   // final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
-
+  final SharedPreferencesHelper _preferencesHelper =SharedPreferencesHelper();
   Future<MapData> getCurrentLocation() async {
         try {
           bool serviceEnabled;
@@ -115,41 +116,6 @@ class MapService {
         return _information;
   }
 
- Future<String> getDumyPosition()async{
-    try {
-      bool serviceEnabled;
-      LocationPermission permission;
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        Future.error('Location services are disabled');
-        throw('Location services are disabled');
-      }
-
-      permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          Future.error('Location permissions are denied');
-          throw('Location permissions are denied');
-
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        Future.error(
-            'Location permissions are permanently denied, we cannot request permissions.');
-        throw( 'Location permissions are permanently denied, we cannot request permissions.');
-
-      }
-     String subArea = await getSubArea(LatLng(37.42270380149313, -122.08567522466183));
-    return subArea;
-
-    }catch(e){
-
-return '';
-
-    }
-  }
 
  Future<String?> getSubAreaPosition(LatLng? latLng)async {
    late String subArea ;
@@ -160,6 +126,8 @@ return '';
      }else{
        subArea = await getSubArea(latLng);
      }
+     _preferencesHelper.setCurrentSubArea(subArea);
+
      return subArea;
 
    }catch(e){
@@ -168,10 +136,23 @@ return '';
   }
 
  Future<bool> checkAddressInArea(String storeId,String address) async{
-    print(address);
    QuerySnapshot zone_response = await _firestore.collection('zones').where('store_id',isEqualTo: storeId).where('name',arrayContains: address).get();
    return zone_response.docs.length != 0;
   }
+
+ Future<bool> saveQuickLocation(QuickLocationModel quickLocationModel) async{
+    try{
+      String? userId =await AuthPrefsHelper().getUserId();
+      await _firestore.collection('users').doc(userId).collection('quick_locations').add(quickLocationModel.toJson());
+      return true;
+    }catch(e){
+      print(e);
+      return false;
+    }
+
+  }
+
+
 
 
 }

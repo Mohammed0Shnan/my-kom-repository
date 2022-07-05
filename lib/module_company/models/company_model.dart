@@ -7,7 +7,7 @@ class CompanyModel {
   late String description;
   late String imageUrl;
   late List<ProductModel> products;
-
+  late bool isActive;
   CompanyModel({required this.id, required this.name, required this.imageUrl,required this.description});
 
   CompanyModel.fromJson(Map<String, dynamic> map) {
@@ -16,6 +16,7 @@ class CompanyModel {
     this.imageUrl = map['imageUrl'];
     this.description = map['description'];
     this.storeId = map['store_id'];
+    this.isActive = map['is_active'];
     if( map['products'] != null){
       List<ProductModel> productFromResponse = [];
       map['products'].forEach((v) {

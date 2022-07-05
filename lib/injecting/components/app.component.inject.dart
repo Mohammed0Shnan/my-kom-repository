@@ -38,7 +38,7 @@ class AppComponentInjector implements AppComponent {
 
   LocalizationService? _singletonLocalizationService;
   CompanyService? _singletonCompanyService;
-
+  MapBloc? _singletonMapBloc;
   static Future<AppComponent> create() async {
     final injector = AppComponentInjector._();
     return injector;
@@ -59,13 +59,18 @@ class AppComponentInjector implements AppComponent {
 
   LocalizationService _createLocalizationService() =>
       _singletonLocalizationService ??= LocalizationService();
-  AboutModule _createAboutModule() => AboutModule(LanguageScreen(localizationService: _singletonLocalizationService!,));
+  AboutModule _createAboutModule(){
+
+    _singletonMapBloc ??= MapBloc();
+    return AboutModule(LanguageScreen( mapBloc:_singletonMapBloc!,localizationService: _singletonLocalizationService!,));
+  }
   SplashModule _createSplashModule() =>
       SplashModule(SplashScreen(AuthService(), AboutService()));
   NavigatorModule _createNavigatorModule() {
     _singletonCompanyService ??= CompanyService();
+    _singletonMapBloc ??= MapBloc();
     return NavigatorModule( NavigatorScreen(
-        homeScreen: HomeScreen(mapBloc: MapBloc(),filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singletonCompanyService!),
+        homeScreen: HomeScreen(mapBloc: _singletonMapBloc!,filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singletonCompanyService!),
             recommendedProductsCompanyBloc: RecommendedProductsCompanyBloc(_singletonCompanyService!),
           checkZoneBloc: CheckZoneBloc(_singletonCompanyService!),
           isInit: true,
@@ -80,7 +85,10 @@ class AppComponentInjector implements AppComponent {
 
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule( LoginScreen(), RegisterScreen() );
-  MapModule _createMapModule() => MapModule(MapScreen());
+  MapModule _createMapModule() {
+    _singletonMapBloc ??= MapBloc();
+    return  MapModule(MapScreen(mapBloc:_singletonMapBloc!,));
+  }
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
   OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
   ProfileModule _createProfileModule()=> ProfileModule(ProfileScreen());

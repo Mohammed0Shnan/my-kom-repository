@@ -95,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          height: SizeConfig.screenHeight * 0.25,
+                          height: SizeConfig.screenHeight * 0.22,
                           margin: EdgeInsets.symmetric(
                               horizontal: SizeConfig.screenWidth * 0.2),
                           child: Column(
@@ -108,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   style: TextStyle(
                                       color: Colors.black45,
                                       fontWeight: FontWeight.w900,
-                                      fontSize: SizeConfig.titleSize * 4.8)),
+                                      fontSize: SizeConfig.titleSize * 4)),
                               SizedBox(
                                 height:SizeConfig.screenHeight * 0.02,
                               ),
@@ -120,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     Text(
                                       S.of(context)!.alreadyHaveOne,
                                       style: TextStyle(
-                                          fontSize: SizeConfig.titleSize * 3 ,
+                                          fontSize: SizeConfig.titleSize * 1.9 ,
                                           color: Colors.black45,
                                           fontWeight: FontWeight.w800
                                       ),
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       },
                                       child: Text(S.of(context)!.login,
                                           style:  GoogleFonts.lato(
-                                              fontSize: SizeConfig.titleSize * 2.5,
+                                              fontSize: SizeConfig.titleSize * 2,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.blue                          )),
                                     )
@@ -150,11 +150,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             children: [
                               ListTile(
                                   title: Padding(
-                                      padding: EdgeInsets.only(bottom: 8),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       child: Text(S.of(context)!.email, style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.4
+                                          color: Colors.black87,
+                                          fontSize: SizeConfig.titleSize * 2
                                       ))),
                                   subtitle: TextFormField(
                                     style: TextStyle(fontSize: 16,
@@ -193,11 +193,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               ListTile(
                                 title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
+                                    padding: EdgeInsets.only(bottom: 4),
                                     child: Text(S.of(context)!.password, style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.3
+                                        color: Colors.black87,
+                                        fontSize: SizeConfig.titleSize * 2
                                     ))),
                                 subtitle: BlocBuilder<PasswordHiddinCubit,
                                     PasswordHiddinCubitState>(
@@ -259,11 +259,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               ListTile(
                                 title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
+                                    padding: EdgeInsets.only(bottom: 4),
                                     child: Text(S.of(context)!.confirmPassword,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.3
+                                        color: Colors.black87,
+                                        fontSize: SizeConfig.titleSize * 2
                                     ))),
                                 subtitle: BlocBuilder<PasswordHiddinCubit,
                                     PasswordHiddinCubitState>(
@@ -359,7 +359,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   else
                                     return ListTile(
                                       title: Container(
-                                        height: SizeConfig.heightMulti * 10,
+                                        height: SizeConfig.heightMulti * 9,
                                         padding: EdgeInsets.symmetric(vertical: 10),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10)
@@ -393,7 +393,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize:
-                                                      SizeConfig.titleSize * 2.6,
+                                                      SizeConfig.titleSize * 2.3,
                                                       fontWeight: FontWeight.w700))),
                                         )
                                       ),
@@ -429,7 +429,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontWeight: FontWeight.w900,
-                                  fontSize: SizeConfig.titleSize * 4.5)),
+                                  fontSize: SizeConfig.titleSize * 4)),
                           SizedBox(height: SizeConfig.heightMulti * 3,),
                           // Container(
                           //   margin: EdgeInsets.symmetric(horizontal: 30),
@@ -472,11 +472,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 ListTile(
                                     title: Padding(
-                                      padding: EdgeInsets.only(bottom: 8),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       child: Text(S.of(context)!.name,style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.3
+                                          color: Colors.black87,
+                                          fontSize: SizeConfig.titleSize * 2
                                       ))),
                                     subtitle: TextFormField(
                                       controller: _registerUserNameController,
@@ -519,11 +519,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 ListTile(
                                     title: Padding(
-                                      padding: EdgeInsets.only(bottom: 8),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       child: Text( S.of(context)!.address, style:GoogleFonts.lato(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.3
+                                          color: Colors.black87,
+                                          fontSize: SizeConfig.titleSize * 2
                                       ))),
                                     subtitle: Row(
                                       children: [
@@ -589,8 +589,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           },
                                           child: Container(
 
-                                            width: SizeConfig.heightMulti * 7.4,
-                                            height: SizeConfig.heightMulti * 7.4,
+                                            width: SizeConfig.heightMulti * 7,
+                                            height: SizeConfig.heightMulti * 7,
                                             decoration: BoxDecoration(
                                                 color: ColorsConst.mainColor,
                                                 borderRadius:
@@ -608,11 +608,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 ListTile(
                                   title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
+                                    padding: EdgeInsets.only(bottom: 4),
                                     child: Text( S.of(context)!.phone,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.7
+                                        color: Colors.black87,
+                                        fontSize: SizeConfig.titleSize * 2
                                     ))),
                                   subtitle: Container(
 height: SizeConfig.heightMulti * 7,
@@ -729,7 +729,7 @@ height: SizeConfig.heightMulti * 7,
                                     else
                                       return ListTile(
                                         title: Container(
-                                          height: SizeConfig.heightMulti * 10,
+                                          height: SizeConfig.heightMulti * 9,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10)
                                           ),
@@ -768,7 +768,7 @@ height: SizeConfig.heightMulti * 7,
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize:
-                                                        SizeConfig.titleSize * 2.6,
+                                                        SizeConfig.titleSize * 2.3,
                                                         fontWeight: FontWeight.w700))),
                                           ),
                                         ),

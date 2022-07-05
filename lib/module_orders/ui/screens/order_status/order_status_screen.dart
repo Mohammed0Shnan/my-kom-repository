@@ -54,7 +54,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
             Text(
             S.of(context)!.trackingOrder,
               style: GoogleFonts.lato(
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white..withOpacity(0.8)
             ),
@@ -161,27 +161,17 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                           indicatorBuilder: (_, index) {
                             if (items[index].isComplete) {
                               return DotIndicator(
-                                size: 23,
+                                size: 20,
                                 color: Color(0xff66c97f),
-                                // child: Icon(
-                                //   Icons.check,
-                                //   color: Colors.white,
-                                //   size: 20.0,
-                                // ),
                               );
                             } else if(items[index].isNext){
                               return DotIndicator(
-                                size: 23,
+                                size: 20,
                                 color: Colors.indigoAccent,
-                                // child: Icon(
-                                //   Icons.check,
-                                //   color: Colors.white,
-                                //   size: 20.0,
-                                // ),
                               );
                             } else{
                               return OutlinedDotIndicator(
-                                size: 23,
+                                size: 20,
                                 borderWidth: 2.5,
                               );
                             }
@@ -191,13 +181,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.widhtMulti * 3),
                                 width: SizeConfig.screenWidth * 0.8,
                                 height: SizeConfig.screenHeight * 0.15,
-                               // color: items[index].isComplete? Colors.green.shade200:Colors.white,
                                 padding: EdgeInsets.all(8.0),
-
-                                // child:(stepNumber ==4)?(index == 1)?Image.asset(icons_dir+items[index].image): SvgPicture.asset(icons_dir+items[index].image):
-                                // (index == 2)?
-                                // Image.asset(icons_dir+items[index].image):
-                                // SvgPicture.asset(icons_dir+items[index].image),
                                 child: Row(
                                   children: [
                                     if(stepNumber == 5)
@@ -209,8 +193,8 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                                     ),
                                     if(stepNumber == 4)
                                     Container(
-                                      width: SizeConfig.heightMulti * 8,
-                                      height:  SizeConfig.heightMulti *8,
+                                      width: SizeConfig.heightMulti * 6,
+                                      height:  SizeConfig.heightMulti *6,
                                       child:
                                       (index == 2)?
                                       Image.asset(icons_dir+items[index].image):
@@ -226,7 +210,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                                         style: GoogleFonts.lato(
                                           color: Colors.black54,
                                           fontWeight: FontWeight.bold,
-                                         fontSize: SizeConfig.titleSize * 2.7
+                                         fontSize: SizeConfig.titleSize * 2.3
                                         ),
                                         ),
                                         SizedBox(height: 5,),
@@ -235,7 +219,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                                           style: GoogleFonts.lato(
                                               color: Colors.black45,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: SizeConfig.titleSize * 2.5
+                                              fontSize: SizeConfig.titleSize * 2
                                           ),
                                         ),
                                       ],
@@ -251,9 +235,6 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                               color: items[index-1].isComplete ? Colors.green : null,
                             );
                           },
-                          // lastConnectorStyle:ConnectorStyle.transparent ,
-                          //
-
 
                           itemCount: stepNumber,
                         ),

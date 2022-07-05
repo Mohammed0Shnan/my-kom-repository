@@ -4,12 +4,24 @@ import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/module_about/screen/about_screen.dart';
 import 'package:my_kom/module_about/widgets/language_drop_down.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
+import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 
-class LanguageScreen extends StatelessWidget {
+class LanguageScreen extends StatefulWidget {
  final  LocalizationService localizationService ;
-  const LanguageScreen({ required this.localizationService, Key? key}) : super(key: key);
+ final MapBloc mapBloc ;
+ const LanguageScreen({ required this.mapBloc,required this.localizationService, Key? key}) : super(key: key);
 
+  @override
+  State<LanguageScreen> createState() => _LanguageScreenState();
+}
+
+class _LanguageScreenState extends State<LanguageScreen> {
+  @override
+  void initState() {
+    widget.mapBloc.getSubArea();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +50,7 @@ class LanguageScreen extends StatelessWidget {
                 ),
                 ListTile(
                     title: Padding(
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: EdgeInsets.only(bottom: 8),
                         child: Text(S.of(context)!.language,
                             style: GoogleFonts.lato(
                               color: Colors.black54,
@@ -50,7 +62,7 @@ class LanguageScreen extends StatelessWidget {
                             //     fontWeight: FontWeight.w600)
                         )
                     ),
-                    subtitle: LangugeDropDownWidget(localizationService: localizationService,)),
+                    subtitle: LangugeDropDownWidget(localizationService: widget.localizationService,)),
                 SizedBox(
                   height: SizeConfig.heightMulti ,
                 ),
@@ -72,7 +84,7 @@ class LanguageScreen extends StatelessWidget {
                             .push(MaterialPageRoute(builder: (conterxt) {
                           return AboutScreen();
                         }));
-                          
+
                         },
                         child: Text(S.of(context)!.next,
                             style: TextStyle(

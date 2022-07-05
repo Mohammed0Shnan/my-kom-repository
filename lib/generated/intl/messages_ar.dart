@@ -221,5 +221,45 @@ class MessageLookup extends MessageLookupByLibrary {
     "no": MessageLookupByLibrary.simpleMessage("لا"),
     "yes": MessageLookupByLibrary.simpleMessage("نعم"),
 
+    "successLogin": MessageLookupByLibrary.simpleMessage("تم تسجيل الدخول بنجاح"),
+    "emailIsAlready": MessageLookupByLibrary.simpleMessage("الايميل موجود مسبقا"),
+    "accountNotFound": MessageLookupByLibrary.simpleMessage("الحساب غير موجود"),
+    "incorrectPassword": MessageLookupByLibrary.simpleMessage("كلمة السر غير صحيحة"),
+    "errorInLogin": MessageLookupByLibrary.simpleMessage("خطأ في تسجيل الدخول"),
+    "errorInRegister": MessageLookupByLibrary.simpleMessage("خطأ في عملية التسجيل"),
+    "goToHome": MessageLookupByLibrary.simpleMessage("الذهاب الى الرئيسية"),
+    "mapSave": MessageLookupByLibrary.simpleMessage("حفظ"),
+    "mapDelivery": MessageLookupByLibrary.simpleMessage("توصيل الى هنا"),
+    "thankYou": MessageLookupByLibrary.simpleMessage("شكرا لك !"),
+    "orderReceived": MessageLookupByLibrary.simpleMessage("تم استلام طلبك"),
+    "selectAndSave": MessageLookupByLibrary.simpleMessage("قم بتحديد موقع"),
+    "errorInGetCurrentLocation": MessageLookupByLibrary.simpleMessage("فشل في تحديد الموقع"),
+
+    "codeSend": MessageLookupByLibrary.simpleMessage("تم ارسال الرمز برسالة نصية"),
+    "codeTimeOut": MessageLookupByLibrary.simpleMessage("تم انتهاء مدة الرمز المرسل , قم باعادة طلب الرمز"),
+    "creditComingSoon": MessageLookupByLibrary.simpleMessage("قريبا !!!"),
+    "serviceComingSoon": MessageLookupByLibrary.simpleMessage("قريبا !!!"),
+    "anotherAddress": MessageLookupByLibrary.simpleMessage("عنوان آخر!"),
+    "saveAnotherAddress": MessageLookupByLibrary.simpleMessage("أضغط هنا لحفظ العنوان للوصول اليه سريعا في المرة القادمة"),
+    "enterTheNameOfTheBookmark": MessageLookupByLibrary.simpleMessage("أدخل اسم العلامة المرجعية"),
+    "pleaseWaitForSaveLocation": MessageLookupByLibrary.simpleMessage("جار حفظ الموقع.."),
+    "successSaveLocation": MessageLookupByLibrary.simpleMessage("تمت عملية الحفظ بنجاح"),
+    "errorSaveLocation": MessageLookupByLibrary.simpleMessage("حدث خطأ حاول مجددا!"),
+    "hintTextBookMarkField": MessageLookupByLibrary.simpleMessage("المنزل , ورشة العمل ,الخ..."),
+    "nameBookMark": MessageLookupByLibrary.simpleMessage("أدخل اسم العلامة المرجعية"),
+    "afterSaveLocation": MessageLookupByLibrary.simpleMessage("تم حفظ الموقع , نقر فوق تغيير للاستخدام السريع "),
+    "errorLoadLocation": MessageLookupByLibrary.simpleMessage("حدث خطأ في تحميل العناصر"),
+    "to": MessageLookupByLibrary.simpleMessage("الى"),
+    "remove": MessageLookupByLibrary.simpleMessage("حذف"),
+    "removed": MessageLookupByLibrary.simpleMessage("تم الحذف"),
+    "signedOutSuccessfully": MessageLookupByLibrary.simpleMessage("تم تسجيل الخروج بنجاح"),
+
+
+
+
+
+
+
+
   };
 }

@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: SizeConfig.screenHeight * 0.55,
+                  height: SizeConfig.screenHeight * 0.5,
                   padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -91,257 +91,255 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: Form(
                     key: _LoginFormKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(height: SizeConfig.heightMulti * 4,),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: ListTile(
-                                title: Padding(
-                                    padding: EdgeInsets.only(bottom: 8),
-                                    child: Text(S.of(context)!.email,style:GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.2
-                                    ))),
-                                subtitle: Container(
-                                  child: TextFormField(
-
-                                    style: TextStyle(fontSize: 16,
-                                    height: 0.5
-                                    ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    controller: _LoginEmailController,
-                                    decoration: InputDecoration(
-                                      
-                                        border:OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                width: 2,
-                                                style:BorderStyle.solid ,
-                                                color: Colors.black87
-                                            ),
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        hintText: S.of(context)!.email,
-                                        hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                      //S.of(context).name,
-                                    ),
-                                    textInputAction: TextInputAction.next,
-                                    onEditingComplete: () => node.nextFocus(),
-
-                                    validator: (result) {
-                                      if (result!.isEmpty) {
-                                        return  S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
-                                      }
-                                      if (!_validateEmailStructure(result))
-                                        return 'Must write an email address';
-                                      return null;
-                                    },
-                                  ),
-                                )),
+                    child: ListView(
+                      children: [
+                        SizedBox(height: SizeConfig.heightMulti * 2,),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-
-                            ),
-                            child: ListTile(
+                          child: ListTile(
                               title: Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
-                                  child: Text( S.of(context)!.password,style:GoogleFonts.lato(
+                                  padding: EdgeInsets.only(bottom: 4),
+                                  child: Text(S.of(context)!.email,style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.2
+                                      color: Colors.black87,
+                                      fontSize: SizeConfig.titleSize * 2
                                   ))),
-                              subtitle: BlocBuilder<PasswordHiddinCubit,
-                                  PasswordHiddinCubitState>(
-                                bloc: cubit,
-                                builder: (context, state) {
-                                  return TextFormField(
-                                    controller: _LoginPasswordController,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        height: 0.5
+                              subtitle: Container(
+                                child: TextFormField(
+
+                                  style: TextStyle(fontSize: 16,
+                                  height: 0.5
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: _LoginEmailController,
+                                  decoration: InputDecoration(
+
+                                      border:OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 2,
+                                              style:BorderStyle.solid ,
+                                              color: Colors.black87
+                                          ),
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      hintText: S.of(context)!.email,
+                                      hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                    //S.of(context).name,
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  onEditingComplete: () => node.nextFocus(),
+
+                                  validator: (result) {
+                                    if (result!.isEmpty) {
+                                      return  S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
+                                    }
+                                    if (!_validateEmailStructure(result))
+                                      return 'Must write an email address';
+                                    return null;
+                                  },
+                                ),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+
+                          ),
+                          child: ListTile(
+                            title: Padding(
+                                padding: EdgeInsets.only(bottom:4),
+                                child: Text( S.of(context)!.password,style:GoogleFonts.lato(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                    fontSize: SizeConfig.titleSize * 2
+                                ))),
+                            subtitle: BlocBuilder<PasswordHiddinCubit,
+                                PasswordHiddinCubitState>(
+                              bloc: cubit,
+                              builder: (context, state) {
+                                return TextFormField(
+                                  controller: _LoginPasswordController,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      height: 0.5
+                                  ),
+                                  decoration: InputDecoration(
+                                      errorStyle: GoogleFonts.lato(
+                                        color: Colors.red.shade700,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            cubit.changeState();
+                                          },
+                                          icon: state ==
+                                              PasswordHiddinCubitState
+                                                  .VISIBILITY
+                                              ? Icon(Icons.visibility)
+                                              : Icon(Icons.visibility_off)),
+                                      border:OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 2,
+                                              style:BorderStyle.solid ,
+                                              color: Colors.black87
+                                          ),
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      hintText:  S.of(context)!.password,
+                                      hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                  ),
+                                  obscureText:
+                                  state == PasswordHiddinCubitState.VISIBILITY
+                                      ? false
+                                      : true,
+
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (v) => node.unfocus(),
+                                  // Move focus to next
+                                  validator: (result) {
+                                    if (result!.isEmpty) {
+                                      return  S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
+                                    }
+                                    if (result.length < 8) {
+                                      return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
+                                    }
+
+                                    return null;
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                  RestPasswordScreen()
+                              ));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  right: 2.345 * SizeConfig.heightMulti),
+                              child: Text( S.of(context)!.forgotPassword,
+                                  style: GoogleFonts.lato(
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black54,
+                                    fontSize: SizeConfig.titleSize * 1.7,
+                                  )),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height:SizeConfig.heightMulti *1.8,
+                        ),
+                        BlocConsumer<LoginBloc, LoginStates>(
+                            bloc: widget._loginBloc,
+                            listener: (context, LoginStates state)async {
+                              if (state is LoginSuccessState) {
+                                snackBarSuccessWidget(context, state.message);
+                                UserRole? role = await AuthService().userRole;
+                                if(role != null){
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
+                                }
+
+                              } else if (state is LoginErrorState) {
+                                snackBarErrorWidget(context, state.message);
+                              }
+                            },
+                            builder: (context, LoginStates state) {
+                              if (state is LoginLoadingState)
+                                return Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: ColorsConst.mainColor,
+                                      ),
+                                    ));
+                              else
+                                return ListTile(
+                                  title: Container(
+                                    height: SizeConfig.heightMulti * 9,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10)),
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: ClipRRect(
+                                      clipBehavior: Clip.antiAlias,
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+
+                                            primary:ColorsConst.mainColor,
+                                          ),
+                                          onPressed: () {
+                                            if (_LoginFormKey.currentState!
+                                                .validate()) {
+                                              String email =
+                                              _LoginEmailController.text.trim();
+                                              String password =
+                                              _LoginPasswordController.text
+                                                  .trim();
+                                              widget._loginBloc
+                                                  .login(email, password);
+                                            }
+                                          },
+                                          child: Text( S.of(context)!.login,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                  SizeConfig.titleSize * 2.7,
+                                                  fontWeight: FontWeight.w700))),
                                     ),
-                                    decoration: InputDecoration(
-                                        errorStyle: GoogleFonts.lato(
-                                          color: Colors.red.shade700,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-
-                                        suffixIcon: IconButton(
-                                            onPressed: () {
-                                              cubit.changeState();
-                                            },
-                                            icon: state ==
-                                                PasswordHiddinCubitState
-                                                    .VISIBILITY
-                                                ? Icon(Icons.visibility)
-                                                : Icon(Icons.visibility_off)),
-                                        border:OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                width: 2,
-                                                style:BorderStyle.solid ,
-                                                color: Colors.black87
-                                            ),
-                                            borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        hintText:  S.of(context)!.password,
-                                        hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                    ),
-                                    obscureText:
-                                    state == PasswordHiddinCubitState.VISIBILITY
-                                        ? false
-                                        : true,
-
-                                    textInputAction: TextInputAction.done,
-                                    onFieldSubmitted: (v) => node.unfocus(),
-                                    // Move focus to next
-                                    validator: (result) {
-                                      if (result!.isEmpty) {
-                                        return  S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
-                                      }
-                                      if (result.length < 8) {
-                                        return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                      }
-
-                                      return null;
-                                    },
+                                  ),
+                                );
+                            }),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                S.of(context)!.dontHaveAnAccount,
+                                style:  GoogleFonts.lato(
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.black45,
+                                  fontSize: SizeConfig.titleSize * 1.7,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context,
+                                      AuthorizationRoutes.REGISTER_SCREEN,
+                                      arguments: UserRole.ROLE_USER
                                   );
                                 },
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                    RestPasswordScreen()
-                                ));
-                              },
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    right: 2.345 * SizeConfig.heightMulti),
-                                child: Text( S.of(context)!.forgotPassword,
-                                    style: GoogleFonts.lato(
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.1,
-                                    )),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height:SizeConfig.heightMulti *1.8,
-                          ),
-                          BlocConsumer<LoginBloc, LoginStates>(
-                              bloc: widget._loginBloc,
-                              listener: (context, LoginStates state)async {
-                                if (state is LoginSuccessState) {
-                                  snackBarSuccessWidget(context, state.message);
-                                  UserRole? role = await AuthService().userRole;
-                                  if(role != null){
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
-                                  }
+                                child: Text( S.of(context)!.createAccount,
+                                    style:  GoogleFonts.lato(
+                                        fontSize: SizeConfig.titleSize * 2,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue                          )
 
-                                } else if (state is LoginErrorState) {
-                                  snackBarErrorWidget(context, state.message);
-                                }
-                              },
-                              builder: (context, LoginStates state) {
-                                if (state is LoginLoadingState)
-                                  return Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: ColorsConst.mainColor,
-                                        ),
-                                      ));
-                                else
-                                  return ListTile(
-                                    title: Container(
-                                      height: SizeConfig.heightMulti * 9.5,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10)),
-                                      padding: EdgeInsets.symmetric(vertical: 10),
-                                      child: ClipRRect(
-                                        clipBehavior: Clip.antiAlias,
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-
-                                              primary:ColorsConst.mainColor,
-                                            ),
-                                            onPressed: () {
-                                              if (_LoginFormKey.currentState!
-                                                  .validate()) {
-                                                String email =
-                                                _LoginEmailController.text.trim();
-                                                String password =
-                                                _LoginPasswordController.text
-                                                    .trim();
-                                                widget._loginBloc
-                                                    .login(email, password);
-                                              }
-                                            },
-                                            child: Text( S.of(context)!.login,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                    SizeConfig.titleSize * 3,
-                                                    fontWeight: FontWeight.w700))),
-                                      ),
-                                    ),
-                                  );
-                              }),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  S.of(context)!.dontHaveAnAccount,
-                                  style:  GoogleFonts.lato(
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black45,
-                                    fontSize: SizeConfig.titleSize * 1.9,
-                                  ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context,
-                                        AuthorizationRoutes.REGISTER_SCREEN,
-                                        arguments: UserRole.ROLE_USER
-                                    );
-                                  },
-                                  child: Text( S.of(context)!.createAccount,
-                                      style:  GoogleFonts.lato(
-                                          fontSize: SizeConfig.titleSize * 2.5,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue                          )
-
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
+                        ),
 
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ))

@@ -102,7 +102,6 @@ class _SplashScreenState extends State<SplashScreen> {
      if (!isInited) {
         return AboutRoutes.ROUTE_ABOUT;
         }
-
      // Is LoggedIn
       UserRole? role = await widget._authService.userRole;
       if(role != null){
