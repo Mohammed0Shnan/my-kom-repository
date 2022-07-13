@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
@@ -75,7 +76,7 @@ class MapService {
   Future<String> getSubArea(LatLng latLng)async{
     List<Placemark> placemarks = await placemarkFromCoordinates(
         latLng.latitude, latLng.longitude,
-        localeIdentifier: 'en');
+        localeIdentifier: UtilsConst.lang);
 
     Placemark place1 = placemarks[0];
     print(place1);
@@ -100,8 +101,7 @@ class MapService {
 
 
   LocationInformation _getDetailFromPlacemark(List<Placemark>? placemarks) {
-    print('_______________________ get sub area in service -------------');
-    print(placemarks);
+
     Placemark place1 = placemarks![0];
     //Placemark place2 = placemarks[1];
     LocationInformation _information = LocationInformation();
@@ -126,6 +126,7 @@ class MapService {
      }else{
        subArea = await getSubArea(latLng);
      }
+     if(latLng == null)
      _preferencesHelper.setCurrentSubArea(subArea);
 
      return subArea;

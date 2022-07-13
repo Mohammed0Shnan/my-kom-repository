@@ -511,7 +511,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                             child: Padding(
                                                               padding: EdgeInsets.symmetric(horizontal: 5),
                                                               child: Text(
-                                                                items[index].title,
+                                                                UtilsConst.lang == 'en'?
+                                                                items[index].title:
+                                                                items[index].title2,
                                                                 maxLines: 2,
                                                                 style: TextStyle(
                                                                     fontSize: SizeConfig
@@ -527,7 +529,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                           Text(
                                                             items[index]
                                                                 .quantity
-                                                                .toString() + ' Plot',
+                                                                .toString() +' '+ S.of(context)!.plot,
                                                             style: TextStyle(
                                                                 color:
                                                                 Colors.black26,

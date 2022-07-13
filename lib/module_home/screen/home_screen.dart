@@ -23,6 +23,7 @@ import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_map/service/map_service.dart';
 import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
+import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:my_kom/generated/l10n.dart';
@@ -133,6 +134,7 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                         AddressModel addressModel = (value as AddressModel);
                         widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: addressModel.subArea));
                         widget.checkZoneBloc.checkZone(addressModel.subArea);
+
                       }
                     });
                   },
@@ -178,6 +180,10 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                 bloc: widget.checkZoneBloc,
                 listener: (context,checkZoneState)async{
                   if(checkZoneState is CheckZoneSuccessState){
+
+                    /// Configure the shopping cart for the products of the specified store
+                    shopCartBloc.startedShop();
+
                     widget.allCompanyBloc.getAllCompany(checkZoneState.storeId);
                     widget.recommendedProductsCompanyBloc.getRecommendedProducts(checkZoneState.storeId);
 
@@ -434,14 +440,14 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
                    Container(
-                     height: 120,
+                     height: 100,
                      child: Image.asset('assets/error.png'),
                    ),
-                   SizedBox(height: 20,),
+                   SizedBox(height: 15,),
                    Text(S.of(context)!.determineLocation,
                    textAlign: TextAlign.center,
                      style: GoogleFonts.lato(
-                       fontSize: 18,
+                       fontSize: SizeConfig.titleSize * 1.8,
                        fontWeight: FontWeight.w800,
                        color: Colors.black45
                      ),
@@ -541,11 +547,11 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
                    title: RichText(
                      text: TextSpan(
                          text: suggestionList[index].name.substring(0,query.length),
-                         style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 22),
+                         style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 18),
                          children: [
                            TextSpan(
                              text: suggestionList[index].name.substring(query.length),
-                             style: TextStyle(color: Colors.grey,fontSize: 18),
+                             style: TextStyle(color: Colors.grey,fontSize: 16),
 
                            )
                          ]

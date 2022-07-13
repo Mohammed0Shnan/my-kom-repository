@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_shoping/models/card_model.dart';
 import 'package:my_kom/module_shoping/service/card_service.dart';
-import 'package:my_kom/module_shoping/service/purchers_service.dart';
-import 'package:uuid/uuid.dart';
 
 
 class StripeServices{

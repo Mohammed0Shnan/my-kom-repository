@@ -4,6 +4,7 @@ class CompanyModel {
   late final String id;
   late final String storeId;
   late final String name;
+  late final String name2;
   late String description;
   late String imageUrl;
   late List<ProductModel> products;
@@ -11,8 +12,10 @@ class CompanyModel {
   CompanyModel({required this.id, required this.name, required this.imageUrl,required this.description});
 
   CompanyModel.fromJson(Map<String, dynamic> map) {
+
     this.id = map['id'];
     this.name = map['name'];
+    this.name2 = map['name2']==null?'':map['name2'];
     this.imageUrl = map['imageUrl'];
     this.description = map['description'];
     this.storeId = map['store_id'];

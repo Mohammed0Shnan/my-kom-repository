@@ -179,7 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValue": MessageLookupByLibrary.simpleMessage("قيمة الطلب"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("طريقة الدفع"),
     "cashMoney": MessageLookupByLibrary.simpleMessage("نقدا"),
-    "creditCard": MessageLookupByLibrary.simpleMessage("بطاقة"),
+    "creditCard": MessageLookupByLibrary.simpleMessage("أونلاين"),
     "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("رجاءا اختر طريقة الدفع"),
     "destinationAlert": MessageLookupByLibrary.simpleMessage("قم باختيار موقع صحيح ينتمي للمناطق المخدمة "),
     "orderConfirmation": MessageLookupByLibrary.simpleMessage("تأكيد"),
@@ -253,6 +253,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "remove": MessageLookupByLibrary.simpleMessage("حذف"),
     "removed": MessageLookupByLibrary.simpleMessage("تم الحذف"),
     "signedOutSuccessfully": MessageLookupByLibrary.simpleMessage("تم تسجيل الخروج بنجاح"),
+    "nextTimeBookMark": MessageLookupByLibrary.simpleMessage("أضف علامات مرجعية للمرة القادمة"),
+    "cart": MessageLookupByLibrary.simpleMessage("السلة"),
+    "plot": MessageLookupByLibrary.simpleMessage("حبة"),
+
 
 
 

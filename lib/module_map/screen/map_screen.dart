@@ -34,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   final CameraPosition _kGooglePlex = CameraPosition(
-      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 13.0);
+      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 16.5);
   late final TextEditingController _searchController;
   bool? register= null;
   String language ='en';
@@ -100,6 +100,8 @@ class _MapScreenState extends State<MapScreen> {
                 .getSubArea(LatLng(state.latitude, state.longitude));
             addressModel.subArea = subArea;
           }
+          print('***** address information after click the button in map screen ********');
+          print(addressModel.toJson());
           Navigator.pop(context, addressModel);
         } else if (state is MapGestureSuccessState) {
           location_from_search = null;
@@ -226,6 +228,7 @@ class _MapScreenState extends State<MapScreen> {
                           child: TextButton(
                             onPressed: () {
                               if (location_from_search != null) {
+                                print('******  address from google map search  ******');
                                 LatLng latLan =
                                     location_from_search!['po'] as LatLng;
                                 String n =
@@ -233,6 +236,7 @@ class _MapScreenState extends State<MapScreen> {
 
                                 mapBloc.saveLocation(latLan, n);
                               } else {
+                                print('******  address from gesture  ******');
                                 if (state is MapGestureSuccessState) {
                                   LatLng latLng = LatLng(state.data.latitude,
                                       state.data.longitude);
@@ -295,7 +299,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _move(LatLng latLng) async {
-    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 13.0);
+    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 16.5);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
@@ -353,6 +357,6 @@ class _MapScreenState extends State<MapScreen> {
 
     final GoogleMapController controller = await _controller.future;
     controller
-        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
+        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 16.5));
   }
 }

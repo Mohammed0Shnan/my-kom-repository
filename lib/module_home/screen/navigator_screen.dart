@@ -56,13 +56,13 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           ),
           child: BottomNavigationBar(
             selectedItemColor: Colors.white,
-
+              selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
               unselectedItemColor: Colors.white,
               selectedIconTheme:IconThemeData(
-                size: 30
+                size: 26
               ) ,
               unselectedIconTheme:IconThemeData(
-                  size: 20,
+                  size: 18,
                 color: Colors.white.withOpacity(0.5)
               ) , 
               showSelectedLabels: true,

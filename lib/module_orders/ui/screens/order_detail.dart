@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_company/company_routes.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
@@ -625,7 +626,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                         color: Colors.white,
                                                         padding: EdgeInsets.symmetric(horizontal: 5),
                                                         child: Text(
-                                                          items[index].title,
+                                                          UtilsConst.lang =='en'?
+                                                          items[index].title:
+                                                          items[index].title2
+                                                          ,
                                                           maxLines: 2,
                                                           style: TextStyle(
                                                             color: Colors.black87,

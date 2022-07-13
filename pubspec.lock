@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.1"
   async:
     dependency: transitive
     description:
@@ -134,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   country_code_picker:
     dependency: "direct main"
     description:
@@ -547,12 +561,19 @@ packages:
     source: hosted
     version: "2.0.7"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.13.4"
+  http_auth:
+    dependency: "direct main"
+    description:
+      name: http_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   http_parser:
     dependency: transitive
     description:
@@ -651,6 +672,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
+  logger:
+    dependency: transitive
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   logging:
     dependency: transitive
     description:
@@ -875,6 +903,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.2"
+  rename:
+    dependency: "direct main"
+    description:
+      name: rename
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -1034,13 +1069,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  stripe_payment:
-    dependency: "direct main"
-    description:
-      name: stripe_payment
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.4"
   synchronized:
     dependency: transitive
     description:

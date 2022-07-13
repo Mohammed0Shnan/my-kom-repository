@@ -12,6 +12,7 @@ import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/module_orders/state_manager/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -28,6 +29,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
   final String CURRENT_ORDER = 'current';
   final String PREVIOUS_ORDER = 'previous';
   late String current_tap ;
+  late String _storeID;
   @override
   void initState() {
     current_tap = CURRENT_ORDER;
@@ -423,17 +425,20 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Text(S.of(context)!.orderDetail,style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w800
-                                  ),),
-                                  Text('${S.of(context)!.orderNumber} : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
-                                      color: ColorsConst.mainColor,
-                                      fontSize: 18,
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold
-                                  ),)
+                                Spacer(),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: ColorsConst.mainColor.withOpacity(0.1)
+                                    ),
+                                    child: Text('${S.of(context)!.orderNumber} : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
+                                        color: ColorsConst.mainColor,
+                                        fontSize: 14,
+                                        letterSpacing: 1,
+                                        fontWeight: FontWeight.bold
+                                    ),),
+                                  )
                                 ],
                               ),
                               SizedBox(height: 8,),
@@ -490,7 +495,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                           },
                                           child: Text(S.of(context)!.orderDetail, style: TextStyle(
                                               color: ColorsConst.mainColor,
-                                              fontSize: SizeConfig.titleSize * 2.6),),
+                                              fontSize: SizeConfig.titleSize * 2.1),),
 
                                         ),
                                       ),
@@ -498,6 +503,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                     SizedBox(width: SizeConfig.widhtMulti * 3,),
                                     Expanded(child:
                                     Container(
+                                      height: 30,
                                       clipBehavior: Clip.antiAlias,
                                       decoration: BoxDecoration(
                                           color: ColorsConst.mainColor,
@@ -508,7 +514,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                           _orderBloc.reorder(orders[index].id);
                                         },
                                         child: Text(S.of(context)!.reOrder, style: TextStyle(color: Colors.white,
-                                            fontSize: SizeConfig.titleSize * 2.6),),
+                                            fontSize: SizeConfig.titleSize * 2.1),),
 
                                       ),
                                     )

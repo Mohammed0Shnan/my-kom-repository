@@ -1,26 +1,28 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 
 class ShopCartBloc extends Bloc<CartEvents,CartState> {
-
+  final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
+  double mimimum_purch=0.0;
   ShopCartBloc() : super(CartLoading()){
 
     on<CartEvents>((CartEvents event, Emitter<CartState> emit){
       if(event is CartStartedEvent){
-        emit(CartLoaded());
+        emit(CartLoaded(cart: Cart(products: [],minimum_pursh: mimimum_purch)));
       }
       else if(event is CartAddedEvent){
 
         if(state is CartLoaded){
           print('add event state');
-          emit(CartLoaded(cart: Cart(products: List.from( (state as CartLoaded ).cart.products)..add(event.productModel))
+          emit(CartLoaded(cart: Cart(products: List.from( (state as CartLoaded ).cart.products)..add(event.productModel),minimum_pursh: mimimum_purch,)
           ));
         }
       }
       else if(event is CartRemovedEvent){
         if(state is CartLoaded){
-          emit(CartLoaded(cart: Cart( products:List.from( (state as CartLoaded ).cart.products)..remove(event.productModel))
+          emit(CartLoaded(cart: Cart( products:List.from( (state as CartLoaded ).cart.products)..remove(event.productModel),minimum_pursh: mimimum_purch)
           ));
         }
       }
@@ -28,7 +30,7 @@ class ShopCartBloc extends Bloc<CartEvents,CartState> {
 
       else if(event is CartAddListEvent){
         if(state is CartLoaded){
-          emit(CartLoaded(cart: Cart( products:List.from( (state as CartLoaded ).cart.products)..addAll(event.products))
+          emit(CartLoaded(cart: Cart( products:List.from( (state as CartLoaded ).cart.products)..addAll(event.products),minimum_pursh: mimimum_purch)
           ));
         }}
 
@@ -38,7 +40,11 @@ class ShopCartBloc extends Bloc<CartEvents,CartState> {
 
   }
 
-  startedShop(){
+  startedShop()async{
+   double? res = await _preferencesHelper.getMinimumPurchaseStore();
+   print('<<<<<<<<<<<<<<<<<<< started shopping >>>>>>>>>>>>>>>>>>');
+   print(res);
+   mimimum_purch = res==null?0.0:res;
     add(CartStartedEvent());
   }
 
@@ -90,6 +96,7 @@ abstract class  CartEvents extends Equatable{
 class CartStartedEvent extends CartEvents{
   @override
   List<Object?> get props => [];
+
 }
 class CartAddListEvent extends CartEvents{
   List<ProductModel> products;
@@ -115,8 +122,9 @@ class CartRemovedEvent extends CartEvents{
 
 
 class Cart extends Equatable {
+  final double minimum_pursh ;
   final List<ProductModel>products;
-  const Cart({this.products = const <ProductModel>[]});
+  const Cart({this.products = const <ProductModel>[],this.minimum_pursh =0.0});
  Map<ProductModel,int> productQuantity(List<ProductModel> products){
    Map<ProductModel,int> quantityMap = Map<ProductModel,int>();
    products.forEach((element) {
@@ -146,8 +154,8 @@ class Cart extends Equatable {
     return subTotal+ deliveryFee(subTotal);
   }
 
- bool minimum(double minmumPrice){
- return  subTotal < minmumPrice ? false:true;
+ bool minimum(){
+ return  subTotal < this.minimum_pursh ? false:true;
 
   }
   String freeDelivery(subTotal){

@@ -68,7 +68,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "orders": MessageLookupByLibrary.simpleMessage("Orders"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
-    "ship": MessageLookupByLibrary.simpleMessage("Ship"),
+    "ship": MessageLookupByLibrary.simpleMessage("Cart"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "deliveryTo": MessageLookupByLibrary.simpleMessage("Delivery to"),
     "comingSoon": MessageLookupByLibrary.simpleMessage("The area is currently unavailable select the location manually"),
@@ -156,11 +156,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackShipment": MessageLookupByLibrary.simpleMessage("Track Shipment"),
     "orderNumber": MessageLookupByLibrary.simpleMessage("Order Number"),
     "orderDetail": MessageLookupByLibrary.simpleMessage("Detail"),
-    "reOrder": MessageLookupByLibrary.simpleMessage("Re Order"),
+    "reOrder": MessageLookupByLibrary.simpleMessage("ReOrder"),
     "noDataToDisplay": MessageLookupByLibrary.simpleMessage("No Data To Display"),
 
     /// Ship Pages
-    "shoppingCart": MessageLookupByLibrary.simpleMessage("سلة المشتريات"),
+    "shoppingCart": MessageLookupByLibrary.simpleMessage("Cart"),
     "ofStepper": MessageLookupByLibrary.simpleMessage("of"),
     "stepOneTitle": MessageLookupByLibrary.simpleMessage("Details and price of the shipment"),
     "stepOneSubTitle": MessageLookupByLibrary.simpleMessage(" Next is the destination ,request type"),
@@ -189,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "orderValue": MessageLookupByLibrary.simpleMessage("Order Value"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Payment Methods"),
     "cashMoney": MessageLookupByLibrary.simpleMessage("Cash Money"),
-    "creditCard": MessageLookupByLibrary.simpleMessage("Credit Card"),
+    "creditCard": MessageLookupByLibrary.simpleMessage("OnLine"),
     "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("Please select payment method"),
     "destinationAlert": MessageLookupByLibrary.simpleMessage("Choose a correct site that belongs to the serviced areas "),
     "orderConfirmation": MessageLookupByLibrary.simpleMessage("Confirmation"),
@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "codeSend": MessageLookupByLibrary.simpleMessage("Code sent by text message"),
     "codeTimeOut": MessageLookupByLibrary.simpleMessage("If the code is not received, redial the code"),
     "creditComingSoon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
-    "serviceComingSoon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
+    "serviceComingSoon": MessageLookupByLibrary.simpleMessage("Coming Soon..."),
     "anotherAddress": MessageLookupByLibrary.simpleMessage("Another Address!"),
     "saveAnotherAddress": MessageLookupByLibrary.simpleMessage("Click here to save the address for quick access next time"),
     "enterTheNameOfTheBookmark": MessageLookupByLibrary.simpleMessage("Enter the name of the bookmark"),
@@ -260,6 +260,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "removed": MessageLookupByLibrary.simpleMessage("Removed"),
     "signedOutSuccessfully": MessageLookupByLibrary.simpleMessage("Signed Out Successfully"),
+    "nextTimeBookMark": MessageLookupByLibrary.simpleMessage("Add bookmarks for next time"),
+    "cart": MessageLookupByLibrary.simpleMessage("Cart"),
+    "plot": MessageLookupByLibrary.simpleMessage("Plot"),
 
 
   };

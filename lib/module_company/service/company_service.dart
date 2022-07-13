@@ -49,8 +49,8 @@ class CompanyService {
         /// Save Current Store For Check Address Delivery
         ///
         /// Save Store Information
-        _getStoreFromZone(storeId);
-        _preferencesHelper.setCurrentSubArea(zone);
+         _preferencesHelper.setCurrentSubArea(zone);
+       await _getStoreFromZone(storeId);
         print(' store found !!!!!');
         return storeId;
       }
@@ -61,14 +61,16 @@ class CompanyService {
     }
   }
 
-  _getStoreFromZone(String storeId){
-     _firestore.collection('stores').doc(storeId).get().then((value) {
+  _getStoreFromZone(String storeId)async{
+   await  _firestore.collection('stores').doc(storeId).get().then((value)async {
        Map<String , dynamic> map = value.data() as  Map<String , dynamic>;
        double minimumPurchase =(1.0) * map['minimum_purchase'] ;
+       print('minimum purches from store !!!!!!!!!!!!!!!!!');
+       print(minimumPurchase);
         bool vip =  map['vip'];
-       _preferencesHelper.setCurrentStore(storeId);
-       _preferencesHelper.setMinimumPurchaseStore(minimumPurchase);
-       _preferencesHelper.setVipStore(vip);
+      await _preferencesHelper.setCurrentStore(storeId);
+      await _preferencesHelper.setMinimumPurchaseStore(minimumPurchase);
+      await _preferencesHelper.setVipStore(vip);
      });
   }
 
@@ -86,7 +88,10 @@ class CompanyService {
           CompanyStoreDetailResponse res = CompanyStoreDetailResponse.fromJsom(
               map);
           CompanyModel companyModel = CompanyModel(
-              id: res.id, name: res.name, imageUrl: res.imageUrl,description:res.description );
+              id: res.id, name: res.name, imageUrl: res.imageUrl,description:res.description ,
+
+          );
+          companyModel.name2 = res.name2;
           companyModel.isActive = res.isActive;
           companyModel.storeId = res.storeId;
           companyList.add(companyModel);

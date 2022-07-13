@@ -1,8 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
-import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/module_orders/service/orders/orders.service.dart';
 
 class OrderDetailBloc extends Bloc<OrderDetailEvent,OrderDetailStates> {
@@ -17,9 +15,6 @@ class OrderDetailBloc extends Bloc<OrderDetailEvent,OrderDetailStates> {
       }
       else if (event is   OrderDetailSuccessEvent){
         emit(OrderDetailSuccessState(data: event.data));}
-      // else if(event is UpdateProductsCompanySuccessEvent){
-      //   _update(event,emit);
-      // }
     });
 
 

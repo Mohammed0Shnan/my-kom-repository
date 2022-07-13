@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_company/company_routes.dart';
 import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
@@ -38,7 +40,7 @@ class DescoveryGridWidget extends StatelessWidget {
                     data.length,
                     (index) => AnimationConfiguration.staggeredGrid(
                           position: index,
-                          columnCount: 3,
+                          columnCount:3,
                           duration: Duration(milliseconds: 350),
                           child: ScaleAnimation(
                               child: FadeInAnimation(
@@ -57,7 +59,7 @@ class DescoveryGridWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
 
                                   child: AlertDialog(
-                                    backgroundColor: Colors.white.withOpacity(0.8),
+                                    backgroundColor: Colors.white.withOpacity(0.9),
                                     clipBehavior: Clip.antiAlias,
                                     shape:RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
@@ -66,7 +68,6 @@ class DescoveryGridWidget extends StatelessWidget {
                                     content:Container(
                                       height: 70,
                                       width: 90,
-
                                       child: Center(
                                         child:
                                         Text(S.of(context)!.serviceComingSoon,
@@ -77,13 +78,10 @@ class DescoveryGridWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-
                                   ),
                                 );
                               });
-
                             }
-
                               },
                               child: Stack(
                                 children: [
@@ -119,8 +117,8 @@ class DescoveryGridWidget extends StatelessWidget {
                                                         (context, l, ll) =>
                                                         Center(
                                                           child: Container(
-                                                            height: 40,
-                                                            width: 40,
+                                                            height: 30,
+                                                            width: 30,
                                                             child: CircularProgressIndicator(
                                                               value: ll.progress,
                                                               color: Colors.black12,
@@ -154,7 +152,9 @@ class DescoveryGridWidget extends StatelessWidget {
                                               child: Padding(
                                                 padding: EdgeInsets.only(top: 8),
                                                 child: Text(
-                                                  data[index].name,
+                                                  UtilsConst.lang == 'en'?
+                                                  data[index].name:
+                                                  data[index].name2,
                                                   style: TextStyle(
                                                       fontSize:
                                                           SizeConfig.titleSize * 2.2,
@@ -172,17 +172,17 @@ class DescoveryGridWidget extends StatelessWidget {
                                   if(!data[index].isActive)
                                   Positioned.fill(child: Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.black38,
+                                        color: Colors.white.withOpacity(0.5),
                                         borderRadius: BorderRadius.circular(10),
                                       
                                       ),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                      Image.asset('assets/coming-soon-clock.png',height: 50,color: Colors.white.withOpacity(0.8),),
+                                      Image.asset('assets/coming-soon-clock.png',height: SizeConfig.imageSize * 12,color: ColorsConst.mainColor.withOpacity(0.9),),
                                         SizedBox(height: 8,),
                                         Text('Coming Soon',style: GoogleFonts.acme(
-                                        color: Colors.white,
+                                        color: ColorsConst.mainColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: SizeConfig.titleSize
                                            * 2.2

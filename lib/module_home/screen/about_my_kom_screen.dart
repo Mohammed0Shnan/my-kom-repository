@@ -30,7 +30,7 @@ class _AboutMyKomScreenState extends State<AboutMyKomScreen> {
             SizedBox(height: SizeConfig.screenHeight * 0.03,),
             Center(
               child: Container(
-                width: SizeConfig.screenWidth * 0.6,
+                width: SizeConfig.screenWidth * 0.5,
                 child: Image.asset('assets/new_logo.png'),
               ),
 
@@ -42,7 +42,7 @@ class _AboutMyKomScreenState extends State<AboutMyKomScreen> {
                 style: GoogleFonts.lato(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
-                  fontSize: 18
+                  fontSize: 16
                 ),
                 ))
           ],

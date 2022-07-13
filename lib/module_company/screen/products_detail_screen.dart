@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/products_detail_bloc.dart';
@@ -125,8 +126,8 @@ addRemoveBloc.close();
                             progressIndicatorBuilder: (context, l, ll) =>
                                 Center(
                                   child: Container(
-                                    width: 100,
-                                    height: 100,
+                                    width: 50,
+                                    height: 50,
                                     child: CircularProgressIndicator(
                                       value: ll.progress,
                                       color: Colors.black45
@@ -153,7 +154,9 @@ addRemoveBloc.close();
                                 topLeft:Radius.circular(20),
                                 topRight: Radius.circular(20)
                             ))
-                            ,child: Center(child: Text(productModel.title,style: GoogleFonts.lato(
+                            ,child: Center(child: Text(
+                        UtilsConst.lang == 'en'?productModel.title:productModel.title2
+                        ,style: GoogleFonts.lato(
                             fontWeight: FontWeight.bold,
                             fontSize: SizeConfig.titleSize * 3,
                             color: Colors.black87
@@ -174,7 +177,7 @@ addRemoveBloc.close();
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w600),),
                             SizedBox(height: 10,),
-                            ExpadedTextWidget(text: productModel.description),
+                            ExpadedTextWidget(text:UtilsConst.lang == 'en'? productModel.description:productModel.description2),
                             SizedBox(
                               height: 8,
                             ),

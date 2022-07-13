@@ -151,7 +151,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                           color: Color(0xff989898),
                           indicatorTheme: IndicatorThemeData(
                             position: 0,
-                            size: 20.0,
+                            size: 19.0,
                           ),
                           connectorTheme: ConnectorThemeData(
                             thickness: 2.5,
@@ -161,17 +161,17 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                           indicatorBuilder: (_, index) {
                             if (items[index].isComplete) {
                               return DotIndicator(
-                                size: 20,
+                                size: 19,
                                 color: Color(0xff66c97f),
                               );
                             } else if(items[index].isNext){
                               return DotIndicator(
-                                size: 20,
+                                size: 19,
                                 color: Colors.indigoAccent,
                               );
                             } else{
                               return OutlinedDotIndicator(
-                                size: 20,
+                                size: 19,
                                 borderWidth: 2.5,
                               );
                             }
@@ -208,7 +208,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
                                       children: [
                                         Text(items[index].title,
                                         style: GoogleFonts.lato(
-                                          color: Colors.black54,
+                                          color: Colors.black87,
                                           fontWeight: FontWeight.bold,
                                          fontSize: SizeConfig.titleSize * 2.3
                                         ),

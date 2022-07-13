@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
@@ -30,6 +31,7 @@ Future<void> backgroundHandler(RemoteMessage message)async{
   FireNotificationService().display(message.notification!);
 }
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);

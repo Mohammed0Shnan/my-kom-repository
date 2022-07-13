@@ -2,7 +2,9 @@ class ProductModel {
   late final String id;
   late final String? companyId;
   late final String title;
+  late final String title2;
   late final String description;
+  late final String description2;
   late final double price;
   late final double? old_price;
   late final int quantity;
@@ -23,11 +25,12 @@ class ProductModel {
 
   ProductModel.fromJson(dynamic json) {
     Map<String ,dynamic> map = json as Map<String ,dynamic>;
-    print(map);
     this.id = map['id'];
     this.companyId = map['company_id'];
     this.title = map['title'];
+    this.title2 = map['title2']==null?'': map['title2'];
     this.description = map['description'];
+    this.description2 = map['description2']==null?'':map['description2'];
     this.price = 1.0 * map['price'];
     this.old_price = map['old_price'] == null? null: 1.0 * map['old_price'];
     this.quantity = map['quantity'];

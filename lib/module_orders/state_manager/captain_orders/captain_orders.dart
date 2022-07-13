@@ -1,9 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_kom/module_authorization/exceptions/auth_exception.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/service/orders/orders.service.dart';
-import 'package:my_kom/module_orders/ui/screens/captain_orders/captain_orders.dart';
 
 class CaptainOrdersListBloc extends Bloc<CaptainOrdersListEvent,CaptainOrdersListStates>{
   final OrdersService _ordersService = OrdersService();
@@ -23,35 +21,6 @@ class CaptainOrdersListBloc extends Bloc<CaptainOrdersListEvent,CaptainOrdersLis
       else if (event is CaptainOrdersListSuccessEvent){
         emit(CaptainOrdersListSuccessState(currentOrders: event.currentOrders,previousOrders: event.previousOrders,message: null));
       }
-
-
-      // else if (event is CaptainOrderDeletedSuccessEvent){
-      //   if(this.state is CaptainOrdersListSuccessState)
-      //     {
-      //       print(event.orderID);
-      //       print('------------------');
-      //      List<OrderModel> state = (this.state as  CaptainOrdersListSuccessState ).data;
-      //      state.forEach((element) {
-      //        print(element.id);
-      //      }); print('=============================================');
-      //       List<OrderModel> list =[];
-      //       state.forEach((element) {
-      //         if(element.id != event.orderID)
-      //           list.add(element);
-      //       });
-      //
-      //       print(list);
-      //       emit(CaptainOrdersListSuccessState(data:list,message:'success'));
-      //     }
-      //
-      //   else
-      //   {
-      //     emit(CaptainOrderDeletedErrorState(message: 'Success, Refresh!!!',data:List.from(List.from( (this.state as  CaptainOrdersListSuccessState ).data) )));
-      //   }
-      // }
-      // else if(event is CaptainOrderDeletedErrorEvent){
-      //   emit(CaptainOrderDeletedErrorState(message: 'Error',data:List.from(List.from( (this.state as  CaptainOrdersListSuccessState ).data) )));
-      // }
     });
   }
 

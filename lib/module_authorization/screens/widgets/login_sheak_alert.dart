@@ -38,7 +38,7 @@ loginCheakAlertWidget(context){
           SizedBox(height: 10,),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            height: SizeConfig.screenHeight * 0.2,
+            height: SizeConfig.screenHeight * 0.18,
             width: double.infinity,
 
             child: Image.asset('assets/not_login.png',fit: BoxFit.fill,),
@@ -49,7 +49,7 @@ loginCheakAlertWidget(context){
           Spacer(),
           Container(
             width: double.infinity,
-            height: 40,
+            height: 35,
             margin: EdgeInsets.symmetric(horizontal: 20),
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
@@ -60,7 +60,7 @@ loginCheakAlertWidget(context){
               onPressed: (){
                 Navigator.pushNamed(context, AuthorizationRoutes.LOGIN_SCREEN);
               },
-              child:Text(S.of(context)!.login,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.7),),
+              child:Text(S.of(context)!.login,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.3,fontWeight: FontWeight.bold),),
 
             ),
           ),

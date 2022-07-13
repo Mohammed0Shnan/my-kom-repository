@@ -29,7 +29,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
           SizedBox(height: SizeConfig.screenHeight * 0.03,),
           Center(
             child: Container(
-              width: SizeConfig.screenWidth * 0.6,
+              width: SizeConfig.screenWidth * 0.5,
               child: Image.asset('assets/new_logo.png'),
             ),
 
@@ -37,7 +37,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
           SizedBox(height: SizeConfig.screenHeight * 0.1,),
           Center(
             child: Container(
-              height: SizeConfig.heightMulti * 9.5,
+              height: SizeConfig.heightMulti * 8,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10)),
@@ -62,7 +62,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontSize:
-                                SizeConfig.titleSize * 3,
+                                SizeConfig.titleSize * 2,
                                 fontWeight: FontWeight.w700)),
                       ],
                     )),
@@ -71,7 +71,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
           ),
           Center(
             child: Container(
-              height: SizeConfig.heightMulti * 9.5,
+              height: SizeConfig.heightMulti * 8,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10)),
@@ -99,7 +99,7 @@ class _ConnectUsScreenState extends State<ConnectUsScreen> {
                             style: TextStyle(
                                 color: Colors.blue,
                                 fontSize:
-                                SizeConfig.titleSize * 3,
+                                SizeConfig.titleSize * 2,
                                 fontWeight: FontWeight.w700)),
                       ],
                     )),

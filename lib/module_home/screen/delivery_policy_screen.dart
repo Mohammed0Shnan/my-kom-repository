@@ -32,7 +32,7 @@ class _DeliveryPolicyScreenState extends State<DeliveryPolicyScreen> {
               SizedBox(height: SizeConfig.screenHeight * 0.03,),
               Center(
                 child: Container(
-                  width: SizeConfig.screenWidth * 0.6,
+                  width: SizeConfig.screenWidth * 0.5,
                   child: Image.asset('assets/new_logo.png'),
                 ),
 
@@ -42,7 +42,7 @@ class _DeliveryPolicyScreenState extends State<DeliveryPolicyScreen> {
                 style: GoogleFonts.lato(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18
+                    fontSize: 16
                 ),
               ),
               SizedBox(height: 10,)
@@ -51,7 +51,7 @@ class _DeliveryPolicyScreenState extends State<DeliveryPolicyScreen> {
                 style: GoogleFonts.lato(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16
+                    fontSize: 14
                 ),
               )
             ],

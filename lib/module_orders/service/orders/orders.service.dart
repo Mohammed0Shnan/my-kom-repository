@@ -78,6 +78,7 @@ class OrdersService {
       return null;
     OrderModel orderModel = OrderModel() ;
      orderModel.id = response.id;
+     orderModel.storeId = response.storeId;
     orderModel.vipOrder = response.vipOrder;
     orderModel.products = response.products;
     orderModel.payment = response.payment;
@@ -86,14 +87,13 @@ class OrdersService {
     orderModel.addressName = response.addressName;
     orderModel.destination = response.destination;
     orderModel.phone = response.phone;
-    orderModel.startDate = DateFormat('yyyy-MM-dd HH-mm').parse(response.startDate) ;
+    orderModel.startDate =DateTime.parse(response.startDate);//DateTime.parse(response.startDate) ;
     orderModel.numberOfMonth = response.numberOfMonth;
     orderModel.deliveryTime = response.deliveryTime;
     orderModel.cardId = response.cardId;
     orderModel.status = response.status;
     orderModel.customerOrderID = response.customerOrderID;
     orderModel.productIds = response.products_ides;
-
     return orderModel;
     }catch(e){
       return null;
@@ -128,13 +128,16 @@ class OrdersService {
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
     DateTime date = DateTime.now();
-    //await PaymentService().processPayment(cardId!);
+    var formatter = DateFormat.yMMMMEEEEd("en_US");
 
     // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
-    //   bool stripResponse =  await _stripeServices.charge(customer: customername!, amount: amount, userId: uId!, cardId: cardId);
-    //   if(!stripResponse){
-    //     throw Exception();
-    //   }
+    //  bool paymentResult =  await PaymentService().paymentByPaypal(amount: amount, displayName: customername!);
+    //
+    //  /// An error occurred in the payment process
+    //  /// Throw Exception
+    //  if(!paymentResult){
+    //    throw Exception();
+    //  }
     // }
 
     late CreateOrderRequest orderRequest;
@@ -173,6 +176,9 @@ class OrdersService {
        if(customer_order_id== null)
          throw Exception();
 
+
+
+
        orderRequest = CreateOrderRequest(
           userId: uId!,
            storeId: storeId,
@@ -184,7 +190,7 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate: DateFormat('yyyy-MM-dd HH-mm').format(date)  ,
+          startDate:date.toIso8601String(),// DateFormat('yyyy-MM-dd HH-mm').format(date)  ,
           description:description.substring(0 , description.length-2),
           addressName :addressName,
           cardId:cardId,
@@ -209,7 +215,7 @@ class OrdersService {
           numberOfMonth: numberOfMonth,
           deliveryTime: deliveryTimes,
           orderValue: amount,
-          startDate: DateFormat('yyyy-MM-dd HH-mm').format(date),
+          startDate:date.toIso8601String(),// DateFormat('yyyy-MM-dd HH-mm').format(date),
           description:description!,
           addressName :addressName,
           cardId:cardId,
@@ -259,6 +265,8 @@ class OrdersService {
 
  Future<OrderModel?> reorder(String orderID)async {
     OrderModel? order =  await getOrderDetails(orderID);
+    print('********************************');
+
     if(order == null){
 
       return null;

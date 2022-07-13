@@ -452,6 +452,17 @@ class S {
     );
   }
 
+  /// `Plot`
+  String get plot {
+    return Intl.message(
+      'Plot',
+      name: 'plot',
+      desc: '',
+      args: [],
+    );
+  }
+
+
   /// `Ship`
   String get ship {
     return Intl.message(
@@ -665,6 +676,15 @@ class S {
     return Intl.message(
       'My Profile',
       name: 'myProfile',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Cart`
+  String get cart {
+    return Intl.message(
+      'Cart',
+      name: 'cart',
       desc: '',
       args: [],
     );
@@ -972,6 +992,17 @@ class S {
       args: [],
     );
   }
+  /// `Next Time Book Mark`
+  String get nextTimeBookMark {
+    return Intl.message(
+      'Next Time Book Mark',
+      name: 'nextTimeBookMark',
+      desc: '',
+      args: [],
+    );
+  }
+
+
   /// `Hint Text Book Mark Field`
   String get hintTextBookMarkField {
     return Intl.message(
