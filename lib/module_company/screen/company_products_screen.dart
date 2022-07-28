@@ -160,38 +160,43 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 height: 20,
               ),
               Container(
-                height: SizeConfig.heightMulti * 6,
+            
                 alignment: Alignment.center,
                 margin: EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
                     boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 2)
+                      BoxShadow(color: Colors.black26, blurRadius: 1)
                     ]),
-                child: TextFormField(
-
-                  controller: _serachController,
-                  style: TextStyle(
-                    height: 0.6
-                  ),
-                  onChanged: (String query){
-                    productsCompanyBloc.search(query);
-                  },
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          size: 25,
-                          color: Colors.black38,
+                child: SizedBox(
+                  height:  SizeConfig.heightMulti * 6,
+                  child: TextFormField(
+                
+                    controller: _serachController,
+                    style: TextStyle(
+                      height: 1
+                    ),
+                    onChanged: (String query){
+                      productsCompanyBloc.search(query);
+                    },
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                        border: InputBorder.none,
+                        prefixIcon: IconButton(
+                          icon: Icon(
+                            Icons.search,
+                            size: 25,
+                            color: Colors.black38,
+                          ),
+                          onPressed: () {
+                            productsCompanyBloc.search(_serachController.text);
+                          },
                         ),
-                        onPressed: () {
-                          productsCompanyBloc.search(_serachController.text);
-                        },
-                      ),
-                      hintText:S.of(context)!.searchForYourProducts,
-                      hintStyle: TextStyle(color: Colors.black26)),
+                        hintText:S.of(context)!.searchForYourProducts,
+                        hintStyle: TextStyle(color: Colors.black26)),
+                  ),
                 ),
               ),
               SizedBox(
@@ -313,7 +318,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
-                      childAspectRatio: 0.7,
+                      childAspectRatio: 0.9,
                       children: List.generate(
                           items.length,
                               (index){
@@ -346,11 +351,12 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             AspectRatio(
-                                              aspectRatio:  1.5,
+                                              aspectRatio:  1.8,
                                               child: Container(
                                                 child: Stack(
                                                   children: [
                                                     Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 16),
                                                       width: double.infinity,
                                                       child: ClipRRect(
                                                         borderRadius:
@@ -477,7 +483,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 fontSize:
                                                                 SizeConfig
                                                                     .titleSize *
-                                                                    2.4),
+                                                                    2),
                                                           )
                                                               : SizedBox.shrink(),
                                                           SizedBox(width: 8,),
@@ -494,7 +500,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                   FontWeight.w700,
                                                                   fontSize: SizeConfig
                                                                       .titleSize *
-                                                                      2.8),
+                                                                      2.2),
                                                             ),
                                                           ),
 
@@ -514,11 +520,11 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 UtilsConst.lang == 'en'?
                                                                 items[index].title:
                                                                 items[index].title2,
-                                                                maxLines: 2,
+
                                                                 style: TextStyle(
                                                                     fontSize: SizeConfig
                                                                         .titleSize *
-                                                                        2.1,
+                                                                        1.7,
                                                                     fontWeight:
                                                                     FontWeight.bold,
                                                                     overflow: TextOverflow
@@ -537,7 +543,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 FontWeight.w700,
                                                                 fontSize: SizeConfig
                                                                     .titleSize *
-                                                                    2),
+                                                                    1.7),
                                                           ),
                                                         ],
                                                       ),
@@ -550,7 +556,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                             ),
                                             Container(
                                               margin: EdgeInsets.symmetric(horizontal: 4),
-                                              height: SizeConfig.heightMulti *5,
+                                              height: SizeConfig.heightMulti *4,
                                               child: Row(
                                                 mainAxisAlignment:
                                                 MainAxisAlignment

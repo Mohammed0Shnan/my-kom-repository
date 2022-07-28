@@ -1,4 +1,4 @@
-package com.example.my_kom
+package com.districtapp.mykomapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -18,7 +18,6 @@ class CompanyStoreDetailResponse{
     this.description= data['description'];
     this.storeId= data['store_id'];
     this.isActive = data['is_active'];
-
   }
 
 }

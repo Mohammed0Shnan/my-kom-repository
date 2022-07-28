@@ -6,7 +6,7 @@ import 'package:my_kom/module_map/service/map_service.dart';
 
 class MapBloc extends Bloc<MapEvents, MapStates> {
   final MapService service = MapService();
-  MapBloc() : super(MapLoadingState()) {
+  MapBloc() : super(MapInitState()) {
     on<MapEvents>((MapEvents event, Emitter<MapStates> emit) {
       if (event is MapLoadingEvent)
         emit(MapLoadingState());

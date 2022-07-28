@@ -94,6 +94,8 @@ class OrdersService {
     orderModel.status = response.status;
     orderModel.customerOrderID = response.customerOrderID;
     orderModel.productIds = response.products_ides;
+    orderModel.note = response.note;
+    orderModel.orderSource = response.orderSource;
     return orderModel;
     }catch(e){
       return null;
@@ -121,15 +123,16 @@ class OrdersService {
       {required List<ProductModel>  products ,required String storeId,required String addressName, required String deliveryTimes,
         required bool orderType , required GeoJson destination, required String phoneNumber,required String paymentMethod,
         required  double amount , required String? cardId,required int numberOfMonth,required bool reorder,String? description
-        ,required int? customerOrderID,required List<String>? productsIds
+        ,required int? customerOrderID,required List<String>? productsIds,
+        required String note,
+        required String? orderSource
+
       }
       ) async {
 
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
     DateTime date = DateTime.now();
-    var formatter = DateFormat.yMMMMEEEEd("en_US");
-
     // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
     //  bool paymentResult =  await PaymentService().paymentByPaypal(amount: amount, displayName: customername!);
     //
@@ -168,16 +171,10 @@ class OrdersService {
         description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
         newproducts.add(key);
         products_ides.add(key.id);
-
       });
-
-
 
        if(customer_order_id== null)
          throw Exception();
-
-
-
 
        orderRequest = CreateOrderRequest(
           userId: uId!,
@@ -195,15 +192,18 @@ class OrdersService {
           addressName :addressName,
           cardId:cardId,
          customerOrderID:customer_order_id,
-         productsIdes: products_ides
-
+         productsIdes: products_ides,
+         note: note,
+         orderSource: orderSource
 
       );
       orderRequest.status = OrderStatus.INIT.name;
     }
     else{
+
       if(customer_order_id== null)
         throw Exception();
+
       orderRequest = CreateOrderRequest(
           userId: uId!,
           storeId: storeId,
@@ -220,11 +220,12 @@ class OrdersService {
           addressName :addressName,
           cardId:cardId,
         customerOrderID:customer_order_id ,
-        productsIdes: productsIds!
+        productsIdes: productsIds!,
+        note: note,
+          orderSource: orderSource
+
       );
-
       orderRequest.status = OrderStatus.INIT.name;
-
     }
 
     DocumentSnapshot orderSnapShot =await _orderRepository.addNewOrder(orderRequest);
@@ -265,7 +266,6 @@ class OrdersService {
 
  Future<OrderModel?> reorder(String orderID)async {
     OrderModel? order =  await getOrderDetails(orderID);
-    print('********************************');
 
     if(order == null){
 
@@ -273,7 +273,7 @@ class OrdersService {
     }
     else{
 
-      OrderModel? neworder = await addNewOrder(storeId:order.storeId,productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, orderType: order.vipOrder, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
+      OrderModel? neworder = await addNewOrder(orderSource: order.orderSource, note: order.note, storeId:order.storeId,productsIds: order.productIds,customerOrderID:order.customerOrderID,products: order.products, addressName: order.addressName, deliveryTimes: order.deliveryTime, orderType: order.vipOrder, destination: order.destination, phoneNumber: order.phone, paymentMethod: order.payment, amount: order.orderValue, cardId: order.cardId, numberOfMonth: order.numberOfMonth,
       reorder: true,
         description: order.description
       );
@@ -287,88 +287,6 @@ class OrdersService {
 
  }
 
-  // Future<OrderModel?> getOrdersDetail(String ) async {
-  //   _orderRepository.getOrderDetails(uid)
-  //   // List<Order> response = await _ordersManager.getCaptainOrders();
-  //   // if (response == null) return null;
-  //
-  //   // List<OrderModel> orders = [];
-  //
-  //   // response.forEach((element) {
-  //   //   orders.add(new OrderModel(
-  //   //     to: element.location,
-  //   //     clientPhone: element.recipientPhone,
-  //   //     from: '',
-  //   //     storeName: element.userName,
-  //   //     creationTime:
-  //   //         DateTime.fromMillisecondsSinceEpoch(element.date.timestamp * 1000),
-  //   //     paymentMethod: element.payment,
-  //   //     id: element.id,
-  //   //   ));
-  //   // });
-  //
-  //   // return orders;
-  //   return null;
-  // }
-
-
-
-Future<void> getOwnerOrders() async {
-  _orderRepository.getOwnerOrders().listen((event) {
-    Map<String,List<OrderModel>> orderList = {};
-    List<OrderModel> cur =[];
-    List<OrderModel> pre =[];
-    event.docs.forEach((element2) {
-
-      Map <String ,dynamic> order = element2.data() as Map<String , dynamic>;
-      if(order['status'] != OrderStatus.FINISHED.name){
-        order['id'] = element2.id;
-        OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
-        cur.add(orderModel);
-      }
-      else{
-        order['id'] = element2.id;
-        OrderModel orderModel = OrderModel.mainDetailsFromJson(order);
-        pre.add(orderModel);
-      }
-
-
-    }
-    );
-    orderList['cur']= cur;
-    orderList['pre']= pre;
-
-    orderPublishSubject.add(orderList);
-
-  }).onError((e){
-    orderPublishSubject.add(null);
-  });
-
-}
-
-
-  Future<List<OrderModel>?> getCaptainOrders() async {
-    // List<Order> response = await _ordersManager.getCaptainOrders();
-    // if (response == null) return null;
-
-    // List<OrderModel> orders = [];
-
-    // response.forEach((element) {
-    //   orders.add(new OrderModel(
-    //     to: element.location,
-    //     clientPhone: element.recipientPhone,
-    //     from: '',
-    //     storeName: element.userName,
-    //     creationTime:
-    //         DateTime.fromMillisecondsSinceEpoch(element.date.timestamp * 1000),
-    //     paymentMethod: element.payment,
-    //     id: element.id,
-    //   ));
-    // });
-
-    // return orders;
-    return null;
-  }
 
   Future<void> getNotifications()async {
     String? uid = await _authPrefsHelper.getUserId();

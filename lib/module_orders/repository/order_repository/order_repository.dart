@@ -34,7 +34,7 @@ class OrderRepository {
 
   Future<OrderDetailResponse?> getOrderDetails(String orderId) async {
     try{
-       return await _firestore.collection('orders').doc(orderId).collection('details').get().then((value) {
+      return await _firestore.collection('orders').doc(orderId).collection('details').get().then((value) {
          Map <String ,dynamic> result = value.docs[0].data() ;
          result['id'] = orderId;
          OrderDetailResponse r =   OrderDetailResponse.fromJson(result) ;

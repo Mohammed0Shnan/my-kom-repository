@@ -20,7 +20,8 @@ class CreateOrderRequest {
   late String? cardId;
   late int customerOrderID ;
   late bool vipOrder ;
-
+  late String note ;
+  late String? orderSource;
   late List<String> productsIdes;
 
   CreateOrderRequest(
@@ -41,6 +42,8 @@ class CreateOrderRequest {
         required this.customerOrderID
         ,required this.productsIdes,
         required this.vipOrder,
+        required this.note,
+        required this.orderSource
       });
 
   // CreateOrderRequest.fromJson(Map<String, dynamic> json) {
@@ -66,7 +69,7 @@ class CreateOrderRequest {
     data['customer_order_id'] =this.customerOrderID;
     data['start_date'] = this.startDate;
     data['products_ides'] = this.productsIdes;
-
+    data['order_source'] = this.orderSource;
     return data;
   }
 
@@ -91,6 +94,9 @@ class CreateOrderRequest {
     data['payment'] = this.payment;
     data['address_name'] = this.addressName;
     data['description'] = this.description;
+    data['note'] = this.note;
+    data['order_source'] = this.orderSource;
+
 
     return data;
   }

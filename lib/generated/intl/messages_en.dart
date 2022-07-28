@@ -263,6 +263,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "nextTimeBookMark": MessageLookupByLibrary.simpleMessage("Add bookmarks for next time"),
     "cart": MessageLookupByLibrary.simpleMessage("Cart"),
     "plot": MessageLookupByLibrary.simpleMessage("Plot"),
+    "note": MessageLookupByLibrary.simpleMessage("Note"),
+    "noteMessage": MessageLookupByLibrary.simpleMessage("This note will appear at the delivery service provider"),
+    "validPhone": MessageLookupByLibrary.simpleMessage("Enter Valid Phone Number"),
 
 
   };

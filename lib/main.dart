@@ -1,12 +1,10 @@
 
-
-
 import 'dart:async';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_kom/generated/l10n.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/module_about/about_module.dart';
@@ -35,6 +33,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+  }
   final container = await AppComponent.create();
   BlocOverrides.runZoned(
     () {
@@ -48,8 +49,8 @@ void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
-    ..indicatorSize = 45.0
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorSize = 35.0
     ..radius = 10.0
     ..progressColor = Colors.yellow
     ..backgroundColor = Colors.green
@@ -62,7 +63,7 @@ void configLoading() {
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
 
- final LocalizationService _localizationService;
+  final LocalizationService _localizationService;
   final SplashModule _splashModule;
   final AboutModule _aboutModule;
   final NavigatorModule _navigatorModule;
@@ -89,36 +90,26 @@ Timer? _timer;
         _timer?.cancel();
       }
     });
+
   FireNotificationService().init(context);
-    FirebaseMessaging.instance.subscribeToTopic('advertisements');
     FirebaseMessaging.onMessage.listen((event) {
-    print('++++++++++++++++++++++++++++++++++ on Message  ++++++++++++++++++++++++++++++++++');
     if(event.notification != null){
-      print(event.notification!.toMap());
-      FireNotificationService().display(event.notification!);
+     FireNotificationService().display(event.notification!);
     }
 
   });
 
-  FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print('++++++++++++++++++++++++++++++++++ on open app ++++++++++++++++++++++++++++++++++');
-    print(event.toMap());
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+
     Navigator.of(context).pushNamedAndRemoveUntil( NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
   });
 
-  messaging.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    provisional: false,
-    criticalAlert: false,
-    carPlay: false,
-  );
+  // messaging.setForegroundNotificationPresentationOptions(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
+
     super.initState();
   }
 

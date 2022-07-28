@@ -22,8 +22,8 @@ class OrderDetailResponse {
   late int customerOrderID;
   late List<String> products_ides;
   late bool vipOrder;
-
-
+  late String note;
+  late String? orderSource;
 
   OrderDetailResponse.fromJson(Map<String, dynamic> json) {
     print(json);
@@ -41,6 +41,8 @@ class OrderDetailResponse {
     this.phone = json['phone'];
     this.customerOrderID = json['customer_order_id'];
     this.vipOrder = json['vip_order'];
+    this.note = json['note'];
+    this.orderSource = json['order_source'];
     this.products_ides = json['products_ides'].cast<String>();
 
     List<ProductModel> productFromResponse = [];

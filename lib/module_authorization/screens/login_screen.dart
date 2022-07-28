@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -78,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: SizeConfig.screenHeight * 0.5,
+                  height: SizeConfig.screenHeight * 0.45,
                   padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -106,16 +105,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.black87,
                                       fontSize: SizeConfig.titleSize * 2
                                   ))),
-                              subtitle: Container(
+                              subtitle: SizedBox(
+                                height: 42.0,
                                 child: TextFormField(
-
                                   style: TextStyle(fontSize: 16,
-                                  height: 0.5
+                                  height: 1
                                   ),
                                   keyboardType: TextInputType.emailAddress,
                                   controller: _LoginEmailController,
                                   decoration: InputDecoration(
-
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 12),
                                       border:OutlineInputBorder(
                                           borderSide: BorderSide(
                                               width: 2,
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               )),
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 6,
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -158,62 +158,70 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.black87,
                                     fontSize: SizeConfig.titleSize * 2
                                 ))),
-                            subtitle: BlocBuilder<PasswordHiddinCubit,
-                                PasswordHiddinCubitState>(
-                              bloc: cubit,
-                              builder: (context, state) {
-                                return TextFormField(
-                                  controller: _LoginPasswordController,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      height: 0.5
-                                  ),
-                                  decoration: InputDecoration(
-                                      errorStyle: GoogleFonts.lato(
-                                        color: Colors.red.shade700,
-                                        fontWeight: FontWeight.w800,
-                                      ),
+                            subtitle: SizedBox(
+                              height: 42,
+                              child: BlocBuilder<PasswordHiddinCubit,
+                                  PasswordHiddinCubitState>(
+                                bloc: cubit,
+                                builder: (context, state) {
+                                  return SizedBox(
+                                    child: TextFormField(
 
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            cubit.changeState();
-                                          },
-                                          icon: state ==
-                                              PasswordHiddinCubitState
-                                                  .VISIBILITY
-                                              ? Icon(Icons.visibility)
-                                              : Icon(Icons.visibility_off)),
-                                      border:OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 2,
-                                              style:BorderStyle.solid ,
-                                              color: Colors.black87
+                                      controller: _LoginPasswordController,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          height: 1
+                                      ),
+                                      decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical:12),
+                                          errorStyle: GoogleFonts.lato(
+                                            color: Colors.red.shade700,
+                                            fontWeight: FontWeight.w800,
                                           ),
-                                          borderRadius: BorderRadius.circular(10)
+
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                cubit.changeState();
+                                              },
+                                              icon: state ==
+                                                  PasswordHiddinCubitState
+                                                      .VISIBILITY
+                                                  ? Icon(Icons.visibility)
+                                                  : Icon(Icons.visibility_off)),
+                                          border:OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  style:BorderStyle.solid ,
+                                                  color: Colors.black87
+                                              ),
+                                              borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          hintText:S.of(context)!.password,
+                                          hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
                                       ),
-                                      hintText:  S.of(context)!.password,
-                                      hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                  ),
-                                  obscureText:
-                                  state == PasswordHiddinCubitState.VISIBILITY
-                                      ? false
-                                      : true,
+                                      obscureText:
+                                      state == PasswordHiddinCubitState.VISIBILITY
+                                          ? false
+                                          : true,
 
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (v) => node.unfocus(),
-                                  // Move focus to next
-                                  validator: (result) {
-                                    if (result!.isEmpty) {
-                                      return  S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
-                                    }
-                                    if (result.length < 8) {
-                                      return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                    }
+                                      textInputAction: TextInputAction.done,
+                                      onFieldSubmitted: (v) => node.unfocus(),
+                                      // Move focus to next
+                                      validator: (result) {
+                                        if (result!.isEmpty) {
+                                          return  S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
+                                        }
+                                        if (result.length < 8) {
+                                          return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
+                                        }
 
-                                    return null;
-                                  },
-                                );
-                              },
+                                        return null;
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),

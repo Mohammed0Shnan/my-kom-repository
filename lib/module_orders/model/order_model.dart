@@ -23,7 +23,8 @@ class OrderModel {
  late OrderStatus status;
  late String? cardId;
  late bool vipOrder;
-
+ late String note;
+ late String? orderSource;
  late List<String> productIds;
  // late GeoJson to;
  // late String addressName;
@@ -54,6 +55,7 @@ class OrderModel {
    this.payment = json['payment'];
    this.customerOrderID =json['customer_order_id'];
    this.vipOrder =json['vip_order'];
+   this.orderSource =json['order_source'];
    //this.startDate = json['start_date']==null?null:DateTime.parse(json['start_date']);
 
 

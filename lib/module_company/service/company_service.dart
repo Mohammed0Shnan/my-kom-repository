@@ -87,6 +87,7 @@ class CompanyService {
           map['id'] = element.id;
           CompanyStoreDetailResponse res = CompanyStoreDetailResponse.fromJsom(
               map);
+
           CompanyModel companyModel = CompanyModel(
               id: res.id, name: res.name, imageUrl: res.imageUrl,description:res.description ,
 

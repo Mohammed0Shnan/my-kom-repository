@@ -8,6 +8,7 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
+import 'package:my_kom/module_authorization/screens/login_automatically.dart';
 import 'package:my_kom/module_authorization/screens/phone_code_sent_screen.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/map_routes.dart';
@@ -82,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           Expanded(
             child: PageView(
-             // physics: NeverScrollableScrollPhysics(),
+              //physics: NeverScrollableScrollPhysics(),
               controller: _pageController,
               children: [
                 /// Page Number One
@@ -156,40 +157,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           color: Colors.black87,
                                           fontSize: SizeConfig.titleSize * 2
                                       ))),
-                                  subtitle: TextFormField(
-                                    style: TextStyle(fontSize: 16,
-                                    height: 0.6
+                                  subtitle: SizedBox(
+                                    height: 42.0,
+                                    child: TextFormField(
+                                      style: TextStyle(fontSize: 16,
+                                      height:1
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                      controller: _registerEmailController,
+                                      decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(vertical: 16,horizontal: 8),
+                                          isDense: true,
+                                          border:OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  style:BorderStyle.solid ,
+                                                  color: Colors.black87
+                                              ),
+                                            borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          hintText: S.of(context)!.email
+                                          ,
+                                          hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                          //S.of(context).name,
+                                          ),
+                                      textInputAction: TextInputAction.next,
+                                      onEditingComplete: () => node.nextFocus(),
+                                      // Move focus to next
+                                      validator: (result) {
+                                        if (result!.isEmpty) {
+                                          return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
+                                        }
+                                        if (!_validateEmailStructure(result))
+                                          return 'Must write an email';
+                                        return null;
+                                      },
                                     ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    controller: _registerEmailController,
-                                    decoration: InputDecoration(
-                                        border:OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                width: 2,
-                                                style:BorderStyle.solid ,
-                                                color: Colors.black87
-                                            ),
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        hintText: S.of(context)!.email
-                                        ,
-                                        hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                        //S.of(context).name,
-                                        ),
-                                    textInputAction: TextInputAction.next,
-                                    onEditingComplete: () => node.nextFocus(),
-                                    // Move focus to next
-                                    validator: (result) {
-                                      if (result!.isEmpty) {
-                                        return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
-                                      }
-                                      if (!_validateEmailStructure(result))
-                                        return 'Must write an email';
-                                      return null;
-                                    },
                                   )),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.01,
+                                height:6
                               ),
                               ListTile(
                                 title: Padding(
@@ -199,63 +205,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         color: Colors.black87,
                                         fontSize: SizeConfig.titleSize * 2
                                     ))),
-                                subtitle: BlocBuilder<PasswordHiddinCubit,
-                                    PasswordHiddinCubitState>(
-                                  bloc: cubit1,
-                                  builder: (context, state) {
-                                    return TextFormField(
-                                      controller: _registerPasswordController,
-                                      style: TextStyle(fontSize: 16,
-                                          height: 0.6
-                                      ),
-                                      decoration: InputDecoration(
+                                subtitle: SizedBox(height: 42.0,
+                                  child: BlocBuilder<PasswordHiddinCubit,
+                                      PasswordHiddinCubitState>(
+                                    bloc: cubit1,
+                                    builder: (context, state) {
+                                      return TextFormField(
+                                        controller: _registerPasswordController,
+                                        style: TextStyle(fontSize: 16,
+                                            height: 1
+                                        ),
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                            contentPadding: EdgeInsets.symmetric(vertical: 14,horizontal: 8),
+                                            suffixIcon: IconButton(
+                                                onPressed: () {
+                                                  cubit1.changeState();
+                                                },
+                                                icon: state ==
+                                                        PasswordHiddinCubitState
+                                                            .VISIBILITY
+                                                    ? Icon(Icons.visibility)
+                                                    : Icon(Icons.visibility_off)),
+                                            border:OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    width: 2,
+                                                    style:BorderStyle.solid ,
+                                                    color: Colors.black87
+                                                ),
+                                                borderRadius: BorderRadius.circular(10)
 
-                                          suffixIcon: IconButton(
-                                              onPressed: () {
-                                                cubit1.changeState();
-                                              },
-                                              icon: state ==
-                                                      PasswordHiddinCubitState
-                                                          .VISIBILITY
-                                                  ? Icon(Icons.visibility)
-                                                  : Icon(Icons.visibility_off)),
-                                          border:OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  width: 2,
-                                                  style:BorderStyle.solid ,
-                                                  color: Colors.black87
-                                              ),
-                                              borderRadius: BorderRadius.circular(10)
+                                            ),
+                                            hintText:S.of(context)!.password
+                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                            ),
+                                        obscureText: state ==
+                                                PasswordHiddinCubitState.VISIBILITY
+                                            ? false
+                                            : true,
+                                        textInputAction: TextInputAction.next,
+                                        onEditingComplete: () => node.nextFocus(),
 
-                                          ),
-                                          hintText:S.of(context)!.password
-                                          , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                          ),
-                                      obscureText: state ==
-                                              PasswordHiddinCubitState.VISIBILITY
-                                          ? false
-                                          : true,
-                                      textInputAction: TextInputAction.next,
-                                      onEditingComplete: () => node.nextFocus(),
-
-                                      // Move focus to next
-                                      validator: (result) {
-                                        if (result!.isEmpty) {
-                                          return S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
-                                        }
-                                        if (result.length < 8) {
-                                          return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                        }
-                                        if (!_validatePasswordStructure(result))
-                                          return '* It must be made up of numbers, letters and signs';
-                                        return null;
-                                      },
-                                    );
-                                  },
+                                        // Move focus to next
+                                        validator: (result) {
+                                          if (result!.isEmpty) {
+                                            return S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
+                                          }
+                                          if (result.length < 8) {
+                                            return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
+                                          }
+                                          if (!_validatePasswordStructure(result))
+                                            return '* It must be made up of numbers, letters and signs';
+                                          return null;
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.01,
+                                height:6,
                               ),
                               ListTile(
                                 title: Padding(
@@ -265,64 +274,70 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         color: Colors.black87,
                                         fontSize: SizeConfig.titleSize * 2
                                     ))),
-                                subtitle: BlocBuilder<PasswordHiddinCubit,
-                                    PasswordHiddinCubitState>(
-                                  bloc: cubit2,
-                                  builder: (context, state) {
-                                    return TextFormField(
-                                      controller:
-                                          _registerConfirmPasswordController,
-                                      style: TextStyle(fontSize: 16,
-                                          height: 0.6
-                                      ),
-                                      decoration: InputDecoration(
+                                subtitle: SizedBox(
+                                  height: 42.0,
+                                  child: BlocBuilder<PasswordHiddinCubit,
+                                      PasswordHiddinCubitState>(
+                                    bloc: cubit2,
+                                    builder: (context, state) {
+                                      return SizedBox(
+                                        child: TextFormField(
+                                          controller:
+                                              _registerConfirmPasswordController,
+                                          style: TextStyle(fontSize: 16,
+                                              height: 1
+                                          ),
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                              contentPadding: EdgeInsets.symmetric(vertical: 14,horizontal: 8),
+                                              suffixIcon: IconButton(
+                                                  onPressed: () {
+                                                    cubit2.changeState();
+                                                  },
+                                                  icon: state ==
+                                                          PasswordHiddinCubitState
+                                                              .VISIBILITY
+                                                      ? Icon(Icons.visibility)
+                                                      : Icon(Icons.visibility_off)),
+                                              border:OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      width: 2,
+                                                      style:BorderStyle.solid ,
+                                                      color: Colors.black87
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(10)
 
-                                          suffixIcon: IconButton(
-                                              onPressed: () {
-                                                cubit2.changeState();
-                                              },
-                                              icon: state ==
-                                                      PasswordHiddinCubitState
-                                                          .VISIBILITY
-                                                  ? Icon(Icons.visibility)
-                                                  : Icon(Icons.visibility_off)),
-                                          border:OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  width: 2,
-                                                  style:BorderStyle.solid ,
-                                                  color: Colors.black87
                                               ),
-                                              borderRadius: BorderRadius.circular(10)
-
-                                          ),
-                                          hintText:
-                                          S.of(context)!.confirmPassword // S.of(context).password,
-                                        , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                          ),
-                                      validator: (result) {
-                                        if (result!.trim() !=
-                                            _registerPasswordController.text
-                                                .trim()) {
-                                          return 'Confirm pass mismatch';
-                                        }
-                                        if (result.isEmpty) {
-                                          return 'Confirm Password Is Required!';
-                                        }
-                                        return null;
-                                      },
-                                      obscureText: state ==
-                                              PasswordHiddinCubitState.VISIBILITY
-                                          ? false
-                                          : true,
-                                      textInputAction: TextInputAction.done,
-                                      onFieldSubmitted: (_) => node
-                                          .unfocus(), // Submit and hide keyboard
-                                    );
-                                  },
+                                              hintText:
+                                              S.of(context)!.confirmPassword // S.of(context).password,
+                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                              ),
+                                          validator: (result) {
+                                            if (result!.trim() !=
+                                                _registerPasswordController.text
+                                                    .trim()) {
+                                              return 'Confirm pass mismatch';
+                                            }
+                                            if (result.isEmpty) {
+                                              return 'Confirm Password Is Required!';
+                                            }
+                                            return null;
+                                          },
+                                          obscureText: state ==
+                                                  PasswordHiddinCubitState.VISIBILITY
+                                              ? false
+                                              : true,
+                                          textInputAction: TextInputAction.done,
+                                          onFieldSubmitted: (_) => node
+                                              .unfocus(), // Submit and hide keyboard
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.04,
+                                height:SizeConfig.screenHeight * 0.02,
                               ),
                               Center(
                                 child: SmoothPageIndicator(
@@ -337,7 +352,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height:SizeConfig.screenHeight * 0.05,
+                                height:SizeConfig.screenHeight * 0.04,
                               ),
                               BlocConsumer<RegisterBloc, RegisterStates>(
                                 bloc: widget._bloc,
@@ -478,44 +493,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           color: Colors.black87,
                                           fontSize: SizeConfig.titleSize * 2
                                       ))),
-                                    subtitle: TextFormField(
-                                      controller: _registerUserNameController,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        height: 0.6
+                                    subtitle: SizedBox(
+                                      child: TextFormField(
+                                        controller: _registerUserNameController,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          height:1
+                                        ),
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 14),
+                                            errorStyle: GoogleFonts.lato(
+                                              color: Colors.red.shade700,
+                                              fontWeight: FontWeight.w800,
+
+
+                                            ),
+                                            border:OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    width: 2,
+                                                    style:BorderStyle.solid ,
+                                                    color: Colors.black87
+                                                ),
+                                                borderRadius: BorderRadius.circular(10)
+
+                                            ),hintText: S.of(context)!.name
+                                              , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+
+                                            //S.of(context).name,
+                                            ),
+                                        textInputAction: TextInputAction.next,
+                                        onEditingComplete: () => node.nextFocus(),
+                                        // Move focus to next
+                                        validator: (result) {
+                                          if (result!.isEmpty) {
+                                            return  S.of(context)!.nameIsRequired; //S.of(context).nameIsRequired;
+                                          }
+                                          return null;
+                                        },
                                       ),
-                                      decoration: InputDecoration(
-                                          errorStyle: GoogleFonts.lato(
-                                            color: Colors.red.shade700,
-                                            fontWeight: FontWeight.w800,
-
-
-                                          ),
-                                          border:OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  width: 2,
-                                                  style:BorderStyle.solid ,
-                                                  color: Colors.black87
-                                              ),
-                                              borderRadius: BorderRadius.circular(10)
-
-                                          ),hintText: S.of(context)!.name
-                                            , hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-
-                                          //S.of(context).name,
-                                          ),
-                                      textInputAction: TextInputAction.next,
-                                      onEditingComplete: () => node.nextFocus(),
-                                      // Move focus to next
-                                      validator: (result) {
-                                        if (result!.isEmpty) {
-                                          return  S.of(context)!.nameIsRequired; //S.of(context).nameIsRequired;
-                                        }
-                                        return null;
-                                      },
                                     )),
                                 SizedBox(
-                                  height: 8,
+                                  height: 4,
                                 ),
                                 ListTile(
                                     title: Padding(
@@ -525,86 +544,93 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           color: Colors.black87,
                                           fontSize: SizeConfig.titleSize * 2
                                       ))),
-                                    subtitle: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            controller:
-                                                _registerAddressController,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                height: 0.6
-                                            ),
-                                            readOnly: true,
-                                            enableInteractiveSelection: true,
-
-                                            decoration: InputDecoration(
-                                                errorStyle: GoogleFonts.lato(
-                                                  color: Colors.red.shade700,
-                                                  fontWeight: FontWeight.w800,
-
-
+                                    subtitle: Container(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: SizedBox(
+                                              height: 45.0,
+                                              child: TextFormField(
+                                                controller:
+                                                    _registerAddressController,
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    height:1
                                                 ),
-                                                prefixIcon:
-                                                    Icon(Icons.location_on),
-                                                border:OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        width: 2,
-                                                        style:BorderStyle.solid ,
-                                                        color: Colors.black87
+                                                readOnly: true,
+                                                enableInteractiveSelection: true,
+
+                                                decoration: InputDecoration(
+                                                    isDense: true,
+                                                    contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 12),
+                                                    errorStyle: GoogleFonts.lato(
+                                                      color: Colors.red.shade700,
+                                                      fontWeight: FontWeight.w800,
+
+
                                                     ),
-                                                    borderRadius: BorderRadius.circular(10)
+                                                    prefixIcon:
+                                                        Icon(Icons.location_on),
+                                                    border:OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 2,
+                                                            style:BorderStyle.solid ,
+                                                            color: Colors.black87
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(10)
 
-                                                ), hintText: S.of(context)!.address,
-                                                hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
-                                                ),
+                                                    ), hintText: S.of(context)!.address,
+                                                    hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
+                                                    ),
 
-                                            textInputAction: TextInputAction.next,
-                                            onEditingComplete: () =>
-                                                node.nextFocus(),
-                                            // Move focus to next
-                                            validator: (result) {
-                                              if (result!.isEmpty) {
-                                                return  S.of(context)!.addressIsRequired; //S.of(context).emailAddressIsRequired;
-                                              }
+                                                textInputAction: TextInputAction.next,
+                                                onEditingComplete: () =>
+                                                    node.nextFocus(),
+                                                // Move focus to next
+                                                validator: (result) {
+                                                  if (result!.isEmpty) {
+                                                    return  S.of(context)!.addressIsRequired; //S.of(context).emailAddressIsRequired;
+                                                  }
 
-                                              return null;
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          GestureDetector(
+                                            onTap: (){
+                                              Navigator.pushNamed(
+                                                  context, MapRoutes.MAP_SCREEN,arguments: true)
+                                                  .then((value) {
+                                                if (value != null) {
+                                                  addressModel = (value as AddressModel);
+                                                  _registerAddressController.text =
+                                                      addressModel.description;
+                                                }
+                                              });
                                             },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: (){
-                                            Navigator.pushNamed(
-                                                context, MapRoutes.MAP_SCREEN,arguments: true)
-                                                .then((value) {
-                                              if (value != null) {
-                                                addressModel = (value as AddressModel);
-                                                _registerAddressController.text =
-                                                    addressModel.description;
-                                              }
-                                            });
-                                          },
-                                          child: Container(
+                                            child: Container(
 
-                                            width: SizeConfig.heightMulti * 7,
-                                            height: SizeConfig.heightMulti * 7,
-                                            decoration: BoxDecoration(
-                                                color: ColorsConst.mainColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: Icon(
-                                                Icons.my_location_outlined,
-                                                size: SizeConfig.heightMulti * 4,
-                                                color: Colors.white),
-                                          ),
-                                        )
-                                      ],
+                                              width: SizeConfig.heightMulti * 7,
+                                              height: SizeConfig.heightMulti * 7,
+                                              decoration: BoxDecoration(
+                                                  color: ColorsConst.mainColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10)),
+                                              child: Icon(
+                                                  Icons.my_location_outlined,
+                                                  size: SizeConfig.heightMulti * 4,
+                                                  color: Colors.white),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     )),
                                 SizedBox(
-                                  height: 8,
+                                  height: 4,
                                 ),
                                 ListTile(
                                   title: Padding(
@@ -615,7 +641,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         fontSize: SizeConfig.titleSize * 2
                                     ))),
                                   subtitle: Container(
-height: SizeConfig.heightMulti * 7,
+                                    height: SizeConfig.heightMulti * 7,
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
                                          horizontal: 10),
@@ -655,12 +681,16 @@ height: SizeConfig.heightMulti * 7,
                                         Expanded(
                                             child: TextFormField(
                                           keyboardType: TextInputType.number,
+                                          style: TextStyle(
+                                            fontSize: 14
+                                          ),
                                           controller:
                                               _registerPhoneNumberController,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
+
                                               hintText:
-                                                  '(0)123412212' // S.of(context).email,
+                                                  '123412212' // S.of(context).email,
                                   , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
 
                                               ),
@@ -669,7 +699,7 @@ height: SizeConfig.heightMulti * 7,
                                               return  S.of(context)!.phoneIsRequired;
                                             } else if (!_validatePhoneNumberStructure(
                                                 result)) {
-                                              return 'Enter Valid Phone Number';
+                                              return S.of(context)!.validPhone;
                                             } else
                                               return null;
                                           },
@@ -706,15 +736,15 @@ height: SizeConfig.heightMulti * 7,
                                        String _email  =_registerEmailController.text.trim();
                                       String _password  =_registerPasswordController.text.trim();
 
-                                      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
-                                      // LoginAutomatically(email: _email, password: _password)
-                                      // ),(route)=>false);
-                                     String phone_number = countryCode+ _registerPhoneNumberController
-                                           .text
-                                           .trim().substring(1);
-                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                           PhoneCodeSentScreen(phoneNumber: phone_number,email:_email,password: _password ,)
-                                       ));
+                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
+                                      LoginAutomatically(email: _email, password: _password)
+                                      ),(route)=>false);
+                                    // String phone_number = countryCode+ _registerPhoneNumberController
+                                    //        .text
+                                    //        .trim();
+                                       // Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                       //     PhoneCodeSentScreen(phoneNumber: phone_number,email:_email,password: _password ,)
+                                       // ));
                                     }
                                   },
                                   builder: (context, state) {
@@ -752,7 +782,7 @@ height: SizeConfig.heightMulti * 7,
                                                     _registerUserNameController.text
                                                         .trim();
                                                     String phone =
-                                                    _registerPhoneNumberController
+                                                   countryCode+ _registerPhoneNumberController
                                                         .text
                                                         .trim();
                                                     ProfileRequest profileRequest =
@@ -803,7 +833,7 @@ height: SizeConfig.heightMulti * 7,
   }
 
   bool _validatePasswordStructure(String value) {
-    String pattern = r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{8,}$';
+    String pattern = r'^(?=.*?[a-z])(?=.*?[0-9])';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
@@ -815,7 +845,7 @@ height: SizeConfig.heightMulti * 7,
   }
 
   bool _validatePhoneNumberStructure(String value) {
-    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String pattern = r'([0-9]{9}$)';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }

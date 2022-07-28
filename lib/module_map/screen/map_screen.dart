@@ -31,15 +31,16 @@ final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _MapScreenState extends State<MapScreen> {
 
-  Completer<GoogleMapController> _controller = Completer();
+   late GoogleMapController _controller ;
 
   final CameraPosition _kGooglePlex = CameraPosition(
-      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 16.5);
+      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 17.0);
   late final TextEditingController _searchController;
   bool? register= null;
   String language ='en';
   @override
   void initState() {
+
     widget._preferencesHelper.getLanguage().then((value) {
       language = value!;
     });
@@ -48,9 +49,13 @@ class _MapScreenState extends State<MapScreen> {
     _searchController = TextEditingController(text: '');
     mapBloc.getCurrentPosition();
   }
-
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   final Set<Marker> _markers = Set<Marker>();
-  late GoogleMapController googleMapController;
+ // late GoogleMapController googleMapController;
   Map<String, dynamic>? location_from_search = null;
   final Mode _mode = Mode.overlay;
   @override
@@ -102,7 +107,8 @@ class _MapScreenState extends State<MapScreen> {
           }
           print('***** address information after click the button in map screen ********');
           print(addressModel.toJson());
-          Navigator.pop(context, addressModel);
+
+        Navigator.pop(context, addressModel);
         } else if (state is MapGestureSuccessState) {
           location_from_search = null;
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
@@ -124,6 +130,7 @@ class _MapScreenState extends State<MapScreen> {
                         LatLng latLng = LatLng(v.latitude, v.longitude);
                         mapBloc.getGesturePosition(latLng, '');
                       },
+                      minMaxZoomPreference: MinMaxZoomPreference(0 , 17),
                       markers: _markers,
                       myLocationButtonEnabled: false,
                       myLocationEnabled: true,
@@ -135,8 +142,9 @@ class _MapScreenState extends State<MapScreen> {
                       mapType: MapType.normal,
                       initialCameraPosition: _kGooglePlex,
                       onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
+                        _controller =controller;
                       },
+
                     ),
                   ),
                   if (state is MapLoadingState)
@@ -166,10 +174,10 @@ class _MapScreenState extends State<MapScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
                                         BoxShadow(
-                                            color: ColorsConst.mainColor
-                                                .withOpacity(0.1),
-                                            blurRadius: 2,
-                                            spreadRadius: 1)
+                                            color:Colors.black45,
+                                            offset: Offset(0,1),
+                                            blurRadius: 1,
+                                           )
                                       ]),
                                   child: Row(
                                     children: [
@@ -184,6 +192,7 @@ class _MapScreenState extends State<MapScreen> {
                                         child: Container(
                                             padding: EdgeInsets.all(4),
                                             alignment: Alignment.centerLeft,
+
                                             height: SizeConfig.heightMulti * 6,
                                             child: Text(
                                               _searchController.text == ''?
@@ -299,8 +308,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _move(LatLng latLng) async {
-    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 16.5);
-    final GoogleMapController controller = await _controller.future;
+    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 17.0);
+    final GoogleMapController controller = _controller; // await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
@@ -355,8 +364,8 @@ class _MapScreenState extends State<MapScreen> {
         position: LatLng(lat, lng),
         infoWindow: InfoWindow(title: detail.result.name)));
 
-    final GoogleMapController controller = await _controller.future;
+    final GoogleMapController controller =  _controller; // await _controller.future;
     controller
-        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 16.5));
+        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng),17.0));
   }
 }

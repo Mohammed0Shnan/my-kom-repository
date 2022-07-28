@@ -247,14 +247,12 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                                                       ),
                                                     ),
                                                     child:CachedNetworkImage(
-
                                                       imageUrl: advertisement[index].imageUrl,
-                                                      filterQuality: FilterQuality.high,
                                                       fadeInCurve: Curves.easeInOut,
                                                       progressIndicatorBuilder: (context, l, ll) =>
                                                           Center(
                                                             child: Container(width: 50,
-                                                              height: 50,
+                                                              height: 40,
                                                               child:  CircularProgressIndicator(
                                                                 value: ll.progress,
                                                                 color: Colors.black12,
@@ -297,9 +295,13 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                                               highlightColor: Colors.grey.shade100,
                                               enabled: true,
                                               child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  color: Colors.white,
+
+                                                ),
                                                 height:  SizeConfig.screenHeight * 0.2,
-                                                width:  SizeConfig.screenWidth * 0.8,
-                                                color: Colors.white,
+                                                width:  SizeConfig.screenWidth * 0.9,
                                               ));
                                         }
 
@@ -520,7 +522,12 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
 
   @override
   Widget buildResults(BuildContext context) {
-    throw UnimplementedError();
+    return ListTile(
+      onTap: (){
+
+      },
+      title: Text('Select Result From Suggestions'),
+    );
   }
 
   @override
@@ -530,7 +537,8 @@ class CompanySearch extends SearchDelegate<SearchModel?>{
        builder: (context,state) {
          if(state is AllCompanySuccessState){
            List<CompanyModel>companies =  state.data;
-           final suggestionList = companies.where((element) =>element.name.startsWith(query) ).toList();
+           companies.removeWhere((element) => element.isActive ==false);
+           final suggestionList = companies.where((element) =>element.name.startsWith(query)  ).toList();
 
            return ListView.builder(
                itemCount:suggestionList.length ,

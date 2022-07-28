@@ -256,6 +256,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "nextTimeBookMark": MessageLookupByLibrary.simpleMessage("أضف علامات مرجعية للمرة القادمة"),
     "cart": MessageLookupByLibrary.simpleMessage("السلة"),
     "plot": MessageLookupByLibrary.simpleMessage("حبة"),
+    "note": MessageLookupByLibrary.simpleMessage("ملاحظة"),
+    "noteMessage": MessageLookupByLibrary.simpleMessage("ستظهر هذه الملاحظة عند مقدم خدمة التوصيل"),
+    "validPhone": MessageLookupByLibrary.simpleMessage("ادخل رقم هاتف صحيح"),
+
 
 
 

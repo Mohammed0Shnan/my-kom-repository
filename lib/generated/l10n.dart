@@ -1113,6 +1113,35 @@ class S {
     );
   }
 
+  /// `Note`
+  String get note {
+    return Intl.message(
+      'Note',
+      name: 'note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Note Message`
+  String get noteMessage {
+    return Intl.message(
+      'Note Message',
+      name: 'noteMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Valid Phone`
+  String get validPhone {
+    return Intl.message(
+      'Valid Phone',
+      name: 'validPhone',
+      desc: '',
+      args: [],
+    );
+  }
   /// `Change`
   String get change {
     return Intl.message(

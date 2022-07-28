@@ -27,7 +27,6 @@ class AllCompanyBloc extends Bloc<AllCompanyEvent, AllCompanyStates> {
   }
 
   getAllCompany(String storeId) async{
-
     this.add(AllCompanyLoadingEvent());
     _service.companyStoresPublishSubject.listen((value) {
       if (value != null){

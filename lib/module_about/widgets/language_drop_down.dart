@@ -20,7 +20,7 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
   Widget build(BuildContext context) {
     List<Map<String, String>> _myJson = [
       {"id": 'ar', "image": "assets/arabic_flag.png", "name": S.of(context)!.arabic},
-      {"id": 'en', "image": "assets/english_flag.jpg", "name": S.of(context)!.english},
+      {"id": 'en', "image": "assets/english_flag.png", "name": S.of(context)!.english},
     ];
 
     return Container(

@@ -495,8 +495,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     child: Badge(
                                       badgeContent: Container(
                                         margin: EdgeInsets.symmetric(horizontal: 10),
-                                        height: SizeConfig.heightMulti * 2.2,
-                                        width: SizeConfig.heightMulti * 2.2,
+                                        height: SizeConfig.heightMulti * 2.1,
+                                        width: SizeConfig.heightMulti * 2.1,
                                         child:
                                         Center(
                                           child: Text(items[index].orderQuantity.toString(),
@@ -524,7 +524,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                             AspectRatio(
                                               aspectRatio:  1.5,
                                               child: Container(
-
                                                 child: Stack(
                                                   children: [
                                                     Container(

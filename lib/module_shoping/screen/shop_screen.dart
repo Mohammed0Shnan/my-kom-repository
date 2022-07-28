@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,24 +47,63 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
+  /// this controller for purchasing protocol (steps)
   late final _pageController;
-  final PaymentMethodeNumberBloc paymentMethodeNumberBloc =
-      PaymentMethodeNumberBloc();
+
+  /// new order state management
   final NewOrderBloc _orderBloc = NewOrderBloc();
+
+  /// controller to change the delivery address
   final TextEditingController _newAddressController =
       TextEditingController(text: '');
+
+  /// check address state management
+  /// In order to check the specified address if it is within the serviced areas
   final CheckAddressBloc _checkAddressBloc = CheckAddressBloc();
+
+  final PaymentMethodeNumberBloc paymentMethodeNumberBloc =
+      PaymentMethodeNumberBloc();
+
+  /// local storage in order to take the current storage and add it to the request
+  /// sort orders
   final SharedPreferencesHelper _preferencesHelper = SharedPreferencesHelper();
+
+  ///Map services in order to determine the area for the user's address
+  /// if it is available within the areas served by the specified store
   final MapService _mapService = MapService();
+
+  /// my addresses state management (add , remove)
+  /// Pre-saved express delivery addresses
   final MyAddressesBloc _myAddressesBloc = MyAddressesBloc();
+
+  /// this controller is in order to capture the name of the address that we want to save for quick access
   final TextEditingController _savedNameLocationController =
       TextEditingController();
+
+  /// this controller is for write note
+  final TextEditingController _noteController = TextEditingController();
+
+  /// Customer phone number
+  /// We get it from local storage
+  /// Application registration process
+  final TextEditingController _phoneController =
+      TextEditingController(text: '');
+
+  /// To check permission to open the cart page (guests cannot view cart page)
   late final IsLogginCubit isLogginCubit;
+  late String storeId;
+
+  ///To save the source of the request (Dubai ..., etc)
+  ///If an error occurred, we could not get the value stored in the device (Null)
+
+  String? orderSource = null;
+
+  AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
 
   @override
   void initState() {
     isLogginCubit = IsLogginCubit();
-    AuthPrefsHelper().getAddress().then((value) {
+    _authPrefsHelper.getAddress().then((value) {
       if (value != null) {
         addressModel = value;
         _newAddressController.text = value.description;
@@ -74,13 +112,22 @@ class _ShopScreenState extends State<ShopScreen> {
     _preferencesHelper.getCurrentStore().then((store) {
       if (store != null) {
         storeId = store;
-        AuthPrefsHelper().getAddress().then((address) {
+        _authPrefsHelper.getAddress().then((address) {
           if (address != null) {
             LatLng latLng = LatLng(address.latitude, address.longitude);
             _getSubAreaForAddress(latLng);
           }
         });
       }
+    });
+
+    _authPrefsHelper.getPhone().then((value) {
+      _phoneController.text = value!;
+    });
+
+    ///To get the source of the request (sub area)
+    _preferencesHelper.getOrderSource().then((value) {
+      orderSource = value;
     });
     _pageController = PageController(
       initialPage: 0,
@@ -95,29 +142,52 @@ class _ShopScreenState extends State<ShopScreen> {
     super.dispose();
   }
 
-  late String storeId;
   int currentIndex = 0;
-
   double stateAngle = 0;
   double endAngle = 0;
 
-  // request parameters
+  /// request parameters
+
+  /// Products we want to buy
+  /// We get it from ShopCartBloc when the case is success we do attribution
   late List<ProductModel> requestProduct;
+
+  /// This is for the subscription process
+  /// Once, daily, monthly.... In our case, all requests are only once
   String deliveryTimesGroupValue = DeliveryTimesConst.ONE;
+
+  /// Repeat order
   int numberOfMonth = 0;
+
+  /// Delivery Address
   late AddressModel addressModel;
 
-  late String phoneNumber = '';
+  ///Payment method
   late String paymentGroupValue = '';
-  late double orderValue = 0.0;
-  late String cardId = '';
-  late bool vipOrder = false;
-  bool addressIsAccept = false;
 
+  /// Order price
+  ///  We get it from ShopCartBloc when the case is success we do attribution (total methode in block)
+  late double orderValue = 0.0;
+
+  /// card id (if payment method was credit card)
+  late String cardId = '';
+
+  /// Speed Order feature (true or false)
+  late bool vipOrder = false;
+
+  ///Added value when activating speed order
   double vipOrderValue = 0.0;
 
-  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  /// Validation
+  ///
+  /// The delivery address is acceptable or not
+  bool addressIsAccept = false;
+
+  /// For Validation (The order completable or not)
   bool orderNotComplete = false;
+
+  /// Snack Messages
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
   _getSubAreaForAddress(LatLng? latLng) {
     _mapService.getSubAreaPosition(latLng).then((subArea) {
@@ -216,7 +286,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             children: [
                               TweenAnimationBuilder(
                                   tween: Tween<double>(begin: 0.0, end: 1.0),
-                                  duration: Duration(seconds:1),
+                                  duration: Duration(seconds: 1),
                                   builder: (context, double value, child) {
                                     return Container(
                                         width: 10 * SizeConfig.heightMulti,
@@ -414,10 +484,9 @@ class _ShopScreenState extends State<ShopScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  UtilsConst.lang == 'en'?
-                          productModel.title:
-                              productModel.title2
-                                 ,
+                                  UtilsConst.lang == 'en'
+                                      ? productModel.title
+                                      : productModel.title2,
                                   style: TextStyle(
                                       fontSize: SizeConfig.titleSize * 2.3,
                                       fontWeight: FontWeight.w600),
@@ -625,14 +694,12 @@ class _ShopScreenState extends State<ShopScreen> {
                               color: Colors.red.shade50,
                             ),
                             child: Center(
-                              child: Text(
-                                  '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
-                                  style: GoogleFonts.lato(
-                                      fontSize:
-                                      SizeConfig.titleSize * 1.7,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.red))
-                            ));
+                                child: Text(
+                                    '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
+                                    style: GoogleFonts.lato(
+                                        fontSize: SizeConfig.titleSize * 1.7,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.red))));
                       } else
                         return Container();
                     } else {
@@ -732,14 +799,11 @@ class _ShopScreenState extends State<ShopScreen> {
                     //   color: Colors.black38
                     // ),
                     boxShadow: [
+                      BoxShadow(offset: Offset(0, -1), color: Colors.black12),
                       BoxShadow(
                           blurRadius: 1,
                           offset: Offset(0, 1),
-                          color: Colors.black12),
-                      BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(0, -1),
-                          color: Colors.black12)
+                          color: Colors.black26)
                     ]),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -815,95 +879,107 @@ class _ShopScreenState extends State<ShopScreen> {
                                                             List<QuickLocationModel>
                                                                 data =
                                                                 state.list;
-                                                            if(data.isEmpty)
+                                                            if (data.isEmpty)
                                                               return Center(
-
                                                                 child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
                                                                   children: [
-                                                                    Icon(Icons.bookmark,color: Colors.blue,size: 28,),
-                                                                    SizedBox(height: 8,),
-                                                                    Text(S.of(context)!.nextTimeBookMark,
-                                                                    style: GoogleFonts.lato(
-                                                                      color: Colors.black87,
-                                                                      fontWeight: FontWeight.w600,
-                                                                      fontSize: SizeConfig.titleSize * 2
+                                                                    Icon(
+                                                                      Icons
+                                                                          .bookmark,
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      size: 28,
                                                                     ),
+                                                                    SizedBox(
+                                                                      height: 8,
+                                                                    ),
+                                                                    Text(
+                                                                      S
+                                                                          .of(context)!
+                                                                          .nextTimeBookMark,
+                                                                      style: GoogleFonts.lato(
+                                                                          color: Colors
+                                                                              .black87,
+                                                                          fontWeight: FontWeight
+                                                                              .w600,
+                                                                          fontSize:
+                                                                              SizeConfig.titleSize * 2),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               );
-                                                              else
-                                                            return ListView
-                                                                .separated(
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    itemCount: data
-                                                                        .length,
-                                                                    separatorBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      return Divider(
-                                                                        color: Colors
-                                                                            .black87,
-                                                                      );
-                                                                    },
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      return InkWell(
-                                                                        onTap:
-                                                                            () {
-
-                                                                          addressModel =
-                                                                              data[index].address;
-                                                                          _newAddressController.text = S.of(context)!.to +
-                                                                              ' ' +
-                                                                              data[index].display;
-                                                                          LatLng
-                                                                              latLang =
-                                                                              LatLng(addressModel.latitude, addressModel.longitude);
-                                                                          _getSubAreaForAddress(
-                                                                              latLang);
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              35,
+                                                            else
+                                                              return ListView
+                                                                  .separated(
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemCount:
+                                                                          data
+                                                                              .length,
+                                                                      separatorBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        return Divider(
+                                                                          color:
+                                                                              Colors.black87,
+                                                                        );
+                                                                      },
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        return InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            addressModel =
+                                                                                data[index].address;
+                                                                            _newAddressController.text = S.of(context)!.to +
+                                                                                ' ' +
+                                                                                data[index].display;
+                                                                            LatLng
+                                                                                latLang =
+                                                                                LatLng(addressModel.latitude, addressModel.longitude);
+                                                                            _getSubAreaForAddress(latLang);
+                                                                            Navigator.pop(context);
+                                                                          },
                                                                           child:
-                                                                              Row(
-                                                                            children: [
-                                                                              Icon(
-                                                                                Icons.bookmark_outline,
-                                                                                color: Colors.blue,
-                                                                                size: 16,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 5,
-                                                                              ),
-                                                                              Text(
-                                                                                data[index].display,
-                                                                                style: GoogleFonts.lato(fontSize: 15, color: Colors.black),
-                                                                              ),
-                                                                              Spacer(),
-                                                                              TextButton(
-                                                                                  onPressed: () {
-                                                                                    EasyLoading.show(status: S.of(context)!.pleaseWait);
-                                                                                    _myAddressesBloc.removeLocation(data[index].id).then((value) {
-                                                                                      EasyLoading.showError(S.of(context)!.removed);
-                                                                                    });
-                                                                                  },
-                                                                                  child: Text(
-                                                                                    S.of(context)!.remove,
-                                                                                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue, fontSize: 12),
-                                                                                  ))
-                                                                            ],
+                                                                              Container(
+                                                                            height:
+                                                                                35,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Icon(
+                                                                                  Icons.bookmark_outline,
+                                                                                  color: Colors.blue,
+                                                                                  size: 16,
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 5,
+                                                                                ),
+                                                                                Text(
+                                                                                  data[index].display,
+                                                                                  style: GoogleFonts.lato(fontSize: 15, color: Colors.black),
+                                                                                ),
+                                                                                Spacer(),
+                                                                                TextButton(
+                                                                                    onPressed: () {
+                                                                                      EasyLoading.show(status: S.of(context)!.pleaseWait);
+                                                                                      _myAddressesBloc.removeLocation(data[index].id).then((value) {
+                                                                                        EasyLoading.showError(S.of(context)!.removed);
+                                                                                      });
+                                                                                    },
+                                                                                    child: Text(
+                                                                                      S.of(context)!.remove,
+                                                                                      style: TextStyle( color: Colors.blue, fontSize: 12),
+                                                                                    ))
+                                                                              ],
+                                                                            ),
                                                                           ),
-                                                                        ),
-                                                                      );
-                                                                    });
+                                                                        );
+                                                                      });
                                                           } else if (state
                                                               is MyAddressesErrorState) {
                                                             return Center(
@@ -1085,44 +1161,52 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ],
                     ),
-                    FutureBuilder<String?>(
-                        initialData: null,
-                        future: AuthPrefsHelper().getPhone(),
-                        builder: (context, state) {
-                          phoneNumber = '';
-                          if (state.data == null) {
-                            phoneNumber = '';
-                          } else
-                            phoneNumber = state.data!;
-                          return Row(
-                            children: [
-                              Icon(
-                                Icons.phone,
-                                color: Colors.blue,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          color: Colors.blue,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          '${S.of(context)!.phone} :',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black45,
+                              fontSize: SizeConfig.titleSize * 1.8),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: SizeConfig.heightMulti * 3,
+                            child: TextFormField(
+                              controller: _phoneController,
+
+                              style: TextStyle(
+                                  fontSize: SizeConfig.titleSize * 1.7,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600]),
+
+                              decoration: InputDecoration(
+                                suffixIcon: Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                  size: 18,
+                                ),
+                                border: InputBorder.none,
+                                //S.of(context).name,
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                '${S.of(context)!.phone} :',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black45,
-                                    fontSize: SizeConfig.titleSize * 1.8),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                phoneNumber,
-                                style: TextStyle(
-                                    fontSize: SizeConfig.titleSize * 1.7,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[600]),
-                              ),
-                            ],
-                          );
-                        }),
+                              textInputAction: TextInputAction.next,
+                              // Move focus to next
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -1266,8 +1350,6 @@ class _ShopScreenState extends State<ShopScreen> {
                                                               .saveAddress(
                                                                   quickLocationModel);
                                                         }
-
-
                                                       },
                                                       child: Text(
                                                           S
@@ -1321,7 +1403,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   state.saved
                                       ? Icons.check
                                       : Icons.bookmark_outline,
-                                 color: Colors.green,
+                                  color: Colors.green,
                                   size: 19,
                                 ),
                               ],
@@ -1356,13 +1438,12 @@ class _ShopScreenState extends State<ShopScreen> {
                               // ),
                               boxShadow: [
                                 BoxShadow(
-                                    blurRadius: 1,
-                                    offset: Offset(0, 1),
+                                    offset: Offset(0, -1),
                                     color: Colors.black12),
                                 BoxShadow(
                                     blurRadius: 1,
-                                    offset: Offset(0, -1),
-                                    color: Colors.black12)
+                                    offset: Offset(0, 1),
+                                    color: Colors.black38)
                               ],
                               borderRadius: BorderRadius.circular(10)),
                           child: Column(
@@ -1423,7 +1504,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         color: Colors.black54),
                                   ),
                                   Container(
-                                    height: SizeConfig.heightMulti * 1.3,
+                                    height: SizeConfig.heightMulti * 3,
                                     width: SizeConfig.widhtMulti * 14,
                                     child: Switch(
                                         value: vipOrder,
@@ -1495,7 +1576,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                 height: 12,
                               ),
                               Text(
-                                S.of(context)!.myKomExpressServiceMessageDisable,
+                                S
+                                    .of(context)!
+                                    .myKomExpressServiceMessageDisable,
                                 style: GoogleFonts.lato(
                                     fontSize: SizeConfig.titleSize * 1.8,
                                     fontWeight: FontWeight.w800,
@@ -1534,6 +1617,103 @@ class _ShopScreenState extends State<ShopScreen> {
                           child: Text('Error in load data'));
                     }
                   }),
+              SizedBox(
+                height: 16,
+              ),
+
+              /// Note
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.all(8),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    // border: Border.all(
+                    //   color: Colors.black38
+                    // ),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, -1),
+                          color: Colors.black12),
+                      BoxShadow(
+                          blurRadius: 1,
+                          offset: Offset(0, 1),
+                          color: Colors.black38)
+                    ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: SizeConfig.heightMulti * 5,
+                          width: SizeConfig.heightMulti * 5,
+                          padding: EdgeInsets.all(2),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 2, color: Colors.blue)),
+                          child: Container(
+                              padding: EdgeInsets.all(4),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                Icons.note_add,
+                                color: Colors.blue,
+                                size: 20,
+                              ))),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          S.of(context)!.note,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                              fontSize: SizeConfig.titleSize * 2.1),
+                        ),
+                        Spacer(),
+                        Text(
+                          '( ' + S.of(context)!.noteMessage + ' )',
+                          style: GoogleFonts.lato(
+                              color: Colors.black87, fontSize: 12),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: _noteController,
+                      minLines: 3,
+                      maxLines: 5,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600]),
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
+                          hintText: S.of(context)!.note,
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.black26)
+                          //S.of(context).name,
+                          ),
+                      textInputAction: TextInputAction.next,
+                      // Move focus to next
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
             ],
           ),
         )),
@@ -1635,13 +1815,12 @@ class _ShopScreenState extends State<ShopScreen> {
                     // ),
                     boxShadow: [
                       BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(0, 1),
+                          offset: Offset(0, -1),
                           color: Colors.black12),
                       BoxShadow(
                           blurRadius: 1,
-                          offset: Offset(0, -1),
-                          color: Colors.black12)
+                          offset: Offset(0, 1),
+                          color: Colors.black38)
                     ],
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
@@ -1803,25 +1982,23 @@ class _ShopScreenState extends State<ShopScreen> {
                               color: Colors.red.shade50,
                             ),
                             child: Center(
-                              child: Container(
-                                  width: double.maxFinite,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.widhtMulti * 5),
-                                  padding: EdgeInsets.symmetric(vertical: 2),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.red.shade50,
-                                  ),
-                                  child: Center(
-                                      child: Text(
-                                          '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
-                                          style: GoogleFonts.lato(
-                                              fontSize:
-                                              SizeConfig.titleSize * 1.7,
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.red))
-                                  ))
-                            ));
+                                child: Container(
+                                    width: double.maxFinite,
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.widhtMulti * 5),
+                                    padding: EdgeInsets.symmetric(vertical: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.red.shade50,
+                                    ),
+                                    child: Center(
+                                        child: Text(
+                                            '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
+                                            style: GoogleFonts.lato(
+                                                fontSize:
+                                                    SizeConfig.titleSize * 1.7,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.red))))));
                       } else
                         return Container();
                     } else {
@@ -1830,7 +2007,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   }),
 
               SizedBox(
-                height: 8,
+                height: 16,
               ),
 
               /// Payment Method
@@ -1847,13 +2024,12 @@ class _ShopScreenState extends State<ShopScreen> {
                     // ),
                     boxShadow: [
                       BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(0, 1),
+                          offset: Offset(0, -1),
                           color: Colors.black12),
                       BoxShadow(
                           blurRadius: 1,
-                          offset: Offset(0, -1),
-                          color: Colors.black12)
+                          offset: Offset(0,1),
+                          color: Colors.black38)
                     ],
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
@@ -2145,40 +2321,53 @@ class _ShopScreenState extends State<ShopScreen> {
                                                   content: Text(S
                                                       .of(context)!
                                                       .destinationAlert)));
-                                        }
-                                        else if(paymentGroupValue == ''){
-                                          _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
-                                        }
-                                        else if (paymentGroupValue ==
+                                        } else if (paymentGroupValue == '') {
+                                          _scaffoldState.currentState!
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(S
+                                                      .of(context)!
+                                                      .paymentMethodAlert)));
+                                        } else if (paymentGroupValue ==
                                             PaymentMethodConst.CREDIT_CARD) {
-
-                                                showDialog(
-          context: context,
-          builder: (context) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: AlertDialog(
-                backgroundColor:
-                    Colors.white.withOpacity(0.8),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                content: Container(
-                  height: 70,
-                  width: 90,
-                  child: Center(
-                    child: Text(
-                      S.of(context)!.creditComingSoon,
-                      style: GoogleFonts.acme(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          });
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: AlertDialog(
+                                                    backgroundColor: Colors
+                                                        .white
+                                                        .withOpacity(0.8),
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
+                                                    content: Container(
+                                                      height: 70,
+                                                      width: 90,
+                                                      child: Center(
+                                                        child: Text(
+                                                          S
+                                                              .of(context)!
+                                                              .creditComingSoon,
+                                                          style:
+                                                              GoogleFonts.acme(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
 
                                           // GeoJson geoJson = GeoJson(
                                           //     lat: addressModel.latitude,
@@ -2196,7 +2385,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           //     numberOfMonth: numberOfMonth,
                                           //     orderValue: orderValue,
                                           //     cardId: cardId,
-                                             // storeId: storeId);
+                                          // storeId: storeId);
 
                                         } else {
                                           GeoJson geoJson = GeoJson(
@@ -2210,12 +2399,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                               destination: geoJson,
                                               addressName:
                                                   addressModel.description,
-                                              phoneNumber: phoneNumber,
+                                              phoneNumber:
+                                                  _phoneController.text.trim(),
                                               paymentMethod: paymentGroupValue,
                                               numberOfMonth: numberOfMonth,
                                               orderValue: orderValue,
                                               cardId: cardId,
-                                              storeId: storeId);
+                                              storeId: storeId,
+                                              note: _noteController.text.trim(),
+                                              orderSource: orderSource);
                                         }
                                       },
                                       child: Text(
