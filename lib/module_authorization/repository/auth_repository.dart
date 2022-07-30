@@ -1,6 +1,6 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:my_kom/module_authorization/exceptions/auth_exception.dart';
 import 'package:my_kom/module_authorization/requests/login_request.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/response/login_response.dart';
@@ -32,7 +32,7 @@ class AuthRepository {
         });
       return await user.getIdToken();
     }).catchError((error) {
-      throw Exception(error.toString());
+      throw error;
     });
 
 
@@ -68,7 +68,7 @@ class AuthRepository {
       String token = await creds.user!.getIdToken();
       return LoginResponse(token);
     } catch (e) {
-      throw Exception('Error getting the token from the Fire Base API');
+      throw e;
     }
   }
 
@@ -110,6 +110,19 @@ class AuthRepository {
     }catch(e){
       throw e;
     }
+  }
+
+  Future deleteFakeProfile(uid) async{
+    try{
+
+         _firestore.collection('users').doc(uid).delete();
+
+
+    }catch(e){
+
+    }
+
+
   }
 
 }

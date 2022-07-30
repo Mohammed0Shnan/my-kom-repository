@@ -296,25 +296,36 @@ addRemoveBloc.close();
                                 borderRadius: BorderRadius.circular(10)),
                             child: MaterialButton(
                               onPressed: () {
-                                if(addRemoveBloc.state == 0){
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content:  Text(S.of(context)!.selectTheNumberOfItemsRequired,style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
-                                    backgroundColor: Colors.black54,
-                                    duration: const Duration(seconds: 1),
 
-                                  ));
-                                }
-                                else{
-                                  shopCartBloc.addProductsToCart(productModel,addRemoveBloc.state).then((value) {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                      content:  Text('${addRemoveBloc.state} ${S.of(context)!.itemsHaveBeenAdded}',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
-                                      backgroundColor: Colors.black54,
-                                      duration: const Duration(seconds: 1),
+                                _authService.isLoggedIn.then((value) {
+                                  if(value){
+                                    if(addRemoveBloc.state == 0){
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content:  Text(S.of(context)!.selectTheNumberOfItemsRequired,style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                        backgroundColor: Colors.black54,
+                                        duration: const Duration(seconds: 1),
 
-                                    ));
-                                    addRemoveBloc.clear();
-                                  });
-                                }
+                                      ));
+                                    }
+                                    else{
+
+                                      shopCartBloc.addProductsToCart(productModel,addRemoveBloc.state).then((value) {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                          content:  Text('${addRemoveBloc.state} ${S.of(context)!.itemsHaveBeenAdded}',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                          backgroundColor: Colors.black54,
+                                          duration: const Duration(seconds: 1),
+
+                                        ));
+                                        addRemoveBloc.clear();
+                                      });
+                                    }
+
+                                  }else{
+                                    loginCheakAlertWidget(context);
+                                  }
+                                });
+
+
 
                               },
                               child: Row(

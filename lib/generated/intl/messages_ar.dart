@@ -259,6 +259,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "note": MessageLookupByLibrary.simpleMessage("ملاحظة"),
     "noteMessage": MessageLookupByLibrary.simpleMessage("ستظهر هذه الملاحظة عند مقدم خدمة التوصيل"),
     "validPhone": MessageLookupByLibrary.simpleMessage("ادخل رقم هاتف صحيح"),
+    "shortPassword": MessageLookupByLibrary.simpleMessage("كلمة المرمر قصرة , على الأقل 5 محارف"),
+    "confirmPasswordRequired": MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرمر مطلوب"),
 
 
 

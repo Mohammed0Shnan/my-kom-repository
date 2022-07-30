@@ -1133,6 +1133,24 @@ class S {
     );
   }
 
+  /// `Password Short`
+  String get shortPassword {
+    return Intl.message(
+      'Password Short',
+      name: 'shortPassword',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Confirm Password Required`
+  String get confirmPasswordRequired {
+    return Intl.message(
+      'Confirm Password Required',
+      name: 'confirmPasswordRequired',
+      desc: '',
+      args: [],
+    );
+  }
   /// `Valid Phone`
   String get validPhone {
     return Intl.message(

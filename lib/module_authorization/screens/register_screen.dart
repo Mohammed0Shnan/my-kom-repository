@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
-import 'package:my_kom/module_authorization/screens/phone_code_sent_screen.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
@@ -26,7 +26,7 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObserver{
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _registerCompleteFormKey = GlobalKey<FormState>();
   final TextEditingController _registerEmailController =
@@ -64,6 +64,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     cubit2.close();
     super.dispose();
   }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.inactive || state == AppLifecycleState.detached){
+    widget._bloc.deleteFakeAccount();
+    }
+  }
+
 
   late AddressModel addressModel;
   
@@ -143,280 +152,282 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                         ),
-                        Form(
-                          key: _registerFormKey,
-                          child: Flex(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            direction: Axis.vertical,
-                            children: [
-                              ListTile(
-                                  title: Padding(
-                                      padding: EdgeInsets.only(bottom: 4),
-                                      child: Text(S.of(context)!.email, style:GoogleFonts.lato(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black87,
-                                          fontSize: SizeConfig.titleSize * 2
-                                      ))),
-                                  subtitle: SizedBox(
-                                    height: 42.0,
-                                    child: TextFormField(
-                                      style: TextStyle(fontSize: 16,
-                                      height:1
-                                      ),
-                                      keyboardType: TextInputType.emailAddress,
-                                      controller: _registerEmailController,
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(vertical: 16,horizontal: 8),
-                                          isDense: true,
-                                          border:OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  width: 2,
-                                                  style:BorderStyle.solid ,
-                                                  color: Colors.black87
-                                              ),
-                                            borderRadius: BorderRadius.circular(10)
-                                          ),
-                                          hintText: S.of(context)!.email
-                                          ,
-                                          hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                          //S.of(context).name,
-                                          ),
-                                      textInputAction: TextInputAction.next,
-                                      onEditingComplete: () => node.nextFocus(),
-                                      // Move focus to next
-                                      validator: (result) {
-                                        if (result!.isEmpty) {
-                                          return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
-                                        }
-                                        if (!_validateEmailStructure(result))
-                                          return 'Must write an email';
-                                        return null;
-                                      },
-                                    ),
-                                  )),
-                              SizedBox(
-                                height:6
-                              ),
-                              ListTile(
-                                title: Padding(
-                                    padding: EdgeInsets.only(bottom: 4),
-                                    child: Text(S.of(context)!.password, style:GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                        fontSize: SizeConfig.titleSize * 2
-                                    ))),
-                                subtitle: SizedBox(height: 42.0,
-                                  child: BlocBuilder<PasswordHiddinCubit,
-                                      PasswordHiddinCubitState>(
-                                    bloc: cubit1,
-                                    builder: (context, state) {
-                                      return TextFormField(
-                                        controller: _registerPasswordController,
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal:  SizeConfig.screenWidth * 0.04),
+                          child: Form(
+                            key: _registerFormKey,
+                            child: Flex(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              direction: Axis.vertical,
+                              children: [
+                                ListTile(
+                                    title: Padding(
+                                        padding: EdgeInsets.only(bottom: 4),
+                                        child: Text(S.of(context)!.email, style:GoogleFonts.lato(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                            fontSize: SizeConfig.titleSize * 2
+                                        ))),
+                                    subtitle: SizedBox(
+                                     // height: 42.0,
+                                      child: TextFormField(
                                         style: TextStyle(fontSize: 16,
-                                            height: 1
+                                        height:1
                                         ),
+                                        keyboardType: TextInputType.emailAddress,
+                                        controller: _registerEmailController,
                                         decoration: InputDecoration(
-                                          isDense: true,
-                                            contentPadding: EdgeInsets.symmetric(vertical: 14,horizontal: 8),
-                                            suffixIcon: IconButton(
-                                                onPressed: () {
-                                                  cubit1.changeState();
-                                                },
-                                                icon: state ==
-                                                        PasswordHiddinCubitState
-                                                            .VISIBILITY
-                                                    ? Icon(Icons.visibility)
-                                                    : Icon(Icons.visibility_off)),
+                                            isDense: true,
                                             border:OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                     width: 2,
                                                     style:BorderStyle.solid ,
                                                     color: Colors.black87
                                                 ),
-                                                borderRadius: BorderRadius.circular(10)
-
+                                              borderRadius: BorderRadius.circular(10)
                                             ),
-                                            hintText:S.of(context)!.password
-                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                            hintText: S.of(context)!.email
+                                            ,
+                                            hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                            //S.of(context).name,
                                             ),
-                                        obscureText: state ==
-                                                PasswordHiddinCubitState.VISIBILITY
-                                            ? false
-                                            : true,
                                         textInputAction: TextInputAction.next,
                                         onEditingComplete: () => node.nextFocus(),
-
                                         // Move focus to next
                                         validator: (result) {
                                           if (result!.isEmpty) {
-                                            return S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
+                                            return S.of(context)!.emailAddressIsRequired; //S.of(context).nameIsRequired;
                                           }
-                                          if (result.length < 8) {
-                                            return '* The password is short, it must be 8 characters long'; //S.of(context).emailAddressIsRequired;
-                                          }
-                                          if (!_validatePasswordStructure(result))
-                                            return '* It must be made up of numbers, letters and signs';
+                                          if (!_validateEmailStructure(result))
+                                            return 'Must write an email';
                                           return null;
                                         },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:6,
-                              ),
-                              ListTile(
-                                title: Padding(
-                                    padding: EdgeInsets.only(bottom: 4),
-                                    child: Text(S.of(context)!.confirmPassword,style:GoogleFonts.lato(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                        fontSize: SizeConfig.titleSize * 2
-                                    ))),
-                                subtitle: SizedBox(
-                                  height: 42.0,
-                                  child: BlocBuilder<PasswordHiddinCubit,
-                                      PasswordHiddinCubitState>(
-                                    bloc: cubit2,
-                                    builder: (context, state) {
-                                      return SizedBox(
-                                        child: TextFormField(
-                                          controller:
-                                              _registerConfirmPasswordController,
-                                          style: TextStyle(fontSize: 16,
-                                              height: 1
-                                          ),
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                              contentPadding: EdgeInsets.symmetric(vertical: 14,horizontal: 8),
-                                              suffixIcon: IconButton(
-                                                  onPressed: () {
-                                                    cubit2.changeState();
-                                                  },
-                                                  icon: state ==
-                                                          PasswordHiddinCubitState
-                                                              .VISIBILITY
-                                                      ? Icon(Icons.visibility)
-                                                      : Icon(Icons.visibility_off)),
-                                              border:OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      width: 2,
-                                                      style:BorderStyle.solid ,
-                                                      color: Colors.black87
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(10)
-
-                                              ),
-                                              hintText:
-                                              S.of(context)!.confirmPassword // S.of(context).password,
-                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
-                                              ),
-                                          validator: (result) {
-                                            if (result!.trim() !=
-                                                _registerPasswordController.text
-                                                    .trim()) {
-                                              return 'Confirm pass mismatch';
-                                            }
-                                            if (result.isEmpty) {
-                                              return 'Confirm Password Is Required!';
-                                            }
-                                            return null;
-                                          },
-                                          obscureText: state ==
-                                                  PasswordHiddinCubitState.VISIBILITY
-                                              ? false
-                                              : true,
-                                          textInputAction: TextInputAction.done,
-                                          onFieldSubmitted: (_) => node
-                                              .unfocus(), // Submit and hide keyboard
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:SizeConfig.screenHeight * 0.02,
-                              ),
-                              Center(
-                                child: SmoothPageIndicator(
-                                  controller: _pageController,
-                                  count: 2,
-                                  effect: ExpandingDotsEffect(
-                                      dotColor: Colors.black12,
-                                      dotHeight: 10,
-                                      dotWidth: 10,
-                                      spacing: 2,
-                                      activeDotColor: ColorsConst.mainColor),
-                                ),
-                              ),
-                              SizedBox(
-                                height:SizeConfig.screenHeight * 0.04,
-                              ),
-                              BlocConsumer<RegisterBloc, RegisterStates>(
-                                bloc: widget._bloc,
-                                listener: (context, state) {
-                                  if (state is RegisterSuccessState) {
-                                    _pageController.jumpToPage(1);
-                                  } else if (state is RegisterErrorState) {
-                                    snackBarErrorWidget(context, state.message);
-                                  }
-                                },
-                                builder: (context, state) {
-                                  if (state is RegisterLoadingState)
-                                    return Center(
-                                        child: Container(
-                                          margin: EdgeInsets.all(20),
-                                            width: 50,
-                                            height: 50,
-                                            child: CircularProgressIndicator()));
-                                  else
-                                    return ListTile(
-                                      title: Container(
-                                        height: SizeConfig.heightMulti * 9,
-                                        padding: EdgeInsets.symmetric(vertical: 10),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        child: ClipRRect(
-                                          clipBehavior: Clip.antiAlias,
-                                            borderRadius: BorderRadius.circular(10)
-,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-
-                                                primary:
-                                                Color.fromARGB(255, 28, 174, 147),
-                                              ),
-                                              onPressed: () {
-                                                if (_registerFormKey.currentState!
-                                                    .validate()) {
-                                                  String email =
-                                                  _registerEmailController.text
-                                                      .trim();
-                                                  String password =
-                                                  _registerPasswordController.text
-                                                      .trim();
-                                                  widget._bloc.register(
-                                                      userRole: userRole,
-                                                      email: email,
-                                                      password: password);
-                                                }
-                                              },
-                                              child: Text(S.of(context)!.next,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                      SizeConfig.titleSize * 2.3,
-                                                      fontWeight: FontWeight.w700))),
-                                        )
                                       ),
-                                    );
-                                },
-                              ),
+                                    )),
+                                SizedBox(
+                                  height:4
+                                ),
+                                ListTile(
+                                  title: Padding(
+                                      padding: EdgeInsets.only(bottom: 4),
+                                      child: Text(S.of(context)!.password, style:GoogleFonts.lato(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                          fontSize: SizeConfig.titleSize * 2
+                                      ))),
+                                  subtitle: SizedBox(
+                                    child: BlocBuilder<PasswordHiddinCubit,
+                                        PasswordHiddinCubitState>(
+                                      bloc: cubit1,
+                                      builder: (context, state) {
+                                        return SizedBox(
+                                          child: TextFormField(
+                                            controller: _registerPasswordController,
+                                            style: TextStyle(fontSize: 16,
+                                                height: 1
+                                            ),
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                                contentPadding: EdgeInsets.symmetric(vertical: 12,horizontal: 8),
+                                                suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      cubit1.changeState();
+                                                    },
+                                                    icon: state ==
+                                                            PasswordHiddinCubitState
+                                                                .VISIBILITY
+                                                        ? Icon(Icons.visibility)
+                                                        : Icon(Icons.visibility_off)),
+                                                border:OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        style:BorderStyle.solid ,
+                                                        color: Colors.black87
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(10)
 
-                            ],
+                                                ),
+                                                hintText:S.of(context)!.password
+                                                , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                                ),
+                                            obscureText: state ==
+                                                    PasswordHiddinCubitState.VISIBILITY
+                                                ? false
+                                                : true,
+                                            textInputAction: TextInputAction.next,
+                                            onEditingComplete: () => node.nextFocus(),
+
+                                            // Move focus to next
+                                            validator: (result) {
+                                              if (result!.isEmpty) {
+                                                return S.of(context)!.passwordIsRequired; //S.of(context).emailAddressIsRequired;
+                                              }
+                                              if (result.length < 5) {
+                                                return  S.of(context)!.shortPassword;
+                                              }
+
+                                              return null;
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height:6,
+                                ),
+                                ListTile(
+                                  title: Padding(
+                                      padding: EdgeInsets.only(bottom: 4),
+                                      child: Text(S.of(context)!.confirmPassword,style:GoogleFonts.lato(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                          fontSize: SizeConfig.titleSize * 2
+                                      ))),
+                                  subtitle: SizedBox(
+                                    child: BlocBuilder<PasswordHiddinCubit,
+                                        PasswordHiddinCubitState>(
+                                      bloc: cubit2,
+                                      builder: (context, state) {
+                                        return SizedBox(
+                                          child: TextFormField(
+                                            controller:
+                                                _registerConfirmPasswordController,
+                                            style: TextStyle(fontSize: 16,
+                                                height: 1
+                                            ),
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                                contentPadding: EdgeInsets.symmetric(vertical: 12,horizontal: 8),
+                                                suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      cubit2.changeState();
+                                                    },
+                                                    icon: state ==
+                                                            PasswordHiddinCubitState
+                                                                .VISIBILITY
+                                                        ? Icon(Icons.visibility)
+                                                        : Icon(Icons.visibility_off)),
+                                                border:OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        style:BorderStyle.solid ,
+                                                        color: Colors.black87
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(10)
+
+                                                ),
+                                                hintText:
+                                                S.of(context)!.confirmPassword // S.of(context).password,
+                                              , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                                ),
+                                            validator: (result) {
+                                              if (result!.trim() !=
+                                                  _registerPasswordController.text
+                                                      .trim()) {
+                                                return UtilsConst.lang == 'ar'?'تأكيد غير متطابق':'Confirm pass mismatch';
+                                              }
+                                              if (result.isEmpty) {
+                                                return S.of(context)!.confirmPasswordRequired;
+                                              }
+                                              return null;
+                                            },
+                                            obscureText: state ==
+                                                    PasswordHiddinCubitState.VISIBILITY
+                                                ? false
+                                                : true,
+                                            textInputAction: TextInputAction.done,
+                                            onFieldSubmitted: (_) => node
+                                                .unfocus(), // Submit and hide keyboard
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height:SizeConfig.screenHeight * 0.02,
+                                ),
+                                Center(
+                                  child: SmoothPageIndicator(
+                                    controller: _pageController,
+                                    count: 2,
+                                    effect: ExpandingDotsEffect(
+                                        dotColor: Colors.black12,
+                                        dotHeight: 10,
+                                        dotWidth: 10,
+                                        spacing: 2,
+                                        activeDotColor: ColorsConst.mainColor),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height:SizeConfig.screenHeight * 0.04,
+                                ),
+                                BlocConsumer<RegisterBloc, RegisterStates>(
+                                  bloc: widget._bloc,
+                                  listener: (context, state) {
+                                    if (state is RegisterSuccessState) {
+                                      _pageController.jumpToPage(1);
+                                    } else if (state is RegisterErrorState) {
+                                      snackBarErrorWidget(context, state.message);
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    if (state is RegisterLoadingState)
+                                      return Center(
+                                          child: Container(
+                                            margin: EdgeInsets.all(20),
+                                              width: 50,
+                                              height: 50,
+                                              child: CircularProgressIndicator()));
+                                    else
+                                      return ListTile(
+                                        title: Container(
+                                          height:55,
+                                          padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10)
+                                          ),
+                                          child: ClipRRect(
+                                            clipBehavior: Clip.antiAlias,
+                                              borderRadius: BorderRadius.circular(10)
+,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+
+                                                  primary:
+                                                  Color.fromARGB(255, 28, 174, 147),
+                                                ),
+                                                onPressed: () {
+                                                  if (_registerFormKey.currentState!
+                                                      .validate()) {
+                                                    String email =
+                                                    _registerEmailController.text
+                                                        .trim();
+                                                    String password =
+                                                    _registerPasswordController.text
+                                                        .trim();
+                                                    widget._bloc.register(
+                                                        userRole: userRole,
+                                                        email: email,
+                                                        password: password);
+                                                  }
+                                                },
+                                                child: Text(S.of(context)!.next,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                        SizeConfig.titleSize * 2.3,
+                                                        fontWeight: FontWeight.w700))),
+                                          )
+                                        ),
+                                      );
+                                  },
+                                ),
+
+                              ],
+                            ),
                           ),
                         ),
 
@@ -433,6 +444,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 WillPopScope(
                   onWillPop: ()=> _willPop(),
                   child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.04),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: Column(
@@ -502,7 +514,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                         decoration: InputDecoration(
                                           isDense: true,
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 14),
                                             errorStyle: GoogleFonts.lato(
                                               color: Colors.red.shade700,
                                               fontWeight: FontWeight.w800,
@@ -549,7 +560,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         children: [
                                           Expanded(
                                             child: SizedBox(
-                                              height: 45.0,
                                               child: TextFormField(
                                                 controller:
                                                     _registerAddressController,
@@ -614,8 +624,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             },
                                             child: Container(
 
-                                              width: SizeConfig.heightMulti * 7,
-                                              height: SizeConfig.heightMulti * 7,
+                                              width: SizeConfig.heightMulti * 6.5,
+                                              height: SizeConfig.heightMulti * 6.5,
                                               decoration: BoxDecoration(
                                                   color: ColorsConst.mainColor,
                                                   borderRadius:
@@ -654,57 +664,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           borderRadius: BorderRadius.circular(10)
 
                                       ),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.phone),
-                                        CountryCodePicker(
+                                    child: SizedBox(
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.phone),
+                                          CountryCodePicker(
 
-                                          initialSelection:
-                                              'دولة الإمارات العربية المتحدة',
-                                          showOnlyCountryWhenClosed: false,
-                                          onInit: (initC){
-                                            countryCode =initC!.dialCode!;
-                                          },
-                                          favorite: [
-                                            '+971',
-                                            'دولة الإمارات العربية المتحدة'
-                                          ],
-                                          onChanged: (c) {
-                                            countryCode =c.dialCode!;
-                                          },
-                                        ),
-                                        Divider(
-                                          height: 30,
-                                          color: Colors.black,
-                                          thickness: 10,
-                                        ),
-                                        Expanded(
-                                            child: TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          style: TextStyle(
-                                            fontSize: 14
+                                            initialSelection:
+                                                'دولة الإمارات العربية المتحدة',
+                                            showOnlyCountryWhenClosed: false,
+                                            onInit: (initC){
+                                              countryCode =initC!.dialCode!;
+                                            },
+                                            favorite: [
+                                              '+971',
+                                              'دولة الإمارات العربية المتحدة'
+                                            ],
+                                            onChanged: (c) {
+                                              countryCode =c.dialCode!;
+                                            },
                                           ),
-                                          controller:
-                                              _registerPhoneNumberController,
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
+                                          Divider(
+                                            height: 30,
+                                            color: Colors.black,
+                                            thickness: 10,
+                                          ),
+                                          Expanded(
+                                              child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            style: TextStyle(
+                                              fontSize: 14
+                                            ),
+                                            controller:
+                                                _registerPhoneNumberController,
+                                            decoration: InputDecoration(
+                                                border: InputBorder.none,
 
-                                              hintText:
-                                                  '123412212' // S.of(context).email,
+                                                hintText:
+                                                    '123412212' // S.of(context).email,
                                   , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
 
-                                              ),
-                                          validator: (result) {
-                                            if (result!.isEmpty) {
-                                              return  S.of(context)!.phoneIsRequired;
-                                            } else if (!_validatePhoneNumberStructure(
-                                                result)) {
-                                              return S.of(context)!.validPhone;
-                                            } else
-                                              return null;
-                                          },
-                                        ))
-                                      ],
+                                                ),
+                                            validator: (result) {
+                                              if (result!.isEmpty) {
+                                                return  S.of(context)!.phoneIsRequired;
+                                              } else if (!_validatePhoneNumberStructure(
+                                                  result)) {
+                                                return S.of(context)!.validPhone;
+                                              } else
+                                                return null;
+                                            },
+                                          ))
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -752,14 +764,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       return Center(
                                         child: Container(
                                           margin: EdgeInsets.all(20),
-                                            height: 50,
-                                            width: 50,
+                                            height: 25,
+                                            width: 25,
                                             child: CircularProgressIndicator()),
                                       );
                                     else
                                       return ListTile(
                                         title: Container(
-                                          height: SizeConfig.heightMulti * 9,
+                                          margin: EdgeInsets.symmetric(horizontal: 20),
+                                          height: 55,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(10)
                                           ),

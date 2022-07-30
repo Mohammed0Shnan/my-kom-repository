@@ -199,6 +199,8 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext maincontext) {
+    final node = FocusScope.of(context);
+
     List<String> nowTitle = [
       S.of(context)!.stepOneTitle,
       S.of(context)!.stepTowTitle,
@@ -1200,7 +1202,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 border: InputBorder.none,
                                 //S.of(context).name,
                               ),
-                              textInputAction: TextInputAction.next,
+                              textInputAction: TextInputAction.done,
                               // Move focus to next
                             ),
                           ),
@@ -1679,12 +1681,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               color: Colors.black87,
                               fontSize: SizeConfig.titleSize * 2.1),
                         ),
-                        Spacer(),
-                        Text(
-                          '( ' + S.of(context)!.noteMessage + ' )',
-                          style: GoogleFonts.lato(
-                              color: Colors.black87, fontSize: 12),
-                        )
+
                       ],
                     ),
                     SizedBox(
@@ -1695,17 +1692,18 @@ class _ShopScreenState extends State<ShopScreen> {
                       minLines: 3,
                       maxLines: 5,
                       style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[600]),
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(8),
-                          hintText: S.of(context)!.note,
+                          hintText: S.of(context)!.noteMessage,
+
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black26)
+                          hintStyle: TextStyle(color: Colors.black26,fontSize: 14)
                           //S.of(context).name,
                           ),
-                      textInputAction: TextInputAction.next,
+                      textInputAction: TextInputAction.done,
                       // Move focus to next
                     ),
                   ],

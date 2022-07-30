@@ -67,8 +67,10 @@ Future<AppUser>  getCurrentUser()async{
       String message ='';
       if (e is FirebaseAuthException) {
         {
+          print('********************');
+          print(e.code);
           switch (e.code) {
-            case 'auth/email-already-in-use':
+            case 'email-already-in-use':
               {
                 message =currentLangIsArabic?'البريد الاليكتروني قيد الاستخدام': 'Email Already In Use';
                 Logger()
@@ -76,7 +78,7 @@ Future<AppUser>  getCurrentUser()async{
                 break;
               }
 
-            case 'auth/invalid-email':
+            case 'invalid-email':
               {
                 message = currentLangIsArabic?'الايميل غير صحيح':'Invalid Email';
 
@@ -84,14 +86,14 @@ Future<AppUser>  getCurrentUser()async{
                 break;
               }
 
-            case 'auth/operation-not-allowed':
+            case 'operation-not-allowed':
               {
                 message = currentLangIsArabic?'العملية غير مسموح بها':'Operation Not Allowed';
                 Logger().info('AuthService', 'Error during sign up.');
                 break;
               }
 
-            case 'auth/weak-password':{
+            case 'weak-password':{
               message = currentLangIsArabic?'كلمة السر ضعيفة':'Weak Password';
               Logger().info('AuthService',
                   'Password is not strong enough. Add additional characters including special characters and numbers.');
@@ -217,8 +219,10 @@ Future<AppUser>  getCurrentUser()async{
     await _prefsHelper.cleanAll();
   }
 
-  void fakeAccount() {
+  void fakeAccount() async{
   print('fake account');
+ String uid = await FirebaseAuth.instance.currentUser!.uid;
+ await _repository.deleteFakeProfile(uid);
     FirebaseAuth.instance.currentUser!.delete();
   }
 

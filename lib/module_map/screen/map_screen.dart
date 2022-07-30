@@ -16,10 +16,9 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:my_kom/generated/l10n.dart';
 
 class MapScreen extends StatefulWidget {
-  final MapBloc mapBloc;
   final LocalizationPreferencesHelper _preferencesHelper =
   LocalizationPreferencesHelper();
-   MapScreen({required this.mapBloc,Key? key}) : super(key: key);
+   MapScreen({Key? key}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -30,24 +29,24 @@ const kGoogleApiKey = 'AIzaSyD2mHkT8_abpMD9LJl307Qhk7GHWuKqMJw';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _MapScreenState extends State<MapScreen> {
-
+  late final MapBloc mapBloc ;
    late GoogleMapController _controller ;
 
   final CameraPosition _kGooglePlex = CameraPosition(
-      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 17.0);
+      target: LatLng(24.46515637636609, 54.351306818425655), zoom: 16.0);
   late final TextEditingController _searchController;
   bool? register= null;
   String language ='en';
   @override
   void initState() {
-
+    mapBloc = MapBloc();
     widget._preferencesHelper.getLanguage().then((value) {
       language = value!;
     });
 
     super.initState();
     _searchController = TextEditingController(text: '');
-    mapBloc.getCurrentPosition();
+    //mapBloc.getCurrentPosition();
   }
   @override
   void dispose() {
@@ -92,7 +91,7 @@ class _MapScreenState extends State<MapScreen> {
                 latitude: latLan.latitude,
                 longitude: latLan.longitude,
                 geoData: {});
-            String subArea = await widget.mapBloc.service
+            String subArea = await mapBloc.service
                 .getSubArea(LatLng(latLan.latitude, latLan.longitude));
             addressModel.subArea = subArea;
           } else {
@@ -101,19 +100,16 @@ class _MapScreenState extends State<MapScreen> {
                 latitude: state.latitude,
                 longitude: state.longitude,
                 geoData: {});
-            String subArea = await widget.mapBloc.service
+            String subArea = await mapBloc.service
                 .getSubArea(LatLng(state.latitude, state.longitude));
             addressModel.subArea = subArea;
           }
-          print('***** address information after click the button in map screen ********');
-          print(addressModel.toJson());
-
         Navigator.pop(context, addressModel);
         } else if (state is MapGestureSuccessState) {
           location_from_search = null;
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
           getDetailFromLocation(latLng);
-          widget.mapBloc.service.getSubArea(latLng);
+          mapBloc.service.getSubArea(latLng);
         }
       },
       builder: (context, state) {
@@ -130,7 +126,7 @@ class _MapScreenState extends State<MapScreen> {
                         LatLng latLng = LatLng(v.latitude, v.longitude);
                         mapBloc.getGesturePosition(latLng, '');
                       },
-                      minMaxZoomPreference: MinMaxZoomPreference(0 , 17),
+                      minMaxZoomPreference: MinMaxZoomPreference(0 , 16),
                       markers: _markers,
                       myLocationButtonEnabled: false,
                       myLocationEnabled: true,
@@ -295,7 +291,7 @@ class _MapScreenState extends State<MapScreen> {
 
   getDetailFromLocation(LatLng latLng) async {
     LocationInformation _currentAddress =
-        await widget.mapBloc.service.getPositionDetail(latLng);
+        await mapBloc.service.getPositionDetail(latLng);
     Marker marker = Marker(
         markerId: MarkerId('_current_position'),
         infoWindow: InfoWindow(
@@ -308,7 +304,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _move(LatLng latLng) async {
-    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 17.0);
+    CameraPosition cameraPosition = CameraPosition(target: latLng, zoom: 16.0);
     final GoogleMapController controller = _controller; // await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
@@ -328,7 +324,7 @@ class _MapScreenState extends State<MapScreen> {
         apiKey: kGoogleApiKey,
         onError: onError,
         mode: _mode,
-        radius: 1000,
+        radius: 5,
         language: language,
         strictbounds: false,
         types: [""],
@@ -366,6 +362,6 @@ class _MapScreenState extends State<MapScreen> {
 
     final GoogleMapController controller =  _controller; // await _controller.future;
     controller
-        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng),17.0));
+        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng),16.0));
   }
 }

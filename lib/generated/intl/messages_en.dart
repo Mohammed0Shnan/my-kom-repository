@@ -266,6 +266,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "note": MessageLookupByLibrary.simpleMessage("Note"),
     "noteMessage": MessageLookupByLibrary.simpleMessage("This note will appear at the delivery service provider"),
     "validPhone": MessageLookupByLibrary.simpleMessage("Enter Valid Phone Number"),
+    "shortPassword": MessageLookupByLibrary.simpleMessage("The password is short, it must be 5 characters long"),
+    "confirmPasswordRequired": MessageLookupByLibrary.simpleMessage("Confirm password is required"),
 
 
   };

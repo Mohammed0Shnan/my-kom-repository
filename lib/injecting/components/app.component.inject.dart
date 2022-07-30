@@ -86,8 +86,8 @@ class AppComponentInjector implements AppComponent {
   AuthorizationModule _createAuthorizationModule() =>
       AuthorizationModule( LoginScreen(), RegisterScreen() );
   MapModule _createMapModule() {
-    _singletonMapBloc ??= MapBloc();
-    return  MapModule(MapScreen(mapBloc:_singletonMapBloc!,));
+
+    return  MapModule(MapScreen());
   }
   ShopingModule _createShopingModule()=> ShopingModule(ShopScreen());
   OrdersModule _createOrderModule()=> OrdersModule( CaptainOrdersScreen(),OrderDetailScreen(),OrderStatusScreen());
