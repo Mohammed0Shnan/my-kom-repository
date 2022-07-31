@@ -41,13 +41,14 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
     super.initState();
   }
-  
+
  bool isInit =true;
   @override
   Widget build(BuildContext context) {
 
     CompanyArgumentsRoute argumentsRoute =   (ModalRoute.of(context)!.settings.arguments) as CompanyArgumentsRoute;
     company = CompanyModel(id: argumentsRoute.companyId, name: argumentsRoute.companyName, imageUrl: argumentsRoute.companyImage, description: 'description');
+    company.name2 = argumentsRoute.companyName2;
     if(isInit){
       productsCompanyBloc.getProducts( company.id);
       setState(() {
@@ -76,8 +77,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       Hero(
                         tag: 'company' + company.id,
                         child: Container(
-                          height: SizeConfig.imageSize * 12,
-                          width: SizeConfig.imageSize * 12,
+                          height: SizeConfig.imageSize * 11,
+                          width: SizeConfig.imageSize * 11,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                           
@@ -109,9 +110,10 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                         width: 10,
                       ),
                       Text(
-                     company.name,
+                        UtilsConst.lang == 'en'?
+                     company.name:company.name2,
                         style: TextStyle(
-                            fontSize: SizeConfig.titleSize * 2.8,
+                            fontSize: SizeConfig.titleSize * 2.4,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500),
                       ),
@@ -231,7 +233,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
               topRight: Radius.circular(20),
             ),
             boxShadow: [BoxShadow(
-                offset:Offset(0,-5),
+                offset:Offset(0,-3),
                 color: Colors.black12,
                 blurRadius: 3
             )]
@@ -240,6 +242,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            SizedBox(height: 2,),
             FutureBuilder<double?>(
                 future: _preferencesHelper.getMinimumPurchaseStore(),
                 builder: (context,AsyncSnapshot<double?> snap){
@@ -250,7 +253,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                   }
             }),
             Container(
-              height: 40,
+              height: 38,
               margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
@@ -351,12 +354,12 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             AspectRatio(
-                                              aspectRatio:  1.8,
+                                              aspectRatio:  2,
                                               child: Container(
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 16),
+                                                      padding: EdgeInsets.symmetric(horizontal: SizeConfig.widhtMulti * 5),
                                                       width: double.infinity,
                                                       child: ClipRRect(
                                                         borderRadius:
@@ -399,7 +402,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                               13,
                                                           height: SizeConfig
                                                               .heightMulti *
-                                                              4.5,
+                                                              4,
                                                           decoration: BoxDecoration(
                                                               color: Colors.orange,
                                                               borderRadius:
@@ -415,7 +418,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 FontWeight.w500,
                                                                 fontSize: SizeConfig
                                                                     .titleSize *
-                                                                    2.6),
+                                                                    2.2),
                                                           ),
                                                         )):Positioned(
                                                         top: 0,
@@ -428,7 +431,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                               13,
                                                           height: SizeConfig
                                                               .heightMulti *
-                                                              4.5,
+                                                              4,
                                                           decoration: BoxDecoration(
                                                               color: Colors.orange,
                                                               borderRadius:(UtilsConst.lang == 'ar')?
@@ -443,7 +446,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 FontWeight.w500,
                                                                 fontSize: SizeConfig
                                                                     .titleSize *
-                                                                    2.6),
+                                                                    2.2),
                                                           ),
                                                         ))
                                                         : SizedBox.shrink()
@@ -451,256 +454,254 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 10,),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(top: 8),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                                      child: Row(
-                                                        children: [
-                                                          (items[index].old_price !=
-                                                              null)
-                                                              ? Text(
-                                                            items[index]
-                                                                .old_price
-                                                                .toString(),
-                                                            overflow:
-                                                            TextOverflow
-                                                                .ellipsis,
-                                                            style: TextStyle(
-                                                                decoration:
-                                                                TextDecoration
-                                                                    .lineThrough,
-                                                                color: Colors
-                                                                    .black26,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w700,
-                                                                fontSize:
-                                                                SizeConfig
-                                                                    .titleSize *
-                                                                    2),
-                                                          )
-                                                              : SizedBox.shrink(),
-                                                          SizedBox(width: 8,),
-                                                          Expanded(
-                                                            child: Text(
-                                                              items[index]
-                                                                  .price
-                                                                  .toString(),
-                                                              overflow: TextOverflow
-                                                                  .ellipsis,
-                                                              style: TextStyle(
-                                                                  color: Colors.green,
-                                                                  fontWeight:
-                                                                  FontWeight.w700,
-                                                                  fontSize: SizeConfig
-                                                                      .titleSize *
-                                                                      2.2),
-                                                            ),
-                                                          ),
-
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 5,),
-                                                    Padding(
-                                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                                      child: Row(
-                                                        children: [
-
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding: EdgeInsets.symmetric(horizontal: 5),
-                                                              child: Text(
-                                                                UtilsConst.lang == 'en'?
-                                                                items[index].title:
-                                                                items[index].title2,
-
-                                                                style: TextStyle(
-                                                                    fontSize: SizeConfig
-                                                                        .titleSize *
-                                                                        1.7,
-                                                                    fontWeight:
-                                                                    FontWeight.bold,
-                                                                    overflow: TextOverflow
-                                                                        .ellipsis),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            items[index]
-                                                                .quantity
-                                                                .toString() +' '+ S.of(context)!.plot,
-                                                            style: TextStyle(
-                                                                color:
-                                                                Colors.black26,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize: SizeConfig
-                                                                    .titleSize *
-                                                                    1.7),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 5,),
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.symmetric(horizontal: 4),
-                                              height: SizeConfig.heightMulti *4,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-
-                                                  Expanded(
-                                                      child: LayoutBuilder(
-                                                        builder: (BuildContext
-                                                        context,
-                                                            BoxConstraints
-                                                            constraints) {
-                                                          double w = constraints
-                                                              .maxWidth;
-
-                                                          return Container(
-                                                            clipBehavior:
-                                                            Clip.antiAlias,
-                                                            decoration:
-                                                            BoxDecoration(
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                    color: Colors
-                                                                        .black12)
-                                                              ],
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  5),
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                  0.1),
-                                                            ),
-                                                            child: Stack(
-                                                              children: [
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                                  children: [
-                                                                    Container(
-                                                                      alignment: Alignment.center,
-                                                                      color: ColorsConst
-                                                                          .mainColor,
-                                                                      width: w /
-                                                                          3,
-                                                                      child: IconButton(
-                                                                          onPressed: () {
-                                                                            addRemoveBloc.removeOne();
-                                                                          },
-                                                                          icon: Icon(
-                                                                            Icons.remove,
-                                                                            size:
-                                                                            SizeConfig.imageSize * 4,
-                                                                            color:
-                                                                            Colors.white,
-                                                                          )),
-                                                                    ),
-                                                                    BlocBuilder<AddRemoveProductQuantityBloc , int>(
-                                                                        bloc:addRemoveBloc ,
-                                                                        builder: (context,state){
-                                                                          return  Container(
-                                                                            child: Text( state.toString(),style: TextStyle(fontWeight: FontWeight.w500,),),
-                                                                          );
-                                                                        }),
-                                                                    Container(
-                                                                      alignment: Alignment.center,
-
-                                                                      width: w /
-                                                                          3,
-                                                                      color: ColorsConst
-                                                                          .mainColor,
-                                                                      child:
-                                                                      Center(
-                                                                        child: IconButton(
-                                                                            onPressed: () {
-                                                                              addRemoveBloc.addOne();
-
-                                                                            },
-                                                                            icon: Icon(
-                                                                              Icons.add,
-                                                                              size: SizeConfig.imageSize * 4,
-                                                                              color: Colors.white,
-                                                                            )),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                        },
-                                                      )),
-                                                  SizedBox(width: 8,),
-                                                  Container(
-                                                    // height: 10,
-                                                    child: ElevatedButton
-                                                        .icon(
-                                                      onPressed: () {
-                                                        widget._authService.isLoggedIn.then((value) {
-                                                          if(value){
-                                                            if(addRemoveBloc.state == 0){
-
-                                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                                content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
-                                                                backgroundColor: Colors.black54,
-                                                                duration: const Duration(seconds: 1),
-
-                                                              ));
-                                                            }
-                                                            else{
-                                                              shopCartBloc.addProductsToCart(items[index],addRemoveBloc.state).then((value) {
-                                                                addRemoveBloc.clear();
-                                                              });
-                                                            }
-
-                                                          }else{
-                                                            loginCheakAlertWidget(context);
-                                                          }
-                                                        });
-
-                                                      },
-                                                      label: Text(
-                                                        S.of(context)!.added,
+                                            SizedBox(height: 12,),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                                  child: Row(
+                                                    children: [
+                                                      (items[index].old_price !=
+                                                          null)
+                                                          ? Text(
+                                                        items[index]
+                                                            .old_price
+                                                            .toString(),
+                                                        overflow:
+                                                        TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
+                                                            decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
                                                             color: Colors
-                                                                .white,
+                                                                .black26,
                                                             fontWeight:
                                                             FontWeight
-                                                                .w900),
+                                                                .w700,
+                                                            fontSize:
+                                                            SizeConfig
+                                                                .titleSize *
+                                                                2),
+                                                      )
+                                                          : SizedBox.shrink(),
+                                                      SizedBox(width: 8,),
+                                                      Expanded(
+                                                        child: Text(
+                                                          items[index]
+                                                              .price
+                                                              .toString(),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                              color: Colors.green,
+                                                              fontWeight:
+                                                              FontWeight.w700,
+                                                              fontSize: SizeConfig
+                                                                  .titleSize *
+                                                                  2.2),
+                                                        ),
                                                       ),
-                                                      icon: Icon(
-                                                        Icons
-                                                            .shopping_cart_outlined,
-                                                        size: SizeConfig
-                                                            .imageSize *
-                                                            5,
-                                                      ),
-                                                    ),
+
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                SizedBox(height: 4,),
+                                                Container(
+                                                  height: SizeConfig.heightMulti * 4,
+                                                  padding: EdgeInsets.symmetric(horizontal:8),
+                                                  child: Row(
+                                                    children: [
+
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                                          child: Text(
+                                                            UtilsConst.lang == 'en'?
+                                                            items[index].title:
+                                                            items[index].title2,
+                                                            maxLines: 2,
+                                                            style: TextStyle(
+                                                                fontSize: SizeConfig
+                                                                    .titleSize *
+                                                                    1.8,
+                                                                fontWeight:
+                                                                FontWeight.bold,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        items[index]
+                                                            .quantity
+                                                            .toString() +' '+ S.of(context)!.plot,
+                                                        style: TextStyle(
+                                                            color:
+                                                            Colors.black26,
+                                                            fontWeight:
+                                                            FontWeight.w700,
+                                                            fontSize: SizeConfig
+                                                                .titleSize *
+                                                                1.6),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                              ],
                                             ),
+                                            SizedBox(
+                                              height: SizeConfig.heightMulti *2,
+                                            ),
+                                            Container(
+                                               margin: EdgeInsets.symmetric(horizontal: 4),
+                                               height: SizeConfig.heightMulti *4,
+                                               child: Row(
+                                                 mainAxisAlignment:
+                                                 MainAxisAlignment
+                                                     .spaceBetween,
+                                                 children: [
+
+                                                   Expanded(
+                                                       child: LayoutBuilder(
+                                                         builder: (BuildContext
+                                                         context,
+                                                             BoxConstraints
+                                                             constraints) {
+                                                           double w = constraints
+                                                               .maxWidth;
+
+                                                           return Container(
+                                                             clipBehavior:
+                                                             Clip.antiAlias,
+                                                             decoration:
+                                                             BoxDecoration(
+                                                               boxShadow: [
+                                                                 BoxShadow(
+                                                                     color: Colors
+                                                                         .black12)
+                                                               ],
+                                                               borderRadius:
+                                                               BorderRadius
+                                                                   .circular(
+                                                                   5),
+                                                               color: Colors
+                                                                   .white
+                                                                   .withOpacity(
+                                                                   0.1),
+                                                             ),
+                                                             child: Stack(
+                                                               children: [
+                                                                 Row(
+                                                                   mainAxisAlignment:
+                                                                   MainAxisAlignment
+                                                                       .spaceBetween,
+                                                                   children: [
+                                                                     Container(
+                                                                       alignment: Alignment.center,
+                                                                       color: ColorsConst
+                                                                           .mainColor,
+                                                                       width: w /
+                                                                           3,
+                                                                       child: IconButton(
+                                                                           onPressed: () {
+                                                                             addRemoveBloc.removeOne();
+                                                                           },
+                                                                           icon: Icon(
+                                                                             Icons.remove,
+                                                                             size:
+                                                                             SizeConfig.imageSize * 4,
+                                                                             color:
+                                                                             Colors.white,
+                                                                           )),
+                                                                     ),
+                                                                     BlocBuilder<AddRemoveProductQuantityBloc , int>(
+                                                                         bloc:addRemoveBloc ,
+                                                                         builder: (context,state){
+                                                                           return  Container(
+                                                                             child: Text( state.toString(),style: TextStyle(fontWeight: FontWeight.w500,),),
+                                                                           );
+                                                                         }),
+                                                                     Container(
+                                                                       alignment: Alignment.center,
+
+                                                                       width: w /
+                                                                           3,
+                                                                       color: ColorsConst
+                                                                           .mainColor,
+                                                                       child:
+                                                                       Center(
+                                                                         child: IconButton(
+                                                                             onPressed: () {
+                                                                               addRemoveBloc.addOne();
+
+                                                                             },
+                                                                             icon: Icon(
+                                                                               Icons.add,
+                                                                               size: SizeConfig.imageSize * 4,
+                                                                               color: Colors.white,
+                                                                             )),
+                                                                       ),
+                                                                     ),
+                                                                   ],
+                                                                 ),
+                                                               ],
+                                                             ),
+                                                           );
+                                                         },
+                                                       )),
+                                                   SizedBox(width: 8,),
+                                                   Container(
+                                                     // height: 10,
+                                                     child: ElevatedButton
+                                                         .icon(
+                                                       onPressed: () {
+                                                         widget._authService.isLoggedIn.then((value) {
+                                                           if(value){
+                                                             if(addRemoveBloc.state == 0){
+
+                                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                                 content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                                                 backgroundColor: Colors.black54,
+                                                                 duration: const Duration(seconds: 1),
+
+                                                               ));
+                                                             }
+                                                             else{
+                                                               shopCartBloc.addProductsToCart(items[index],addRemoveBloc.state).then((value) {
+                                                                 addRemoveBloc.clear();
+                                                               });
+                                                             }
+
+                                                           }else{
+                                                             loginCheakAlertWidget(context);
+                                                           }
+                                                         });
+
+                                                       },
+                                                       label: Text(
+                                                         S.of(context)!.added,
+                                                         style: TextStyle(
+                                                             color: Colors
+                                                                 .white,
+                                                             fontWeight:
+                                                             FontWeight
+                                                                 .w900),
+                                                       ),
+                                                       icon: Icon(
+                                                         Icons
+                                                             .shopping_cart_outlined,
+                                                         size: SizeConfig
+                                                             .imageSize *
+                                                             5,
+                                                       ),
+                                                     ),
+                                                   ),
+                                                 ],
+                                               ),
+                                             ),
                                             SizedBox(height: 8,)
                                           ],
                                         ),

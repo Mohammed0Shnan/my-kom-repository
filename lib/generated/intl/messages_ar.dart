@@ -60,7 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deliveryTo": MessageLookupByLibrary.simpleMessage("التوصيل الى"),
     "comingSoon": MessageLookupByLibrary.simpleMessage("المنطقة غير متوفرة حاليًا حدد الموقع يدويًا"),
     "pleaseWait": MessageLookupByLibrary.simpleMessage("انتظر قليلا"),
-    "notLoggedIN": MessageLookupByLibrary.simpleMessage("انت غير مشترك في MyKom"),
+    "notLoggedIN": MessageLookupByLibrary.simpleMessage("انت غير مشترك في \n MyKom"),
     "refresh": MessageLookupByLibrary.simpleMessage("تحديث"),
     "determineLocation": MessageLookupByLibrary.simpleMessage("تعذر تحديد الموقع ، حدد الموقع يدويًا"),
 

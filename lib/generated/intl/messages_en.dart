@@ -73,7 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "deliveryTo": MessageLookupByLibrary.simpleMessage("Delivery to"),
     "comingSoon": MessageLookupByLibrary.simpleMessage("The area is currently unavailable select the location manually"),
     "pleaseWait": MessageLookupByLibrary.simpleMessage("Please Wait"),
-    "notLoggedIN": MessageLookupByLibrary.simpleMessage("You are not subscribed to MyKom"),
+    "notLoggedIN": MessageLookupByLibrary.simpleMessage("You are not subscribed to \n MyKom"),
     "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "determineLocation": MessageLookupByLibrary.simpleMessage("Unable to determine the location, specify the location manually!"),
 

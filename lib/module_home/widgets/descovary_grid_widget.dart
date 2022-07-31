@@ -7,6 +7,7 @@ import 'package:my_kom/module_company/company_routes.dart';
 import 'package:my_kom/module_company/models/company_arguments_route.dart';
 import 'package:my_kom/module_company/models/company_model.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -21,10 +22,7 @@ class DescoveryGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.length == 0) {
-      return Center(
-          child: Container(
-        child: Text('Empty !!!'),
-      ));
+      return Center(child: NoDataForDisplayWidget());
     } else {
       return AnimationLimiter(
         child: Padding(
@@ -35,7 +33,7 @@ class DescoveryGridWidget extends StatelessWidget {
                 crossAxisCount: 3,
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
-                childAspectRatio: 0.9,
+                childAspectRatio: 0.95,
                 children: List.generate(
                     data.length,
                     (index) => AnimationConfiguration.staggeredGrid(
@@ -52,6 +50,7 @@ class DescoveryGridWidget extends StatelessWidget {
                               argumentsRoute.companyId = data[index].id;
                               argumentsRoute.companyImage = data[index].imageUrl;
                               argumentsRoute.companyName = data[index].name;
+                              argumentsRoute.companyName2 = data[index].name2;
                               Navigator.pushNamed(context, CompanyRoutes.COMPANY_PRODUCTS_SCREEN,arguments: argumentsRoute);
                             }else{
                               showDialog(context: context, builder: (context){
@@ -101,10 +100,10 @@ class DescoveryGridWidget extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           Flexible(
-                                            flex: 4,
+                                            flex: 3,
                                             child: Container(
                                               child: AspectRatio(
-                                                aspectRatio: 1.3,
+                                                aspectRatio: 1.4,
                                                 child:data[index].isActive? ClipRRect(
                                                   borderRadius:
                                                   BorderRadius.circular(10),
@@ -150,11 +149,13 @@ class DescoveryGridWidget extends StatelessWidget {
                                             flex: 2,
                                             child: Center(
                                               child: Padding(
-                                                padding: EdgeInsets.only(top: 8),
+                                                padding: EdgeInsets.only(top: 4,bottom:6),
                                                 child: Text(
                                                   UtilsConst.lang == 'en'?
                                                   data[index].name:
                                                   data[index].name2,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
                                                   style: TextStyle(
                                                       fontSize:
                                                           SizeConfig.titleSize * 2.2,

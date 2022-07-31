@@ -43,7 +43,7 @@ loginCheakAlertWidget(context){
 
             child: Image.asset('assets/not_login.png',fit: BoxFit.fill,),
           ),
-          Center(child: Text(S.of(context)!.notLoggedIN,style: GoogleFonts.lato(
+          Center(child: Text(S.of(context)!.notLoggedIN,textAlign: TextAlign.center,style: GoogleFonts.lato(
               fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.bold,color: Colors.black54
           ),)),
           Spacer(),
