@@ -26,7 +26,6 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
   }
 
   Future<void> getCurrentPosition() async {
-
     this.add(MapLoadingEvent());
     service.getCurrentLocation().then((value) {
       if(value.isError)

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_kom/module_authorization/requests/profile_request.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_profile/model/profile_model.dart';
 import 'package:my_kom/module_profile/service/profile_service.dart';
@@ -42,7 +43,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
     });
   }
   
-   editProfile(ProfileRequest request){
+   editProfile(EditProfileRequest request){
      this.add(ProfileLoadingEvent());
      _service.editMyProfile(request).then((value) {
        if (value !=null) {
@@ -56,6 +57,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileStates> {
   void deleteFakeAccount() {
   //  _service.fakeAccount();
 
+  }
+
+  Future<bool> deleteMyAccount()async {
+   return await _service.deleteMyAccount();
   }
 }
 

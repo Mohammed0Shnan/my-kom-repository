@@ -1,13 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/bloc/is_loggedin_cubit.dart';
-import 'package:my_kom/module_authorization/requests/register_request.dart';
+import 'package:my_kom/module_authorization/requests/profile_request.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
 import 'package:my_kom/module_profile/bloc/profile_bloc.dart';
+import 'package:my_kom/module_profile/screen/widgets/delete_account_aleart.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -44,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
  late String? userId;
   bool isEditingProfile = false;
- late ProfileRequest? request ;
+ late EditProfileRequest? request ;
   late AddressModel addressModel ;
   @override
   Widget build(BuildContext context) {
@@ -89,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context,state) {
 
                   if(state is ProfileErrorState){
-                    return NoDataForDisplayWidget();
+                    return Center(child: NoDataForDisplayWidget());
                   }
                   else if(state is ProfileSuccessState) {
 
@@ -108,11 +112,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isEditingProfile = !isEditingProfile;
                                       setState((){});
                                     }else{
-                                      request = ProfileRequest
-                                        (userName: _profileUserNameController.text.trim(), address:
-                                      addressModel
-                                          , phone: _profilePhoneController.text.trim(),
-                                      );
+                                      request = EditProfileRequest();
+                                      request?.userName = _profileUserNameController.text.trim();
+                                      request?.address = addressModel;
+                                      request?.phone = _profilePhoneController.text.trim();
+                                      print('rrrrrrrrrrrrrrrrrrrrrrrrrrrrr from screennnnnn ');
+                                      print(request?.userName);
+                                      print(request?.address.toJson());
+                                      print(request?.phone);
                                       profileBloc.editProfile(request!);
                                     }
 
@@ -153,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(color: Colors.black12,
-                                                    blurRadius: 5
+                                                    blurRadius: 2
                                                 )
                                               ],
                                               borderRadius: BorderRadius.circular(30)
@@ -168,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               Center(
                                                 child: TextFormField(
                                                   textAlign: TextAlign.center,
-
+                                                  enabled: (!isEditingProfile)?false:true,
                                                   controller: _profileUserNameController,
 
                                                   style: TextStyle(
@@ -203,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               shape: BoxShape.circle,
                                               boxShadow: [
                                                 BoxShadow(color: Colors.black12,
-                                                    blurRadius: 5
+                                                    blurRadius: 2
                                                 )
                                               ],
                                             ),
@@ -228,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(color: Colors.black12,
-                                      blurRadius: 5
+                                      blurRadius: 2
                                   )
                                 ],
                               ),
@@ -321,7 +328,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       color: Colors.white),
                                                 ),
                                               )
-
                                           ],
                                         )
                                       ],
@@ -379,7 +385,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ],
                               ),
-                            )
+                            ),
+                            SizedBox(height: 20,),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 15),
+                              height: 45,
+                              width: SizeConfig.screenWidth,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(color: Colors.black12,
+                                      blurRadius: 2
+                                  )
+                                ],
+                              ),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
+                                  onPressed: (){
+                                    deleteAccountAlertWidget(context,profileBloc);
+                                  },
+                                  child: Center(child: Text('Delete Account',style: GoogleFonts.lato(fontSize: 17,fontWeight: FontWeight.bold,color: Colors.red),))),
+                            ),
+
                           ],
                         ),
                       ),
@@ -387,8 +417,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   } else
                     return Center(
                       child: Container(
-                        height: 40,
-                        width: 40,
+                        height: 30,
+                        width: 30,
                         child: Center(
                           child: CircularProgressIndicator(color: ColorsConst.mainColor,),
                         ),
@@ -407,7 +437,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
         }
-
     );
 
 

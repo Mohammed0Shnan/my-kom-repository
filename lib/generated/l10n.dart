@@ -522,6 +522,15 @@ class S {
       args: [],
     );
   }
+  /// `Number Of Items Required`
+  String get numberOfItemsRequired {
+    return Intl.message(
+      'Number Of Items Required',
+      name: 'numberOfItemsRequired',
+      desc: '',
+      args: [],
+    );
+  }
 
   /// `Determine Location`
   String get determineLocation {
@@ -1401,7 +1410,24 @@ class S {
       args: [],
     );
   }
-
+  /// `Register address success message`
+  String get registerAddressSuccessMessage {
+    return Intl.message(
+      'Register address success message',
+      name: 'registerAddressSuccessMessage',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Register address error message`
+  String get registerAddressErrorMessage {
+    return Intl.message(
+      'Register address error message',
+      name: 'registerAddressErrorMessage',
+      desc: '',
+      args: [],
+    );
+  }
   /// `Rival`
   String get rival {
     return Intl.message(

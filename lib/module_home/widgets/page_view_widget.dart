@@ -37,7 +37,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
 
   _autoMove() async {
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
-   if(currentPage <widget.itemCount){
+   if(currentPage <widget.itemCount-1){
      currentPage ++;
    }else
    currentPage = 0;

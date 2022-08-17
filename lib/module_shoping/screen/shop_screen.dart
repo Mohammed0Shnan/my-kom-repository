@@ -2080,8 +2080,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 ? 5
                                 : 0,
                             child: Container(
-                              width: SizeConfig.screenWidth * 0.2,
-                              height: SizeConfig.heightMulti * 12,
+                              width: SizeConfig.screenWidth * 0.24,
+                              height: SizeConfig.heightMulti * 13,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -2116,9 +2116,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                               )),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: EdgeInsets.all(8),
                                       child: Text(
                                         S.of(context)!.cashMoney,
+                                        textAlign: TextAlign.center,
                                         style: GoogleFonts.lato(
                                             color: paymentGroupValue ==
                                                     PaymentMethodConst
@@ -2126,7 +2127,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 ? Colors.white
                                                 : Colors.black54,
                                             fontSize:
-                                                SizeConfig.titleSize * 1.7,
+                                                SizeConfig.titleSize * 1.4,
                                             fontWeight: FontWeight.bold),
                                       ))
                                 ],
@@ -2154,7 +2155,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 ? 5
                                 : 0,
                             child: Container(
-                              width: SizeConfig.screenWidth * 0.2,
+                              width: SizeConfig.screenWidth * 0.24,
                               height: SizeConfig.heightMulti * 13,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -2190,7 +2191,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                               )),
                                   ),
                                   Container(
-                                      padding: EdgeInsets.all(3),
+                                      padding: EdgeInsets.all(8),
                                       child: Text(
                                         S.of(context)!.creditCard,
                                         style: GoogleFonts.lato(
@@ -2200,7 +2201,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 ? Colors.white
                                                 : Colors.black54,
                                             fontSize:
-                                                SizeConfig.titleSize * 1.7,
+                                                SizeConfig.titleSize * 1.4,
                                             fontWeight: FontWeight.bold),
                                       ))
                                 ],

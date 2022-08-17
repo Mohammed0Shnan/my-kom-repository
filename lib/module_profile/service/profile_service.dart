@@ -4,8 +4,10 @@ import 'package:my_kom/module_authorization/enums/auth_source.dart';
 import 'package:my_kom/module_authorization/exceptions/auth_exception.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_authorization/repository/auth_repository.dart';
+import 'package:my_kom/module_authorization/requests/profile_request.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/response/login_response.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_profile/model/profile_model.dart';
 import 'package:my_kom/module_profile/model/quick_location_model.dart';
@@ -54,7 +56,9 @@ class ProfileService{
 
   }
 
-  Future <ProfileModel?> editMyProfile(ProfileRequest request)async {
+  Future <ProfileModel?> editMyProfile(EditProfileRequest request)async {
+    print('::::::::::::::::::::::::::::::::::::::::::');
+    print(request.toJson());
     var user = _auth.currentUser;
 
     // Change This
@@ -113,6 +117,23 @@ class ProfileService{
       });
     }catch(e){
       return null;
+    }
+  }
+
+  Future<bool> deleteMyAccount()async {
+    String?  userId =await _prefsHelper.getUserId();
+    try{
+      FirebaseFirestore _fire =  FirebaseFirestore.instance;
+      await FirebaseAuth.instance.currentUser!.delete();
+      await _fire.collection('users').doc(userId).update({
+        'userName':'deleted_account',
+        'email':'deleted_account',
+        'address':{}
+      });
+      await  _auth.signOut();
+      return true;
+    }catch(e){
+      return false;
     }
   }
 }

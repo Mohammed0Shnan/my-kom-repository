@@ -663,7 +663,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                              if(addRemoveBloc.state == 0){
 
                                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                                 content:  Text('Select the number of items required',style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
+                                                                 content:  Text(S.of(context)!.selectTheNumberOfItemsRequired,style: TextStyle(color: Colors.white ,letterSpacing: 1, fontWeight: FontWeight.bold,),),
                                                                  backgroundColor: Colors.black54,
                                                                  duration: const Duration(seconds: 1),
 

@@ -54,6 +54,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "codeIsRequired": MessageLookupByLibrary.simpleMessage("The code is required"),
     "code": MessageLookupByLibrary.simpleMessage("OTP"),
     "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
+    "registerAddressSuccessMessage": MessageLookupByLibrary.simpleMessage("You can change your main address from your profile"),
+    "registerAddressErrorMessage": MessageLookupByLibrary.simpleMessage("Failed to locate your location, please reset it"),
+
+
 
     /// About Pages
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
@@ -188,8 +192,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "extraCharge": MessageLookupByLibrary.simpleMessage("Extra Charge"),
     "orderValue": MessageLookupByLibrary.simpleMessage("Order Value"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("Payment Methods"),
-    "cashMoney": MessageLookupByLibrary.simpleMessage("Cash Money"),
-    "creditCard": MessageLookupByLibrary.simpleMessage("OnLine"),
+    "cashMoney": MessageLookupByLibrary.simpleMessage("Cash On Delivery"),
+    "creditCard": MessageLookupByLibrary.simpleMessage("Credit Card"),
     "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("Please select payment method"),
     "destinationAlert": MessageLookupByLibrary.simpleMessage("Choose a correct site that belongs to the serviced areas "),
     "orderConfirmation": MessageLookupByLibrary.simpleMessage("Confirmation"),
@@ -268,6 +272,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validPhone": MessageLookupByLibrary.simpleMessage("Enter Valid Phone Number"),
     "shortPassword": MessageLookupByLibrary.simpleMessage("The password is short, it must be 5 characters long"),
     "confirmPasswordRequired": MessageLookupByLibrary.simpleMessage("Confirm password is required"),
+    "numberOfItemsRequired": MessageLookupByLibrary.simpleMessage("Select the number of items required"),
 
 
   };

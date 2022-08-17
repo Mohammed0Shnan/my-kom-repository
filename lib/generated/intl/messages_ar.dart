@@ -41,7 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "codeIsRequired": MessageLookupByLibrary.simpleMessage("رجاءا ادخل رمز التحقق"),
     "code": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
     "newPassword": MessageLookupByLibrary.simpleMessage("كلمة السر الجديدة"),
-
+    "registerAddressSuccessMessage": MessageLookupByLibrary.simpleMessage("يمكنك تغيير عنوانك الرئيسي من الصفحة الشخصية"),
+    "registerAddressErrorMessage": MessageLookupByLibrary.simpleMessage("فشل تحديد موقعك ، يرجى إعادة تحديده"),
     /// About Pages
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "titlePageOne": MessageLookupByLibrary.simpleMessage("خيارات متعددة"),
@@ -178,8 +179,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "extraCharge": MessageLookupByLibrary.simpleMessage("الرسوم الاضافية"),
     "orderValue": MessageLookupByLibrary.simpleMessage("قيمة الطلب"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("طريقة الدفع"),
-    "cashMoney": MessageLookupByLibrary.simpleMessage("نقدا"),
-    "creditCard": MessageLookupByLibrary.simpleMessage("أونلاين"),
+    "cashMoney": MessageLookupByLibrary.simpleMessage("الدفع نقداً"),
+    "creditCard": MessageLookupByLibrary.simpleMessage("الدفع باسخدام البطاقة"),
     "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("رجاءا اختر طريقة الدفع"),
     "destinationAlert": MessageLookupByLibrary.simpleMessage("قم باختيار موقع صحيح ينتمي للمناطق المخدمة "),
     "orderConfirmation": MessageLookupByLibrary.simpleMessage("تأكيد"),
@@ -194,7 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "seeTheCart": MessageLookupByLibrary.simpleMessage("شوف العربة"),
     "addToCart": MessageLookupByLibrary.simpleMessage(" أضف الى العربة"),
     "description": MessageLookupByLibrary.simpleMessage("الوصف"),
-    "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("قم بتحديدعدد المنتجات ثم أضف"),
+    "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("قم بتحديد عدد المنتجات ثم أضف"),
     "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("تم أضافة المنتجات الى العربة "),
     "rival": MessageLookupByLibrary.simpleMessage("خصم"),
 
@@ -261,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validPhone": MessageLookupByLibrary.simpleMessage("ادخل رقم هاتف صحيح"),
     "shortPassword": MessageLookupByLibrary.simpleMessage("كلمة المرمر قصرة , على الأقل 5 محارف"),
     "confirmPasswordRequired": MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرمر مطلوب"),
+    "numberOfItemsRequired": MessageLookupByLibrary.simpleMessage("حدد عدد العناصر المطلوب"),
 
 
 

@@ -37,9 +37,8 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
 
         body: _getActiveScreen(),
 
-
         bottomNavigationBar: Container(
-          margin: EdgeInsets.only(bottom: 6,right: 8,left: 8),
+          margin: EdgeInsets.only(bottom:12,right: 12,left: 12),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
 
@@ -48,22 +47,22 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
-                offset: Offset(0,-2),
-                blurRadius: 5,
+
+                blurRadius: 3,
                 spreadRadius: 1
               )
             ]
           ),
           child: BottomNavigationBar(
-            selectedItemColor: Colors.white,
+            selectedItemColor: ColorsConst.mainColor,
               selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-              unselectedItemColor: Colors.white,
+              unselectedItemColor: ColorsConst.mainColor,
               selectedIconTheme:IconThemeData(
                 size: 26
               ) ,
               unselectedIconTheme:IconThemeData(
                   size: 18,
-                color: Colors.white.withOpacity(0.5)
+                color: ColorsConst.mainColor
               ) , 
               showSelectedLabels: true,
               showUnselectedLabels: true,
@@ -75,20 +74,20 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                backgroundColor: ColorsConst.mainColor,
+                backgroundColor: Colors.white,
                 label: S.of(context)!.home,
                 icon: Icon(Icons.home_outlined)),
               BottomNavigationBarItem(label:  S.of(context)!.orders,icon: Icon(Icons.description_outlined),
-                backgroundColor: ColorsConst.mainColor,
+                backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(label:  S.of(context)!.profile,icon: Icon(Icons.perm_identity),
-                backgroundColor: ColorsConst.mainColor,
+                backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(label:  S.of(context)!.ship,icon: Icon(Icons.shopping_cart_outlined),
-                backgroundColor: ColorsConst.mainColor,
+                backgroundColor: Colors.white,
               ),
               BottomNavigationBarItem(label:  S.of(context)!.more,icon: Icon(Icons.widgets_outlined),
-                backgroundColor: ColorsConst.mainColor,),
+                backgroundColor: Colors.white,),
             ],
           ),
         ),

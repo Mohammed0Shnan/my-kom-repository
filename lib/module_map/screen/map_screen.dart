@@ -69,7 +69,7 @@ class _MapScreenState extends State<MapScreen> {
         if (state is MapSuccessState) {
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);
           _searchController.text = state.data.name;
-          mapBloc.getGesturePosition(latLng, '').then((value) {
+          mapBloc.getGesturePosition(latLng , '').then((value) {
             location_from_search = null;
             _move(latLng);
             getDetailFromLocation(latLng);
@@ -104,7 +104,18 @@ class _MapScreenState extends State<MapScreen> {
                 .getSubArea(LatLng(state.latitude, state.longitude));
             addressModel.subArea = subArea;
           }
-        Navigator.pop(context, addressModel);
+
+          ///for map error
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => Center(child: Container(
+            height: 30,
+            width: 30,
+            child: CircularProgressIndicator(color: ColorsConst.mainColor,),
+          ),)));
+          await Future.delayed(Duration(seconds: 1));
+
+          /// fetch data from map
+          Navigator.of(context)..pop()..pop(addressModel);
+
         } else if (state is MapGestureSuccessState) {
           location_from_search = null;
           LatLng latLng = LatLng(state.data.latitude, state.data.longitude);

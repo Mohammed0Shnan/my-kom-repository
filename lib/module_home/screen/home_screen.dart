@@ -86,6 +86,7 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
     return BlocConsumer<MapBloc,MapStates>(
       bloc:  widget.mapBloc,
       listener: (context , state){
+
         if(state is MapSuccessState){
 
            if(state.isRefresh){

@@ -92,29 +92,29 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ),
 
-                GestureDetector(
-                  onTap: (){},
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 2,
-                            offset: Offset(0,1)
-                        )]
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
-                        SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.settings, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
-                      ],
-                    ),
-
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: (){},
+                //   child: Container(
+                //     padding: EdgeInsets.all(8),
+                //     decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(20),
+                //         color: Colors.white,
+                //         boxShadow: [BoxShadow(
+                //             color: Colors.black12,
+                //             blurRadius: 2,
+                //             offset: Offset(0,1)
+                //         )]
+                //     ),
+                //     child: Column(
+                //       children: [
+                //         Icon(Icons.settings_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
+                //         SizedBox(height: 10,),
+                //         Expanded(child: Text(S.of(context)!.settings, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                //       ],
+                //     ),
+                //
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=> AboutMyKomScreen() ));

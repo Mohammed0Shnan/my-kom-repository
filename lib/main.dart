@@ -23,6 +23,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'module_map/map_module.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:load/load.dart';
+
 
 Future<void> backgroundHandler(RemoteMessage message)async{
   await Firebase.initializeApp();

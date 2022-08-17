@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
@@ -114,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller: _LoginEmailController,
                                   decoration: InputDecoration(
                                       isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
                                       border:OutlineInputBorder(
                                           borderSide: BorderSide(
                                               width: 2,
@@ -168,16 +170,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     decoration: InputDecoration(
                                         isDense: true,
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical:12),
+                                        contentPadding: EdgeInsets.symmetric(vertical: 12,horizontal: 16),
                                         errorStyle: GoogleFonts.lato(
                                           color: Colors.red.shade700,
                                           fontWeight: FontWeight.w800,
                                         ),
-
+                                        suffixIconConstraints: BoxConstraints(
+                                          minWidth: 2,
+                                          minHeight: 30,
+                                        ),
                                         suffixIcon: SizedBox(
-                                          height: 10,
+                                          height: 4,
                                           child: IconButton(
-                                              onPressed: () {
+                                              onPressed: (){
                                                 cubit.changeState();
                                               },
                                               icon: state ==
@@ -248,8 +253,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         BlocConsumer<LoginBloc, LoginStates>(
                             bloc: widget._loginBloc,
                             listener: (context, LoginStates state)async {
-                              if (state is LoginSuccessState) {
-                                snackBarSuccessWidget(context, state.message);
+                              if(state is LoginLoadingState)
+                                EasyLoading.show();
+                             else if (state is LoginSuccessState) {
+                                EasyLoading.showSuccess(state.message);
+                                //snackBarSuccessWidget(context, state.message);
                                 UserRole? role = await AuthService().userRole;
                                 if(role != null){
                                   Navigator.pushNamedAndRemoveUntil(
@@ -257,20 +265,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
 
                               } else if (state is LoginErrorState) {
-                                snackBarErrorWidget(context, state.message);
+                                EasyLoading.showError( state.message);
+                                //snackBarErrorWidget(context, state.message);
                               }
                             },
                             builder: (context, LoginStates state) {
-                              if (state is LoginLoadingState)
-                                return Container(
-                                    height: 25,
-                                    width: 25,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: ColorsConst.mainColor,
-                                      ),
-                                    ));
-                              else
+
                                 return ListTile(
                                   title: Container(
                                     height: 55,
