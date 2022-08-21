@@ -42,7 +42,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
         this.add(MapErrorEvent(error_message: 'Error Get Current Location '));
       else{
         MapData map =  MapData(latitude: 0.0, longitude: 0.0, name:'', message: '', isError: false);
-      map.subArea = value;
+        map.subArea = value;
         this.add(MapSuccessEvent(map,false));
       }
     });

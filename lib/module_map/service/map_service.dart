@@ -119,10 +119,21 @@ class MapService {
 
  Future<String?> getSubAreaPosition(LatLng? latLng)async {
    late String subArea ;
+   AuthPrefsHelper _authPref = AuthPrefsHelper();
    try{
      if(latLng == null){
-       MapData data =  await getCurrentLocation();
-       subArea = await getSubArea(LatLng(data.latitude,data.longitude));
+       String? _token = await _authPref.getToken();
+       if(_token == null){
+         MapData data =  await getCurrentLocation();
+         subArea = await getSubArea(LatLng(data.latitude,data.longitude));
+       }
+       /// fetching the registration address area
+
+       else{
+         AddressModel? addressModel = await _authPref.getAddress();
+         subArea = await getSubArea(LatLng(addressModel!.latitude,addressModel.longitude));
+       }
+
      }else{
        subArea = await getSubArea(latLng);
      }

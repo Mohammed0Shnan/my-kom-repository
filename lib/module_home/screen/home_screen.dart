@@ -467,8 +467,7 @@ final SharedPreferencesHelper _sharedPreferencesHelper = SharedPreferencesHelper
                            if (value != null) {
                              AddressModel addressModel = (value as AddressModel);
                              widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: addressModel.subArea));
-                             widget.checkZoneBloc.checkZone(addressModel.subArea);
-                           }
+                             widget.mapBloc.setLocationManually(addressModel.subArea);                           }
                          });
 
                        },
