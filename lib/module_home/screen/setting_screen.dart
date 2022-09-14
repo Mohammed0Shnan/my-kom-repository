@@ -52,7 +52,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Icon(Icons.language_outlined ,color: ColorsConst.mainColor,size: 5* SizeConfig.heightMulti),
+                      Icon(Icons.language_outlined ,color: ColorsConst.mainColor,size: 35),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5),
@@ -72,11 +72,11 @@ class _SettingScreenState extends State<SettingScreen> {
                                   ),
                                   items: [
                                     DropdownMenuItem(
-                                      child: Text('العربية',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87)),//Text(S.of(context).arabic),
+                                      child: Text('العربية',  style: TextStyle(fontWeight: FontWeight.bold,fontSize:14,color: Colors.black87)),//Text(S.of(context).arabic),
                                       value: 'ar',
                                     ),
                                     DropdownMenuItem(
-                                      child:Text('English', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.2 * SizeConfig.heightMulti,color: Colors.black87)),//, Text(S.of(context).english),
+                                      child:Text('English', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Colors.black87)),//, Text(S.of(context).english),
                                       value: 'en',
                                     ),
                                   ],
@@ -133,9 +133,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.info_outline ,color: ColorsConst.mainColor,size:5 * SizeConfig.heightMulti),
+                        Icon(Icons.info_outline ,color: ColorsConst.mainColor,size:35),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.aboutApp, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                        Expanded(child: Text(S.of(context)!.aboutApp, style: TextStyle(fontFamily: 'Roboto',fontWeight: FontWeight.bold,fontSize:  14,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -158,9 +158,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
+                        Icon(Icons.lock_outline ,color: ColorsConst.mainColor,size: 35),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.privacyPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.1 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                        Expanded(child: Text(S.of(context)!.privacyPolicy,textAlign: TextAlign.center,style: TextStyle(fontFamily: 'Roboto',fontWeight: FontWeight.bold,fontSize:  14,color: Colors.black87)  ))
                       ],
                     ),
 
@@ -185,9 +185,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
+                        Icon(Icons.description_outlined ,color: ColorsConst.mainColor,size: 35,),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.deliveryPolicy,textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.1 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                        Expanded(child: Text(S.of(context)!.deliveryPolicy,textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Roboto',fontWeight: FontWeight.bold,fontSize:  14,color: Colors.black87),  ))
                       ],
                     ),
 
@@ -211,9 +211,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
+                        Icon(Icons.phone_outlined ,color: ColorsConst.mainColor,size: 35),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.contactUs, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 2.3 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                        Expanded(child: Text(S.of(context)!.contactUs, style: TextStyle(fontFamily: 'Roboto',fontWeight: FontWeight.bold,fontSize:  14,color: Colors.black87) ))
                       ],
                     ),
 
@@ -247,9 +247,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 5 * SizeConfig.heightMulti),
+                        Icon(Icons.logout_outlined ,color: ColorsConst.mainColor,size: 35,),
                         SizedBox(height: 10,),
-                        Expanded(child: Text(S.of(context)!.logout, style: TextStyle(fontWeight: FontWeight.bold,fontSize:  2.2 * SizeConfig.heightMulti,color: Colors.black87),  ))
+                        Expanded(child: Text(S.of(context)!.logout,style: TextStyle(fontFamily: 'Roboto',fontWeight: FontWeight.bold,fontSize:  14,color: Colors.black87) ))
                       ],
                     ),
 

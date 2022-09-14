@@ -14,7 +14,6 @@ class LangugeDropDownWidget extends StatefulWidget {
 }
 
 class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
-  String? _selected;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
     ];
 
     return Container(
-      height: SizeConfig.heightMulti * 7,
+      height: 35.0,
       decoration: BoxDecoration(
           border: Border.all(width: 1, color: Colors.grey),
           borderRadius: BorderRadius.circular(10)),
@@ -67,7 +66,7 @@ class _LangugeDropDownWidgetState extends State<LangugeDropDownWidget> {
                       children: <Widget>[
                         Image.asset(
                           map["image"],
-                          width: 40,
+                          width: 30,
                         ),
                         Container(
                             margin: EdgeInsets.only(left: 10),

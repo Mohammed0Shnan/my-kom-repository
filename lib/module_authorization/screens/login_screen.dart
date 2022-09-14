@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,7 +9,6 @@ import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/screens/reset_password_screen.dart';
-import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: _LoginFormKey,
                     child: ListView(
                       children: [
-                        SizedBox(height: SizeConfig.heightMulti * 5,),
+
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
@@ -104,11 +104,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(S.of(context)!.email,style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
-                                      fontSize: SizeConfig.titleSize * 2
+                                      fontSize: 15
                                   ))),
                               subtitle: SizedBox(
                                 child: TextFormField(
-                                  style: TextStyle(fontSize: 16,
+                                  style: TextStyle(fontSize: 15,
                                   height: 1
                                   ),
                                   keyboardType: TextInputType.emailAddress,
@@ -154,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text( S.of(context)!.password,style:GoogleFonts.lato(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black87,
-                                    fontSize: SizeConfig.titleSize * 2
+                                    fontSize:15
                                 ))),
                             subtitle: BlocBuilder<PasswordHiddinCubit,
                                 PasswordHiddinCubitState>(
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     controller: _LoginPasswordController,
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         height: 1
                                     ),
                                     decoration: InputDecoration(
@@ -237,18 +237,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(
-                                  right: 2.345 * SizeConfig.heightMulti),
+                                  right: SizeConfig.widhtMulti * 4),
                               child: Text( S.of(context)!.forgotPassword,
                                   style: GoogleFonts.lato(
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black54,
-                                    fontSize: SizeConfig.titleSize * 1.7,
+                                    fontSize: 12,
                                   )),
                             ),
                           ),
                         ),
                         SizedBox(
-                          height:SizeConfig.heightMulti *1.8,
+                          height:20,
                         ),
                         BlocConsumer<LoginBloc, LoginStates>(
                             bloc: widget._loginBloc,
@@ -260,6 +260,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 //snackBarSuccessWidget(context, state.message);
                                 UserRole? role = await AuthService().userRole;
                                 if(role != null){
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //   CupertinoPageRoute(
+                                  //     builder: (BuildContext context) {
+                                  //       return ();
+                                  //     },
+                                  //   ),
+                                  //       (_) => false,
+                                  // );
+                                  //
+                                  //
                                   Navigator.pushNamedAndRemoveUntil(
                                       context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
                                 }
@@ -273,12 +283,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 return ListTile(
                                   title: Container(
-                                    height: 55,
+                                    height: 35,
                                     margin: EdgeInsets.symmetric(horizontal: 20),
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10)),
-                                    padding: EdgeInsets.symmetric(vertical: 10),
                                     child: ClipRRect(
                                       clipBehavior: Clip.antiAlias,
                                       borderRadius: BorderRadius.circular(10),
@@ -302,8 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Text( S.of(context)!.login,
                                               style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize:
-                                                  SizeConfig.titleSize * 2.7,
+                                                  fontSize:17,
                                                   fontWeight: FontWeight.w700))),
                                     ),
                                   ),

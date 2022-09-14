@@ -11,14 +11,9 @@ import 'package:my_kom/module_authorization/bloc/register_bloc.dart';
 import 'package:my_kom/module_authorization/enums/user_role.dart';
 import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/screens/login_automatically.dart';
-import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
 import 'package:my_kom/module_map/bloc/map_bloc.dart';
-import 'package:my_kom/module_map/map_routes.dart';
 import 'package:my_kom/module_map/models/address_model.dart';
-import 'package:my_kom/module_map/service/map_service.dart';
-import 'package:my_kom/module_orders/response/orders/orders_response.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -107,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                       style: TextStyle(
                           color: Colors.white.withOpacity(0.95),
                           fontWeight: FontWeight.w900,
-                          fontSize: SizeConfig.titleSize * 3.5)),
+                          fontSize: 28)),
                   SizedBox(
                     height:SizeConfig.screenHeight * 0.02,
                   ),
@@ -119,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                         Text(
                           S.of(context)!.alreadyHaveOne+'  ',
                           style: TextStyle(
-                              fontSize: SizeConfig.titleSize * 2 ,
+                              fontSize: 17 ,
                               color: Colors.white.withOpacity(0.9),
                               fontWeight: FontWeight.w800
                           ),
@@ -133,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
 
                               style:  GoogleFonts.lato(
                                 decoration: TextDecoration.underline,
-                                  fontSize: SizeConfig.titleSize * 2,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87                          )),
                         )
@@ -177,14 +172,14 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                     child: Text(S.of(context)!.name,style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black87,
-                                        fontSize: SizeConfig.titleSize * 2
+                                        fontSize: 15
                                     ))),
                                 subtitle: SizedBox(
                                   child: TextFormField(
 
                                     controller: _registerUserNameController,
                                     style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         height:1
                                     ),
                                     decoration: InputDecoration(
@@ -227,12 +222,12 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                     child: Text(S.of(context)!.email, style:GoogleFonts.lato(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black87,
-                                        fontSize: SizeConfig.titleSize * 2
+                                        fontSize: 15
                                     ))),
                                 subtitle: SizedBox(
 
                                   child: TextFormField(
-                                    style: TextStyle(fontSize: 16,
+                                    style: TextStyle(fontSize: 15,
                                         height:1
                                     ),
                                     keyboardType: TextInputType.emailAddress,
@@ -250,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                         ),
                                         hintText: S.of(context)!.email
                                         ,
-                                        hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                        hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 15)
                                       //S.of(context).name,
                                     ),
                                     textInputAction: TextInputAction.next,
@@ -275,7 +270,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                   child: Text(S.of(context)!.password, style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
-                                      fontSize: SizeConfig.titleSize * 2
+                                      fontSize: 15
                                   ))),
                               subtitle: SizedBox(
                                 child: BlocBuilder<PasswordHiddinCubit,
@@ -285,7 +280,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                     return SizedBox(
                                       child: TextFormField(
                                         controller: _registerPasswordController,
-                                        style: TextStyle(fontSize: 16,
+                                        style: TextStyle(fontSize: 15,
                                             height: 1
                                         ),
                                         decoration: InputDecoration(
@@ -317,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
 
                                             ),
                                             hintText:S.of(context)!.password
-                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)
+                                            , hintStyle: TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 15)
                                         ),
                                         obscureText: state ==
                                             PasswordHiddinCubitState.VISIBILITY
@@ -353,7 +348,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                   child: Text(S.of(context)!.confirmPassword,style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
-                                      fontSize: SizeConfig.titleSize * 2
+                                      fontSize: 15
                                   ))),
                               subtitle: SizedBox(
                                 child: BlocBuilder<PasswordHiddinCubit,
@@ -364,7 +359,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                       child: TextFormField(
                                         controller:
                                         _registerConfirmPasswordController,
-                                        style: TextStyle(fontSize: 16,
+                                        style: TextStyle(fontSize: 15,
                                             height: 1
                                         ),
                                         decoration: InputDecoration(
@@ -430,14 +425,14 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                   child: Text( S.of(context)!.address, style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
-                                      fontSize: SizeConfig.titleSize * 2
+                                      fontSize:15
                                   ))),
                               subtitle: SizedBox(
                                 child: TextFormField(
                                   controller:
                                   _registerAddressController,
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 15,
                                       height:1
                                   ),
                                   readOnly: true,
@@ -516,7 +511,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
 
                                       )
                                       , hintText: S.of(context)!.address,
-                                      hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 13)// S.of(context).email,
+                                      hintStyle:  TextStyle(color: Colors.black26,fontWeight: FontWeight.w800,fontSize: 15)// S.of(context).email,
                                   ),
 
                                   textInputAction: TextInputAction.next,
@@ -578,7 +573,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                   child: Text( S.of(context)!.phone,style:GoogleFonts.lato(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
-                                      fontSize: SizeConfig.titleSize * 2
+                                      fontSize:15
                                   ))),
                               subtitle: SizedBox(
                                 child: TextFormField(
@@ -739,8 +734,7 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                               child: Text(S.of(context)!.register,
                                                   style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize:
-                                                      SizeConfig.titleSize * 2.3,
+                                                      fontSize:17,
                                                       fontWeight: FontWeight.w700))),
                                         )
                                     ),

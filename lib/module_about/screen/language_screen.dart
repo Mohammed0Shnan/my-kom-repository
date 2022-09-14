@@ -39,8 +39,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   tag: 'logo',
                   child: Center(
                     child: Container(
-                           height: 30 * SizeConfig.heightMulti,
-                           width: 30 * SizeConfig.heightMulti,
+                           height:200,
+                           width:200,
                       child: Image.asset('assets/new_oval_logo.png',fit: BoxFit.contain,),
                     ),
                   ),
@@ -56,23 +56,18 @@ class _LanguageScreenState extends State<LanguageScreen> {
                               color: Colors.black54,
                                 fontWeight: FontWeight.w600
                             ),
-                            // style: TextStyle(
-                            //     color: Colors.black,
-                            //     fontSize: SizeConfig.titleSize * 2.2,
-                            //     fontWeight: FontWeight.w600)
+
                         )
                     ),
                     subtitle: LangugeDropDownWidget(localizationService: widget.localizationService,)),
-                SizedBox(
-                  height: SizeConfig.heightMulti ,
-                ),
+
                 ListTile(
                   title: Container(
-                    height: 9.5*  SizeConfig.heightMulti ,
+                    height:35 ,
                     clipBehavior: Clip.antiAlias,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    padding: EdgeInsets.symmetric(vertical: 10),
+
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -89,7 +84,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                         child: Text(S.of(context)!.next,
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: SizeConfig.titleSize * 2.6,
+                                fontSize: 17,
                                 fontWeight: FontWeight.w700))),
                   ),
                 )

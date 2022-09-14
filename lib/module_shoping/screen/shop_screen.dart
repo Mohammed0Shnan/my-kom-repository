@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/consts/delivery_times.dart';
 import 'package:my_kom/consts/payment_method.dart';
@@ -34,7 +37,7 @@ import 'package:my_kom/module_shoping/bloc/my_addresses_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
 import 'package:my_kom/module_shoping/models/card_model.dart';
-import 'package:my_kom/module_shoping/service/stripe.dart';
+
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:my_kom/generated/l10n.dart';
@@ -96,26 +99,27 @@ class _ShopScreenState extends State<ShopScreen> {
   ///To save the source of the request (Dubai ..., etc)
   ///If an error occurred, we could not get the value stored in the device (Null)
 
-  String? orderSource = null;
+ late String orderSource ;
 
   AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
 
   @override
   void initState() {
     isLogginCubit = IsLogginCubit();
-    _authPrefsHelper.getAddress().then((value) {
+    _authPrefsHelper.getAddress().then((value)  {
       if (value != null) {
         addressModel = value;
         _newAddressController.text = value.description;
+
       }
     });
     _preferencesHelper.getCurrentStore().then((store) {
       if (store != null) {
         storeId = store;
-        _authPrefsHelper.getAddress().then((address) {
+        _authPrefsHelper.getAddress().then((address)  async{
           if (address != null) {
             LatLng latLng = LatLng(address.latitude, address.longitude);
-            _getSubAreaForAddress(latLng);
+           await _getSubAreaForAddress(latLng);
           }
         });
       }
@@ -126,9 +130,7 @@ class _ShopScreenState extends State<ShopScreen> {
     });
 
     ///To get the source of the request (sub area)
-    _preferencesHelper.getOrderSource().then((value) {
-      orderSource = value;
-    });
+
     _pageController = PageController(
       initialPage: 0,
     );
@@ -197,9 +199,12 @@ class _ShopScreenState extends State<ShopScreen> {
     });
   }
 
+ Future<String> _getOrderSourceFromDeliveryLocation(LatLng latLng)async{
+   return await _mapService.getOrderSource(latLng);
+  }
+
   @override
   Widget build(BuildContext maincontext) {
-    final node = FocusScope.of(context);
 
     List<String> nowTitle = [
       S.of(context)!.stepOneTitle,
@@ -259,7 +264,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     backgroundColor: Colors.white,
                     leading: IconButton(
                       icon: Icon(
-                        Icons.arrow_back,
+                      Platform.isIOS? Icons.arrow_back_ios: Icons.arrow_back ,
                         color: Colors.black,
                       ),
                       onPressed: () {
@@ -278,7 +283,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     child: Column(
                       children: [
                         Container(
-                          height: 9 * SizeConfig.heightMulti,
+                          height: 65,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
@@ -291,8 +296,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                   duration: Duration(seconds: 1),
                                   builder: (context, double value, child) {
                                     return Container(
-                                        width: 10 * SizeConfig.heightMulti,
-                                        height: 10 * SizeConfig.heightMulti,
+                                        width: 72,
+                                        height: 72,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 10),
                                         child: Stack(
@@ -315,9 +320,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                               },
                                               child: Container(
                                                 width:
-                                                    11 * SizeConfig.heightMulti,
+                                                    80,
                                                 height:
-                                                    11 * SizeConfig.heightMulti,
+                                                    80,
                                                 decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Colors.white),
@@ -326,9 +331,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                             Center(
                                               child: Container(
                                                 height:
-                                                    6 * SizeConfig.heightMulti,
+                                                   45,
                                                 width:
-                                                    6 * SizeConfig.heightMulti,
+                                                   45,
                                                 decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Colors.white),
@@ -340,9 +345,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                           FontWeight.w600,
                                                       color:
                                                           ColorsConst.mainColor,
-                                                      fontSize:
-                                                          SizeConfig.titleSize *
-                                                              1.5),
+                                                      fontSize:12.5),
                                                 )),
                                               ),
                                             )
@@ -361,8 +364,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: TextStyle(
                                             color: ColorsConst.mainColor,
                                             fontWeight: FontWeight.w600,
-                                            fontSize:
-                                                SizeConfig.titleSize * 2.1)),
+                                            fontSize:16)),
                                     SizedBox(
                                       height: 6,
                                     ),
@@ -370,8 +372,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: TextStyle(
                                             color: Colors.black54,
                                             fontWeight: FontWeight.w500,
-                                            fontSize:
-                                                SizeConfig.titleSize * 1.7))
+                                            fontSize:13))
                                   ],
                                 ),
                               ),
@@ -410,16 +411,13 @@ class _ShopScreenState extends State<ShopScreen> {
           }
         });
 
-    ////////////////////////////////////////////////////////
-
-    ///
   }
 
   Widget _buildShoppingCard(
       {required ProductModel productModel, required int quantity}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      height: SizeConfig.heightMulti * 14,
+      height: 95,
       width: double.infinity,
       child: Row(
         children: [
@@ -490,7 +488,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       ? productModel.title
                                       : productModel.title2,
                                   style: TextStyle(
-                                      fontSize: SizeConfig.titleSize * 2.3,
+                                      fontSize:16,
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text('${productModel.quantity} حبة \ الكرتون'),
@@ -591,7 +589,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         child: Column(
                       children: [
                         Container(
-                          height: SizeConfig.screenHeight * 0.3,
+                          height: 250,
                           width: SizeConfig.screenWidth * 0.4,
                           child: Image.asset('assets/empty_cart.jpg'),
                         ),
@@ -644,11 +642,11 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
               Text(S.of(context)!.paymentSummary,
                   style: GoogleFonts.lato(
-                      fontSize: SizeConfig.titleSize * 2,
+                      fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: Colors.black87)),
               SizedBox(
-                height: 8,
+                height: 6,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -656,7 +654,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   Text(
                     S.of(context)!.total,
                     style: GoogleFonts.lato(
-                        fontSize: SizeConfig.titleSize * 1.8,
+                        fontSize: 13,
                         fontWeight: FontWeight.w800,
                         color: Colors.black54),
                   ),
@@ -666,14 +664,14 @@ class _ShopScreenState extends State<ShopScreen> {
                         if (state is CartLoaded) {
                           return Text(state.cart.totalString,
                               style: GoogleFonts.lato(
-                                  fontSize: SizeConfig.titleSize * 2.1,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black54));
                         } else {
                           return Text('',
                               style: TextStyle(
                                   color: Colors.black54,
-                                  fontSize: SizeConfig.titleSize * 2.9));
+                                  fontSize: 14));
                         }
                       }),
                 ],
@@ -699,7 +697,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 child: Text(
                                     '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.7,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.red))));
                       } else
@@ -712,7 +710,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         ),
         Container(
-          height: 5 * SizeConfig.heightMulti,
+          height: 35,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -735,7 +733,8 @@ class _ShopScreenState extends State<ShopScreen> {
                         S.of(context)!.addMore,
                         style: TextStyle(
                             color: ColorsConst.mainColor,
-                            fontSize: SizeConfig.titleSize * 2.5),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17),
                       ),
                     ),
                   ),
@@ -761,7 +760,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       S.of(context)!.next,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: SizeConfig.titleSize * 2.5),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17),
                     ),
                   ),
                 ),
@@ -792,7 +792,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: SizeConfig.screenHeight * 0.2,
+                height: 140,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -817,8 +817,8 @@ class _ShopScreenState extends State<ShopScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              height: SizeConfig.heightMulti * 5,
-                              width: SizeConfig.heightMulti * 5,
+                              height: 32,
+                              width: 32,
                               padding: EdgeInsets.all(2),
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -842,9 +842,9 @@ class _ShopScreenState extends State<ShopScreen> {
                             Text(
                               S.of(context)!.destination,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w800,
                                   color: Colors.black87,
-                                  fontSize: SizeConfig.titleSize * 2.1),
+                                  fontSize: 15),
                             ),
                           ],
                         ),
@@ -893,7 +893,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                           .bookmark,
                                                                       color: Colors
                                                                           .blue,
-                                                                      size: 28,
+                                                                      size: 25,
                                                                     ),
                                                                     SizedBox(
                                                                       height: 8,
@@ -907,8 +907,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                               .black87,
                                                                           fontWeight: FontWeight
                                                                               .w600,
-                                                                          fontSize:
-                                                                              SizeConfig.titleSize * 2),
+                                                                          fontSize:15),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1082,7 +1081,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black45,
-                              fontSize: SizeConfig.titleSize * 1.8),
+                              fontSize: 14),
                         ),
                         SizedBox(
                           width: 10,
@@ -1097,7 +1096,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     controller: _newAddressController,
                                     maxLines: 1,
                                     style: TextStyle(
-                                        fontSize: SizeConfig.titleSize * 1.7,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[600]),
                                     decoration: InputDecoration(
@@ -1108,9 +1107,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                     // Move focus to next
                                   ),
                                 ),
+
                                 Container(
-                                  height: SizeConfig.heightMulti * 5,
-                                  width: SizeConfig.heightMulti * 5,
+                                  height: 38,
+                                  width: 38,
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -1120,8 +1120,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                       bloc: _checkAddressBloc,
                                       builder: (context, state) {
                                         if (state is CheckAddressLoadingState)
-                                          return CircularProgressIndicator(
-                                            color: ColorsConst.mainColor,
+                                          return Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: CircularProgressIndicator(
+                                              color: ColorsConst.mainColor,
+                                            ),
                                           );
                                         else if (state
                                             is CheckAddressErrorState) {
@@ -1177,19 +1180,19 @@ class _ShopScreenState extends State<ShopScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black45,
-                              fontSize: SizeConfig.titleSize * 1.8),
+                              fontSize: 14),
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: SizedBox(
-                            height: SizeConfig.heightMulti * 3,
+                            height: 20,
                             child: TextFormField(
                               controller: _phoneController,
 
                               style: TextStyle(
-                                  fontSize: SizeConfig.titleSize * 1.7,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey[600]),
 
@@ -1249,7 +1252,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               child: Text(S.of(context)!.destinationAlert,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.lato(
-                                      fontSize: SizeConfig.titleSize * 1.8,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.red))));
                     } else if (state is CheckAddressSuccessState) {
@@ -1273,33 +1276,37 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 BorderRadius.circular(20),
                                           ),
                                           content: Container(
-                                            height:
-                                                SizeConfig.screenHeight * 0.12,
+                                            height:100,
                                             width: SizeConfig.screenWidth,
                                             child: Center(
                                                 child: Column(
                                               children: [
                                                 Expanded(
-                                                  child: TextField(
-                                                    controller:
-                                                        _savedNameLocationController,
-                                                    style: TextStyle(
-                                                        height: 0.3,
-                                                        fontSize: 14),
-                                                    decoration: InputDecoration(
-                                                        border:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        hintText: S
-                                                            .of(context)!
-                                                            .hintTextBookMarkField,
-                                                        hintStyle: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors
-                                                                .black38)),
+                                                  child: SizedBox(
+
+                                                    child: TextField(
+                                                      controller:
+                                                          _savedNameLocationController,
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+
+                                                      decoration: InputDecoration(
+                                                        isDense: true,
+                                                        contentPadding: EdgeInsets.all(12),
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(10),
+                                                          ),
+                                                          hintText: S
+                                                              .of(context)!
+                                                              .hintTextBookMarkField,
+                                                          hintStyle: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .black38)),
+                                                    ),
                                                   ),
                                                 ),
                                                 Row(
@@ -1366,9 +1373,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                       .bold,
                                                               color:
                                                                   Colors.blue,
-                                                              fontSize: SizeConfig
-                                                                      .titleSize *
-                                                                  1.8)),
+                                                              fontSize: 12)),
                                                     ),
                                                   ],
                                                 )
@@ -1395,7 +1400,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         : S.of(context)!.saveAnotherAddress,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.5,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.green)),
                                 SizedBox(
@@ -1431,7 +1436,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         return Container(
                           margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.all(8),
-                          height: SizeConfig.screenHeight * 0.21,
+                          height: 170,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -1455,8 +1460,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    height: SizeConfig.heightMulti * 5,
-                                    width: SizeConfig.heightMulti * 5,
+                                    height: 32,
+                                    width: 32,
                                     padding: EdgeInsets.all(2),
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
@@ -1476,7 +1481,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   ),
                                   Text(S.of(context)!.myKomExpressService,
                                       style: GoogleFonts.lato(
-                                          fontSize: SizeConfig.titleSize * 2,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w800,
                                           color: Colors.black87)),
                                 ],
@@ -1487,7 +1492,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Text(
                                 S.of(context)!.myKomExpressServiceMessageEnable,
                                 style: GoogleFonts.lato(
-                                    fontSize: SizeConfig.titleSize * 1.8,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black54),
                               ),
@@ -1501,25 +1506,34 @@ class _ShopScreenState extends State<ShopScreen> {
                                   Text(
                                     S.of(context)!.myKomExpress,
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.8,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54),
                                   ),
-                                  Container(
-                                    height: SizeConfig.heightMulti * 3,
-                                    width: SizeConfig.widhtMulti * 14,
-                                    child: Switch(
-                                        value: vipOrder,
-                                        onChanged: (val) {
-                                          setState(() {
-                                            vipOrder = val;
-                                            if (vipOrder) {
-                                              vipOrderValue = 10.0;
-                                            } else {
-                                              vipOrderValue = 0.0;
-                                            }
-                                          });
-                                        }),
+                                  SizedBox(
+                                    child: FlutterSwitch(
+                                      activeColor: ColorsConst.mainColor,
+
+                                      width: 60,
+                                      height:20.0,
+                                      valueFontSize: 15.0,
+                                      toggleSize: 20.0,
+                                      value: vipOrder,
+                                      borderRadius: 30.0,
+                                      padding: 1,
+                                      showOnOff: true,
+
+                                      onToggle: (val) {
+                                              setState(() {
+                                                vipOrder = val;
+                                                if (vipOrder) {
+                                                  vipOrderValue = 10.0;
+                                                } else {
+                                                  vipOrderValue = 0.0;
+                                                }
+                                              });
+                                      },
+                                    ),
                                   )
                                 ],
                               ),
@@ -1533,7 +1547,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         return Container(
                           margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.all(8),
-                          height: SizeConfig.screenHeight * 0.19,
+                          height: 140,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.4),
@@ -1545,8 +1559,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    height: SizeConfig.heightMulti * 5,
-                                    width: SizeConfig.heightMulti * 5,
+                                    height:32,
+                                    width: 32,
                                     clipBehavior: Clip.antiAlias,
                                     padding: EdgeInsets.all(2),
                                     decoration: BoxDecoration(
@@ -1569,7 +1583,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   ),
                                   Text(S.of(context)!.myKomExpressService,
                                       style: GoogleFonts.lato(
-                                          fontSize: SizeConfig.titleSize * 2,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w800,
                                           color: Colors.black54)),
                                 ],
@@ -1582,7 +1596,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     .of(context)!
                                     .myKomExpressServiceMessageDisable,
                                 style: GoogleFonts.lato(
-                                    fontSize: SizeConfig.titleSize * 1.8,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black54),
                               ),
@@ -1596,15 +1610,26 @@ class _ShopScreenState extends State<ShopScreen> {
                                   Text(
                                     S.of(context)!.myKomExpress,
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.8,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54),
                                   ),
-                                  Container(
-                                    height: SizeConfig.heightMulti * 1.3,
-                                    width: SizeConfig.widhtMulti * 14,
-                                    child: Switch(
-                                        value: false, onChanged: (val) {}),
+                                  SizedBox(
+                                    child: FlutterSwitch(
+                                      disabled: true,
+                                      width: 60,
+                                      height:20.0,
+                                      valueFontSize: 15.0,
+                                      toggleSize: 20.0,
+                                      value: vipOrder,
+                                      borderRadius: 30.0,
+                                      padding: 1,
+                                      showOnOff: true,
+
+                                      onToggle: (val) {
+
+                                      },
+                                    ),
                                   )
                                 ],
                               ),
@@ -1651,8 +1676,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: SizeConfig.heightMulti * 5,
-                          width: SizeConfig.heightMulti * 5,
+                          height: 32,
+                          width: 32,
                           padding: EdgeInsets.all(2),
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
@@ -1677,9 +1702,9 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.note,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w800,
                               color: Colors.black87,
-                              fontSize: SizeConfig.titleSize * 2.1),
+                              fontSize:15),
                         ),
 
                       ],
@@ -1700,9 +1725,10 @@ class _ShopScreenState extends State<ShopScreen> {
                           hintText: S.of(context)!.noteMessage,
 
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black26,fontSize: 14)
+                          hintStyle: TextStyle(color: Colors.black26,fontSize: 12)
                           //S.of(context).name,
                           ),
+
                       textInputAction: TextInputAction.done,
                       // Move focus to next
                     ),
@@ -1716,7 +1742,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         )),
         Container(
-          height: 5 * SizeConfig.heightMulti,
+          height: 35,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -1742,7 +1768,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       S.of(context)!.back,
                       style: TextStyle(
                           color: ColorsConst.mainColor,
-                          fontSize: SizeConfig.titleSize * 2.5),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17),
                     ),
                   ),
                 ),
@@ -1775,7 +1802,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       S.of(context)!.next,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: SizeConfig.titleSize * 2.5),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17),
                     ),
                   ),
                 ),
@@ -1804,7 +1832,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: SizeConfig.screenHeight * 0.22,
+                height: 150,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -1833,8 +1861,8 @@ class _ShopScreenState extends State<ShopScreen> {
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.blue, width: 2)),
                           child: Container(
-                            height: SizeConfig.heightMulti * 5,
-                            width: SizeConfig.heightMulti * 5,
+                            height: 32,
+                            width: 32,
                             margin: EdgeInsets.all(2),
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
@@ -1851,7 +1879,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                         Text(S.of(context)!.paymentSummary,
                             style: GoogleFonts.lato(
-                                fontSize: SizeConfig.titleSize * 2,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black87)),
                       ],
@@ -1865,7 +1893,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.total,
                           style: GoogleFonts.lato(
-                              fontSize: SizeConfig.titleSize * 1.9,
+                              fontSize:14,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1875,14 +1903,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               if (state is CartLoaded) {
                                 return Text(state.cart.totalString,
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.9,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.9));
+                                        fontSize:14));
                               }
                             }),
                       ],
@@ -1896,7 +1924,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.extraCharge,
                           style: GoogleFonts.lato(
-                              fontSize: SizeConfig.titleSize * 1.9,
+                              fontSize: 14,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1906,14 +1934,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               if (state is CartLoaded) {
                                 return Text(vipOrderValue.toString(),
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.9,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 1.9));
+                                        fontSize: 14));
                               }
                             }),
                       ],
@@ -1927,7 +1955,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.orderValue,
                           style: GoogleFonts.lato(
-                              fontSize: SizeConfig.titleSize * 1.9,
+                              fontSize: 14,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1942,14 +1970,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                 orderValue = total;
                                 return Text(total.toString(),
                                     style: GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 1.9,
+                                        fontSize:14,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize: SizeConfig.titleSize * 2.9));
+                                        fontSize: 14));
                               }
                             }),
                       ],
@@ -1993,8 +2021,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         child: Text(
                                             '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
                                             style: GoogleFonts.lato(
-                                                fontSize:
-                                                    SizeConfig.titleSize * 1.7,
+                                                fontSize:12.0,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.red))))));
                       } else
@@ -2013,7 +2040,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: SizeConfig.screenHeight * 0.23,
+                height: 165,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -2037,8 +2064,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: SizeConfig.heightMulti * 5,
-                          width: SizeConfig.heightMulti * 5,
+                          height: 32,
+                          width: 32,
                           padding: EdgeInsets.all(2),
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
@@ -2053,7 +2080,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                         Text(S.of(context)!.paymentMethods,
                             style: GoogleFonts.lato(
-                                fontSize: SizeConfig.titleSize * 2,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black87)),
                       ],
@@ -2081,7 +2108,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 : 0,
                             child: Container(
                               width: SizeConfig.screenWidth * 0.24,
-                              height: SizeConfig.heightMulti * 13,
+                              height:100,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -2091,12 +2118,13 @@ class _ShopScreenState extends State<ShopScreen> {
                                       : Colors.white,
                                   border: Border.all(color: Colors.black12)),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: SizeConfig.heightMulti * 7,
-                                    width: SizeConfig.screenWidth * 0.2,
+                                    height: 45,
+                                   width: SizeConfig.screenWidth * 0.24,
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
@@ -2115,21 +2143,22 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 ),
                                               )),
                                   ),
-                                  Container(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        S.of(context)!.cashMoney,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.lato(
-                                            color: paymentGroupValue ==
-                                                    PaymentMethodConst
-                                                        .CASH_MONEY
-                                                ? Colors.white
-                                                : Colors.black54,
-                                            fontSize:
-                                                SizeConfig.titleSize * 1.4,
-                                            fontWeight: FontWeight.bold),
-                                      ))
+                                  Center(
+                                    child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 4.0,vertical: 8.0),
+                                        child: Text(
+                                          S.of(context)!.cashMoney,
+                                          style: GoogleFonts.lato(
+
+                                              color: paymentGroupValue ==
+                                                      PaymentMethodConst
+                                                          .CASH_MONEY
+                                                  ? Colors.white
+                                                  : Colors.black54,
+                                              fontSize:10,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  )
                                 ],
                               ),
                             ),
@@ -2156,7 +2185,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 : 0,
                             child: Container(
                               width: SizeConfig.screenWidth * 0.24,
-                              height: SizeConfig.heightMulti * 13,
+                              height:100,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -2167,11 +2196,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                   border: Border.all(color: Colors.black12)),
                               child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: SizeConfig.heightMulti * 8,
-                                    width: SizeConfig.screenWidth * 0.2,
+                                    height: 45,
+                                    width: SizeConfig.screenWidth * 0.24,
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
@@ -2190,20 +2219,22 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 ),
                                               )),
                                   ),
-                                  Container(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        S.of(context)!.creditCard,
-                                        style: GoogleFonts.lato(
-                                            color: paymentGroupValue ==
-                                                    PaymentMethodConst
-                                                        .CREDIT_CARD
-                                                ? Colors.white
-                                                : Colors.black54,
-                                            fontSize:
-                                                SizeConfig.titleSize * 1.4,
-                                            fontWeight: FontWeight.bold),
-                                      ))
+                                  Center(
+                                    child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 4.0,vertical: 8.0),
+                                        child: Text(
+                                          S.of(context)!.creditCard,
+                                          style: GoogleFonts.lato(
+                                              color: paymentGroupValue ==
+                                                      PaymentMethodConst
+                                                          .CREDIT_CARD
+                                                  ? Colors.white
+                                                  : Colors.black54,
+                                              fontSize:
+                                                 10,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                  )
                                 ],
                               ),
                             ),
@@ -2222,7 +2253,7 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         )),
         Container(
-          height: 5 * SizeConfig.heightMulti,
+          height:35,
           margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.widhtMulti * 3, vertical: 5),
           child: Row(
@@ -2248,7 +2279,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       S.of(context)!.back,
                       style: TextStyle(
                           color: ColorsConst.mainColor,
-                          fontSize: SizeConfig.titleSize * 2.5),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 17),
                     ),
                   ),
                 ),
@@ -2258,6 +2290,7 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
               Expanded(
                   child: Container(
+                    height: 35.0,
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                           color: ColorsConst.mainColor,
@@ -2288,7 +2321,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             return AnimatedContainer(
                               duration: Duration(milliseconds: 200),
                               clipBehavior: Clip.antiAlias,
-                              height: 8.44 * SizeConfig.heightMulti,
+                              height: 35,
                               width:
                                   isLoading ? 60 : SizeConfig.screenWidth * 0.8,
                               padding: EdgeInsets.all(isLoading ? 8 : 0),
@@ -2299,14 +2332,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               child: isLoading
                                   ? Center(
                                       child: Container(
-                                      height: SizeConfig.heightMulti * 3,
-                                      width: SizeConfig.heightMulti * 3,
+                                      height:20,
+                                      width: 20,
                                       child: CircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                     ))
                                   : MaterialButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (orderNotComplete) {
                                           _scaffoldState.currentState!
                                               .showSnackBar(SnackBar(
@@ -2328,68 +2361,279 @@ class _ShopScreenState extends State<ShopScreen> {
                                                       .paymentMethodAlert)));
                                         } else if (paymentGroupValue ==
                                             PaymentMethodConst.CREDIT_CARD) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: AlertDialog(
-                                                    backgroundColor: Colors
-                                                        .white
-                                                        .withOpacity(0.8),
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                    ),
-                                                    content: Container(
-                                                      height: 70,
-                                                      width: 90,
-                                                      child: Center(
-                                                        child: Text(
-                                                          S
-                                                              .of(context)!
-                                                              .creditComingSoon,
-                                                          style:
-                                                              GoogleFonts.acme(
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              });
+                                          //       /// For Credits Cards
 
-                                          // GeoJson geoJson = GeoJson(
-                                          //     lat: addressModel.latitude,
-                                          //     lon: addressModel.longitude);
-                                          // _orderBloc.addNewOrder(
-                                          //     product: requestProduct,
-                                          //     deliveryTimes:
-                                          //         deliveryTimesGroupValue,
-                                          //     orderType: vipOrder,
-                                          //     destination: geoJson,
-                                          //     addressName:
-                                          //         addressModel.description,
-                                          //     phoneNumber: phoneNumber,
-                                          //     paymentMethod: paymentGroupValue,
-                                          //     numberOfMonth: numberOfMonth,
-                                          //     orderValue: orderValue,
-                                          //     cardId: cardId,
-                                          // storeId: storeId);
+        showMaterialModalBottomSheet(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                topRight: Radius.circular(30)
+            ),
+          ),
+          context: context,
+          builder: (context) => SingleChildScrollView(
+            controller: ModalScrollController.of(context),
+            child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+                bloc: paymentMethodeNumberBloc,
+                builder: (context,state) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: SizeConfig.screenHeight * 0.8 ,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(onPressed: (){
+                          Navigator.of(context).pop();
+                        }, icon:Icon(Icons.clear) ),
+                        Text(S.of(context)!.payByCard , style:TextStyle(
 
-                                        } else {
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.titleSize*2.9
+
+                        ),),
+                        SizedBox(height: 15,),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+
+                          child: ListView.separated(
+                            separatorBuilder: (context,index){
+                              return  SizedBox(height: 8,);
+                            },
+                            shrinkWrap:true ,
+                            itemCount: state.cards.length,
+                            itemBuilder: (context,index){
+                              CardModel  card =   state.cards[index];
+                              return   Center(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 6.8 * SizeConfig.heightMulti,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade50,
+                                      border: Border.all(
+                                          color: Colors.black26,
+                                          width: 2
+                                      )
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+
+                                    children: [
+                                      Radio<String>(
+                                        value: card.id,
+                                        groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+                                        onChanged: (value) {
+                                          paymentMethodeNumberBloc.changeSelect(value!);
+                                        },
+                                        activeColor: Colors.green,
+                                      ),
+                                      Icon(Icons.payment),
+                                      SizedBox(width: 10,),
+
+                                      Text(card.cardNumber , style: GoogleFonts.lato(
+                                          color: Colors.black54,
+                                          fontSize: SizeConfig.titleSize * 2.1,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                      Spacer(),
+                                      IconButton(onPressed: (){
+                                        paymentMethodeNumberBloc.removeOne(state.cards[index]);
+                                      }, icon: Icon(Icons.delete,color: Colors.red,)),
+
+                                    ],
+                                  ),
+                                ),
+                              );
+
+                            },
+
+                          ),
+                        ),
+                        SizedBox(height:25,),
+                        Center(
+                          child: GestureDetector(
+                            onTap: ()async{
+                            // await PaymentService().createPaymentMethod();
+                              // Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                              //     BlocProvider.value(
+                              //         value: paymentMethodeNumberBloc,
+                              //         child: AddCardScreen())
+                              // ));
+                              //  paymentMethodeNumberBloc.addOne();
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+
+                              width: SizeConfig.screenWidth ,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey.shade50,
+                                  border: Border.all(
+                                      color: Colors.black26,
+                                      width: 2
+                                  )
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+
+                                children: [
+
+                                  Icon(Icons.add),
+                                  SizedBox(width: 10,),
+
+                                  Text(S.of(context)!.addCard, style: GoogleFonts.lato(
+                                      color: Colors.black54,
+                                      fontSize: SizeConfig.titleSize * 2.6,
+                                      fontWeight: FontWeight.bold
+                                  )
+                                    ,)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        Center(
+                          child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+                              bloc: _orderBloc,
+                              listener: (context,state)async{
+                                if(state is CreateOrderSuccessState)
+                                {
+                                  snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
+                                  shopCartBloc.startedShop();
+                                }
+                                else if(state is CreateOrderErrorState)
+                                {
+                                  snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
+                                }
+                              },
+                              builder: (context,state) {
+                                bool isLoading = state is CreateOrderLoadingState?true:false;
+                                return AnimatedContainer(
+                                  duration: Duration(milliseconds: 200),
+                                  clipBehavior: Clip.antiAlias,
+                                  height: 8.44 * SizeConfig.heightMulti,
+                                  width:isLoading?60: SizeConfig.screenWidth * 0.8,
+                                  padding: EdgeInsets.all(isLoading?8:0 ),
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  decoration: BoxDecoration(
+                                      color: ColorsConst.mainColor,
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+                                    onPressed: ()  {
+                                      cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+                                      if(cardId ==''){
+                                        Fluttertoast.showToast(
+                                            msg: S.of(context)!.selectCardAlert,
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.TOP,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.white,
+                                            textColor: Colors.black,
+                                            fontSize: 18.0
+                                        );
+                                      }
+                                      else{
+                                        GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+                                       // _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+
+                                      }
+
+                                    },
+                                    child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
+                                        fontSize: SizeConfig.titleSize * 2.7),),
+
+                                  ),
+                                );
+                              }
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.screenHeight * 0.05,)
+                      ],
+                    ),
+                  );
+                }
+            ),
+          ),
+        );
+       }
+                                          // showDialog(
+                                          //     context: context,
+                                          //     builder: (context) {
+                                          //       return ClipRRect(
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(20),
+                                          //         child: AlertDialog(
+                                          //           backgroundColor: Colors
+                                          //               .white
+                                          //               .withOpacity(0.8),
+                                          //           clipBehavior:
+                                          //               Clip.antiAlias,
+                                          //           shape:
+                                          //               RoundedRectangleBorder(
+                                          //             borderRadius:
+                                          //                 BorderRadius.circular(
+                                          //                     20),
+                                          //           ),
+                                          //           content: Container(
+                                          //             height: 70,
+                                          //             width: 90,
+                                          //             child: Center(
+                                          //               child: Text(
+                                          //                 S
+                                          //                     .of(context)!
+                                          //                     .creditComingSoon,
+                                          //                 style:
+                                          //                     GoogleFonts.acme(
+                                          //                         color: Colors
+                                          //                             .green,
+                                          //                         fontWeight:
+                                          //                             FontWeight
+                                          //                                 .bold),
+                                          //               ),
+                                          //             ),
+                                          //           ),
+                                          //         ),
+                                          //       );
+                                          //     });
+                                          //
+                                          // // GeoJson geoJson = GeoJson(
+                                          // //     lat: addressModel.latitude,
+                                          // //     lon: addressModel.longitude);
+                                          // // _orderBloc.addNewOrder(
+                                          // //     product: requestProduct,
+                                          // //     deliveryTimes:
+                                          // //         deliveryTimesGroupValue,
+                                          // //     orderType: vipOrder,
+                                          // //     destination: geoJson,
+                                          // //     addressName:
+                                          // //         addressModel.description,
+                                          // //     phoneNumber: phoneNumber,
+                                          // //     paymentMethod: paymentGroupValue,
+                                          // //     numberOfMonth: numberOfMonth,
+                                          // //     orderValue: orderValue,
+                                          // //     cardId: cardId,
+                                          // // storeId: storeId);
+
+                                         else {
+
                                           GeoJson geoJson = GeoJson(
                                               lat: addressModel.latitude,
                                               lon: addressModel.longitude);
+
+                                          /// Here we fetch the current region of the specified address to find out the source of the request
+                                        orderSource = await _getOrderSourceFromDeliveryLocation(LatLng(addressModel.latitude, addressModel.longitude));
+
+
                                           _orderBloc.addNewOrder(
                                               product: requestProduct,
                                               deliveryTimes:
@@ -2406,15 +2650,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                               cardId: cardId,
                                               storeId: storeId,
                                               note: _noteController.text.trim(),
-                                              orderSource: orderSource);
+                                              orderSource: orderSource!);
                                         }
                                       },
                                       child: Text(
                                         S.of(context)!.orderConfirmation,
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize:
-                                                SizeConfig.titleSize * 2.4),
+                                            fontWeight: FontWeight.w800,
+                                            fontSize:17),
                                       ),
                                     ),
                             );
@@ -2648,7 +2892,7 @@ class AddCardScreenState extends State<AddCardScreen> {
                             print(cardNumber.replaceAll(
                                 RegExp(r"\s+\b|\b\s"), ""));
 
-                            StripeServices stripeServices = StripeServices();
+                            //StripeServices stripeServices = StripeServices();
 
                             AppUser user = await authService.getCurrentUser();
                             // CardModel card ;
@@ -2719,6 +2963,261 @@ class AddCardScreenState extends State<AddCardScreen> {
       cvvCode = creditCardModel.cvvCode;
       isCvvFocused = creditCardModel.isCvvFocused;
     });
+  }
+
+  showPaymentCards()async{
+      //     // showDialog(
+      // //     context: context,
+      // //     builder: (context) {
+      // //       return ClipRRect(
+      // //         borderRadius: BorderRadius.circular(20),
+      // //         child: AlertDialog(
+      // //           backgroundColor:
+      // //               Colors.white.withOpacity(0.8),
+      // //           clipBehavior: Clip.antiAlias,
+      // //           shape: RoundedRectangleBorder(
+      // //             borderRadius: BorderRadius.circular(20),
+      // //           ),
+      // //           content: Container(
+      // //             height: 70,
+      // //             width: 90,
+      // //             child: Center(
+      // //               child: Text(
+      // //                 S.of(context)!.creditComingSoon,
+      // //                 style: GoogleFonts.acme(
+      // //                     color: Colors.green,
+      // //                     fontWeight: FontWeight.bold),
+      // //               ),
+      // //             ),
+      // //           ),
+      // //         ),
+      // //       );
+      // //     });
+      // if(paymentGroupValue ==''){
+      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
+      // }
+      // else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
+      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
+      // }
+      // else if(orderNotComplete){
+      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
+      // }
+      // // else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
+      // //   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+      // //   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+      // // }
+      // else{
+      //     GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+      //     _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+      //
+      // }
+      //
+      //
+      //
+      // /// For Credits Cards
+      // // else
+      // //   showMaterialModalBottomSheet(
+      // //     shape: RoundedRectangleBorder(
+      // //       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+      // //           topRight: Radius.circular(30)
+      // //       ),
+      // //     ),
+      // //     context: context,
+      // //     builder: (context) => SingleChildScrollView(
+      // //       controller: ModalScrollController.of(context),
+      // //       child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+      // //           bloc: paymentMethodeNumberBloc,
+      // //           builder: (context,state) {
+      // //             return Container(
+      // //               padding: EdgeInsets.symmetric(horizontal: 10),
+      // //               height: SizeConfig.screenHeight * 0.8 ,
+      // //               clipBehavior: Clip.antiAlias,
+      // //               decoration: BoxDecoration(
+      // //                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+      // //                     topRight: Radius.circular(30)
+      // //                 ),
+      // //               ),
+      // //               child: Column(
+      // //                 crossAxisAlignment: CrossAxisAlignment.start,
+      // //                 children: [
+      // //                   IconButton(onPressed: (){
+      // //                     Navigator.of(context).pop();
+      // //                   }, icon:Icon(Icons.clear) ),
+      // //                   Text(S.of(context)!.payByCard , style:TextStyle(
+      // //
+      // //                       color: Colors.black54,
+      // //                       fontWeight: FontWeight.bold,
+      // //                       fontSize: SizeConfig.titleSize*2.9
+      // //
+      // //                   ),),
+      // //                   SizedBox(height: 15,),
+      // //                   Container(
+      // //                     margin: EdgeInsets.symmetric(horizontal: 20),
+      // //
+      // //                     child: ListView.separated(
+      // //                       separatorBuilder: (context,index){
+      // //                         return  SizedBox(height: 8,);
+      // //                       },
+      // //                       shrinkWrap:true ,
+      // //                       itemCount: state.cards.length,
+      // //                       itemBuilder: (context,index){
+      // //                         CardModel  card =   state.cards[index];
+      // //                         return   Center(
+      // //                           child: Container(
+      // //                             width: double.infinity,
+      // //                             height: 6.8 * SizeConfig.heightMulti,
+      // //                             decoration: BoxDecoration(
+      // //                                 borderRadius: BorderRadius.circular(10),
+      // //                                 color: Colors.grey.shade50,
+      // //                                 border: Border.all(
+      // //                                     color: Colors.black26,
+      // //                                     width: 2
+      // //                                 )
+      // //                             ),
+      // //                             child: Row(
+      // //                               mainAxisSize: MainAxisSize.min,
+      // //
+      // //                               children: [
+      // //                                 Radio<String>(
+      // //                                   value: card.id,
+      // //                                   groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+      // //                                   onChanged: (value) {
+      // //                                     paymentMethodeNumberBloc.changeSelect(value!);
+      // //                                   },
+      // //                                   activeColor: Colors.green,
+      // //                                 ),
+      // //                                 Icon(Icons.payment),
+      // //                                 SizedBox(width: 10,),
+      // //
+      // //                                 Text(card.cardNumber , style: GoogleFonts.lato(
+      // //                                     color: Colors.black54,
+      // //                                     fontSize: SizeConfig.titleSize * 2.1,
+      // //                                     fontWeight: FontWeight.bold
+      // //                                 ),),
+      // //                                 Spacer(),
+      // //                                 IconButton(onPressed: (){
+      // //                                   paymentMethodeNumberBloc.removeOne(state.cards[index]);
+      // //                                 }, icon: Icon(Icons.delete,color: Colors.red,)),
+      // //
+      // //                               ],
+      // //                             ),
+      // //                           ),
+      // //                         );
+      // //
+      // //                       },
+      // //
+      // //                     ),
+      // //                   ),
+      // //                   SizedBox(height:25,),
+      // //                   Center(
+      // //                     child: GestureDetector(
+      // //                       onTap: (){
+      // //                         Navigator.push(context, MaterialPageRoute(builder: (context)=>
+      // //                             BlocProvider.value(
+      // //                                 value: paymentMethodeNumberBloc,
+      // //                                 child: AddCardScreen())
+      // //                         ));
+      // //                         //  paymentMethodeNumberBloc.addOne();
+      // //                       },
+      // //                       child: Container(
+      // //                         margin: EdgeInsets.symmetric(horizontal: 20),
+      // //
+      // //                         width: SizeConfig.screenWidth ,
+      // //                         height: 6.8 * SizeConfig.heightMulti,
+      // //                         decoration: BoxDecoration(
+      // //                             borderRadius: BorderRadius.circular(10),
+      // //                             color: Colors.grey.shade50,
+      // //                             border: Border.all(
+      // //                                 color: Colors.black26,
+      // //                                 width: 2
+      // //                             )
+      // //                         ),
+      // //                         child: Row(
+      // //                           mainAxisSize: MainAxisSize.min,
+      // //
+      // //                           children: [
+      // //
+      // //                             Icon(Icons.add),
+      // //                             SizedBox(width: 10,),
+      // //
+      // //                             Text(S.of(context)!.addCard, style: GoogleFonts.lato(
+      // //                                 color: Colors.black54,
+      // //                                 fontSize: SizeConfig.titleSize * 2.6,
+      // //                                 fontWeight: FontWeight.bold
+      // //                             )
+      // //                               ,)
+      // //                           ],
+      // //                         ),
+      // //                       ),
+      // //                     ),
+      // //                   ),
+      // //                   Spacer(),
+      // //                   Center(
+      // //                     child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+      // //                         bloc: _orderBloc,
+      // //                         listener: (context,state)async{
+      // //                           if(state is CreateOrderSuccessState)
+      // //                           {
+      // //                             snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
+      // //                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
+      // //                             shopCartBloc.startedShop();
+      // //                           }
+      // //                           else if(state is CreateOrderErrorState)
+      // //                           {
+      // //                             snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
+      // //                           }
+      // //                         },
+      // //                         builder: (context,state) {
+      // //                           bool isLoading = state is CreateOrderLoadingState?true:false;
+      // //                           return AnimatedContainer(
+      // //                             duration: Duration(milliseconds: 200),
+      // //                             clipBehavior: Clip.antiAlias,
+      // //                             height: 8.44 * SizeConfig.heightMulti,
+      // //                             width:isLoading?60: SizeConfig.screenWidth * 0.8,
+      // //                             padding: EdgeInsets.all(isLoading?8:0 ),
+      // //                             margin: EdgeInsets.symmetric(horizontal: 20),
+      // //                             decoration: BoxDecoration(
+      // //                                 color: ColorsConst.mainColor,
+      // //                                 borderRadius: BorderRadius.circular(10)
+      // //                             ),
+      // //                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+      // //                               onPressed: () {
+      // //                                 cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+      // //                                 if(cardId ==''){
+      // //                                   Fluttertoast.showToast(
+      // //                                       msg: S.of(context)!.selectCardAlert,
+      // //                                       toastLength: Toast.LENGTH_LONG,
+      // //                                       gravity: ToastGravity.TOP,
+      // //                                       timeInSecForIosWeb: 1,
+      // //                                       backgroundColor: Colors.white,
+      // //                                       textColor: Colors.black,
+      // //                                       fontSize: 18.0
+      // //                                   );
+      // //                                 }
+      // //                                 else{
+      // //                                   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+      // //                                   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+      // //
+      // //                                 }
+      // //
+      // //                               },
+      // //                               child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
+      // //                                   fontSize: SizeConfig.titleSize * 2.7),),
+      // //
+      // //                             ),
+      // //                           );
+      // //                         }
+      // //                     ),
+      // //                   ),
+      // //                   SizedBox(height: SizeConfig.screenHeight * 0.05,)
+      // //                 ],
+      // //               ),
+      // //             );
+      // //           }
+      // //       ),
+      // //     ),
+      // //   );
+      // //  }
   }
 }
 

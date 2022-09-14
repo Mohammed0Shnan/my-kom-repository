@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_kom/consts/utils_const.dart';
@@ -21,8 +24,7 @@ import 'package:my_kom/generated/l10n.dart';
 
 class PriductDetailScreen extends StatefulWidget {
 
-   PriductDetailScreen(
-      { Key? key});
+
   @override
   State<PriductDetailScreen> createState() => _PriductDetailScreenState();
 }
@@ -71,7 +73,7 @@ addRemoveBloc.close();
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconWidget(icon:Icons.arrow_back, onPress: (){
+                          IconWidget(icon:Platform.isIOS? Icons.arrow_back_ios: Icons.arrow_back, onPress: (){
                             Navigator.pop(context);
                           }),
                           BlocBuilder<ShopCartBloc,CartState>(
@@ -80,8 +82,8 @@ addRemoveBloc.close();
 
                                 return Container(
                                   alignment: Alignment.center,
-                                  width:SizeConfig.heightMulti *7,
-                                  height: SizeConfig.heightMulti *7,
+                                  width:40,
+                                  height: 40,
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white.withOpacity(0.8)
@@ -158,7 +160,7 @@ addRemoveBloc.close();
                         UtilsConst.lang == 'en'?productModel.title:productModel.title2
                         ,style: GoogleFonts.lato(
                             fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.titleSize * 3,
+                            fontSize: 20,
                             color: Colors.black87
 
                         )
@@ -173,7 +175,7 @@ addRemoveBloc.close();
                           children: [
                             SizedBox(height: 20,),
                             Text(S.of(context)!.description,style: TextStyle(
-                                fontSize: SizeConfig.titleSize * 2.2,
+                                fontSize: 18,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w600),),
                             SizedBox(height: 10,),
@@ -207,7 +209,7 @@ addRemoveBloc.close();
 
                             Container(
                                 width: SizeConfig.widhtMulti * 25
-                                ,height: 5 * SizeConfig.heightMulti
+                                ,height:30
                                 ,  child: LayoutBuilder(
                               builder:
                                   (BuildContext context, BoxConstraints constraints) {
@@ -240,7 +242,7 @@ addRemoveBloc.close();
                                                 },
                                                 icon: Icon(
                                                   Icons.remove,
-                                                  size: SizeConfig.imageSize * 5,
+                                                  size: 18,
                                                   color: Colors.white,
                                                 )),
                                           ),
@@ -265,7 +267,7 @@ addRemoveBloc.close();
                                                   },
                                                   icon: Icon(
                                                     Icons.add,
-                                                    size: SizeConfig.imageSize * 5,
+                                                    size: 18,
                                                     color: Colors.white,
                                                   )),
                                             ),
@@ -280,7 +282,7 @@ addRemoveBloc.close();
                             Text('${productModel.price}  AED',
                               style: GoogleFonts.lato(
                                   color: ColorsConst.mainColor,
-                                  fontSize: SizeConfig.titleSize * 2.3,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold
                               ),
                             ),
@@ -290,7 +292,7 @@ addRemoveBloc.close();
                         Builder(
                           builder:(context)=> Container(
                             clipBehavior: Clip.antiAlias,
-                            height: 6 * SizeConfig.heightMulti,
+                            height:40,
                             decoration: BoxDecoration(
                                 color: ColorsConst.mainColor,
                                 borderRadius: BorderRadius.circular(10)),
@@ -336,7 +338,7 @@ addRemoveBloc.close();
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: SizeConfig.titleSize * 2.2),
+                                        fontSize: 17),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -358,8 +360,8 @@ addRemoveBloc.close();
             return Scaffold(body: NoDataForDisplayWidget());
           }else{
           return  Scaffold(
-            body: Center(child: Container(height: 40,width: 40,
-              child: CircularProgressIndicator(color: ColorsConst.mainColor,),
+            body: Center(child: Container(height: 35,width: 35,
+              child:Platform.isIOS? CupertinoActivityIndicator(): CircularProgressIndicator(color: ColorsConst.mainColor,),
               ),),
           );
           }

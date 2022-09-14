@@ -13,7 +13,7 @@ class MessageLookup extends MessageLookupByLibrary {
     /// login page
     "login": MessageLookupByLibrary.simpleMessage("دخول"),
     "email": MessageLookupByLibrary.simpleMessage("الايميل"),
-    "password": MessageLookupByLibrary.simpleMessage("كلمة السر"),
+    "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "createAccount": MessageLookupByLibrary.simpleMessage("انشاء حساب"),
     "confirmPassword": MessageLookupByLibrary.simpleMessage("تأكيد كلمة المرور"),
     "signInToContinue": MessageLookupByLibrary.simpleMessage("سجل دخول للمتابعة"),
@@ -55,7 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     /// Home Page
     "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "orders": MessageLookupByLibrary.simpleMessage("الطلبات"),
-    "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+    "profile": MessageLookupByLibrary.simpleMessage("بروفايل"),
     "ship": MessageLookupByLibrary.simpleMessage("السلة"),
     "more": MessageLookupByLibrary.simpleMessage("المزيد"),
     "deliveryTo": MessageLookupByLibrary.simpleMessage("التوصيل الى"),
@@ -64,7 +64,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notLoggedIN": MessageLookupByLibrary.simpleMessage("انت غير مشترك في \n MyKom"),
     "refresh": MessageLookupByLibrary.simpleMessage("تحديث"),
     "determineLocation": MessageLookupByLibrary.simpleMessage("تعذر تحديد الموقع ، حدد الموقع يدويًا"),
-
+    "recommended": MessageLookupByLibrary.simpleMessage("موصى به"),
+    "companies": MessageLookupByLibrary.simpleMessage("الشركات"),
+    "all": MessageLookupByLibrary.simpleMessage("الكل"),
 
     /// Setting Page
     "settings": MessageLookupByLibrary.simpleMessage("الاعدادات"),

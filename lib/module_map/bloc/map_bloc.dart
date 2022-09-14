@@ -35,7 +35,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     });
   }
 
-  getSubArea(){
+  getSubArea()async{
     this.add(MapLoadingEvent());
     service.getSubAreaPosition(null).then((value) {
       if(value == null)
@@ -54,7 +54,7 @@ class MapBloc extends Bloc<MapEvents, MapStates> {
     this.add(MapSuccessEvent(map,false));
   }
 
-  Future<void> getGesturePosition(LatLng latLng ,String description) async {
+  getGesturePosition(LatLng latLng ,String description)  {
     this.add(MapGestureSuccessEvent(MapData(latitude: latLng.latitude,longitude: latLng.longitude,name:description,message: 'success',isError: false)));
   }
 
@@ -163,4 +163,4 @@ class MapData{
 
 }
 
-MapBloc mapBloc = MapBloc();
+//MapBloc mapBloc = MapBloc();

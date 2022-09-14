@@ -224,7 +224,7 @@ class Page extends StatelessWidget {
                     Text(
                       infoTitle,
                       style: GoogleFonts.lato(
-                        fontSize: SizeConfig.titleSize * 3.5,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87
 
@@ -239,7 +239,7 @@ class Page extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: GoogleFonts.lato(
 
-                          fontSize: SizeConfig.titleSize * 2.4,
+                          fontSize:16.0,
                           fontWeight: FontWeight.w600,
                           color: Colors.black54
 

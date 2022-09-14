@@ -35,7 +35,7 @@ class NewOrderBloc extends Bloc<CreateOrderEvent,CreateOrderStates> {
   //  //  });
   // }
 
-  void addNewOrder({required String? orderSource,required String note,required String storeId,required List<ProductModel>  product ,required int numberOfMonth,required String addressName, required String deliveryTimes,
+  void addNewOrder({required String orderSource,required String note,required String storeId,required List<ProductModel>  product ,required int numberOfMonth,required String addressName, required String deliveryTimes,
   required bool orderType , required GeoJson destination, required String phoneNumber,required String paymentMethod,
     required  double orderValue , required String cardId
   }) {

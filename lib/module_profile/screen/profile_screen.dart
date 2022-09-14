@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<IsLogginCubit,IsLogginCubitState>(
         bloc: isLogginCubit,
-        listener: (context,state){
+        listener: (ccontext,state){
       if(state ==IsLogginCubitState.LoggedIn)
         {
           if(userId == null){
@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         }
       if(state == IsLogginCubitState.NotLoggedIn)
-        loginCheakAlertWidget(context);
+        loginCheakAlertWidget(ccontext);
     },
     builder: (context,state){
     if(state == IsLogginCubitState.LoggedIn){

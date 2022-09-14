@@ -1269,6 +1269,37 @@ class S {
     );
   }
 
+  /// `Companies`
+  String get companies {
+    return Intl.message(
+      'Companies',
+      name: 'companies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get all {
+    return Intl.message(
+      'All',
+      name: 'all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommended `
+  String get recommended {
+    return Intl.message(
+      'Recommended',
+      name: 'recommended',
+      desc: '',
+      args: [],
+    );
+  }
+
+
   /// `Credit Card`
   String get creditCard {
     return Intl.message(

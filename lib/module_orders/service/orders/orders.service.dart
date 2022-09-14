@@ -1,33 +1,24 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
+
 import 'package:my_kom/consts/order_status.dart';
 import 'package:my_kom/consts/payment_method.dart';
-import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
-import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/repository/order_repository/order_repository.dart';
-import 'package:my_kom/module_orders/request/accept_order_request/accept_order_request.dart';
 import 'package:my_kom/module_orders/request/order/order_request.dart';
-import 'package:my_kom/module_orders/request/update_order_request/update_order_request.dart';
-import 'package:my_kom/module_orders/response/branch.dart';
 import 'package:my_kom/module_orders/response/order_details/order_details_response.dart';
 import 'package:my_kom/module_orders/response/order_status/order_status_response.dart';
 import 'package:my_kom/module_orders/response/orders/orders_response.dart';
-import 'package:my_kom/module_orders/utils/status_helper/status_helper.dart';
-import 'package:my_kom/module_shoping/service/payment_service.dart';
 import 'package:my_kom/module_shoping/service/purchers_service.dart';
-import 'package:my_kom/module_shoping/service/stripe.dart';
 import 'package:rxdart/rxdart.dart';
-
+import "package:collection/collection.dart";
 class OrdersService {
   //final ProfileService _profileService;
   final  OrderRepository _orderRepository = OrderRepository();
   final AuthPrefsHelper _authPrefsHelper = AuthPrefsHelper();
-  final StripeServices _stripeServices = StripeServices();
+  //final StripeServices _stripeServices = StripeServices();
  final  PurchaseServices _purchaseServices = PurchaseServices();
 
   final PublishSubject<Map<String,List<OrderModel>>?> orderPublishSubject =
@@ -133,15 +124,15 @@ class OrdersService {
     String? uId = await _authPrefsHelper.getUserId();
     String? customername = await _authPrefsHelper.getUsername();
     DateTime date = DateTime.now();
-    // if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
-    //  bool paymentResult =  await PaymentService().paymentByPaypal(amount: amount, displayName: customername!);
-    //
-    //  /// An error occurred in the payment process
-    //  /// Throw Exception
-    //  if(!paymentResult){
-    //    throw Exception();
-    //  }
-    // }
+    if(paymentMethod == PaymentMethodConst.CREDIT_CARD){
+    //  await PaymentService().processPayment(paymentMethodID: '',amount:  1000.0);
+
+     /// An error occurred in the payment process
+     /// Throw Exception
+     // if(!paymentResult){
+     //   throw Exception();
+     // }
+    }
 
     late CreateOrderRequest orderRequest;
 
@@ -151,14 +142,21 @@ class OrdersService {
     int? customer_order_id = await _orderRepository.generateOrderID();
 
     if(!reorder){
+
       Map<ProductModel,int> productsMap = Map<ProductModel,int>();
-      products.forEach((element) {
-        if(!productsMap.containsKey(element)){
-          productsMap[element]= 1;
-        }
-        else{
-          productsMap[element] = productsMap[element]! + 1;
-        }
+
+      // products.forEach((element) {
+      //   if(!productsMap.containsKey(element)){
+      //     productsMap[element]= 1;
+      //   }
+      //   else{
+      //     productsMap[element] = productsMap[element]! + 1;
+      //   }
+      // });
+
+      Map<String , List<ProductModel>> _gruoped_products_list =   groupBy(products, (ProductModel p0) =>p0.id);
+      _gruoped_products_list.forEach((key, value) {
+        productsMap[value.first] = value.length;
       });
 
       List<ProductModel> newproducts = [];
@@ -167,7 +165,6 @@ class OrdersService {
 
       productsMap.forEach((key, value) {
        key.orderQuantity = value;
-
         description = description + key.orderQuantity.toString() + ' '+ key.title + ' + ';
         newproducts.add(key);
         products_ides.add(key.id);

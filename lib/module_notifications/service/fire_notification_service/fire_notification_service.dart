@@ -39,6 +39,7 @@ class FireNotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+
     );
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
