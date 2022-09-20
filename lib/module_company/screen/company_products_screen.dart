@@ -311,6 +311,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
       );
     } else {
 
+          String _currency = UtilsConst.lang == 'en' ? 'AED':'د.إ';
             return AnimationLimiter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -419,7 +420,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                 color: Colors.white,
                                                                 fontWeight:
                                                                 FontWeight.w500,
-                                                                fontSize: 16),
+                                                                fontSize: 15.5),
                                                           ),
                                                         )):Positioned(
                                                         top: 0,
@@ -453,7 +454,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 8,),
+                                            SizedBox(height: 4,),
 
                                             /// The price section
                                             Container(
@@ -467,7 +468,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                         child: Text(
                                                     items[index]
                                                           .old_price
-                                                          .toString(),
+                                                          .toString()+ " "+_currency,
                                                     overflow:
                                                     TextOverflow
                                                           .ellipsis,
@@ -480,7 +481,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                           fontWeight:
                                                           FontWeight
                                                               .w700,
-                                                          fontSize:15),
+                                                          fontSize:11.5),
                                                   ),
                                                       )
                                                       : SizedBox.shrink(),
@@ -489,39 +490,41 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                     child: Text(
                                                       items[index]
                                                           .price
-                                                          .toString(),
+                                                          .toString() + " "+_currency ,
                                                       overflow: TextOverflow
                                                           .ellipsis,
                                                       style: TextStyle(
                                                           color: Colors.green,
                                                           fontWeight:
                                                           FontWeight.w700,
-                                                          fontSize: 17),
+                                                          fontSize: 13.5),
                                                     ),
                                                   ),
 
                                                 ],
                                               ),
                                             ),
-                                            SizedBox(height: 4,),
+
                                             /// The name section
                                             AspectRatio(
-                                              aspectRatio: 5,
+                                              aspectRatio: 4.5,
                                               child: Container(
                                                 // height: 40,
                                                 padding: EdgeInsets.symmetric(horizontal:8),
                                                 child: Row(
                                                   children: [
                                                     Expanded(
+
                                                       child: Padding(
                                                         padding: EdgeInsets.symmetric(horizontal: 5),
                                                         child: Text(
                                                           UtilsConst.lang == 'en'?
                                                           items[index].title:
                                                           items[index].title2,
+
                                                           maxLines: 2,
                                                           style: TextStyle(
-                                                              fontSize: 14,
+                                                              fontSize: 13,
                                                               fontWeight:
                                                               FontWeight.w700,
                                                               color: Colors.black54,
@@ -547,10 +550,10 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                             ),
                                             ///
                                             SizedBox(
-                                              height:4,
+                                              height:8,
                                             ),
                                             AspectRatio(
-                                              aspectRatio: 5.8,
+                                              aspectRatio: 6.5,
                                               child: Container(
                                                  margin: EdgeInsets.symmetric(horizontal: 4),
                                                  // height: 30,
@@ -619,7 +622,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                                          bloc:addRemoveBloc ,
                                                                          builder: (context,state){
                                                                            return  Container(
-                                                                             child: Text( state.toString(),style: TextStyle(fontWeight: FontWeight.w500,),),
+                                                                             child: Text( state.toString(),style: TextStyle(fontWeight: FontWeight.w500,fontSize: 12.0),),
                                                                            );
                                                                          }),
                                                                      Container(
@@ -658,6 +661,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                      SizedBox(width: 8,),
                                                      SizedBox(
                                                        // height: 10,
+
                                                        child: ElevatedButton
                                                            .icon(
 
@@ -706,7 +710,6 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                                                  ),
                                                ),
                                             ),
-                                           // SizedBox(height: 4,)
                                           ],
                                         ),
                                       ),

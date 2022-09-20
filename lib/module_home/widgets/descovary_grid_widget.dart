@@ -26,6 +26,7 @@ class DescoveryGridWidget extends StatelessWidget {
     } else {
       return AnimationLimiter(
         child: GridView.count(
+          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
             crossAxisCount: 4,
             crossAxisSpacing: 12,

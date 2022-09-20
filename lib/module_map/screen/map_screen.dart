@@ -293,6 +293,7 @@ class _MapScreenState extends State<MapScreen> {
                         child: Container(
                           height: 35.0,
                           child: TextButton(
+
                             onPressed: () {
                               if (location_from_search != null) {
                                 LatLng latLan =
@@ -319,16 +320,18 @@ class _MapScreenState extends State<MapScreen> {
                                 }
                               }
                             },
-                            child: Text(
-                              register == null
-                                  ? ''
-                                  : register!
-                                      ? S.of(context)!.mapSave
-                                      : S.of(context)!.mapDelivery,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500),
+                            child: Center(
+                              child: Text(
+                                register == null
+                                    ? ''
+                                    : register!
+                                        ? S.of(context)!.mapSave
+                                        : S.of(context)!.mapDelivery,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                         ),

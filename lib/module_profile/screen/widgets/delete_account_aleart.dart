@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_profile/bloc/profile_bloc.dart';
+import 'package:my_kom/generated/l10n.dart';
 
 deleteAccountAlertWidget(context,ProfileBloc bloc){
   // set up the AlertDialog
@@ -24,14 +25,14 @@ deleteAccountAlertWidget(context,ProfileBloc bloc){
 
           SizedBox(height: 25,),
 
-          Center(child: Text('Do you want to delete your account ?',textAlign: TextAlign.center,style: GoogleFonts.lato(
+          Center(child: Text(S.of(context)!.titleDeleteAccountAlert,textAlign: TextAlign.center,style: GoogleFonts.lato(
               fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black87
           ),)),
           SizedBox(height: 8,),
           Center(child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Note: When you delete your account, you will lose your personal data on the MyKom app.',textAlign: TextAlign.center,style: GoogleFonts.lato(
-                fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black54
+            child: Text(S.of(context)!.subTitleDeleteAccountAlert,textAlign: TextAlign.center,style: GoogleFonts.lato(
+                fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black54
             ),),
           )),
           SizedBox(height: 16,),
@@ -58,7 +59,7 @@ deleteAccountAlertWidget(context,ProfileBloc bloc){
                         width: 2
                       )
                     ),
-                    child: Center(child: Text('Cancel',style: TextStyle(color: Colors.black87,fontSize:15,fontWeight: FontWeight.bold),))),
+                    child: Center(child: Text(S.of(context)!.cancelAccountDeleteAlertButton,style: TextStyle(color: Colors.black87,fontSize:14.0,fontWeight: FontWeight.bold),))),
 
               ),
               MaterialButton(
@@ -69,10 +70,10 @@ deleteAccountAlertWidget(context,ProfileBloc bloc){
                   EasyLoading.show();
                   bloc.deleteMyAccount().then((value) {
                     if(value){
-                      EasyLoading.showSuccess('The account has been deleted successfully');
+                      EasyLoading.showSuccess(S.of(context)!.successDeleteAccount);
                       Navigator.pushNamedAndRemoveUntil(context, AuthorizationRoutes.LOGIN_SCREEN, (route) => false);
                     }else{
-                      EasyLoading.showError('An error occurred !');
+                      EasyLoading.showError(S.of(context)!.errorDeleteAccount);
 
                     }
                   });
@@ -92,7 +93,7 @@ deleteAccountAlertWidget(context,ProfileBloc bloc){
                       color: Colors.white,
 
                     ),
-                    child: Center(child: Text('Delete',style: TextStyle(color: Colors.red,fontSize:15,fontWeight: FontWeight.bold),))),
+                    child: Center(child: Text(S.of(context)!.deleteAccountAlertButton,style: TextStyle(color: Colors.red,fontSize:14.0,fontWeight: FontWeight.bold),))),
 
               ),
             ],

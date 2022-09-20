@@ -274,7 +274,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     elevation: 0,
                     title: Text(S.of(context)!.shoppingCart,
                         style: GoogleFonts.lato(
-                            fontSize: 23,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.black54)),
                   ),
@@ -364,7 +364,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: TextStyle(
                                             color: ColorsConst.mainColor,
                                             fontWeight: FontWeight.w600,
-                                            fontSize:16)),
+                                            fontSize:14)),
                                     SizedBox(
                                       height: 6,
                                     ),
@@ -372,7 +372,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: TextStyle(
                                             color: Colors.black54,
                                             fontWeight: FontWeight.w500,
-                                            fontSize:13))
+                                            fontSize:11))
                                   ],
                                 ),
                               ),
@@ -488,14 +488,19 @@ class _ShopScreenState extends State<ShopScreen> {
                                       ? productModel.title
                                       : productModel.title2,
                                   style: TextStyle(
-                                      fontSize:16,
+                                      fontSize:15.0,
                                       fontWeight: FontWeight.w600),
                                 ),
-                                Text('${productModel.quantity} حبة \ الكرتون'),
+                                Text('${productModel.quantity}'+' '+  UtilsConst.lang == 'en'?'pcs':'حبة', style: TextStyle(
+                                    fontSize:13.0,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w600)),
                                 Text(
-                                  '${productModel.price} AED',
+                                  '${productModel.price}'+' '+ UtilsConst.lang == 'en'?'AED':'د.إ',
                                   style:
-                                      TextStyle(color: ColorsConst.mainColor),
+                                      TextStyle(color: ColorsConst.mainColor ,
+                                        fontSize: 14
+                                        ),
                                 )
                               ]),
                         ),
@@ -792,7 +797,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: 140,
+                height: 110,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -817,8 +822,8 @@ class _ShopScreenState extends State<ShopScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              height: 32,
-                              width: 32,
+                              height: 25.0,
+                              width: 25.0,
                               padding: EdgeInsets.all(2),
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -844,7 +849,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black87,
-                                  fontSize: 15),
+                                  fontSize: 13),
                             ),
                           ],
                         ),
@@ -864,7 +869,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                               BorderRadius.circular(20),
                                         ),
                                         content: Container(
-                                          height: SizeConfig.screenHeight * 0.4,
+                                          height: 120.0,
                                           width: SizeConfig.screenWidth,
                                           child: Center(
                                               child: Column(
@@ -893,7 +898,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                           .bookmark,
                                                                       color: Colors
                                                                           .blue,
-                                                                      size: 25,
+                                                                      size: 22,
                                                                     ),
                                                                     SizedBox(
                                                                       height: 8,
@@ -907,7 +912,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                                               .black87,
                                                                           fontWeight: FontWeight
                                                                               .w600,
-                                                                          fontSize:15),
+                                                                          fontSize:13),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1050,9 +1055,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color: Colors.blue,
-                                                            fontSize: SizeConfig
-                                                                    .titleSize *
-                                                                1.8)),
+                                                            fontSize: 13.0)),
                                                   ),
                                                 ],
                                               )
@@ -1063,7 +1066,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     );
                                   });
                             },
-                            child: Text(S.of(context)!.change))
+                            child: Text(S.of(context)!.change,style: TextStyle(fontSize: 11.0),))
                       ],
                     ),
                     Row(
@@ -1072,6 +1075,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Icon(
                           Icons.location_on_outlined,
                           color: Colors.blue,
+                          size: 16.0,
                         ),
                         SizedBox(
                           width: 5,
@@ -1081,7 +1085,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black45,
-                              fontSize: 14),
+                              fontSize: 11.0),
                         ),
                         SizedBox(
                           width: 10,
@@ -1091,27 +1095,32 @@ class _ShopScreenState extends State<ShopScreen> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    controller: _newAddressController,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600]),
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      //S.of(context).name,
+                                  child: SizedBox(
+                                    height: 10,
+                                    child: TextFormField(
+                                      readOnly: true,
+                                      controller: _newAddressController,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 11.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600]),
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+                                        border: InputBorder.none,
+                                        //S.of(context).name,
+                                      ),
+                                      textInputAction: TextInputAction.next,
+                                      // Move focus to next
                                     ),
-                                    textInputAction: TextInputAction.next,
-                                    // Move focus to next
                                   ),
                                 ),
 
                                 Container(
-                                  height: 38,
-                                  width: 38,
-                                  padding: EdgeInsets.all(8),
+                                  height: 25.0,
+                                  width: 25.0,
+                                  margin: EdgeInsets.symmetric(horizontal: 8),
+                                  padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                   ),
@@ -1121,7 +1130,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       builder: (context, state) {
                                         if (state is CheckAddressLoadingState)
                                           return Padding(
-                                            padding: const EdgeInsets.all(4.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: CircularProgressIndicator(
                                               color: ColorsConst.mainColor,
                                             ),
@@ -1137,7 +1146,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                   child: Icon(
                                                 Icons.error,
                                                 color: Colors.white,
-                                                size: 18,
+                                                size: 16.0,
                                               )));
                                         } else if (state
                                             is CheckAddressSuccessState) {
@@ -1171,6 +1180,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Icon(
                           Icons.phone,
                           color: Colors.blue,
+                          size: 13.0,
                         ),
                         SizedBox(
                           width: 5,
@@ -1180,27 +1190,28 @@ class _ShopScreenState extends State<ShopScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black45,
-                              fontSize: 14),
+                              fontSize: 11.0),
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: SizedBox(
-                            height: 20,
+                            height: 12,
                             child: TextFormField(
                               controller: _phoneController,
 
                               style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 10.0,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey[600]),
 
                               decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
                                 suffixIcon: Icon(
                                   Icons.edit,
                                   color: Colors.black,
-                                  size: 18,
+                                  size: 13.0,
                                 ),
                                 border: InputBorder.none,
                                 //S.of(context).name,
@@ -1215,9 +1226,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+
 
               ///  Address Worn
               BlocConsumer<CheckAddressBloc, CheckAddressStates>(
@@ -1240,9 +1249,10 @@ class _ShopScreenState extends State<ShopScreen> {
                   builder: (context, state) {
                     if (state is CheckAddressErrorState) {
                       return Container(
+                          height: 24.0,
                           width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.widhtMulti * 5),
+                          margin: EdgeInsets.only(left:  SizeConfig.widhtMulti * 5 , right:   SizeConfig.widhtMulti * 5 , top: 8),
+
                           padding: EdgeInsets.symmetric(vertical: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
@@ -1252,13 +1262,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               child: Text(S.of(context)!.destinationAlert,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.lato(
-                                      fontSize: 12,
+                                      fontSize: 10.0,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.red))));
                     } else if (state is CheckAddressSuccessState) {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: MaterialButton(
+                          height: 20.0,
                             elevation: 1,
                             onPressed: () {
                               /// Save Location
@@ -1400,7 +1411,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         : S.of(context)!.saveAnotherAddress,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.lato(
-                                        fontSize: 12,
+                                        fontSize: 10.0,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.green)),
                                 SizedBox(
@@ -1411,7 +1422,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       ? Icons.check
                                       : Icons.bookmark_outline,
                                   color: Colors.green,
-                                  size: 19,
+                                  size: 17,
                                 ),
                               ],
                             ))),
@@ -1436,7 +1447,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         return Container(
                           margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.all(8),
-                          height: 170,
+                          height: 130.0,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -1460,8 +1471,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    height: 32,
-                                    width: 32,
+                                    height: 25.0,
+                                    width: 25.0,
                                     padding: EdgeInsets.all(2),
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
@@ -1480,8 +1491,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                     width: 10,
                                   ),
                                   Text(S.of(context)!.myKomExpressService,
-                                      style: GoogleFonts.lato(
-                                          fontSize: 15,
+                                      style: TextStyle(
+                                          fontSize: 13.0,
                                           fontWeight: FontWeight.w800,
                                           color: Colors.black87)),
                                 ],
@@ -1492,7 +1503,7 @@ class _ShopScreenState extends State<ShopScreen> {
                               Text(
                                 S.of(context)!.myKomExpressServiceMessageEnable,
                                 style: GoogleFonts.lato(
-                                    fontSize: 14,
+                                    fontSize: 11.0,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black54),
                               ),
@@ -1506,8 +1517,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                   Text(
                                     S.of(context)!.myKomExpress,
                                     style: GoogleFonts.lato(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w800,
+                                        fontSize: 10.0,
+                                        fontWeight: FontWeight.bold,
                                         color: Colors.black54),
                                   ),
                                   SizedBox(
@@ -1516,13 +1527,12 @@ class _ShopScreenState extends State<ShopScreen> {
 
                                       width: 60,
                                       height:20.0,
-                                      valueFontSize: 15.0,
+                                      valueFontSize: 12.0,
                                       toggleSize: 20.0,
                                       value: vipOrder,
                                       borderRadius: 30.0,
                                       padding: 1,
                                       showOnOff: true,
-
                                       onToggle: (val) {
                                               setState(() {
                                                 vipOrder = val;
@@ -1547,7 +1557,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         return Container(
                           margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.all(8),
-                          height: 140,
+                          height: 100.0,
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.4),
@@ -1559,8 +1569,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    height:32,
-                                    width: 32,
+                                    height:25.0,
+                                    width: 25.0,
                                     clipBehavior: Clip.antiAlias,
                                     padding: EdgeInsets.all(2),
                                     decoration: BoxDecoration(
@@ -1583,8 +1593,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                   ),
                                   Text(S.of(context)!.myKomExpressService,
                                       style: GoogleFonts.lato(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w800,
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.bold,
                                           color: Colors.black54)),
                                 ],
                               ),
@@ -1596,7 +1606,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     .of(context)!
                                     .myKomExpressServiceMessageDisable,
                                 style: GoogleFonts.lato(
-                                    fontSize: 14,
+                                    fontSize: 11.0,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black54),
                               ),
@@ -1610,7 +1620,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   Text(
                                     S.of(context)!.myKomExpress,
                                     style: GoogleFonts.lato(
-                                        fontSize: 14,
+                                        fontSize: 10.0,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54),
                                   ),
@@ -1619,7 +1629,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       disabled: true,
                                       width: 60,
                                       height:20.0,
-                                      valueFontSize: 15.0,
+                                      valueFontSize: 12.0,
                                       toggleSize: 20.0,
                                       value: vipOrder,
                                       borderRadius: 30.0,
@@ -1650,6 +1660,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
               /// Note
               Container(
+
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
                 width: double.maxFinite,
@@ -1676,8 +1687,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: 32,
-                          width: 32,
+                          height: 25.0,
+                          width: 25.0,
                           padding: EdgeInsets.all(2),
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
@@ -1693,7 +1704,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                   child: Icon(
                                 Icons.note_add,
                                 color: Colors.blue,
-                                size: 20,
+                                size: 11.0,
                               ))),
                         ),
                         SizedBox(
@@ -1704,7 +1715,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.w800,
                               color: Colors.black87,
-                              fontSize:15),
+                              fontSize:13),
                         ),
 
                       ],
@@ -1714,10 +1725,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                     TextFormField(
                       controller: _noteController,
-                      minLines: 3,
-                      maxLines: 5,
+                      minLines: 2,
+                      maxLines: 4,
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12.5,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[600]),
                       decoration: InputDecoration(
@@ -1725,7 +1736,7 @@ class _ShopScreenState extends State<ShopScreen> {
                           hintText: S.of(context)!.noteMessage,
 
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black26,fontSize: 12)
+                          hintStyle: TextStyle(color: Colors.black26,fontSize: 11)
                           //S.of(context).name,
                           ),
 
@@ -1832,7 +1843,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: 150,
+                height: 130.0,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -1861,8 +1872,8 @@ class _ShopScreenState extends State<ShopScreen> {
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.blue, width: 2)),
                           child: Container(
-                            height: 32,
-                            width: 32,
+                            height: 25.0,
+                            width: 25.0,
                             margin: EdgeInsets.all(2),
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
@@ -1878,8 +1889,8 @@ class _ShopScreenState extends State<ShopScreen> {
                           width: 10,
                         ),
                         Text(S.of(context)!.paymentSummary,
-                            style: GoogleFonts.lato(
-                                fontSize: 15,
+                            style: TextStyle(
+                                fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black87)),
                       ],
@@ -1893,7 +1904,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.total,
                           style: GoogleFonts.lato(
-                              fontSize:14,
+                              fontSize:11,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1903,14 +1914,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               if (state is CartLoaded) {
                                 return Text(state.cart.totalString,
                                     style: GoogleFonts.lato(
-                                        fontSize: 14,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize:14));
+                                        fontSize:11));
                               }
                             }),
                       ],
@@ -1924,7 +1935,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.extraCharge,
                           style: GoogleFonts.lato(
-                              fontSize: 14,
+                              fontSize: 11,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1934,14 +1945,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               if (state is CartLoaded) {
                                 return Text(vipOrderValue.toString(),
                                     style: GoogleFonts.lato(
-                                        fontSize: 14,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize: 14));
+                                        fontSize: 11));
                               }
                             }),
                       ],
@@ -1955,7 +1966,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         Text(
                           S.of(context)!.orderValue,
                           style: GoogleFonts.lato(
-                              fontSize: 14,
+                              fontSize: 11,
                               fontWeight: FontWeight.w800,
                               color: Colors.black54),
                         ),
@@ -1970,14 +1981,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                 orderValue = total;
                                 return Text(total.toString(),
                                     style: GoogleFonts.lato(
-                                        fontSize:14,
+                                        fontSize:11,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black54));
                               } else {
                                 return Text('',
                                     style: TextStyle(
                                         color: Colors.black54,
-                                        fontSize: 14));
+                                        fontSize: 11));
                               }
                             }),
                       ],
@@ -1987,7 +1998,7 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
 
               SizedBox(
-                height: 10,
+                height: 8,
               ),
 
               /// Payment Summary Worn
@@ -2021,7 +2032,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         child: Text(
                                             '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
                                             style: GoogleFonts.lato(
-                                                fontSize:12.0,
+                                                fontSize:11.0,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.red))))));
                       } else
@@ -2032,7 +2043,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   }),
 
               SizedBox(
-                height: 16,
+                height: 8,
               ),
 
               /// Payment Method
@@ -2040,7 +2051,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: 165,
+                height: 140.0,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -2064,8 +2075,8 @@ class _ShopScreenState extends State<ShopScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: 32,
-                          width: 32,
+                          height: 25.0,
+                          width: 25.0,
                           padding: EdgeInsets.all(2),
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
@@ -2079,8 +2090,8 @@ class _ShopScreenState extends State<ShopScreen> {
                           width: 10,
                         ),
                         Text(S.of(context)!.paymentMethods,
-                            style: GoogleFonts.lato(
-                                fontSize: 15,
+                            style: TextStyle(
+                                fontSize: 13.0,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black87)),
                       ],
@@ -2108,7 +2119,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 : 0,
                             child: Container(
                               width: SizeConfig.screenWidth * 0.24,
-                              height:100,
+                              height:80,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -2123,7 +2134,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: 45,
+                                    height: 35,
                                    width: SizeConfig.screenWidth * 0.24,
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
@@ -2147,7 +2158,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     child: Container(
                                         padding: EdgeInsets.symmetric(horizontal: 4.0,vertical: 8.0),
                                         child: Text(
-                                          S.of(context)!.cashMoney,
+                                         S.of(context)!.cashMoney,
                                           style: GoogleFonts.lato(
 
                                               color: paymentGroupValue ==
@@ -2185,7 +2196,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                 : 0,
                             child: Container(
                               width: SizeConfig.screenWidth * 0.24,
-                              height:100,
+                              height:80,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -2199,7 +2210,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: 45,
+                                    height: 35,
                                     width: SizeConfig.screenWidth * 0.24,
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(

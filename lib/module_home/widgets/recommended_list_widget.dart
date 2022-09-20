@@ -25,9 +25,10 @@ class RecommendedListWidget extends StatelessWidget {
     if (items.length == 0) {
       return Center(
           child: Container(
-            child: Text('Empty !!!'),
+            child: Text(UtilsConst.lang == 'en'? 'There are no recommended products':'الا يوجد منتجات موصى بها'),
           ));
     } else {
+      String _currency = UtilsConst.lang == 'en' ? 'AED':'د.إ';
 
       return AnimationLimiter(
         child: ListView.builder(
@@ -50,6 +51,8 @@ class RecommendedListWidget extends StatelessWidget {
 
                       },
                       child: Container(
+                        height: 110,
+                        width: 130,
                         margin: EdgeInsets.only(left: 12.0,bottom: 8.0),
                         clipBehavior: Clip.antiAlias,
 
@@ -68,8 +71,8 @@ class RecommendedListWidget extends StatelessWidget {
 
                             /// The image section
                             Container(
-                              height: 110,
-                              width: 150,
+                              height: 90.0,
+                              width: 130,
                               child: Stack(
                                 children: [
                                   Container(
@@ -114,9 +117,7 @@ class RecommendedListWidget extends StatelessWidget {
                                         width: SizeConfig
                                             .widhtMulti *
                                             13,
-                                        height: SizeConfig
-                                            .heightMulti *
-                                            4,
+                                        height: 25.0,
                                         decoration: BoxDecoration(
                                             color: Colors.orange,
                                             borderRadius:
@@ -130,7 +131,7 @@ class RecommendedListWidget extends StatelessWidget {
                                               color: Colors.white,
                                               fontWeight:
                                               FontWeight.w500,
-                                              fontSize: 16),
+                                              fontSize: 14.0),
                                         ),
                                       )):Positioned(
                                       top: 0,
@@ -141,9 +142,7 @@ class RecommendedListWidget extends StatelessWidget {
                                         width: SizeConfig
                                             .widhtMulti *
                                             13,
-                                        height: SizeConfig
-                                            .heightMulti *
-                                            4,
+                                        height: 25.0,
                                         decoration: BoxDecoration(
                                             color: Colors.orange,
                                             borderRadius:(UtilsConst.lang == 'ar')?
@@ -156,7 +155,7 @@ class RecommendedListWidget extends StatelessWidget {
                                               color: Colors.white,
                                               fontWeight:
                                               FontWeight.w500,
-                                              fontSize: 16),
+                                              fontSize: 14.0),
                                         ),
                                       ))
                                       : SizedBox.shrink()
@@ -173,11 +172,11 @@ class RecommendedListWidget extends StatelessWidget {
                                   (items[index].old_price !=
                                       null)
                                       ? Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 6),
+                                    padding: EdgeInsets.symmetric(horizontal:6),
                                     child: Text(
                                       items[index]
                                           .old_price
-                                          .toString(),
+                                          .toString()+ " "+_currency,
                                       overflow:
                                       TextOverflow
                                           .ellipsis,
@@ -190,23 +189,24 @@ class RecommendedListWidget extends StatelessWidget {
                                           fontWeight:
                                           FontWeight
                                               .w700,
-                                          fontSize:15),
+                                          fontSize:10),
                                     ),
                                   )
                                       : SizedBox.shrink(),
-                                  SizedBox(width: 8,),
+                                  SizedBox(width: 6,),
                                   Text(
                                     items[index]
                                         .price
-                                        .toString(),
+                                        .toString()+ " "+_currency,
                                     overflow: TextOverflow
                                         .ellipsis,
                                     style: TextStyle(
                                         color: Colors.green,
                                         fontWeight:
                                         FontWeight.w700,
-                                        fontSize: 18),
+                                        fontSize: 11),
                                   ),
+
 
                                 ],
                               ),
@@ -222,9 +222,10 @@ class RecommendedListWidget extends StatelessWidget {
                                 items[index].title2,
                                 maxLines: 2,
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 12.5,
                                     fontWeight:
                                     FontWeight.w700,
+
                                     color: Colors.black54,
                                     overflow: TextOverflow
                                         .ellipsis),
@@ -242,7 +243,7 @@ class RecommendedListWidget extends StatelessWidget {
                                     Colors.black26,
                                     fontWeight:
                                     FontWeight.w700,
-                                    fontSize:12),
+                                    fontSize:11),
                               ),
                             ),
                             // ///

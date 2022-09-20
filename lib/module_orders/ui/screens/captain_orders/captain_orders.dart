@@ -12,7 +12,6 @@ import 'package:my_kom/module_orders/orders_routes.dart';
 import 'package:my_kom/module_orders/state_manager/captain_orders/captain_orders.dart';
 import 'package:my_kom/module_orders/state_manager/new_order/new_order.state_manager.dart';
 import 'package:my_kom/module_orders/ui/widgets/no_data_for_display_widget.dart';
-import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
 import 'package:my_kom/generated/l10n.dart';
 
@@ -250,7 +249,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                     ),
                                     child: Text('${S.of(context)!.orderNumber} : '+orders[index].customerOrderID.toString() ,style: GoogleFonts.lato(
                                         color: ColorsConst.mainColor,
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         letterSpacing: 1,
                                         fontWeight: FontWeight.bold
                                     ),),
@@ -283,7 +282,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 ],),
                               SizedBox(height: 4,),
                               Text(orders[index].orderValue.toString() + '    AED',style: GoogleFonts.lato(
-                                  fontSize: 16,
+                                  fontSize: 14.0,
                                   color: ColorsConst.mainColor,
                                   fontWeight: FontWeight.bold
                               )),
@@ -319,7 +318,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                                 },
                                 child: Text(S.of(context)!.orderDetail, style: TextStyle(
                                     color: ColorsConst.mainColor,
-                                    fontSize: SizeConfig.titleSize * 2.1),),
+                                    fontSize: 14.0),),
 
                               ),
                             ),
@@ -337,7 +336,7 @@ class CaptainOrdersScreenState extends State<CaptainOrdersScreen> {
                               Navigator.pushNamed(maincontext, OrdersRoutes.ORDER_STATUS_SCREEN,arguments:  orders[index].id);
                               },
                               child: Text(S.of(context)!.trackShipment, style: TextStyle(color: Colors.white,
-                                  fontSize: SizeConfig.titleSize * 2.1),),
+                                  fontSize: 14.0),),
 
                             ),
                           ))

@@ -56,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
     "registerAddressSuccessMessage": MessageLookupByLibrary.simpleMessage("You can change your main address from your profile"),
     "registerAddressErrorMessage": MessageLookupByLibrary.simpleMessage("Failed to locate your location, please reset it"),
+    "deleteMyAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
 
 
 
@@ -156,6 +157,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "myAddress": MessageLookupByLibrary.simpleMessage("My Address"),
     "myInformation": MessageLookupByLibrary.simpleMessage("My Information"),
     "myProfile": MessageLookupByLibrary.simpleMessage("My Profile"),
+    "titleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("Do you want to delete your account ?"),
+    "subTitleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("Note: When you delete your account, you will lose your personal data on the MyKom app."),
+
+    "deleteAccountAlertButton": MessageLookupByLibrary.simpleMessage("Delete"),
+    "cancelAccountDeleteAlertButton": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "successDeleteAccount": MessageLookupByLibrary.simpleMessage("The account has been deleted successfully"),
+    "errorDeleteAccount": MessageLookupByLibrary.simpleMessage("An error occurred !"),
 
     /// Orders Page
     "currentOrders": MessageLookupByLibrary.simpleMessage("Current Orders"),
@@ -269,7 +277,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "signedOutSuccessfully": MessageLookupByLibrary.simpleMessage("Signed Out Successfully"),
     "nextTimeBookMark": MessageLookupByLibrary.simpleMessage("Add bookmarks for next time"),
     "cart": MessageLookupByLibrary.simpleMessage("Cart"),
-    "plot": MessageLookupByLibrary.simpleMessage("Plot"),
+    "plot": MessageLookupByLibrary.simpleMessage("pcs"),
     "note": MessageLookupByLibrary.simpleMessage("Note"),
     "noteMessage": MessageLookupByLibrary.simpleMessage("This note will appear at the delivery service provider"),
     "validPhone": MessageLookupByLibrary.simpleMessage("Enter Valid Phone Number"),

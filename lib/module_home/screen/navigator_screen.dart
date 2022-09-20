@@ -42,7 +42,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           body: _getActiveScreen(),
 
           bottomNavigationBar: Container(
-            margin: const EdgeInsets.all(8.0),
+            margin: const EdgeInsets.only(left: 8.0 , right:  8.0 , bottom:  8.0 , top: 16.0),
             child: ConvexAppBar(
               style: TabStyle.fixedCircle,
               curve:Curves.easeInOut ,
@@ -50,13 +50,16 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               backgroundColor: Colors.white,
               activeColor: ColorsConst.mainColor,
               color: Colors.black54,
-              elevation: 5,
+
               height: 56.0,
               items: [
                 TabItem(
+
                   isIconBlend: true,
                 activeIcon: Icon(Icons.description),
-                icon: Icons.description_outlined, title: S.of(context)!.orders),
+                icon: Icons.description_outlined, title: S.of(context)!.orders,
+
+                ),
                 TabItem(
                     isIconBlend: true,
                     activeIcon: Icon(Icons.person),

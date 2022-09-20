@@ -51,6 +51,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "subTitlePageOne": MessageLookupByLibrary.simpleMessage("في ماي كوم تقدر تلاقي الخيار الذي يناسبك"),
     "subTitlePageTow": MessageLookupByLibrary.simpleMessage("طريقة الدفع في ماي كوم متعددة  ,ادفع بالطريقة الي تناسبك"),
     "subTitlePageThree": MessageLookupByLibrary.simpleMessage("بينما كل التطبيقات تحقق ارباحهامن رسوم التوصيل تطبيقنا يوصلك مجانا"),
+    "deleteMyAccount": MessageLookupByLibrary.simpleMessage("حذف الحساب"),
+
+
 
     /// Home Page
     "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -141,7 +144,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "myAddress": MessageLookupByLibrary.simpleMessage("عنواني"),
     "myInformation": MessageLookupByLibrary.simpleMessage("معلوماتي الشخصية"),
     "myProfile": MessageLookupByLibrary.simpleMessage("ملفي\nالشخصي"),
-
+    "titleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("هل تريد حذف حسابك؟"),
+    "subTitleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("ملاحظة: عندما تحذف حسابك ، ستفقد بياناتك الشخصية على تطبيق مايكوم."),
+    "deleteAccountAlertButton": MessageLookupByLibrary.simpleMessage("حذف"),
+    "cancelAccountDeleteAlertButton": MessageLookupByLibrary.simpleMessage("الغاء"),
+    "successDeleteAccount": MessageLookupByLibrary.simpleMessage("تم حذف الحساب بنجاح"),
+    "errorDeleteAccount": MessageLookupByLibrary.simpleMessage("حدث خطأ !"),
     /// Orders Page
     "currentOrders": MessageLookupByLibrary.simpleMessage("الطلبات الحالية"),
     "previousOrders": MessageLookupByLibrary.simpleMessage("الطلبات السابقة"),
@@ -181,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "extraCharge": MessageLookupByLibrary.simpleMessage("الرسوم الاضافية"),
     "orderValue": MessageLookupByLibrary.simpleMessage("قيمة الطلب"),
     "paymentMethods": MessageLookupByLibrary.simpleMessage("طريقة الدفع"),
-    "cashMoney": MessageLookupByLibrary.simpleMessage("الدفع نقداً"),
+    "cashMoney": MessageLookupByLibrary.simpleMessage("الدفع نقدا"),
     "creditCard": MessageLookupByLibrary.simpleMessage("الدفع باسخدام البطاقة"),
     "paymentMethodAlert": MessageLookupByLibrary.simpleMessage("رجاءا اختر طريقة الدفع"),
     "destinationAlert": MessageLookupByLibrary.simpleMessage("قم باختيار موقع صحيح ينتمي للمناطق المخدمة "),
