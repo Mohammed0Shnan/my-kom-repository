@@ -35,6 +35,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(height: 120,),
                 Hero(
                   tag: 'logo',
                   child: Center(
@@ -45,9 +46,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.heightMulti * 12,
-                ),
+                Spacer(),
                 ListTile(
                     title: Padding(
                         padding: EdgeInsets.only(bottom: 8),
@@ -87,7 +86,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w700))),
                   ),
-                )
+                ),
+                SizedBox(height: 80,),
               ],
             ),
           ),

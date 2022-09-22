@@ -34,7 +34,6 @@ import 'package:my_kom/generated/l10n.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeScreen extends StatefulWidget {
-  bool isInit;
   final MapBloc mapBloc;
 
   final FilterZoneCubit filterZoneCubit;
@@ -50,7 +49,6 @@ class HomeScreen extends StatefulWidget {
       required this.panarBloc,
       required this.checkZoneBloc,
       required this.recommendedBloc,
-      required this.isInit,
       Key? key})
       : super(key: key);
 
@@ -67,9 +65,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
 
     /// We don't need to call it until the first time because we're listening
-    if (widget.isInit) {
+    if (UtilsConst.isInit) {
       widget.mapBloc.getSubArea();
     }
+
 
     WidgetsBinding.instance.addObserver(this);
     super.initState();
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.inactive) {
-      widget.isInit = !widget.isInit;
+      UtilsConst.isInit = true;
       _sharedPreferencesHelper.removeCurrentSubArea();
     }
   }
@@ -98,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         listener: (context, state) {
           if (state is MapSuccessState) {
             widget.checkZoneBloc.checkZone(state.data.subArea);
-            widget.isInit = !widget.isInit;
+            UtilsConst.isInit = false;
             widget.filterZoneCubit.setFilter(SearchModel(storeId: '', zoneName: state.data.subArea));
           } else if (state is MapErrorState) {
             EasyLoading.dismiss();

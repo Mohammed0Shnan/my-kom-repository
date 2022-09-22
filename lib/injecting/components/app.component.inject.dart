@@ -1,3 +1,4 @@
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/injecting/components/app.component.dart';
 import 'package:my_kom/main.dart';
 import 'package:my_kom/module_about/about_module.dart';
@@ -75,12 +76,12 @@ class AppComponentInjector implements AppComponent {
   NavigatorModule _createNavigatorModule() {
     _singletonCompanyService ??= CompanyService();
     _singletonMapBloc ??= MapBloc();
+    UtilsConst.isInit = true;
     return NavigatorModule( NavigatorScreen(
         homeScreen: HomeScreen(mapBloc: _singletonMapBloc!,filterZoneCubit: FilterZoneCubit(),allCompanyBloc: AllCompanyBloc(_singletonCompanyService!),
             panarBloc: PanarBloc(_singletonCompanyService!),
           checkZoneBloc: CheckZoneBloc(_singletonCompanyService!),
           recommendedBloc: RecommendedProductBloc(_singletonCompanyService!),
-          isInit: true,
             ),
         orderScreen: CaptainOrdersScreen(),
         profileScreen: ProfileScreen(),

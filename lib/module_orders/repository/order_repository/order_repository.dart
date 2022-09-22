@@ -26,6 +26,7 @@ class OrderRepository {
      DocumentReference document = await _firestore.collection('orders').add(orderRequest.mainDetailsToJson());
      await _firestore.collection('orders').doc(document.id).collection('details').add(orderRequest.moreDetailsToJson());
      DocumentSnapshot d =  await _firestore.collection('orders').doc(document.id).get();
+
      return d;
     }catch(e){
       throw Exception('Error in set data !');

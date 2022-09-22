@@ -77,8 +77,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       Hero(
                         tag: 'company' + company.id,
                         child: Container(
-                          height: SizeConfig.imageSize * 11,
-                          width: SizeConfig.imageSize * 11,
+                          height: 35,
+                          width: 35,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                           
@@ -113,7 +113,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                         UtilsConst.lang == 'en'?
                      company.name:company.name2,
                         style: TextStyle(
-                            fontSize: SizeConfig.titleSize * 2.4,
+                            fontSize: 18,
                             color: Colors.black54,
                             fontWeight: FontWeight.w500),
                       ),
@@ -126,8 +126,8 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           margin: EdgeInsets.symmetric(horizontal: 12),
 
                           alignment: Alignment.center,
-                          width:SizeConfig.heightMulti *7,
-                          height: SizeConfig.heightMulti *7,
+                          width:40,
+                          height:40,
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white.withOpacity(0.8)
@@ -138,7 +138,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                             animationType: BadgeAnimationType.slide,
                             badgeContent: Text(
                            state is CartLoaded?   state.cart.products.length.toString():'0',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white,fontSize: 11),
                             ),
                             child: IconButton(
                                 icon: Icon(Icons.shopping_cart_outlined,color: Colors.black,),
@@ -247,9 +247,9 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 future: _preferencesHelper.getMinimumPurchaseStore(),
                 builder: (context,AsyncSnapshot<double?> snap){
                   if(snap.hasData){
-                   return Text('${S.of(context)!.minimumAlert} ${snap.data} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
+                   return Text('${S.of(context)!.minimumAlert}  ${snap.data} ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }else{
-                  return Text('${S.of(context)!.minimumAlert} AED',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
+                  return Text('${S.of(context)!.minimumAlert}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
                   }
             }),
             Container(
@@ -274,13 +274,13 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(S.of(context)!.seeTheCart,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4),),
+                    Text('${S.of(context)!.seeTheCart}',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4),),
                     BlocBuilder<ShopCartBloc,CartState>(
                         bloc: shopCartBloc,
                         builder: (context,state) {
                           if(state is CartLoaded ){
 
-                            return Text(state.cart.totalString,style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
+                            return Text('${state.cart.totalString}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
                           }
                           else{
                             return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));

@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
     /// Home Page
     "home": MessageLookupByLibrary.simpleMessage("Home"),
     "orders": MessageLookupByLibrary.simpleMessage("Orders"),
-    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+    "profile": MessageLookupByLibrary.simpleMessage("Account"),
     "ship": MessageLookupByLibrary.simpleMessage("Cart"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "deliveryTo": MessageLookupByLibrary.simpleMessage("Delivery to"),
@@ -82,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "determineLocation": MessageLookupByLibrary.simpleMessage("Unable to determine the location, specify the location manually!"),
     "recommended": MessageLookupByLibrary.simpleMessage("Recommended"),
-    "companies": MessageLookupByLibrary.simpleMessage("Companies"),
+    "companies": MessageLookupByLibrary.simpleMessage("Brands"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
 
 
@@ -156,7 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailAndPhone": MessageLookupByLibrary.simpleMessage("Email And Phone"),
     "myAddress": MessageLookupByLibrary.simpleMessage("My Address"),
     "myInformation": MessageLookupByLibrary.simpleMessage("My Information"),
-    "myProfile": MessageLookupByLibrary.simpleMessage("My Profile"),
+    "myProfile": MessageLookupByLibrary.simpleMessage("MY Account"),
     "titleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("Do you want to delete your account ?"),
     "subTitleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("Note: When you delete your account, you will lose your personal data on the MyKom app."),
 
@@ -171,7 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trackShipment": MessageLookupByLibrary.simpleMessage("Track Shipment"),
     "orderNumber": MessageLookupByLibrary.simpleMessage("Order Number"),
     "orderDetail": MessageLookupByLibrary.simpleMessage("Detail"),
-    "reOrder": MessageLookupByLibrary.simpleMessage("ReOrder"),
+    "reOrder": MessageLookupByLibrary.simpleMessage("Reorder"),
     "noDataToDisplay": MessageLookupByLibrary.simpleMessage("No Data To Display"),
 
     /// Ship Pages
@@ -216,16 +216,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
     "searchForYourProducts": MessageLookupByLibrary.simpleMessage("Search For Your Products"),
     "added": MessageLookupByLibrary.simpleMessage("Add"),
-    "seeTheCart": MessageLookupByLibrary.simpleMessage("See The Cart"),
+    "seeTheCart": MessageLookupByLibrary.simpleMessage("Go To Cart"),
     "addToCart": MessageLookupByLibrary.simpleMessage("Add To Cart"),
     "description": MessageLookupByLibrary.simpleMessage("Description"),
     "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("Select the number of items required"),
     "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("Items have been added"),
-    "rival": MessageLookupByLibrary.simpleMessage("ٌRival"),
+    "rival": MessageLookupByLibrary.simpleMessage("Sale"),
+    "optional": MessageLookupByLibrary.simpleMessage("Optional"),
+    "required": MessageLookupByLibrary.simpleMessage("Required"),
+  "requiredCartFieldMessage": MessageLookupByLibrary.simpleMessage("Please enter the required fields"),
+    "buildingOrHomeNumber": MessageLookupByLibrary.simpleMessage("Building Or Home Number"),
+    "buildingOrHomeNumberHint": MessageLookupByLibrary.simpleMessage("Enter Name or building number or house number"),
 
 
     /// Order Pages
-
     "trackingOrder": MessageLookupByLibrary.simpleMessage("Tracking Order"),
     "orderTrackingNumber": MessageLookupByLibrary.simpleMessage("Order Number"),
     "gotCaption": MessageLookupByLibrary.simpleMessage("Receipt of the request"),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/authorization_routes.dart';
 import 'package:my_kom/module_authorization/bloc/cubits.dart';
 import 'package:my_kom/module_authorization/bloc/login_bloc.dart';
@@ -270,8 +271,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   // );
                                   //
                                   //
+                                  UtilsConst.isInit = true;
                                   Navigator.pushNamedAndRemoveUntil(
-                                      context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false);
+                                      context, NavigatorRoutes.NAVIGATOR_SCREEN,(route)=> false,);
                                 }
 
                               } else if (state is LoginErrorState) {
@@ -327,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style:  GoogleFonts.lato(
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black45,
-                                  fontSize: SizeConfig.titleSize * 1.7,
+                                  fontSize: 16,
                                 ),
                               ),
                               GestureDetector(
@@ -340,7 +342,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 child: Text( S.of(context)!.createAccount,
                                     style:  GoogleFonts.lato(
-                                        fontSize: SizeConfig.titleSize * 2,
+                                        fontSize: 16.5,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.blue                          )
 

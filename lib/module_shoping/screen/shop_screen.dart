@@ -2,26 +2,23 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/consts/delivery_times.dart';
 import 'package:my_kom/consts/payment_method.dart';
 import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_authorization/bloc/is_loggedin_cubit.dart';
-import 'package:my_kom/module_authorization/model/app_user.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_authorization/screens/widgets/login_sheak_alert.dart';
 import 'package:my_kom/module_authorization/screens/widgets/top_snack_bar_widgets.dart';
-import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/models/product_model.dart';
 import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_map/map_routes.dart';
@@ -34,12 +31,9 @@ import 'package:my_kom/module_persistence/sharedpref/shared_preferences_helper.d
 import 'package:my_kom/module_profile/model/quick_location_model.dart';
 import 'package:my_kom/module_shoping/bloc/check_address_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/my_addresses_bloc.dart';
-import 'package:my_kom/module_shoping/bloc/payment_methode_number_bloc.dart';
 import 'package:my_kom/module_shoping/bloc/shopping_cart_bloc.dart';
-import 'package:my_kom/module_shoping/models/card_model.dart';
 
 import 'package:my_kom/utils/size_configration/size_config.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:my_kom/generated/l10n.dart';
 
 class ShopScreen extends StatefulWidget {
@@ -64,8 +58,8 @@ class _ShopScreenState extends State<ShopScreen> {
   /// In order to check the specified address if it is within the serviced areas
   final CheckAddressBloc _checkAddressBloc = CheckAddressBloc();
 
-  final PaymentMethodeNumberBloc paymentMethodeNumberBloc =
-      PaymentMethodeNumberBloc();
+  // final PaymentMethodeNumberBloc paymentMethodeNumberBloc =
+  //     PaymentMethodeNumberBloc();
 
   /// local storage in order to take the current storage and add it to the request
   /// sort orders
@@ -164,6 +158,11 @@ class _ShopScreenState extends State<ShopScreen> {
   /// Delivery Address
   late AddressModel addressModel;
 
+
+  /// Home Number
+  final TextEditingController _buildingAndHomeNumberController =
+  TextEditingController(text: '');
+
   ///Payment method
   late String paymentGroupValue = '';
 
@@ -190,6 +189,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   /// Snack Messages
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _destinationFormKey = GlobalKey<FormState>();
 
   _getSubAreaForAddress(LatLng? latLng) {
     _mapService.getSubAreaPosition(latLng).then((subArea) {
@@ -243,7 +243,6 @@ class _ShopScreenState extends State<ShopScreen> {
         }
         break;
     }
-
     return BlocConsumer<IsLogginCubit, IsLogginCubitState>(
         bloc: isLogginCubit,
         listener: (context, state) {
@@ -488,7 +487,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       ? productModel.title
                                       : productModel.title2,
                                   style: TextStyle(
-                                      fontSize:15.0,
+                                      fontSize:13.5,
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text('${productModel.quantity}'+' '+  UtilsConst.lang == 'en'?'pcs':'حبة', style: TextStyle(
@@ -496,7 +495,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     color: Colors.black54,
                                     fontWeight: FontWeight.w600)),
                                 Text(
-                                  '${productModel.price}'+' '+ UtilsConst.lang == 'en'?'AED':'د.إ',
+                                  '${productModel.price}'+'  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',
                                   style:
                                       TextStyle(color: ColorsConst.mainColor ,
                                         fontSize: 14
@@ -576,6 +575,7 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget firstPage() {
+
     return Column(
       children: [
         SizedBox(
@@ -594,13 +594,11 @@ class _ShopScreenState extends State<ShopScreen> {
                         child: Column(
                       children: [
                         Container(
-                          height: 250,
+                          height: SizeConfig.screenHeight * 0.3,
                           width: SizeConfig.screenWidth * 0.4,
                           child: Image.asset('assets/empty_cart.jpg'),
                         ),
-                        SizedBox(
-                          height: 4,
-                        ),
+
                         Text(
                           S.of(context)!.emptyShip,
                           style: GoogleFonts.lato(
@@ -779,6 +777,7 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 
   Widget secondPage() {
+    final node = FocusScope.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -797,7 +796,7 @@ class _ShopScreenState extends State<ShopScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 padding: EdgeInsets.all(8),
-                height: 110,
+                height: 160,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -812,418 +811,515 @@ class _ShopScreenState extends State<ShopScreen> {
                           offset: Offset(0, 1),
                           color: Colors.black26)
                     ]),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              height: 25.0,
-                              width: 25.0,
-                              padding: EdgeInsets.all(2),
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(width: 2, color: Colors.blue)),
-                              child: Container(
-                                  padding: EdgeInsets.all(4),
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
+                child: Form(
+                  key: _destinationFormKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                height: 25.0,
+                                width: 25.0,
+                                padding: EdgeInsets.all(2),
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    border:
+                                        Border.all(width: 2, color: Colors.blue)),
+                                child: Container(
+                                    padding: EdgeInsets.all(4),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/icons/address_delivery_icon.png',
+                                      fit: BoxFit.contain,
+                                    )),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                S.of(context)!.destination,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black87,
+                                    fontSize: 13),
+                              ),
+                              SizedBox(width: 20,),
+                              Text(
+                                '( ${S.of(context)!.required} )',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                    fontSize:13),
+                              )
+                            ],
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                _myAddressesBloc.getLocations();
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: AlertDialog(
+                                          backgroundColor: Colors.white,
+                                          clipBehavior: Clip.antiAlias,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          content: Container(
+                                            height: 120.0,
+                                            width: SizeConfig.screenWidth,
+                                            child: Center(
+                                                child: Column(
+                                              children: [
+                                                Expanded(
+                                                  child:
+                                                      BlocBuilder<MyAddressesBloc,
+                                                              MyAddressesStates>(
+                                                          bloc: _myAddressesBloc,
+                                                          builder:
+                                                              (context, state) {
+                                                            if (state
+                                                                is MyAddressesSuccessState) {
+                                                              List<QuickLocationModel>
+                                                                  data =
+                                                                  state.list;
+                                                              if (data.isEmpty)
+                                                                return Center(
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .bookmark,
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        size: 22,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height: 8,
+                                                                      ),
+                                                                      Text(
+                                                                        S
+                                                                            .of(context)!
+                                                                            .nextTimeBookMark,
+                                                                        style: GoogleFonts.lato(
+                                                                            color: Colors
+                                                                                .black87,
+                                                                            fontWeight: FontWeight
+                                                                                .w600,
+                                                                            fontSize:13),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              else
+                                                                return ListView
+                                                                    .separated(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        itemCount:
+                                                                            data
+                                                                                .length,
+                                                                        separatorBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return Divider(
+                                                                            color:
+                                                                                Colors.black87,
+                                                                          );
+                                                                        },
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              addressModel =
+                                                                                  data[index].address;
+                                                                              _newAddressController.text = S.of(context)!.to +
+                                                                                  ' ' +
+                                                                                  data[index].display;
+                                                                              LatLng
+                                                                                  latLang =
+                                                                                  LatLng(addressModel.latitude, addressModel.longitude);
+                                                                              _getSubAreaForAddress(latLang);
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height:
+                                                                                  35,
+                                                                              child:
+                                                                                  Row(
+                                                                                children: [
+                                                                                  Icon(
+                                                                                    Icons.bookmark_outline,
+                                                                                    color: Colors.blue,
+                                                                                    size: 16,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 5,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    data[index].display,
+                                                                                    style: GoogleFonts.lato(fontSize: 15, color: Colors.black),
+                                                                                  ),
+                                                                                  Spacer(),
+                                                                                  TextButton(
+                                                                                      onPressed: () {
+                                                                                        EasyLoading.show(status: S.of(context)!.pleaseWait);
+                                                                                        _myAddressesBloc.removeLocation(data[index].id).then((value) {
+                                                                                          EasyLoading.showError(S.of(context)!.removed);
+                                                                                        });
+                                                                                      },
+                                                                                      child: Text(
+                                                                                        S.of(context)!.remove,
+                                                                                        style: TextStyle( color: Colors.blue, fontSize: 12),
+                                                                                      ))
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                            } else if (state
+                                                                is MyAddressesErrorState) {
+                                                              return Center(
+                                                                  child:
+                                                                      Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(10),
+                                                                child: Text(S
+                                                                    .of(context)!
+                                                                    .errorLoadLocation),
+                                                              ));
+                                                            } else
+                                                              return Center(
+                                                                child: Container(
+                                                                  height: 20,
+                                                                  width: 20,
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                ),
+                                                              );
+                                                          }),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pushNamed(
+                                                                context,
+                                                                MapRoutes
+                                                                    .MAP_SCREEN,
+                                                                arguments: false)
+                                                            .then((value) {
+                                                          if (value != null) {
+                                                            addressModel = (value
+                                                                as AddressModel);
+                                                            _newAddressController
+                                                                    .text =
+                                                                addressModel
+                                                                    .description;
+                                                            addressModel = value;
+
+                                                            /// Check Address
+                                                            ///
+
+                                                            LatLng latlang = LatLng(
+                                                                addressModel
+                                                                    .latitude,
+                                                                addressModel
+                                                                    .longitude);
+                                                            _getSubAreaForAddress(
+                                                                latlang);
+                                                            Navigator.pop(
+                                                                context);
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                          S
+                                                              .of(context)!
+                                                              .anotherAddress,
+                                                          style: TextStyle(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
+                                                              fontWeight:
+                                                                  FontWeight.bold,
+                                                              color: Colors.blue,
+                                                              fontSize: 13.0)),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            )),
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              child: Text(S.of(context)!.change,style: TextStyle(fontSize: 11.0),))
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.blue,
+                            size: 16.0,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '${S.of(context)!.street} :',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black45,
+                                fontSize: 11.0),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 15,
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        controller: _newAddressController,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: 11.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[600]),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+                                          border: InputBorder.none,
+                                          //S.of(context).name,
+                                        ),
+                                        textInputAction: TextInputAction.next,
+                                        // Move focus to next
+                                      ),
+                                    ),
                                   ),
-                                  child: Image.asset(
-                                    'assets/icons/address_delivery_icon.png',
-                                    fit: BoxFit.contain,
-                                  )),
+
+                                  Container(
+                                    height: 25.0,
+                                    width: 25.0,
+                                    margin: EdgeInsets.symmetric(horizontal: 8),
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: BlocBuilder<CheckAddressBloc,
+                                            CheckAddressStates>(
+                                        bloc: _checkAddressBloc,
+                                        builder: (context, state) {
+                                          if (state is CheckAddressLoadingState)
+                                            return Padding(
+                                              padding: const EdgeInsets.all(2.0),
+                                              child: CupertinoActivityIndicator()
+                                            );
+                                          else if (state
+                                              is CheckAddressErrorState) {
+                                            return Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.red),
+                                                child: Center(
+                                                    child: Icon(
+                                                  Icons.error,
+                                                  color: Colors.white,
+                                                  size: 16.0,
+                                                )));
+                                          } else if (state
+                                              is CheckAddressSuccessState) {
+                                            return Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.green,
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                ));
+                                            return Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            );
+                                          } else {
+                                            return SizedBox.shrink();
+                                          }
+                                        }),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      /// Building And Home Number
+                      SizedBox(
+                        height: 15,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.home_outlined,
+                              color: Colors.blue,
+                              size: 13.0,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '${S.of(context)!.buildingOrHomeNumber} :',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black45,
+                                  fontSize: 11.0),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Text(
-                              S.of(context)!.destination,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.black87,
-                                  fontSize: 13),
+                            Expanded(
+                              child: TextField(
+                                controller: _buildingAndHomeNumberController,
+                                cursorHeight: 15,
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600]),
+                                onChanged: (v){setState((){});},
+                                onEditingComplete: ()=>node.nextFocus(),
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  suffixIcon: Icon(
+                                    Icons.edit,
+                                    color:_buildingAndHomeNumberController.text.isNotEmpty ? Colors.blue:Colors.red,
+                                    size: 13.0,
+                                  ),
+
+
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color:_buildingAndHomeNumberController.text.isNotEmpty ? Colors.blue:Colors.red,)
+                                    ),
+
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)
+                                    ),
+
+                                  hintText: S.of(context)!.buildingOrHomeNumberHint,
+                                  hintStyle: TextStyle(color:Colors.black38)
+                                  //S.of(context).name,
+                                ),
+                                // validator: (_h){
+                                //   if(_h!.isEmpty)return '';
+                                //   else return null;
+                                // },
+                                textInputAction: TextInputAction.done,
+                                // Move focus to next
+                              ),
                             ),
                           ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              _myAddressesBloc.getLocations();
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: AlertDialog(
-                                        backgroundColor: Colors.white,
-                                        clipBehavior: Clip.antiAlias,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        content: Container(
-                                          height: 120.0,
-                                          width: SizeConfig.screenWidth,
-                                          child: Center(
-                                              child: Column(
-                                            children: [
-                                              Expanded(
-                                                child:
-                                                    BlocBuilder<MyAddressesBloc,
-                                                            MyAddressesStates>(
-                                                        bloc: _myAddressesBloc,
-                                                        builder:
-                                                            (context, state) {
-                                                          if (state
-                                                              is MyAddressesSuccessState) {
-                                                            List<QuickLocationModel>
-                                                                data =
-                                                                state.list;
-                                                            if (data.isEmpty)
-                                                              return Center(
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .bookmark,
-                                                                      color: Colors
-                                                                          .blue,
-                                                                      size: 22,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      S
-                                                                          .of(context)!
-                                                                          .nextTimeBookMark,
-                                                                      style: GoogleFonts.lato(
-                                                                          color: Colors
-                                                                              .black87,
-                                                                          fontWeight: FontWeight
-                                                                              .w600,
-                                                                          fontSize:13),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            else
-                                                              return ListView
-                                                                  .separated(
-                                                                      shrinkWrap:
-                                                                          true,
-                                                                      itemCount:
-                                                                          data
-                                                                              .length,
-                                                                      separatorBuilder:
-                                                                          (context,
-                                                                              index) {
-                                                                        return Divider(
-                                                                          color:
-                                                                              Colors.black87,
-                                                                        );
-                                                                      },
-                                                                      itemBuilder:
-                                                                          (context,
-                                                                              index) {
-                                                                        return InkWell(
-                                                                          onTap:
-                                                                              () {
-                                                                            addressModel =
-                                                                                data[index].address;
-                                                                            _newAddressController.text = S.of(context)!.to +
-                                                                                ' ' +
-                                                                                data[index].display;
-                                                                            LatLng
-                                                                                latLang =
-                                                                                LatLng(addressModel.latitude, addressModel.longitude);
-                                                                            _getSubAreaForAddress(latLang);
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                35,
-                                                                            child:
-                                                                                Row(
-                                                                              children: [
-                                                                                Icon(
-                                                                                  Icons.bookmark_outline,
-                                                                                  color: Colors.blue,
-                                                                                  size: 16,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: 5,
-                                                                                ),
-                                                                                Text(
-                                                                                  data[index].display,
-                                                                                  style: GoogleFonts.lato(fontSize: 15, color: Colors.black),
-                                                                                ),
-                                                                                Spacer(),
-                                                                                TextButton(
-                                                                                    onPressed: () {
-                                                                                      EasyLoading.show(status: S.of(context)!.pleaseWait);
-                                                                                      _myAddressesBloc.removeLocation(data[index].id).then((value) {
-                                                                                        EasyLoading.showError(S.of(context)!.removed);
-                                                                                      });
-                                                                                    },
-                                                                                    child: Text(
-                                                                                      S.of(context)!.remove,
-                                                                                      style: TextStyle( color: Colors.blue, fontSize: 12),
-                                                                                    ))
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      });
-                                                          } else if (state
-                                                              is MyAddressesErrorState) {
-                                                            return Center(
-                                                                child:
-                                                                    Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(10),
-                                                              child: Text(S
-                                                                  .of(context)!
-                                                                  .errorLoadLocation),
-                                                            ));
-                                                          } else
-                                                            return Center(
-                                                              child: Container(
-                                                                height: 20,
-                                                                width: 20,
-                                                                child:
-                                                                    CircularProgressIndicator(),
-                                                              ),
-                                                            );
-                                                        }),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Spacer(),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pushNamed(
-                                                              context,
-                                                              MapRoutes
-                                                                  .MAP_SCREEN,
-                                                              arguments: false)
-                                                          .then((value) {
-                                                        if (value != null) {
-                                                          addressModel = (value
-                                                              as AddressModel);
-                                                          _newAddressController
-                                                                  .text =
-                                                              addressModel
-                                                                  .description;
-                                                          addressModel = value;
-
-                                                          /// Check Address
-                                                          ///
-
-                                                          LatLng latlang = LatLng(
-                                                              addressModel
-                                                                  .latitude,
-                                                              addressModel
-                                                                  .longitude);
-                                                          _getSubAreaForAddress(
-                                                              latlang);
-                                                          Navigator.pop(
-                                                              context);
-                                                        }
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                        S
-                                                            .of(context)!
-                                                            .anotherAddress,
-                                                        style: TextStyle(
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.blue,
-                                                            fontSize: 13.0)),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          )),
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            },
-                            child: Text(S.of(context)!.change,style: TextStyle(fontSize: 11.0),))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: Colors.blue,
-                          size: 16.0,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '${S.of(context)!.street} :',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black45,
-                              fontSize: 11.0),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 10,
-                                    child: TextFormField(
-                                      readOnly: true,
-                                      controller: _newAddressController,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                          fontSize: 11.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[600]),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
-                                        border: InputBorder.none,
-                                        //S.of(context).name,
-                                      ),
-                                      textInputAction: TextInputAction.next,
-                                      // Move focus to next
-                                    ),
-                                  ),
-                                ),
-
-                                Container(
-                                  height: 25.0,
-                                  width: 25.0,
-                                  margin: EdgeInsets.symmetric(horizontal: 8),
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: BlocBuilder<CheckAddressBloc,
-                                          CheckAddressStates>(
-                                      bloc: _checkAddressBloc,
-                                      builder: (context, state) {
-                                        if (state is CheckAddressLoadingState)
-                                          return Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: CircularProgressIndicator(
-                                              color: ColorsConst.mainColor,
-                                            ),
-                                          );
-                                        else if (state
-                                            is CheckAddressErrorState) {
-                                          return Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.red),
-                                              child: Center(
-                                                  child: Icon(
-                                                Icons.error,
-                                                color: Colors.white,
-                                                size: 16.0,
-                                              )));
-                                        } else if (state
-                                            is CheckAddressSuccessState) {
-                                          return Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
-                                              child: Icon(
-                                                Icons.check,
-                                                color: Colors.white,
-                                                size: 15,
-                                              ));
-                                          return Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                          );
-                                        } else {
-                                          return SizedBox.shrink();
-                                        }
-                                      }),
-                                ),
-                              ],
+                      ),
+                      SizedBox(height: 15,),
+                      /// Phone Number Section
+                      SizedBox(
+                        height: 15,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              color:Colors.blue,
+                              size: 13.0,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          color: Colors.blue,
-                          size: 13.0,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '${S.of(context)!.phone} :',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black45,
-                              fontSize: 11.0),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                            height: 12,
-                            child: TextFormField(
-                              controller: _phoneController,
-
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '${S.of(context)!.phone} :',
                               style: TextStyle(
-                                  fontSize: 10.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey[600]),
-
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
-                                suffixIcon: Icon(
-                                  Icons.edit,
-                                  color: Colors.black,
-                                  size: 13.0,
-                                ),
-                                border: InputBorder.none,
-                                //S.of(context).name,
-                              ),
-                              textInputAction: TextInputAction.done,
-                              // Move focus to next
+                                  color: Colors.black45,
+                                  fontSize: 11.0),
                             ),
-                          ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                controller: _phoneController,
+                                cursorHeight: 15,
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600]),
+                                onChanged: (v){setState((){});},
+                                onEditingComplete: ()=>node.unfocus(),
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                    contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  suffixIcon: Icon(
+                                    Icons.edit,
+                                    color: _phoneController.text.isNotEmpty ? Colors.blue:Colors.red,
+                                    size: 13.0,
+                                  ),
+
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: _phoneController.text.isNotEmpty ? Colors.black12:Colors.red,)
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.blue)
+                                    ),
+
+                                    hintText: UtilsConst.lang == 'en' ? 'enter phone number':'أدخل رقم الهاتف'
+                                    ,hintStyle: TextStyle(color:Colors.black38)
+                                  //S.of(context).name,
+                                ),
+                                // validator: (_p){
+                                //   if(_p!.isEmpty)return '';
+                                //   else return null;
+                                // },
+                                textInputAction: TextInputAction.done,
+                                // Move focus to next
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    )
-                  ],
+                      ),
+
+
+                    ],
+                  ),
                 ),
               ),
 
@@ -1495,6 +1591,14 @@ class _ShopScreenState extends State<ShopScreen> {
                                           fontSize: 13.0,
                                           fontWeight: FontWeight.w800,
                                           color: Colors.black87)),
+                                  SizedBox(width: 20,),
+                                  Text(
+                                    '( ${S.of(context)!.optional} )',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                        fontSize:13),
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -1717,7 +1821,14 @@ class _ShopScreenState extends State<ShopScreen> {
                               color: Colors.black87,
                               fontSize:13),
                         ),
-
+                        SizedBox(width: 20,),
+                        Text(
+                          '( ${S.of(context)!.optional} )',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                              fontSize:13),
+                        )
                       ],
                     ),
                     SizedBox(
@@ -1803,10 +1914,21 @@ class _ShopScreenState extends State<ShopScreen> {
                       //       curve: Curves.ease);
                       // }
                       //   else {
+                      if(_buildingAndHomeNumberController.text.trim().isNotEmpty && _phoneController.text.trim().isNotEmpty){
+                        node.unfocus();
+                        _pageController.nextPage(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.ease);
+                      }
 
-                      _pageController.nextPage(
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.ease);
+
+
+                      else
+                        _scaffoldState.currentState!
+                            .showSnackBar(SnackBar(
+                            content: Text(S
+                                .of(context)!
+                                .requiredCartFieldMessage)));
                       // }
                     },
                     child: Text(
@@ -1912,7 +2034,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             bloc: shopCartBloc,
                             builder: (context, state) {
                               if (state is CartLoaded) {
-                                return Text(state.cart.totalString,
+                                return Text('${state.cart.totalString}  ${UtilsConst.lang == 'en'? 'AED':'د.إ'}' ,
                                     style: GoogleFonts.lato(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w800,
@@ -1943,7 +2065,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             bloc: shopCartBloc,
                             builder: (context, state) {
                               if (state is CartLoaded) {
-                                return Text(vipOrderValue.toString(),
+                                return Text('${vipOrderValue.toString()}  ${UtilsConst.lang == 'en'? 'AED':'د.إ'}',
                                     style: GoogleFonts.lato(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w800,
@@ -1979,7 +2101,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     vipOrderValue + state.cart.subTotal;
 
                                 orderValue = total;
-                                return Text(total.toString(),
+                                return Text('${total.toString()}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',
                                     style: GoogleFonts.lato(
                                         fontSize:11,
                                         fontWeight: FontWeight.w800,
@@ -2030,7 +2152,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     ),
                                     child: Center(
                                         child: Text(
-                                            '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh}  AED ',
+                                            '${S.of(context)!.minimumAlert}  ${state.cart.minimum_pursh} ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',
                                             style: GoogleFonts.lato(
                                                 fontSize:11.0,
                                                 fontWeight: FontWeight.w800,
@@ -2345,7 +2467,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       child: Container(
                                       height:20,
                                       width: 20,
-                                      child: CircularProgressIndicator(
+                                      child:Platform.isIOS? CupertinoActivityIndicator(): CircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                     ))
@@ -2372,251 +2494,253 @@ class _ShopScreenState extends State<ShopScreen> {
                                                       .paymentMethodAlert)));
                                         } else if (paymentGroupValue ==
                                             PaymentMethodConst.CREDIT_CARD) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return ClipRRect(
+                                                  borderRadius:
+                                                  BorderRadius.circular(20),
+                                                  child: AlertDialog(
+                                                    backgroundColor: Colors
+                                                        .white
+                                                        .withOpacity(0.8),
+                                                    clipBehavior:
+                                                    Clip.antiAlias,
+                                                    shape:
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          20),
+                                                    ),
+                                                    content: Container(
+                                                      height: 70,
+                                                      width: 90,
+                                                      child: Center(
+                                                        child: Text(
+                                                          S
+                                                              .of(context)!
+                                                              .creditComingSoon,
+                                                          style:
+                                                          GoogleFonts.acme(
+                                                              color: Colors
+                                                                  .green,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .bold),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        }
                                           //       /// For Credits Cards
+        //
+        // showMaterialModalBottomSheet(
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+        //         topRight: Radius.circular(30)
+        //     ),
+        //   ),
+        //   context: context,
+        //   builder: (context) => SingleChildScrollView(
+        //     controller: ModalScrollController.of(context),
+        //     child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+        //         bloc: paymentMethodeNumberBloc,
+        //         builder: (context,state) {
+        //           return Container(
+        //             padding: EdgeInsets.symmetric(horizontal: 10),
+        //             height: SizeConfig.screenHeight * 0.8 ,
+        //             clipBehavior: Clip.antiAlias,
+        //             decoration: BoxDecoration(
+        //               borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+        //                   topRight: Radius.circular(30)
+        //               ),
+        //             ),
+        //             child: Column(
+        //               crossAxisAlignment: CrossAxisAlignment.start,
+        //               children: [
+        //                 IconButton(onPressed: (){
+        //                   Navigator.of(context).pop();
+        //                 }, icon:Icon(Icons.clear) ),
+        //                 Text(S.of(context)!.payByCard , style:TextStyle(
+        //
+        //                     color: Colors.black54,
+        //                     fontWeight: FontWeight.bold,
+        //                     fontSize: SizeConfig.titleSize*2.9
+        //
+        //                 ),),
+        //                 SizedBox(height: 15,),
+        //                 Container(
+        //                   margin: EdgeInsets.symmetric(horizontal: 20),
+        //
+        //                   child: ListView.separated(
+        //                     separatorBuilder: (context,index){
+        //                       return  SizedBox(height: 8,);
+        //                     },
+        //                     shrinkWrap:true ,
+        //                     itemCount: state.cards.length,
+        //                     itemBuilder: (context,index){
+        //                       CardModel  card =   state.cards[index];
+        //                       return   Center(
+        //                         child: Container(
+        //                           width: double.infinity,
+        //                           height: 6.8 * SizeConfig.heightMulti,
+        //                           decoration: BoxDecoration(
+        //                               borderRadius: BorderRadius.circular(10),
+        //                               color: Colors.grey.shade50,
+        //                               border: Border.all(
+        //                                   color: Colors.black26,
+        //                                   width: 2
+        //                               )
+        //                           ),
+        //                           child: Row(
+        //                             mainAxisSize: MainAxisSize.min,
+        //
+        //                             children: [
+        //                               Radio<String>(
+        //                                 value: card.id,
+        //                                 groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+        //                                 onChanged: (value) {
+        //                                   paymentMethodeNumberBloc.changeSelect(value!);
+        //                                 },
+        //                                 activeColor: Colors.green,
+        //                               ),
+        //                               Icon(Icons.payment),
+        //                               SizedBox(width: 10,),
+        //
+        //                               Text(card.cardNumber , style: GoogleFonts.lato(
+        //                                   color: Colors.black54,
+        //                                   fontSize: SizeConfig.titleSize * 2.1,
+        //                                   fontWeight: FontWeight.bold
+        //                               ),),
+        //                               Spacer(),
+        //                               IconButton(onPressed: (){
+        //                                 paymentMethodeNumberBloc.removeOne(state.cards[index]);
+        //                               }, icon: Icon(Icons.delete,color: Colors.red,)),
+        //
+        //                             ],
+        //                           ),
+        //                         ),
+        //                       );
+        //
+        //                     },
+        //
+        //                   ),
+        //                 ),
+        //                 SizedBox(height:25,),
+        //                 Center(
+        //                   child: GestureDetector(
+        //                     onTap: ()async{
+        //                     // await PaymentService().createPaymentMethod();
+        //                       // Navigator.push(context, MaterialPageRoute(builder: (context)=>
+        //                       //     BlocProvider.value(
+        //                       //         value: paymentMethodeNumberBloc,
+        //                       //         child: AddCardScreen())
+        //                       // ));
+        //                       //  paymentMethodeNumberBloc.addOne();
+        //                     },
+        //                     child: Container(
+        //                       margin: EdgeInsets.symmetric(horizontal: 20),
+        //
+        //                       width: SizeConfig.screenWidth ,
+        //                       height: 35,
+        //                       decoration: BoxDecoration(
+        //                           borderRadius: BorderRadius.circular(10),
+        //                           color: Colors.grey.shade50,
+        //                           border: Border.all(
+        //                               color: Colors.black26,
+        //                               width: 2
+        //                           )
+        //                       ),
+        //                       child: Row(
+        //                         mainAxisSize: MainAxisSize.min,
+        //
+        //                         children: [
+        //
+        //                           Icon(Icons.add),
+        //                           SizedBox(width: 10,),
+        //
+        //                           Text(S.of(context)!.addCard, style: GoogleFonts.lato(
+        //                               color: Colors.black54,
+        //                               fontSize: SizeConfig.titleSize * 2.6,
+        //                               fontWeight: FontWeight.bold
+        //                           )
+        //                             ,)
+        //                         ],
+        //                       ),
+        //                     ),
+        //                   ),
+        //                 ),
+        //                 Spacer(),
+        //                 Center(
+        //                   child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+        //                       bloc: _orderBloc,
+        //                       listener: (context,state)async{
+        //                         if(state is CreateOrderSuccessState)
+        //                         {
+        //                           snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
+        //                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
+        //                           shopCartBloc.startedShop();
+        //                         }
+        //                         else if(state is CreateOrderErrorState)
+        //                         {
+        //                           snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
+        //                         }
+        //                       },
+        //                       builder: (context,state) {
+        //                         bool isLoading = state is CreateOrderLoadingState?true:false;
+        //                         return AnimatedContainer(
+        //                           duration: Duration(milliseconds: 200),
+        //                           clipBehavior: Clip.antiAlias,
+        //                           height: 8.44 * SizeConfig.heightMulti,
+        //                           width:isLoading?60: SizeConfig.screenWidth * 0.8,
+        //                           padding: EdgeInsets.all(isLoading?8:0 ),
+        //                           margin: EdgeInsets.symmetric(horizontal: 20),
+        //                           decoration: BoxDecoration(
+        //                               color: ColorsConst.mainColor,
+        //                               borderRadius: BorderRadius.circular(10)
+        //                           ),
+        //                           child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+        //                             onPressed: ()  {
+        //                               cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+        //                               if(cardId ==''){
+        //                                 Fluttertoast.showToast(
+        //                                     msg: S.of(context)!.selectCardAlert,
+        //                                     toastLength: Toast.LENGTH_LONG,
+        //                                     gravity: ToastGravity.TOP,
+        //                                     timeInSecForIosWeb: 1,
+        //                                     backgroundColor: Colors.white,
+        //                                     textColor: Colors.black,
+        //                                     fontSize: 18.0
+        //                                 );
+        //                               }
+        //                               else{
+        //                                 GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+        //                                // _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+        //
+        //                               }
+        //
+        //                             },
+        //                             child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
+        //                                 fontSize: SizeConfig.titleSize * 2.7),),
+        //
+        //                           ),
+        //                         );
+        //                       }
+        //                   ),
+        //                 ),
+        //                 SizedBox(height: SizeConfig.screenHeight * 0.05,)
+        //               ],
+        //             ),
+        //           );
+        //         }
+        //     ),
+        //   ),
+        // );
+      // }
 
-        showMaterialModalBottomSheet(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                topRight: Radius.circular(30)
-            ),
-          ),
-          context: context,
-          builder: (context) => SingleChildScrollView(
-            controller: ModalScrollController.of(context),
-            child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
-                bloc: paymentMethodeNumberBloc,
-                builder: (context,state) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: SizeConfig.screenHeight * 0.8 ,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30)
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(onPressed: (){
-                          Navigator.of(context).pop();
-                        }, icon:Icon(Icons.clear) ),
-                        Text(S.of(context)!.payByCard , style:TextStyle(
 
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.titleSize*2.9
-
-                        ),),
-                        SizedBox(height: 15,),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-
-                          child: ListView.separated(
-                            separatorBuilder: (context,index){
-                              return  SizedBox(height: 8,);
-                            },
-                            shrinkWrap:true ,
-                            itemCount: state.cards.length,
-                            itemBuilder: (context,index){
-                              CardModel  card =   state.cards[index];
-                              return   Center(
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 6.8 * SizeConfig.heightMulti,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.grey.shade50,
-                                      border: Border.all(
-                                          color: Colors.black26,
-                                          width: 2
-                                      )
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-
-                                    children: [
-                                      Radio<String>(
-                                        value: card.id,
-                                        groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
-                                        onChanged: (value) {
-                                          paymentMethodeNumberBloc.changeSelect(value!);
-                                        },
-                                        activeColor: Colors.green,
-                                      ),
-                                      Icon(Icons.payment),
-                                      SizedBox(width: 10,),
-
-                                      Text(card.cardNumber , style: GoogleFonts.lato(
-                                          color: Colors.black54,
-                                          fontSize: SizeConfig.titleSize * 2.1,
-                                          fontWeight: FontWeight.bold
-                                      ),),
-                                      Spacer(),
-                                      IconButton(onPressed: (){
-                                        paymentMethodeNumberBloc.removeOne(state.cards[index]);
-                                      }, icon: Icon(Icons.delete,color: Colors.red,)),
-
-                                    ],
-                                  ),
-                                ),
-                              );
-
-                            },
-
-                          ),
-                        ),
-                        SizedBox(height:25,),
-                        Center(
-                          child: GestureDetector(
-                            onTap: ()async{
-                            // await PaymentService().createPaymentMethod();
-                              // Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                              //     BlocProvider.value(
-                              //         value: paymentMethodeNumberBloc,
-                              //         child: AddCardScreen())
-                              // ));
-                              //  paymentMethodeNumberBloc.addOne();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 20),
-
-                              width: SizeConfig.screenWidth ,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey.shade50,
-                                  border: Border.all(
-                                      color: Colors.black26,
-                                      width: 2
-                                  )
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-
-                                children: [
-
-                                  Icon(Icons.add),
-                                  SizedBox(width: 10,),
-
-                                  Text(S.of(context)!.addCard, style: GoogleFonts.lato(
-                                      color: Colors.black54,
-                                      fontSize: SizeConfig.titleSize * 2.6,
-                                      fontWeight: FontWeight.bold
-                                  )
-                                    ,)
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        Center(
-                          child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
-                              bloc: _orderBloc,
-                              listener: (context,state)async{
-                                if(state is CreateOrderSuccessState)
-                                {
-                                  snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
-                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
-                                  shopCartBloc.startedShop();
-                                }
-                                else if(state is CreateOrderErrorState)
-                                {
-                                  snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
-                                }
-                              },
-                              builder: (context,state) {
-                                bool isLoading = state is CreateOrderLoadingState?true:false;
-                                return AnimatedContainer(
-                                  duration: Duration(milliseconds: 200),
-                                  clipBehavior: Clip.antiAlias,
-                                  height: 8.44 * SizeConfig.heightMulti,
-                                  width:isLoading?60: SizeConfig.screenWidth * 0.8,
-                                  padding: EdgeInsets.all(isLoading?8:0 ),
-                                  margin: EdgeInsets.symmetric(horizontal: 20),
-                                  decoration: BoxDecoration(
-                                      color: ColorsConst.mainColor,
-                                      borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
-                                    onPressed: ()  {
-                                      cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
-                                      if(cardId ==''){
-                                        Fluttertoast.showToast(
-                                            msg: S.of(context)!.selectCardAlert,
-                                            toastLength: Toast.LENGTH_LONG,
-                                            gravity: ToastGravity.TOP,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.white,
-                                            textColor: Colors.black,
-                                            fontSize: 18.0
-                                        );
-                                      }
-                                      else{
-                                        GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-                                       // _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
-
-                                      }
-
-                                    },
-                                    child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
-                                        fontSize: SizeConfig.titleSize * 2.7),),
-
-                                  ),
-                                );
-                              }
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.screenHeight * 0.05,)
-                      ],
-                    ),
-                  );
-                }
-            ),
-          ),
-        );
-       }
-                                          // showDialog(
-                                          //     context: context,
-                                          //     builder: (context) {
-                                          //       return ClipRRect(
-                                          //         borderRadius:
-                                          //             BorderRadius.circular(20),
-                                          //         child: AlertDialog(
-                                          //           backgroundColor: Colors
-                                          //               .white
-                                          //               .withOpacity(0.8),
-                                          //           clipBehavior:
-                                          //               Clip.antiAlias,
-                                          //           shape:
-                                          //               RoundedRectangleBorder(
-                                          //             borderRadius:
-                                          //                 BorderRadius.circular(
-                                          //                     20),
-                                          //           ),
-                                          //           content: Container(
-                                          //             height: 70,
-                                          //             width: 90,
-                                          //             child: Center(
-                                          //               child: Text(
-                                          //                 S
-                                          //                     .of(context)!
-                                          //                     .creditComingSoon,
-                                          //                 style:
-                                          //                     GoogleFonts.acme(
-                                          //                         color: Colors
-                                          //                             .green,
-                                          //                         fontWeight:
-                                          //                             FontWeight
-                                          //                                 .bold),
-                                          //               ),
-                                          //             ),
-                                          //           ),
-                                          //         ),
-                                          //       );
-                                          //     });
-                                          //
                                           // // GeoJson geoJson = GeoJson(
                                           // //     lat: addressModel.latitude,
                                           // //     lon: addressModel.longitude);
@@ -2644,7 +2768,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           /// Here we fetch the current region of the specified address to find out the source of the request
                                         orderSource = await _getOrderSourceFromDeliveryLocation(LatLng(addressModel.latitude, addressModel.longitude));
 
-
+                                        String _address_name = addressModel.description ;
                                           _orderBloc.addNewOrder(
                                               product: requestProduct,
                                               deliveryTimes:
@@ -2652,7 +2776,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                               orderType: vipOrder,
                                               destination: geoJson,
                                               addressName:
-                                                  addressModel.description,
+                                              _address_name,
                                               phoneNumber:
                                                   _phoneController.text.trim(),
                                               paymentMethod: paymentGroupValue,
@@ -2661,7 +2785,9 @@ class _ShopScreenState extends State<ShopScreen> {
                                               cardId: cardId,
                                               storeId: storeId,
                                               note: _noteController.text.trim(),
-                                              orderSource: orderSource!);
+                                              orderSource: orderSource,
+                                              buildingHomeId : _buildingAndHomeNumberController.text.trim(),
+                                          );
                                         }
                                       },
                                       child: Text(
@@ -2669,7 +2795,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w800,
-                                            fontSize:17),
+                                            fontSize:16),
                                       ),
                                     ),
                             );
@@ -2729,768 +2855,768 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 }
 
-class AddCardScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return AddCardScreenState();
-  }
-}
-
-class AddCardScreenState extends State<AddCardScreen> {
-  String cardNumber = '';
-  String expiryDate = '';
-  String cardHolderName = '';
-  String cvvCode = '';
-  bool isCvvFocused = false;
-  bool useGlassMorphism = false;
-  bool useBackgroundImage = false;
-  OutlineInputBorder? border;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final AuthService authService = AuthService();
-
-  @override
-  void initState() {
-    border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(
-        color: Colors.grey.withOpacity(0.7),
-        width: 2.0,
-      ),
-    );
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Credit Card View Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          decoration: BoxDecoration(
-            // image: !useBackgroundImage
-            //     ? const DecorationImage(
-            //   image: ExactAssetImage('assets/bg.png'),
-            //   fit: BoxFit.fill,
-            // )
-            //     : null,
-            color: Colors.white,
-          ),
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 30,
-                ),
-                CreditCardWidget(
-                  glassmorphismConfig:
-                      useGlassMorphism ? Glassmorphism.defaultConfig() : null,
-                  cardNumber: cardNumber,
-                  expiryDate: expiryDate,
-                  cardHolderName: cardHolderName,
-                  cvvCode: cvvCode,
-                  showBackView: isCvvFocused,
-                  obscureCardNumber: true,
-                  obscureCardCvv: true,
-                  isHolderNameVisible: true,
-                  cardBgColor: Colors.red,
-                  // backgroundImage:
-                  // useBackgroundImage ? 'assets/card_bg.png' : null,
-                  isSwipeGestureEnabled: true,
-                  onCreditCardWidgetChange:
-                      (CreditCardBrand creditCardBrand) {},
-                  customCardTypeIcons: <CustomCardTypeIcon>[
-                    CustomCardTypeIcon(
-                      cardType: CardType.mastercard,
-                      cardImage: Image.asset(
-                        'assets/mastercard.png',
-                        height: 48,
-                        width: 48,
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        CreditCardForm(
-                          formKey: formKey,
-                          obscureCvv: true,
-                          obscureNumber: true,
-                          cardNumber: cardNumber,
-                          cvvCode: cvvCode,
-                          isHolderNameVisible: true,
-                          isCardNumberVisible: true,
-                          isExpiryDateVisible: true,
-                          cardHolderName: cardHolderName,
-                          expiryDate: expiryDate,
-                          themeColor: Colors.blue,
-                          textColor: Colors.black45,
-                          cardNumberDecoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            labelText: 'Number',
-                            hintText: 'XXXX XXXX XXXX XXXX',
-                            hintStyle: const TextStyle(color: Colors.black45),
-                            labelStyle: const TextStyle(color: Colors.black45),
-                            focusedBorder: border,
-                            enabledBorder: border,
-                          ),
-                          expiryDateDecoration: InputDecoration(
-                            hintStyle: const TextStyle(color: Colors.black45),
-                            labelStyle: const TextStyle(color: Colors.black45),
-                            focusedBorder: border,
-                            enabledBorder: border,
-                            labelText: 'Expired Date',
-                            hintText: 'XX/XX',
-                          ),
-                          cvvCodeDecoration: InputDecoration(
-                            hintStyle: const TextStyle(color: Colors.black45),
-                            labelStyle: const TextStyle(color: Colors.black45),
-                            focusedBorder: border,
-                            enabledBorder: border,
-                            labelText: 'CVV',
-                            hintText: 'XXX',
-                          ),
-                          cardHolderDecoration: InputDecoration(
-                            hintStyle: const TextStyle(color: Colors.black45),
-                            labelStyle: const TextStyle(color: Colors.black45),
-                            focusedBorder: border,
-                            enabledBorder: border,
-                            labelText: 'Card Holder',
-                          ),
-                          onCreditCardModelChange: onCreditCardModelChange,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            primary: const Color(0xff1b447b),
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.all(12),
-                            child: const Text(
-                              'Validate',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'halter',
-                                fontSize: 14,
-                                package: 'flutter_credit_card',
-                              ),
-                            ),
-                          ),
-                          onPressed: () async {
-                            int? cvc = int.tryParse(cvvCode);
-                            int? carNo = int.tryParse(cardNumber.replaceAll(
-                                RegExp(r"\s+\b|\b\s"), ""));
-                            int? exp_year =
-                                int.tryParse(expiryDate.substring(3, 5));
-                            int? exp_month =
-                                int.tryParse(expiryDate.substring(0, 2));
-                            print("cvc num: ${cvc.toString()}");
-                            print("card num: ${carNo.toString()}");
-                            print("exp year: ${exp_year.toString()}");
-                            print("exp month: ${exp_month.toString()}");
-                            print(cardNumber.replaceAll(
-                                RegExp(r"\s+\b|\b\s"), ""));
-
-                            //StripeServices stripeServices = StripeServices();
-
-                            AppUser user = await authService.getCurrentUser();
-                            // CardModel card ;
-                            // if(user.stripeId == null){
-                            //   String stripeID = await stripeServices.createStripeCustomer(uid: user.id,email: user.email);
-                            //   print('start print strip id ================================');
-                            //   print("stripe id: $stripeID");
-                            //   print('end print strip id ================================');
-                            //   card = await stripeServices.addCard(stripeId: stripeID, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
-                            // }else{
-                            //   card = await   stripeServices.addCard(stripeId: user.stripeId!, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
-                            // }
-                            // PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
-                            //  bloc.getCards();
-                            String card_number_in_firebase =
-                                carNo.toString().substring(0, 4) +
-                                    ' **** **** ' +
-                                    carNo
-                                        .toString()
-                                        .substring(12, carNo.toString().length);
-                            print(card_number_in_firebase);
-                            CardModel card = CardModel(
-                                id: DateTime.now().toString(),
-                                cardNumber: card_number_in_firebase,
-                                userID: user.id,
-                                month: exp_month!,
-                                year: exp_year!,
-                                last4:
-                                    int.parse(carNo.toString().substring(11)));
-
-                            PaymentMethodeNumberBloc bloc =
-                                context.read<PaymentMethodeNumberBloc>();
-                            await bloc.addOne(card);
-                            Navigator.of(context).pop();
-                            //   user.hasCard();
-                            // user.loadCardsAndPurchase(userId: user.user.uid);
-                            // if (formKey.currentState!.validate()) {
-                            //    PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
-                            //      CardModel card = CardModel(
-                            //          id: bloc.state.cards.length+1, cardHolderName: cardHolderName, cardNumber: cardNumber, cvvCode: cvvCode, expiryDate: expiryDate);
-                            //      bloc.addOne(card);
-                            //     // Navigator.pop(context);
-                            //  PaymentMethod  paymentMethod = await paymentService.createPaymentMethod();
-                            //  print('ssssssssssssssssssssss');
-                            //  print(paymentMethod.id);
-                            // //   } else {
-                            //      print('invalid!');
-                            //  //  }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void onCreditCardModelChange(CreditCardModel? creditCardModel) {
-    setState(() {
-      cardNumber = creditCardModel!.cardNumber;
-      expiryDate = creditCardModel.expiryDate;
-      cardHolderName = creditCardModel.cardHolderName;
-      cvvCode = creditCardModel.cvvCode;
-      isCvvFocused = creditCardModel.isCvvFocused;
-    });
-  }
-
-  showPaymentCards()async{
-      //     // showDialog(
-      // //     context: context,
-      // //     builder: (context) {
-      // //       return ClipRRect(
-      // //         borderRadius: BorderRadius.circular(20),
-      // //         child: AlertDialog(
-      // //           backgroundColor:
-      // //               Colors.white.withOpacity(0.8),
-      // //           clipBehavior: Clip.antiAlias,
-      // //           shape: RoundedRectangleBorder(
-      // //             borderRadius: BorderRadius.circular(20),
-      // //           ),
-      // //           content: Container(
-      // //             height: 70,
-      // //             width: 90,
-      // //             child: Center(
-      // //               child: Text(
-      // //                 S.of(context)!.creditComingSoon,
-      // //                 style: GoogleFonts.acme(
-      // //                     color: Colors.green,
-      // //                     fontWeight: FontWeight.bold),
-      // //               ),
-      // //             ),
-      // //           ),
-      // //         ),
-      // //       );
-      // //     });
-      // if(paymentGroupValue ==''){
-      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
-      // }
-      // else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
-      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
-      // }
-      // else if(orderNotComplete){
-      //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
-      // }
-      // // else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
-      // //   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-      // //   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
-      // // }
-      // else{
-      //     GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-      //     _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
-      //
-      // }
-      //
-      //
-      //
-      // /// For Credits Cards
-      // // else
-      // //   showMaterialModalBottomSheet(
-      // //     shape: RoundedRectangleBorder(
-      // //       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-      // //           topRight: Radius.circular(30)
-      // //       ),
-      // //     ),
-      // //     context: context,
-      // //     builder: (context) => SingleChildScrollView(
-      // //       controller: ModalScrollController.of(context),
-      // //       child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
-      // //           bloc: paymentMethodeNumberBloc,
-      // //           builder: (context,state) {
-      // //             return Container(
-      // //               padding: EdgeInsets.symmetric(horizontal: 10),
-      // //               height: SizeConfig.screenHeight * 0.8 ,
-      // //               clipBehavior: Clip.antiAlias,
-      // //               decoration: BoxDecoration(
-      // //                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-      // //                     topRight: Radius.circular(30)
-      // //                 ),
-      // //               ),
-      // //               child: Column(
-      // //                 crossAxisAlignment: CrossAxisAlignment.start,
-      // //                 children: [
-      // //                   IconButton(onPressed: (){
-      // //                     Navigator.of(context).pop();
-      // //                   }, icon:Icon(Icons.clear) ),
-      // //                   Text(S.of(context)!.payByCard , style:TextStyle(
-      // //
-      // //                       color: Colors.black54,
-      // //                       fontWeight: FontWeight.bold,
-      // //                       fontSize: SizeConfig.titleSize*2.9
-      // //
-      // //                   ),),
-      // //                   SizedBox(height: 15,),
-      // //                   Container(
-      // //                     margin: EdgeInsets.symmetric(horizontal: 20),
-      // //
-      // //                     child: ListView.separated(
-      // //                       separatorBuilder: (context,index){
-      // //                         return  SizedBox(height: 8,);
-      // //                       },
-      // //                       shrinkWrap:true ,
-      // //                       itemCount: state.cards.length,
-      // //                       itemBuilder: (context,index){
-      // //                         CardModel  card =   state.cards[index];
-      // //                         return   Center(
-      // //                           child: Container(
-      // //                             width: double.infinity,
-      // //                             height: 6.8 * SizeConfig.heightMulti,
-      // //                             decoration: BoxDecoration(
-      // //                                 borderRadius: BorderRadius.circular(10),
-      // //                                 color: Colors.grey.shade50,
-      // //                                 border: Border.all(
-      // //                                     color: Colors.black26,
-      // //                                     width: 2
-      // //                                 )
-      // //                             ),
-      // //                             child: Row(
-      // //                               mainAxisSize: MainAxisSize.min,
-      // //
-      // //                               children: [
-      // //                                 Radio<String>(
-      // //                                   value: card.id,
-      // //                                   groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
-      // //                                   onChanged: (value) {
-      // //                                     paymentMethodeNumberBloc.changeSelect(value!);
-      // //                                   },
-      // //                                   activeColor: Colors.green,
-      // //                                 ),
-      // //                                 Icon(Icons.payment),
-      // //                                 SizedBox(width: 10,),
-      // //
-      // //                                 Text(card.cardNumber , style: GoogleFonts.lato(
-      // //                                     color: Colors.black54,
-      // //                                     fontSize: SizeConfig.titleSize * 2.1,
-      // //                                     fontWeight: FontWeight.bold
-      // //                                 ),),
-      // //                                 Spacer(),
-      // //                                 IconButton(onPressed: (){
-      // //                                   paymentMethodeNumberBloc.removeOne(state.cards[index]);
-      // //                                 }, icon: Icon(Icons.delete,color: Colors.red,)),
-      // //
-      // //                               ],
-      // //                             ),
-      // //                           ),
-      // //                         );
-      // //
-      // //                       },
-      // //
-      // //                     ),
-      // //                   ),
-      // //                   SizedBox(height:25,),
-      // //                   Center(
-      // //                     child: GestureDetector(
-      // //                       onTap: (){
-      // //                         Navigator.push(context, MaterialPageRoute(builder: (context)=>
-      // //                             BlocProvider.value(
-      // //                                 value: paymentMethodeNumberBloc,
-      // //                                 child: AddCardScreen())
-      // //                         ));
-      // //                         //  paymentMethodeNumberBloc.addOne();
-      // //                       },
-      // //                       child: Container(
-      // //                         margin: EdgeInsets.symmetric(horizontal: 20),
-      // //
-      // //                         width: SizeConfig.screenWidth ,
-      // //                         height: 6.8 * SizeConfig.heightMulti,
-      // //                         decoration: BoxDecoration(
-      // //                             borderRadius: BorderRadius.circular(10),
-      // //                             color: Colors.grey.shade50,
-      // //                             border: Border.all(
-      // //                                 color: Colors.black26,
-      // //                                 width: 2
-      // //                             )
-      // //                         ),
-      // //                         child: Row(
-      // //                           mainAxisSize: MainAxisSize.min,
-      // //
-      // //                           children: [
-      // //
-      // //                             Icon(Icons.add),
-      // //                             SizedBox(width: 10,),
-      // //
-      // //                             Text(S.of(context)!.addCard, style: GoogleFonts.lato(
-      // //                                 color: Colors.black54,
-      // //                                 fontSize: SizeConfig.titleSize * 2.6,
-      // //                                 fontWeight: FontWeight.bold
-      // //                             )
-      // //                               ,)
-      // //                           ],
-      // //                         ),
-      // //                       ),
-      // //                     ),
-      // //                   ),
-      // //                   Spacer(),
-      // //                   Center(
-      // //                     child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
-      // //                         bloc: _orderBloc,
-      // //                         listener: (context,state)async{
-      // //                           if(state is CreateOrderSuccessState)
-      // //                           {
-      // //                             snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
-      // //                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
-      // //                             shopCartBloc.startedShop();
-      // //                           }
-      // //                           else if(state is CreateOrderErrorState)
-      // //                           {
-      // //                             snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
-      // //                           }
-      // //                         },
-      // //                         builder: (context,state) {
-      // //                           bool isLoading = state is CreateOrderLoadingState?true:false;
-      // //                           return AnimatedContainer(
-      // //                             duration: Duration(milliseconds: 200),
-      // //                             clipBehavior: Clip.antiAlias,
-      // //                             height: 8.44 * SizeConfig.heightMulti,
-      // //                             width:isLoading?60: SizeConfig.screenWidth * 0.8,
-      // //                             padding: EdgeInsets.all(isLoading?8:0 ),
-      // //                             margin: EdgeInsets.symmetric(horizontal: 20),
-      // //                             decoration: BoxDecoration(
-      // //                                 color: ColorsConst.mainColor,
-      // //                                 borderRadius: BorderRadius.circular(10)
-      // //                             ),
-      // //                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
-      // //                               onPressed: () {
-      // //                                 cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
-      // //                                 if(cardId ==''){
-      // //                                   Fluttertoast.showToast(
-      // //                                       msg: S.of(context)!.selectCardAlert,
-      // //                                       toastLength: Toast.LENGTH_LONG,
-      // //                                       gravity: ToastGravity.TOP,
-      // //                                       timeInSecForIosWeb: 1,
-      // //                                       backgroundColor: Colors.white,
-      // //                                       textColor: Colors.black,
-      // //                                       fontSize: 18.0
-      // //                                   );
-      // //                                 }
-      // //                                 else{
-      // //                                   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-      // //                                   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
-      // //
-      // //                                 }
-      // //
-      // //                               },
-      // //                               child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
-      // //                                   fontSize: SizeConfig.titleSize * 2.7),),
-      // //
-      // //                             ),
-      // //                           );
-      // //                         }
-      // //                     ),
-      // //                   ),
-      // //                   SizedBox(height: SizeConfig.screenHeight * 0.05,)
-      // //                 ],
-      // //               ),
-      // //             );
-      // //           }
-      // //       ),
-      // //     ),
-      // //   );
-      // //  }
-  }
-}
-
-///  The Code For Credit Cards
-// ? MaterialButton(
-//     onPressed: () {
-//       // showDialog(
-//       //     context: context,
-//       //     builder: (context) {
-//       //       return ClipRRect(
-//       //         borderRadius: BorderRadius.circular(20),
-//       //         child: AlertDialog(
-//       //           backgroundColor:
-//       //               Colors.white.withOpacity(0.8),
-//       //           clipBehavior: Clip.antiAlias,
-//       //           shape: RoundedRectangleBorder(
-//       //             borderRadius: BorderRadius.circular(20),
-//       //           ),
-//       //           content: Container(
-//       //             height: 70,
-//       //             width: 90,
-//       //             child: Center(
-//       //               child: Text(
-//       //                 S.of(context)!.creditComingSoon,
-//       //                 style: GoogleFonts.acme(
-//       //                     color: Colors.green,
-//       //                     fontWeight: FontWeight.bold),
-//       //               ),
-//       //             ),
-//       //           ),
-//       //         ),
-//       //       );
-//       //     });
-//       if(paymentGroupValue ==''){
-//         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
-//       }
-//       else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
-//         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
-//       }
-//       else if(orderNotComplete){
-//         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
-//       }
-//       // else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
-//       //   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-//       //   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+// class AddCardScreen extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() {
+//     return AddCardScreenState();
+//   }
+// }
+//
+// class AddCardScreenState extends State<AddCardScreen> {
+//   String cardNumber = '';
+//   String expiryDate = '';
+//   String cardHolderName = '';
+//   String cvvCode = '';
+//   bool isCvvFocused = false;
+//   bool useGlassMorphism = false;
+//   bool useBackgroundImage = false;
+//   OutlineInputBorder? border;
+//   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+//   final AuthService authService = AuthService();
+//
+//   @override
+//   void initState() {
+//     border = OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10),
+//       borderSide: BorderSide(
+//         color: Colors.grey.withOpacity(0.7),
+//         width: 2.0,
+//       ),
+//     );
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Credit Card View Demo',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: Scaffold(
+//         resizeToAvoidBottomInset: false,
+//         body: Container(
+//           decoration: BoxDecoration(
+//             // image: !useBackgroundImage
+//             //     ? const DecorationImage(
+//             //   image: ExactAssetImage('assets/bg.png'),
+//             //   fit: BoxFit.fill,
+//             // )
+//             //     : null,
+//             color: Colors.white,
+//           ),
+//           child: SafeArea(
+//             child: Column(
+//               children: <Widget>[
+//                 const SizedBox(
+//                   height: 30,
+//                 ),
+//                 // CreditCardWidget(
+//                 //   glassmorphismConfig:
+//                 //       useGlassMorphism ? Glassmorphism.defaultConfig() : null,
+//                 //   cardNumber: cardNumber,
+//                 //   expiryDate: expiryDate,
+//                 //   cardHolderName: cardHolderName,
+//                 //   cvvCode: cvvCode,
+//                 //   showBackView: isCvvFocused,
+//                 //   obscureCardNumber: true,
+//                 //   obscureCardCvv: true,
+//                 //   isHolderNameVisible: true,
+//                 //   cardBgColor: Colors.red,
+//                 //   // backgroundImage:
+//                 //   // useBackgroundImage ? 'assets/card_bg.png' : null,
+//                 //   isSwipeGestureEnabled: true,
+//                 //   onCreditCardWidgetChange:
+//                 //       (CreditCardBrand creditCardBrand) {},
+//                 //   customCardTypeIcons: <CustomCardTypeIcon>[
+//                 //     CustomCardTypeIcon(
+//                 //       cardType: CardType.mastercard,
+//                 //       cardImage: Image.asset(
+//                 //         'assets/mastercard.png',
+//                 //         height: 48,
+//                 //         width: 48,
+//                 //       ),
+//                 //     ),
+//                 //   ],
+//                 // ),
+//                 Expanded(
+//                   child: SingleChildScrollView(
+//                     child: Column(
+//                       children: <Widget>[
+//                         // CreditCardForm(
+//                         //   formKey: formKey,
+//                         //   obscureCvv: true,
+//                         //   obscureNumber: true,
+//                         //   cardNumber: cardNumber,
+//                         //   cvvCode: cvvCode,
+//                         //   isHolderNameVisible: true,
+//                         //   isCardNumberVisible: true,
+//                         //   isExpiryDateVisible: true,
+//                         //   cardHolderName: cardHolderName,
+//                         //   expiryDate: expiryDate,
+//                         //   themeColor: Colors.blue,
+//                         //   textColor: Colors.black45,
+//                         //   cardNumberDecoration: InputDecoration(
+//                         //     border: OutlineInputBorder(
+//                         //         borderRadius: BorderRadius.circular(10)),
+//                         //     labelText: 'Number',
+//                         //     hintText: 'XXXX XXXX XXXX XXXX',
+//                         //     hintStyle: const TextStyle(color: Colors.black45),
+//                         //     labelStyle: const TextStyle(color: Colors.black45),
+//                         //     focusedBorder: border,
+//                         //     enabledBorder: border,
+//                         //   ),
+//                         //   expiryDateDecoration: InputDecoration(
+//                         //     hintStyle: const TextStyle(color: Colors.black45),
+//                         //     labelStyle: const TextStyle(color: Colors.black45),
+//                         //     focusedBorder: border,
+//                         //     enabledBorder: border,
+//                         //     labelText: 'Expired Date',
+//                         //     hintText: 'XX/XX',
+//                         //   ),
+//                         //   cvvCodeDecoration: InputDecoration(
+//                         //     hintStyle: const TextStyle(color: Colors.black45),
+//                         //     labelStyle: const TextStyle(color: Colors.black45),
+//                         //     focusedBorder: border,
+//                         //     enabledBorder: border,
+//                         //     labelText: 'CVV',
+//                         //     hintText: 'XXX',
+//                         //   ),
+//                         //   cardHolderDecoration: InputDecoration(
+//                         //     hintStyle: const TextStyle(color: Colors.black45),
+//                         //     labelStyle: const TextStyle(color: Colors.black45),
+//                         //     focusedBorder: border,
+//                         //     enabledBorder: border,
+//                         //     labelText: 'Card Holder',
+//                         //   ),
+//                         //   onCreditCardModelChange: onCreditCardModelChange,
+//                         // ),
+//                         const SizedBox(
+//                           height: 20,
+//                         ),
+//                         ElevatedButton(
+//                           style: ElevatedButton.styleFrom(
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(8.0),
+//                             ),
+//                             primary: const Color(0xff1b447b),
+//                           ),
+//                           child: Container(
+//                             margin: const EdgeInsets.all(12),
+//                             child: const Text(
+//                               'Validate',
+//                               style: TextStyle(
+//                                 color: Colors.white,
+//                                 fontFamily: 'halter',
+//                                 fontSize: 14,
+//                                 package: 'flutter_credit_card',
+//                               ),
+//                             ),
+//                           ),
+//                           onPressed: () async {
+//                             int? cvc = int.tryParse(cvvCode);
+//                             int? carNo = int.tryParse(cardNumber.replaceAll(
+//                                 RegExp(r"\s+\b|\b\s"), ""));
+//                             int? exp_year =
+//                                 int.tryParse(expiryDate.substring(3, 5));
+//                             int? exp_month =
+//                                 int.tryParse(expiryDate.substring(0, 2));
+//                             print("cvc num: ${cvc.toString()}");
+//                             print("card num: ${carNo.toString()}");
+//                             print("exp year: ${exp_year.toString()}");
+//                             print("exp month: ${exp_month.toString()}");
+//                             print(cardNumber.replaceAll(
+//                                 RegExp(r"\s+\b|\b\s"), ""));
+//
+//                             //StripeServices stripeServices = StripeServices();
+//
+//                             AppUser user = await authService.getCurrentUser();
+//                             // CardModel card ;
+//                             // if(user.stripeId == null){
+//                             //   String stripeID = await stripeServices.createStripeCustomer(uid: user.id,email: user.email);
+//                             //   print('start print strip id ================================');
+//                             //   print("stripe id: $stripeID");
+//                             //   print('end print strip id ================================');
+//                             //   card = await stripeServices.addCard(stripeId: stripeID, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
+//                             // }else{
+//                             //   card = await   stripeServices.addCard(stripeId: user.stripeId!, month: exp_month!, year: exp_year!, cvc: cvc!, cardNumber: carNo!, userId: user.id);
+//                             // }
+//                             // PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
+//                             //  bloc.getCards();
+//                             String card_number_in_firebase =
+//                                 carNo.toString().substring(0, 4) +
+//                                     ' **** **** ' +
+//                                     carNo
+//                                         .toString()
+//                                         .substring(12, carNo.toString().length);
+//                             print(card_number_in_firebase);
+//                             CardModel card = CardModel(
+//                                 id: DateTime.now().toString(),
+//                                 cardNumber: card_number_in_firebase,
+//                                 userID: user.id,
+//                                 month: exp_month!,
+//                                 year: exp_year!,
+//                                 last4:
+//                                     int.parse(carNo.toString().substring(11)));
+//
+//                             PaymentMethodeNumberBloc bloc =
+//                                 context.read<PaymentMethodeNumberBloc>();
+//                             await bloc.addOne(card);
+//                             Navigator.of(context).pop();
+//                             //   user.hasCard();
+//                             // user.loadCardsAndPurchase(userId: user.user.uid);
+//                             // if (formKey.currentState!.validate()) {
+//                             //    PaymentMethodeNumberBloc bloc =  context.read<PaymentMethodeNumberBloc>();
+//                             //      CardModel card = CardModel(
+//                             //          id: bloc.state.cards.length+1, cardHolderName: cardHolderName, cardNumber: cardNumber, cvvCode: cvvCode, expiryDate: expiryDate);
+//                             //      bloc.addOne(card);
+//                             //     // Navigator.pop(context);
+//                             //  PaymentMethod  paymentMethod = await paymentService.createPaymentMethod();
+//                             //  print('ssssssssssssssssssssss');
+//                             //  print(paymentMethod.id);
+//                             // //   } else {
+//                             //      print('invalid!');
+//                             //  //  }
+//                           },
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   // void onCreditCardModelChange(CreditCardModel? creditCardModel) {
+//   //   setState(() {
+//   //     cardNumber = creditCardModel!.cardNumber;
+//   //     expiryDate = creditCardModel.expiryDate;
+//   //     cardHolderName = creditCardModel.cardHolderName;
+//   //     cvvCode = creditCardModel.cvvCode;
+//   //     isCvvFocused = creditCardModel.isCvvFocused;
+//   //   });
+//   // }
+//
+//   showPaymentCards()async{
+//       //     // showDialog(
+//       // //     context: context,
+//       // //     builder: (context) {
+//       // //       return ClipRRect(
+//       // //         borderRadius: BorderRadius.circular(20),
+//       // //         child: AlertDialog(
+//       // //           backgroundColor:
+//       // //               Colors.white.withOpacity(0.8),
+//       // //           clipBehavior: Clip.antiAlias,
+//       // //           shape: RoundedRectangleBorder(
+//       // //             borderRadius: BorderRadius.circular(20),
+//       // //           ),
+//       // //           content: Container(
+//       // //             height: 70,
+//       // //             width: 90,
+//       // //             child: Center(
+//       // //               child: Text(
+//       // //                 S.of(context)!.creditComingSoon,
+//       // //                 style: GoogleFonts.acme(
+//       // //                     color: Colors.green,
+//       // //                     fontWeight: FontWeight.bold),
+//       // //               ),
+//       // //             ),
+//       // //           ),
+//       // //         ),
+//       // //       );
+//       // //     });
+//       // if(paymentGroupValue ==''){
+//       //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
 //       // }
-//       else{
-//           GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-//           _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+//       // else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
+//       //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
+//       // }
+//       // else if(orderNotComplete){
+//       //   _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
+//       // }
+//       // // else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
+//       // //   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+//       // //   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+//       // // }
+//       // else{
+//       //     GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+//       //     _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+//       //
+//       // }
+//       //
+//       //
+//       //
+//       // /// For Credits Cards
+//       // // else
+//       // //   showMaterialModalBottomSheet(
+//       // //     shape: RoundedRectangleBorder(
+//       // //       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+//       // //           topRight: Radius.circular(30)
+//       // //       ),
+//       // //     ),
+//       // //     context: context,
+//       // //     builder: (context) => SingleChildScrollView(
+//       // //       controller: ModalScrollController.of(context),
+//       // //       child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+//       // //           bloc: paymentMethodeNumberBloc,
+//       // //           builder: (context,state) {
+//       // //             return Container(
+//       // //               padding: EdgeInsets.symmetric(horizontal: 10),
+//       // //               height: SizeConfig.screenHeight * 0.8 ,
+//       // //               clipBehavior: Clip.antiAlias,
+//       // //               decoration: BoxDecoration(
+//       // //                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+//       // //                     topRight: Radius.circular(30)
+//       // //                 ),
+//       // //               ),
+//       // //               child: Column(
+//       // //                 crossAxisAlignment: CrossAxisAlignment.start,
+//       // //                 children: [
+//       // //                   IconButton(onPressed: (){
+//       // //                     Navigator.of(context).pop();
+//       // //                   }, icon:Icon(Icons.clear) ),
+//       // //                   Text(S.of(context)!.payByCard , style:TextStyle(
+//       // //
+//       // //                       color: Colors.black54,
+//       // //                       fontWeight: FontWeight.bold,
+//       // //                       fontSize: SizeConfig.titleSize*2.9
+//       // //
+//       // //                   ),),
+//       // //                   SizedBox(height: 15,),
+//       // //                   Container(
+//       // //                     margin: EdgeInsets.symmetric(horizontal: 20),
+//       // //
+//       // //                     child: ListView.separated(
+//       // //                       separatorBuilder: (context,index){
+//       // //                         return  SizedBox(height: 8,);
+//       // //                       },
+//       // //                       shrinkWrap:true ,
+//       // //                       itemCount: state.cards.length,
+//       // //                       itemBuilder: (context,index){
+//       // //                         CardModel  card =   state.cards[index];
+//       // //                         return   Center(
+//       // //                           child: Container(
+//       // //                             width: double.infinity,
+//       // //                             height: 6.8 * SizeConfig.heightMulti,
+//       // //                             decoration: BoxDecoration(
+//       // //                                 borderRadius: BorderRadius.circular(10),
+//       // //                                 color: Colors.grey.shade50,
+//       // //                                 border: Border.all(
+//       // //                                     color: Colors.black26,
+//       // //                                     width: 2
+//       // //                                 )
+//       // //                             ),
+//       // //                             child: Row(
+//       // //                               mainAxisSize: MainAxisSize.min,
+//       // //
+//       // //                               children: [
+//       // //                                 Radio<String>(
+//       // //                                   value: card.id,
+//       // //                                   groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+//       // //                                   onChanged: (value) {
+//       // //                                     paymentMethodeNumberBloc.changeSelect(value!);
+//       // //                                   },
+//       // //                                   activeColor: Colors.green,
+//       // //                                 ),
+//       // //                                 Icon(Icons.payment),
+//       // //                                 SizedBox(width: 10,),
+//       // //
+//       // //                                 Text(card.cardNumber , style: GoogleFonts.lato(
+//       // //                                     color: Colors.black54,
+//       // //                                     fontSize: SizeConfig.titleSize * 2.1,
+//       // //                                     fontWeight: FontWeight.bold
+//       // //                                 ),),
+//       // //                                 Spacer(),
+//       // //                                 IconButton(onPressed: (){
+//       // //                                   paymentMethodeNumberBloc.removeOne(state.cards[index]);
+//       // //                                 }, icon: Icon(Icons.delete,color: Colors.red,)),
+//       // //
+//       // //                               ],
+//       // //                             ),
+//       // //                           ),
+//       // //                         );
+//       // //
+//       // //                       },
+//       // //
+//       // //                     ),
+//       // //                   ),
+//       // //                   SizedBox(height:25,),
+//       // //                   Center(
+//       // //                     child: GestureDetector(
+//       // //                       onTap: (){
+//       // //                         Navigator.push(context, MaterialPageRoute(builder: (context)=>
+//       // //                             BlocProvider.value(
+//       // //                                 value: paymentMethodeNumberBloc,
+//       // //                                 child: AddCardScreen())
+//       // //                         ));
+//       // //                         //  paymentMethodeNumberBloc.addOne();
+//       // //                       },
+//       // //                       child: Container(
+//       // //                         margin: EdgeInsets.symmetric(horizontal: 20),
+//       // //
+//       // //                         width: SizeConfig.screenWidth ,
+//       // //                         height: 6.8 * SizeConfig.heightMulti,
+//       // //                         decoration: BoxDecoration(
+//       // //                             borderRadius: BorderRadius.circular(10),
+//       // //                             color: Colors.grey.shade50,
+//       // //                             border: Border.all(
+//       // //                                 color: Colors.black26,
+//       // //                                 width: 2
+//       // //                             )
+//       // //                         ),
+//       // //                         child: Row(
+//       // //                           mainAxisSize: MainAxisSize.min,
+//       // //
+//       // //                           children: [
+//       // //
+//       // //                             Icon(Icons.add),
+//       // //                             SizedBox(width: 10,),
+//       // //
+//       // //                             Text(S.of(context)!.addCard, style: GoogleFonts.lato(
+//       // //                                 color: Colors.black54,
+//       // //                                 fontSize: SizeConfig.titleSize * 2.6,
+//       // //                                 fontWeight: FontWeight.bold
+//       // //                             )
+//       // //                               ,)
+//       // //                           ],
+//       // //                         ),
+//       // //                       ),
+//       // //                     ),
+//       // //                   ),
+//       // //                   Spacer(),
+//       // //                   Center(
+//       // //                     child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+//       // //                         bloc: _orderBloc,
+//       // //                         listener: (context,state)async{
+//       // //                           if(state is CreateOrderSuccessState)
+//       // //                           {
+//       // //                             snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
+//       // //                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
+//       // //                             shopCartBloc.startedShop();
+//       // //                           }
+//       // //                           else if(state is CreateOrderErrorState)
+//       // //                           {
+//       // //                             snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
+//       // //                           }
+//       // //                         },
+//       // //                         builder: (context,state) {
+//       // //                           bool isLoading = state is CreateOrderLoadingState?true:false;
+//       // //                           return AnimatedContainer(
+//       // //                             duration: Duration(milliseconds: 200),
+//       // //                             clipBehavior: Clip.antiAlias,
+//       // //                             height: 8.44 * SizeConfig.heightMulti,
+//       // //                             width:isLoading?60: SizeConfig.screenWidth * 0.8,
+//       // //                             padding: EdgeInsets.all(isLoading?8:0 ),
+//       // //                             margin: EdgeInsets.symmetric(horizontal: 20),
+//       // //                             decoration: BoxDecoration(
+//       // //                                 color: ColorsConst.mainColor,
+//       // //                                 borderRadius: BorderRadius.circular(10)
+//       // //                             ),
+//       // //                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+//       // //                               onPressed: () {
+//       // //                                 cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+//       // //                                 if(cardId ==''){
+//       // //                                   Fluttertoast.showToast(
+//       // //                                       msg: S.of(context)!.selectCardAlert,
+//       // //                                       toastLength: Toast.LENGTH_LONG,
+//       // //                                       gravity: ToastGravity.TOP,
+//       // //                                       timeInSecForIosWeb: 1,
+//       // //                                       backgroundColor: Colors.white,
+//       // //                                       textColor: Colors.black,
+//       // //                                       fontSize: 18.0
+//       // //                                   );
+//       // //                                 }
+//       // //                                 else{
+//       // //                                   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+//       // //                                   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+//       // //
+//       // //                                 }
+//       // //
+//       // //                               },
+//       // //                               child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
+//       // //                                   fontSize: SizeConfig.titleSize * 2.7),),
+//       // //
+//       // //                             ),
+//       // //                           );
+//       // //                         }
+//       // //                     ),
+//       // //                   ),
+//       // //                   SizedBox(height: SizeConfig.screenHeight * 0.05,)
+//       // //                 ],
+//       // //               ),
+//       // //             );
+//       // //           }
+//       // //       ),
+//       // //     ),
+//       // //   );
+//       // //  }
+//   }
+// }
 //
-//       }
-//
-//
-//
-//       /// For Credits Cards
-//       // else
-//       //   showMaterialModalBottomSheet(
-//       //     shape: RoundedRectangleBorder(
-//       //       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-//       //           topRight: Radius.circular(30)
-//       //       ),
-//       //     ),
-//       //     context: context,
-//       //     builder: (context) => SingleChildScrollView(
-//       //       controller: ModalScrollController.of(context),
-//       //       child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
-//       //           bloc: paymentMethodeNumberBloc,
-//       //           builder: (context,state) {
-//       //             return Container(
-//       //               padding: EdgeInsets.symmetric(horizontal: 10),
-//       //               height: SizeConfig.screenHeight * 0.8 ,
-//       //               clipBehavior: Clip.antiAlias,
-//       //               decoration: BoxDecoration(
-//       //                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-//       //                     topRight: Radius.circular(30)
-//       //                 ),
-//       //               ),
-//       //               child: Column(
-//       //                 crossAxisAlignment: CrossAxisAlignment.start,
-//       //                 children: [
-//       //                   IconButton(onPressed: (){
-//       //                     Navigator.of(context).pop();
-//       //                   }, icon:Icon(Icons.clear) ),
-//       //                   Text(S.of(context)!.payByCard , style:TextStyle(
-//       //
-//       //                       color: Colors.black54,
-//       //                       fontWeight: FontWeight.bold,
-//       //                       fontSize: SizeConfig.titleSize*2.9
-//       //
-//       //                   ),),
-//       //                   SizedBox(height: 15,),
-//       //                   Container(
-//       //                     margin: EdgeInsets.symmetric(horizontal: 20),
-//       //
-//       //                     child: ListView.separated(
-//       //                       separatorBuilder: (context,index){
-//       //                         return  SizedBox(height: 8,);
-//       //                       },
-//       //                       shrinkWrap:true ,
-//       //                       itemCount: state.cards.length,
-//       //                       itemBuilder: (context,index){
-//       //                         CardModel  card =   state.cards[index];
-//       //                         return   Center(
-//       //                           child: Container(
-//       //                             width: double.infinity,
-//       //                             height: 6.8 * SizeConfig.heightMulti,
-//       //                             decoration: BoxDecoration(
-//       //                                 borderRadius: BorderRadius.circular(10),
-//       //                                 color: Colors.grey.shade50,
-//       //                                 border: Border.all(
-//       //                                     color: Colors.black26,
-//       //                                     width: 2
-//       //                                 )
-//       //                             ),
-//       //                             child: Row(
-//       //                               mainAxisSize: MainAxisSize.min,
-//       //
-//       //                               children: [
-//       //                                 Radio<String>(
-//       //                                   value: card.id,
-//       //                                   groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
-//       //                                   onChanged: (value) {
-//       //                                     paymentMethodeNumberBloc.changeSelect(value!);
-//       //                                   },
-//       //                                   activeColor: Colors.green,
-//       //                                 ),
-//       //                                 Icon(Icons.payment),
-//       //                                 SizedBox(width: 10,),
-//       //
-//       //                                 Text(card.cardNumber , style: GoogleFonts.lato(
-//       //                                     color: Colors.black54,
-//       //                                     fontSize: SizeConfig.titleSize * 2.1,
-//       //                                     fontWeight: FontWeight.bold
-//       //                                 ),),
-//       //                                 Spacer(),
-//       //                                 IconButton(onPressed: (){
-//       //                                   paymentMethodeNumberBloc.removeOne(state.cards[index]);
-//       //                                 }, icon: Icon(Icons.delete,color: Colors.red,)),
-//       //
-//       //                               ],
-//       //                             ),
-//       //                           ),
-//       //                         );
-//       //
-//       //                       },
-//       //
-//       //                     ),
-//       //                   ),
-//       //                   SizedBox(height:25,),
-//       //                   Center(
-//       //                     child: GestureDetector(
-//       //                       onTap: (){
-//       //                         Navigator.push(context, MaterialPageRoute(builder: (context)=>
-//       //                             BlocProvider.value(
-//       //                                 value: paymentMethodeNumberBloc,
-//       //                                 child: AddCardScreen())
-//       //                         ));
-//       //                         //  paymentMethodeNumberBloc.addOne();
-//       //                       },
-//       //                       child: Container(
-//       //                         margin: EdgeInsets.symmetric(horizontal: 20),
-//       //
-//       //                         width: SizeConfig.screenWidth ,
-//       //                         height: 6.8 * SizeConfig.heightMulti,
-//       //                         decoration: BoxDecoration(
-//       //                             borderRadius: BorderRadius.circular(10),
-//       //                             color: Colors.grey.shade50,
-//       //                             border: Border.all(
-//       //                                 color: Colors.black26,
-//       //                                 width: 2
-//       //                             )
-//       //                         ),
-//       //                         child: Row(
-//       //                           mainAxisSize: MainAxisSize.min,
-//       //
-//       //                           children: [
-//       //
-//       //                             Icon(Icons.add),
-//       //                             SizedBox(width: 10,),
-//       //
-//       //                             Text(S.of(context)!.addCard, style: GoogleFonts.lato(
-//       //                                 color: Colors.black54,
-//       //                                 fontSize: SizeConfig.titleSize * 2.6,
-//       //                                 fontWeight: FontWeight.bold
-//       //                             )
-//       //                               ,)
-//       //                           ],
-//       //                         ),
-//       //                       ),
-//       //                     ),
-//       //                   ),
-//       //                   Spacer(),
-//       //                   Center(
-//       //                     child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
-//       //                         bloc: _orderBloc,
-//       //                         listener: (context,state)async{
-//       //                           if(state is CreateOrderSuccessState)
-//       //                           {
-//       //                             snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
-//       //                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
-//       //                             shopCartBloc.startedShop();
-//       //                           }
-//       //                           else if(state is CreateOrderErrorState)
-//       //                           {
-//       //                             snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
-//       //                           }
-//       //                         },
-//       //                         builder: (context,state) {
-//       //                           bool isLoading = state is CreateOrderLoadingState?true:false;
-//       //                           return AnimatedContainer(
-//       //                             duration: Duration(milliseconds: 200),
-//       //                             clipBehavior: Clip.antiAlias,
-//       //                             height: 8.44 * SizeConfig.heightMulti,
-//       //                             width:isLoading?60: SizeConfig.screenWidth * 0.8,
-//       //                             padding: EdgeInsets.all(isLoading?8:0 ),
-//       //                             margin: EdgeInsets.symmetric(horizontal: 20),
-//       //                             decoration: BoxDecoration(
-//       //                                 color: ColorsConst.mainColor,
-//       //                                 borderRadius: BorderRadius.circular(10)
-//       //                             ),
-//       //                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
-//       //                               onPressed: () {
-//       //                                 cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
-//       //                                 if(cardId ==''){
-//       //                                   Fluttertoast.showToast(
-//       //                                       msg: S.of(context)!.selectCardAlert,
-//       //                                       toastLength: Toast.LENGTH_LONG,
-//       //                                       gravity: ToastGravity.TOP,
-//       //                                       timeInSecForIosWeb: 1,
-//       //                                       backgroundColor: Colors.white,
-//       //                                       textColor: Colors.black,
-//       //                                       fontSize: 18.0
-//       //                                   );
-//       //                                 }
-//       //                                 else{
-//       //                                   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
-//       //                                   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
-//       //
-//       //                                 }
-//       //
-//       //                               },
-//       //                               child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
-//       //                                   fontSize: SizeConfig.titleSize * 2.7),),
-//       //
-//       //                             ),
-//       //                           );
-//       //                         }
-//       //                     ),
-//       //                   ),
-//       //                   SizedBox(height: SizeConfig.screenHeight * 0.05,)
-//       //                 ],
-//       //               ),
-//       //             );
-//       //           }
-//       //       ),
-//       //     ),
-//       //   );
-//       //  }
-//     },
-//     child: Text(
-//       S.of(context)!.next,
-//       style: TextStyle(
-//           color: Colors.white,
-//           fontSize: SizeConfig.titleSize * 2.5),
-//     ))
+// ///  The Code For Credit Cards
+// // ? MaterialButton(
+// //     onPressed: () {
+// //       // showDialog(
+// //       //     context: context,
+// //       //     builder: (context) {
+// //       //       return ClipRRect(
+// //       //         borderRadius: BorderRadius.circular(20),
+// //       //         child: AlertDialog(
+// //       //           backgroundColor:
+// //       //               Colors.white.withOpacity(0.8),
+// //       //           clipBehavior: Clip.antiAlias,
+// //       //           shape: RoundedRectangleBorder(
+// //       //             borderRadius: BorderRadius.circular(20),
+// //       //           ),
+// //       //           content: Container(
+// //       //             height: 70,
+// //       //             width: 90,
+// //       //             child: Center(
+// //       //               child: Text(
+// //       //                 S.of(context)!.creditComingSoon,
+// //       //                 style: GoogleFonts.acme(
+// //       //                     color: Colors.green,
+// //       //                     fontWeight: FontWeight.bold),
+// //       //               ),
+// //       //             ),
+// //       //           ),
+// //       //         ),
+// //       //       );
+// //       //     });
+// //       if(paymentGroupValue ==''){
+// //         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.paymentMethodAlert)));
+// //       }
+// //       else if(!(_checkAddressBloc.state is CheckAddressSuccessState)){
+// //         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.destinationAlert)));
+// //       }
+// //       else if(orderNotComplete){
+// //         _scaffoldState.currentState!.showSnackBar(SnackBar(content: Text(S.of(context)!.completeTheOrder)));
+// //       }
+// //       // else if(paymentGroupValue == PaymentMethodConst.CASH_MONEY){
+// //       //   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+// //       //   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+// //       // }
+// //       else{
+// //           GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+// //           _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+// //
+// //       }
+// //
+// //
+// //
+// //       /// For Credits Cards
+// //       // else
+// //       //   showMaterialModalBottomSheet(
+// //       //     shape: RoundedRectangleBorder(
+// //       //       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+// //       //           topRight: Radius.circular(30)
+// //       //       ),
+// //       //     ),
+// //       //     context: context,
+// //       //     builder: (context) => SingleChildScrollView(
+// //       //       controller: ModalScrollController.of(context),
+// //       //       child: BlocBuilder<PaymentMethodeNumberBloc,PaymentState>(
+// //       //           bloc: paymentMethodeNumberBloc,
+// //       //           builder: (context,state) {
+// //       //             return Container(
+// //       //               padding: EdgeInsets.symmetric(horizontal: 10),
+// //       //               height: SizeConfig.screenHeight * 0.8 ,
+// //       //               clipBehavior: Clip.antiAlias,
+// //       //               decoration: BoxDecoration(
+// //       //                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+// //       //                     topRight: Radius.circular(30)
+// //       //                 ),
+// //       //               ),
+// //       //               child: Column(
+// //       //                 crossAxisAlignment: CrossAxisAlignment.start,
+// //       //                 children: [
+// //       //                   IconButton(onPressed: (){
+// //       //                     Navigator.of(context).pop();
+// //       //                   }, icon:Icon(Icons.clear) ),
+// //       //                   Text(S.of(context)!.payByCard , style:TextStyle(
+// //       //
+// //       //                       color: Colors.black54,
+// //       //                       fontWeight: FontWeight.bold,
+// //       //                       fontSize: SizeConfig.titleSize*2.9
+// //       //
+// //       //                   ),),
+// //       //                   SizedBox(height: 15,),
+// //       //                   Container(
+// //       //                     margin: EdgeInsets.symmetric(horizontal: 20),
+// //       //
+// //       //                     child: ListView.separated(
+// //       //                       separatorBuilder: (context,index){
+// //       //                         return  SizedBox(height: 8,);
+// //       //                       },
+// //       //                       shrinkWrap:true ,
+// //       //                       itemCount: state.cards.length,
+// //       //                       itemBuilder: (context,index){
+// //       //                         CardModel  card =   state.cards[index];
+// //       //                         return   Center(
+// //       //                           child: Container(
+// //       //                             width: double.infinity,
+// //       //                             height: 6.8 * SizeConfig.heightMulti,
+// //       //                             decoration: BoxDecoration(
+// //       //                                 borderRadius: BorderRadius.circular(10),
+// //       //                                 color: Colors.grey.shade50,
+// //       //                                 border: Border.all(
+// //       //                                     color: Colors.black26,
+// //       //                                     width: 2
+// //       //                                 )
+// //       //                             ),
+// //       //                             child: Row(
+// //       //                               mainAxisSize: MainAxisSize.min,
+// //       //
+// //       //                               children: [
+// //       //                                 Radio<String>(
+// //       //                                   value: card.id,
+// //       //                                   groupValue: paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue,
+// //       //                                   onChanged: (value) {
+// //       //                                     paymentMethodeNumberBloc.changeSelect(value!);
+// //       //                                   },
+// //       //                                   activeColor: Colors.green,
+// //       //                                 ),
+// //       //                                 Icon(Icons.payment),
+// //       //                                 SizedBox(width: 10,),
+// //       //
+// //       //                                 Text(card.cardNumber , style: GoogleFonts.lato(
+// //       //                                     color: Colors.black54,
+// //       //                                     fontSize: SizeConfig.titleSize * 2.1,
+// //       //                                     fontWeight: FontWeight.bold
+// //       //                                 ),),
+// //       //                                 Spacer(),
+// //       //                                 IconButton(onPressed: (){
+// //       //                                   paymentMethodeNumberBloc.removeOne(state.cards[index]);
+// //       //                                 }, icon: Icon(Icons.delete,color: Colors.red,)),
+// //       //
+// //       //                               ],
+// //       //                             ),
+// //       //                           ),
+// //       //                         );
+// //       //
+// //       //                       },
+// //       //
+// //       //                     ),
+// //       //                   ),
+// //       //                   SizedBox(height:25,),
+// //       //                   Center(
+// //       //                     child: GestureDetector(
+// //       //                       onTap: (){
+// //       //                         Navigator.push(context, MaterialPageRoute(builder: (context)=>
+// //       //                             BlocProvider.value(
+// //       //                                 value: paymentMethodeNumberBloc,
+// //       //                                 child: AddCardScreen())
+// //       //                         ));
+// //       //                         //  paymentMethodeNumberBloc.addOne();
+// //       //                       },
+// //       //                       child: Container(
+// //       //                         margin: EdgeInsets.symmetric(horizontal: 20),
+// //       //
+// //       //                         width: SizeConfig.screenWidth ,
+// //       //                         height: 6.8 * SizeConfig.heightMulti,
+// //       //                         decoration: BoxDecoration(
+// //       //                             borderRadius: BorderRadius.circular(10),
+// //       //                             color: Colors.grey.shade50,
+// //       //                             border: Border.all(
+// //       //                                 color: Colors.black26,
+// //       //                                 width: 2
+// //       //                             )
+// //       //                         ),
+// //       //                         child: Row(
+// //       //                           mainAxisSize: MainAxisSize.min,
+// //       //
+// //       //                           children: [
+// //       //
+// //       //                             Icon(Icons.add),
+// //       //                             SizedBox(width: 10,),
+// //       //
+// //       //                             Text(S.of(context)!.addCard, style: GoogleFonts.lato(
+// //       //                                 color: Colors.black54,
+// //       //                                 fontSize: SizeConfig.titleSize * 2.6,
+// //       //                                 fontWeight: FontWeight.bold
+// //       //                             )
+// //       //                               ,)
+// //       //                           ],
+// //       //                         ),
+// //       //                       ),
+// //       //                     ),
+// //       //                   ),
+// //       //                   Spacer(),
+// //       //                   Center(
+// //       //                     child: BlocConsumer<NewOrderBloc,CreateOrderStates>(
+// //       //                         bloc: _orderBloc,
+// //       //                         listener: (context,state)async{
+// //       //                           if(state is CreateOrderSuccessState)
+// //       //                           {
+// //       //                             snackBarSuccessWidget(context, S.of(context)!.orderAddedSuccessfully);
+// //       //                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> CompleteOrderScreen(orderId: state.data.id)),(route)=>false);
+// //       //                             shopCartBloc.startedShop();
+// //       //                           }
+// //       //                           else if(state is CreateOrderErrorState)
+// //       //                           {
+// //       //                             snackBarSuccessWidget(context, S.of(context)!.orderWasNotAdded);
+// //       //                           }
+// //       //                         },
+// //       //                         builder: (context,state) {
+// //       //                           bool isLoading = state is CreateOrderLoadingState?true:false;
+// //       //                           return AnimatedContainer(
+// //       //                             duration: Duration(milliseconds: 200),
+// //       //                             clipBehavior: Clip.antiAlias,
+// //       //                             height: 8.44 * SizeConfig.heightMulti,
+// //       //                             width:isLoading?60: SizeConfig.screenWidth * 0.8,
+// //       //                             padding: EdgeInsets.all(isLoading?8:0 ),
+// //       //                             margin: EdgeInsets.symmetric(horizontal: 20),
+// //       //                             decoration: BoxDecoration(
+// //       //                                 color: ColorsConst.mainColor,
+// //       //                                 borderRadius: BorderRadius.circular(10)
+// //       //                             ),
+// //       //                             child:isLoading?Center(child: CircularProgressIndicator(color: Colors.white,)): MaterialButton(
+// //       //                               onPressed: () {
+// //       //                                 cardId =  paymentMethodeNumberBloc.state.paymentMethodeCreditGroupValue;
+// //       //                                 if(cardId ==''){
+// //       //                                   Fluttertoast.showToast(
+// //       //                                       msg: S.of(context)!.selectCardAlert,
+// //       //                                       toastLength: Toast.LENGTH_LONG,
+// //       //                                       gravity: ToastGravity.TOP,
+// //       //                                       timeInSecForIosWeb: 1,
+// //       //                                       backgroundColor: Colors.white,
+// //       //                                       textColor: Colors.black,
+// //       //                                       fontSize: 18.0
+// //       //                                   );
+// //       //                                 }
+// //       //                                 else{
+// //       //                                   GeoJson geoJson = GeoJson(lat: addressModel.latitude, lon: addressModel.longitude);
+// //       //                                   _orderBloc.addNewOrder(product: requestProduct, deliveryTimes: deliveryTimesGroupValue, orderType:vipOrder , destination: geoJson,addressName: addressModel.description, phoneNumber: phoneNumber, paymentMethod: paymentGroupValue,numberOfMonth: numberOfMonth, orderValue: orderValue, cardId: cardId,storeId:storeId);
+// //       //
+// //       //                                 }
+// //       //
+// //       //                               },
+// //       //                               child: Text(S.of(context)!.orderConfirmation, style: TextStyle(color: Colors.white,
+// //       //                                   fontSize: SizeConfig.titleSize * 2.7),),
+// //       //
+// //       //                             ),
+// //       //                           );
+// //       //                         }
+// //       //                     ),
+// //       //                   ),
+// //       //                   SizedBox(height: SizeConfig.screenHeight * 0.05,)
+// //       //                 ],
+// //       //               ),
+// //       //             );
+// //       //           }
+// //       //       ),
+// //       //     ),
+// //       //   );
+// //       //  }
+// //     },
+// //     child: Text(
+// //       S.of(context)!.next,
+// //       style: TextStyle(
+// //           color: Colors.white,
+// //           fontSize: SizeConfig.titleSize * 2.5),
+// //     ))

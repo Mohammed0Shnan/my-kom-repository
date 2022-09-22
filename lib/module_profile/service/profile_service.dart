@@ -121,15 +121,16 @@ class ProfileService{
   }
 
   Future<bool> deleteMyAccount()async {
-    String?  userId =await _prefsHelper.getUserId();
+
     try{
+
       FirebaseFirestore _fire =  FirebaseFirestore.instance;
-      await FirebaseAuth.instance.currentUser!.delete();
-      await _fire.collection('users').doc(userId).update({
+      await _fire.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
         'userName':'deleted_account',
         'email':'deleted_account',
         'address':{}
       });
+      await FirebaseAuth.instance.currentUser!.delete();
       await  _auth.signOut();
       return true;
     }catch(e){

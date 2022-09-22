@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,7 +37,7 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Platform.isIOS? Icons.arrow_back_ios : Icons.arrow_back),
           onPressed: (){
             Navigator.of(context).pop();
           },

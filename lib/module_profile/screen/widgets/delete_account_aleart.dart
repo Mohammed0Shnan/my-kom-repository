@@ -13,7 +13,7 @@ deleteAccountAlertWidget(context,ProfileBloc bloc){
         borderRadius: BorderRadius.circular(20)
     ),
     content: Container(
-      height: 190,
+      height:200,
       width: 300,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(

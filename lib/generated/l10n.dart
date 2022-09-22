@@ -1284,6 +1284,55 @@ class S {
       args: [],
     );
   }
+
+  /// `Optional`
+  String get optional {
+    return Intl.message(
+      'Optional',
+      name: 'optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Required`
+  String get required {
+    return Intl.message(
+      'Required',
+      name: 'required',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Required Cart Field Message`
+  String get requiredCartFieldMessage {
+    return Intl.message(
+      'Required Cart Field Message',
+      name: 'requiredCartFieldMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Building Or Home Number`
+  String get buildingOrHomeNumber {
+    return Intl.message(
+      'Building Or Home Number',
+      name: 'buildingOrHomeNumber',
+      desc: '',
+      args: [],
+    );
+  }
+  /// `Building Or Home Number Hint`
+  String get buildingOrHomeNumberHint {
+    return Intl.message(
+      'Building Or Home Number Hint',
+      name: 'buildingOrHomeNumberHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Success Delete Account`
   String get successDeleteAccount {
     return Intl.message(

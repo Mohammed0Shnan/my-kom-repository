@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -139,7 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 180.0,
                               child: LayoutBuilder(
                                 builder: (context,constraints){
-                                  double innerHeight  = constraints.maxHeight;
                                   double innerWidth  = constraints.maxWidth;
                                   return Stack(
                                     fit:StackFit.expand,
@@ -417,7 +418,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 30,
                         width: 30,
                         child: Center(
-                          child: CircularProgressIndicator(color: ColorsConst.mainColor,),
+                          child:Platform.isIOS?CupertinoActivityIndicator(): CircularProgressIndicator(color: ColorsConst.mainColor,),
                         ),
                       ),
                     );

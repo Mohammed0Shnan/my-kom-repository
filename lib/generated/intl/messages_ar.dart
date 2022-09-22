@@ -43,6 +43,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "newPassword": MessageLookupByLibrary.simpleMessage("كلمة السر الجديدة"),
     "registerAddressSuccessMessage": MessageLookupByLibrary.simpleMessage("يمكنك تغيير عنوانك الرئيسي من الصفحة الشخصية"),
     "registerAddressErrorMessage": MessageLookupByLibrary.simpleMessage("فشل تحديد موقعك ، يرجى إعادة تحديده"),
+    "buildingOrHomeNumber": MessageLookupByLibrary.simpleMessage("رقم البناء أو المنزل"),
+    "buildingOrHomeNumberHint": MessageLookupByLibrary.simpleMessage("أدخل أسم البناء أو رقم المنزل"),
+
     /// About Pages
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "titlePageOne": MessageLookupByLibrary.simpleMessage("خيارات متعددة"),
@@ -52,13 +55,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "subTitlePageTow": MessageLookupByLibrary.simpleMessage("طريقة الدفع في ماي كوم متعددة  ,ادفع بالطريقة الي تناسبك"),
     "subTitlePageThree": MessageLookupByLibrary.simpleMessage("بينما كل التطبيقات تحقق ارباحهامن رسوم التوصيل تطبيقنا يوصلك مجانا"),
     "deleteMyAccount": MessageLookupByLibrary.simpleMessage("حذف الحساب"),
-
+    "optional": MessageLookupByLibrary.simpleMessage("اختياري"),
+    "required": MessageLookupByLibrary.simpleMessage("مطلوب"),
+    "requiredCartFieldMessage": MessageLookupByLibrary.simpleMessage("الرجاء إدخال الحقول المطلوبة"),
 
 
     /// Home Page
     "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
     "orders": MessageLookupByLibrary.simpleMessage("الطلبات"),
-    "profile": MessageLookupByLibrary.simpleMessage("بروفايل"),
+    "profile": MessageLookupByLibrary.simpleMessage("حسابي"),
     "ship": MessageLookupByLibrary.simpleMessage("السلة"),
     "more": MessageLookupByLibrary.simpleMessage("المزيد"),
     "deliveryTo": MessageLookupByLibrary.simpleMessage("التوصيل الى"),
@@ -143,7 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailAndPhone": MessageLookupByLibrary.simpleMessage("الايميل والهاتف"),
     "myAddress": MessageLookupByLibrary.simpleMessage("عنواني"),
     "myInformation": MessageLookupByLibrary.simpleMessage("معلوماتي الشخصية"),
-    "myProfile": MessageLookupByLibrary.simpleMessage("ملفي\nالشخصي"),
+    "myProfile": MessageLookupByLibrary.simpleMessage("الحساب\nالشخصي"),
     "titleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("هل تريد حذف حسابك؟"),
     "subTitleDeleteAccountAlert": MessageLookupByLibrary.simpleMessage("ملاحظة: عندما تحذف حسابك ، ستفقد بياناتك الشخصية على تطبيق مايكوم."),
     "deleteAccountAlertButton": MessageLookupByLibrary.simpleMessage("حذف"),
@@ -202,11 +207,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
     "searchForYourProducts": MessageLookupByLibrary.simpleMessage("ابحث عن منتجات معينة"),
     "added": MessageLookupByLibrary.simpleMessage("أضف"),
-    "seeTheCart": MessageLookupByLibrary.simpleMessage("شوف العربة"),
-    "addToCart": MessageLookupByLibrary.simpleMessage(" أضف الى العربة"),
+    "seeTheCart": MessageLookupByLibrary.simpleMessage("اذهب الى السلة"),
+    "addToCart": MessageLookupByLibrary.simpleMessage(" أضف الى السلة"),
     "description": MessageLookupByLibrary.simpleMessage("الوصف"),
     "selectTheNumberOfItemsRequired": MessageLookupByLibrary.simpleMessage("قم بتحديد عدد المنتجات ثم أضف"),
-    "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("تم أضافة المنتجات الى العربة "),
+    "itemsHaveBeenAdded": MessageLookupByLibrary.simpleMessage("تم أضافة المنتجات الى السلة"),
     "rival": MessageLookupByLibrary.simpleMessage("خصم"),
 
 
