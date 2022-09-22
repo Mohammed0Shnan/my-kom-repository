@@ -35,14 +35,16 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: true, /// For IOS
-      child: Scaffold(
+    return Scaffold(
 
-          body: _getActiveScreen(),
+        body: _getActiveScreen(),
 
-          bottomNavigationBar: Container(
-            margin: const EdgeInsets.only(left: 8.0 , right:  8.0 , bottom:  8.0 , top: 16.0),
+        bottomNavigationBar: SafeArea(
+          bottom: true,
+          child: Container(
+color: Colors.white,
+            margin: const EdgeInsets.only(left: 8.0 , right:  8.0 , top: 16.0),
+
             child: ConvexAppBar(
               style: TabStyle.fixedCircle,
               curve:Curves.easeInOut ,
@@ -50,7 +52,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               backgroundColor: Colors.white,
               activeColor: ColorsConst.mainColor,
               color: Colors.black54,
-
+elevation: 1,
               height: 56.0,
               items: [
                 TabItem(
@@ -82,63 +84,63 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
                           setState(() {});
               },
             ),
-          )
-          // bottomNavigationBar: Container(
-          //   margin: EdgeInsets.only(bottom:12,right: 12,left: 12),
-          //   clipBehavior: Clip.antiAlias,
-          //   decoration: BoxDecoration(
-          //
-          //     borderRadius: BorderRadius.all(Radius.circular(10)),
-          //
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Colors.black12,
-          //
-          //         blurRadius: 3,
-          //         spreadRadius: 1
-          //       )
-          //     ]
-          //   ),
-          //   child: BottomNavigationBar(
-          //     selectedItemColor: ColorsConst.mainColor,
-          //       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-          //       unselectedItemColor: ColorsConst.mainColor,
-          //       selectedIconTheme:IconThemeData(
-          //         size: 26
-          //       ) ,
-          //       unselectedIconTheme:IconThemeData(
-          //           size: 18,
-          //         color: ColorsConst.mainColor
-          //       ) ,
-          //       showSelectedLabels: true,
-          //       showUnselectedLabels: true,
-          //
-          //       currentIndex: current_index,
-          //     onTap: (index){
-          //           current_index = index;
-          //           setState(() {});
-          //     },
-          //     items: [
-          //       BottomNavigationBarItem(
-          //         backgroundColor: Colors.white,
-          //         label: S.of(context)!.home,
-          //         icon: Icon(Icons.home_outlined)),
-          //       BottomNavigationBarItem(label:  S.of(context)!.orders,icon: Icon(Icons.description_outlined),
-          //         backgroundColor: Colors.white,
-          //       ),
-          //       BottomNavigationBarItem(label:  S.of(context)!.profile,icon: Icon(Icons.perm_identity),
-          //         backgroundColor: Colors.white,
-          //       ),
-          //       BottomNavigationBarItem(label:  S.of(context)!.ship,icon: Icon(Icons.shopping_cart_outlined),
-          //         backgroundColor: Colors.white,
-          //       ),
-          //       BottomNavigationBarItem(label:  S.of(context)!.more,icon: Icon(Icons.widgets_outlined),
-          //         backgroundColor: Colors.white,),
-          //     ],
-          //   ),
-          //),
+          ),
+        )
+        // bottomNavigationBar: Container(
+        //   margin: EdgeInsets.only(bottom:12,right: 12,left: 12),
+        //   clipBehavior: Clip.antiAlias,
+        //   decoration: BoxDecoration(
+        //
+        //     borderRadius: BorderRadius.all(Radius.circular(10)),
+        //
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: Colors.black12,
+        //
+        //         blurRadius: 3,
+        //         spreadRadius: 1
+        //       )
+        //     ]
+        //   ),
+        //   child: BottomNavigationBar(
+        //     selectedItemColor: ColorsConst.mainColor,
+        //       selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+        //       unselectedItemColor: ColorsConst.mainColor,
+        //       selectedIconTheme:IconThemeData(
+        //         size: 26
+        //       ) ,
+        //       unselectedIconTheme:IconThemeData(
+        //           size: 18,
+        //         color: ColorsConst.mainColor
+        //       ) ,
+        //       showSelectedLabels: true,
+        //       showUnselectedLabels: true,
+        //
+        //       currentIndex: current_index,
+        //     onTap: (index){
+        //           current_index = index;
+        //           setState(() {});
+        //     },
+        //     items: [
+        //       BottomNavigationBarItem(
+        //         backgroundColor: Colors.white,
+        //         label: S.of(context)!.home,
+        //         icon: Icon(Icons.home_outlined)),
+        //       BottomNavigationBarItem(label:  S.of(context)!.orders,icon: Icon(Icons.description_outlined),
+        //         backgroundColor: Colors.white,
+        //       ),
+        //       BottomNavigationBarItem(label:  S.of(context)!.profile,icon: Icon(Icons.perm_identity),
+        //         backgroundColor: Colors.white,
+        //       ),
+        //       BottomNavigationBarItem(label:  S.of(context)!.ship,icon: Icon(Icons.shopping_cart_outlined),
+        //         backgroundColor: Colors.white,
+        //       ),
+        //       BottomNavigationBarItem(label:  S.of(context)!.more,icon: Icon(Icons.widgets_outlined),
+        //         backgroundColor: Colors.white,),
+        //     ],
+        //   ),
+        //),
 
-      ),
     );
   }
  Color _getNavItemColor(){

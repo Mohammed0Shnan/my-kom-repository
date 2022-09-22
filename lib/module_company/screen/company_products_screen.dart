@@ -58,6 +58,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
 
     return Scaffold(
       body: SafeArea(
+        bottom: true,
         child: Container(
           child: Column(
             children: [
@@ -172,19 +173,19 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                       BoxShadow(color: Colors.black26, blurRadius: 1)
                     ]),
                 child: SizedBox(
-                  height:  SizeConfig.heightMulti * 6,
+                  height:  35.0,
                   child: TextFormField(
                 
                     controller: _serachController,
                     style: TextStyle(
-                      height: 1
+                      fontSize: 14
                     ),
                     onChanged: (String query){
                       productsCompanyBloc.search(query);
                     },
                     decoration: InputDecoration(
                       isDense: true,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
                         border: InputBorder.none,
                         prefixIcon: IconButton(
                           icon: Icon(
@@ -197,7 +198,7 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
                           },
                         ),
                         hintText:S.of(context)!.searchForYourProducts,
-                        hintStyle: TextStyle(color: Colors.black26)),
+                        hintStyle: TextStyle(color: Colors.black26,fontSize: 14)),
                   ),
                 ),
               ),
@@ -226,73 +227,77 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
           ),
         ),
       ),
-      bottomNavigationBar:  Container(height: 75,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            boxShadow: [BoxShadow(
-                offset:Offset(0,-3),
-                color: Colors.black12,
-                blurRadius: 3
-            )]
-
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: 2,),
-            FutureBuilder<double?>(
-                future: _preferencesHelper.getMinimumPurchaseStore(),
-                builder: (context,AsyncSnapshot<double?> snap){
-                  if(snap.hasData){
-                   return Text('${S.of(context)!.minimumAlert}  ${snap.data} ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
-                  }else{
-                  return Text('${S.of(context)!.minimumAlert}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',style: TextStyle(fontSize: SizeConfig.titleSize * 2,fontWeight: FontWeight.w600,color: Colors.black54),);
-                  }
-            }),
-            Container(
-              height: 38,
-              margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                  color: ColorsConst.mainColor,
-                  borderRadius: BorderRadius.circular(10)
+      bottomNavigationBar:  SafeArea(
+        /// For IOS
+        bottom: true,
+        child: Container(height: 75,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
-              child: MaterialButton(
-                onPressed: (){
-                  widget._authService.isLoggedIn.then((value) {
-                    if(value){
-                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+              boxShadow: [BoxShadow(
+                  offset:Offset(0,-3),
+                  color: Colors.black12,
+                  blurRadius: 3
+              )]
 
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(height: 2,),
+              FutureBuilder<double?>(
+                  future: _preferencesHelper.getMinimumPurchaseStore(),
+                  builder: (context,AsyncSnapshot<double?> snap){
+                    if(snap.hasData){
+                     return Text('${S.of(context)!.minimumAlert}  ${snap.data} ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.w600,color: Colors.black54),);
                     }else{
-                      loginCheakAlertWidget(context);
+                    return Text('${S.of(context)!.minimumAlert}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.w600,color: Colors.black54),);
                     }
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${S.of(context)!.seeTheCart}',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4),),
-                    BlocBuilder<ShopCartBloc,CartState>(
-                        bloc: shopCartBloc,
-                        builder: (context,state) {
-                          if(state is CartLoaded ){
+              }),
+              Container(
+                height: 38,
+                margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: ColorsConst.mainColor,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: MaterialButton(
+                  onPressed: (){
+                    widget._authService.isLoggedIn.then((value) {
+                      if(value){
+                        Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
 
-                            return Text('${state.cart.totalString}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
-                          }
-                          else{
-                            return Text('',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
-                          }
+                      }else{
+                        loginCheakAlertWidget(context);
+                      }
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('${S.of(context)!.seeTheCart}',style: TextStyle(color: Colors.white,fontSize: 17.0,fontWeight: FontWeight.bold),),
+                      BlocBuilder<ShopCartBloc,CartState>(
+                          bloc: shopCartBloc,
+                          builder: (context,state) {
+                            if(state is CartLoaded ){
 
-                        }
-                    )
-                  ],
+                              return Text('${state.cart.totalString}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 17.0));
+                            }
+                            else{
+                              return Text('',style: TextStyle(color: Colors.white,fontSize:17.0));
+                            }
+
+                          }
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,12 +1,14 @@
 
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_kom/consts/colors.dart';
 import 'package:my_kom/consts/payment_method.dart';
+import 'package:my_kom/consts/utils_const.dart';
 import 'package:my_kom/module_orders/model/order_model.dart';
 import 'package:my_kom/module_orders/state_manager/order_status/order_status.state_manager.dart';
 import 'package:my_kom/utils/size_configration/size_config.dart';
@@ -253,14 +255,14 @@ class OrderStatusScreenState extends State<OrderStatusScreen> {
               return Center(child: Container(
                 width: 50,
                 height: 30,
-                child: Text('Error'),
+                child: Text( UtilsConst.lang == 'en'?'Error in Load Data':'خطآ في تحميل البيانات'),
               ),);
             }
           else {
             return Center(child: Container(
               width: 30,
               height: 30,
-              child: CircularProgressIndicator(color: ColorsConst.mainColor,),
+              child:Platform.isIOS? CupertinoActivityIndicator(): CircularProgressIndicator(color: ColorsConst.mainColor,),
             ),);
           }
 

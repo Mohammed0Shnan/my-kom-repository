@@ -2467,7 +2467,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       child: Container(
                                       height:20,
                                       width: 20,
-                                      child:Platform.isIOS? CupertinoActivityIndicator(): CircularProgressIndicator(
+                                      child:Platform.isIOS? CupertinoActivityIndicator(color: Colors.white,): CircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                     ))
