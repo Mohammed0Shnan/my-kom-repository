@@ -29,7 +29,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> backgroundHandler(RemoteMessage message)async{
   await Firebase.initializeApp();
-  FireNotificationService().display(message.notification!);
+  //FireNotificationService().display(message.notification!);
 }
 void main() async {
 

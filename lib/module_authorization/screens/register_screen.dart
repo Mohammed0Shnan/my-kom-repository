@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -678,9 +680,9 @@ class _RegisterScreenState extends State<RegisterScreen> with WidgetsBindingObse
                                   return Center(
                                       child: Container(
                                           margin: EdgeInsets.all(20),
-                                          width: 28,
-                                          height: 28,
-                                          child: CircularProgressIndicator()));
+                                          width: 25,
+                                          height: 25,
+                                          child:Platform.isIOS?CupertinoActivityIndicator(): CircularProgressIndicator(color: ColorsConst.mainColor,)));
                                 else
                                   return ListTile(
                                     title: Container(

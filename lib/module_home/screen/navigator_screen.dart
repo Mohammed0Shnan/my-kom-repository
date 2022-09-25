@@ -42,11 +42,12 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           body: _getActiveScreen(),
 
           bottomNavigationBar: Container(
-            margin: const EdgeInsets.only(left: 8.0 , right:  8.0 , bottom:  8.0 , top: 16.0),
+            margin: const EdgeInsets.only(left: 8.0 , right:  8.0 , top: 16.0),
             child: ConvexAppBar(
               style: TabStyle.fixedCircle,
               curve:Curves.easeInOut ,
-              cornerRadius: 8.0,
+              /// For Android
+              ///cornerRadius: 8.0,
               backgroundColor: Colors.white,
               activeColor: ColorsConst.mainColor,
               color: Colors.black54,

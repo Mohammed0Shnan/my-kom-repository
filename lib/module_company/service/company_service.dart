@@ -66,8 +66,6 @@ class CompanyService {
    await  _firestore.collection('stores').doc(storeId).get().then((value)async {
        Map<String , dynamic> map = value.data() as  Map<String , dynamic>;
        double minimumPurchase =(1.0) * map['minimum_purchase'] ;
-       print('minimum purches from store !!!!!!!!!!!!!!!!!');
-       print(minimumPurchase);
         bool vip =  map['vip'];
       await _preferencesHelper.setCurrentStore(storeId);
       await _preferencesHelper.setMinimumPurchaseStore(minimumPurchase);

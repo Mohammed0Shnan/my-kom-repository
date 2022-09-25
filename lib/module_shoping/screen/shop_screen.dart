@@ -88,7 +88,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   /// To check permission to open the cart page (guests cannot view cart page)
   late final IsLogginCubit isLogginCubit;
-  late String storeId;
+   String storeId = 'untitle';
 
   ///To save the source of the request (Dubai ..., etc)
   ///If an error occurred, we could not get the value stored in the device (Null)
@@ -116,6 +116,9 @@ class _ShopScreenState extends State<ShopScreen> {
            await _getSubAreaForAddress(latLng);
           }
         });
+      }
+      else {
+
       }
     });
 
@@ -2467,7 +2470,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                       child: Container(
                                       height:20,
                                       width: 20,
-                                      child:Platform.isIOS? CupertinoActivityIndicator(): CircularProgressIndicator(
+                                      child:Platform.isIOS? CupertinoActivityIndicator(color: Colors.white,): CircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                     ))

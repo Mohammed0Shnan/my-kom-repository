@@ -225,73 +225,76 @@ class _CompanyProductScreenState extends State<CompanyProductScreen> {
           ),
         ),
       ),
-      bottomNavigationBar:  Container(height: 75,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            boxShadow: [BoxShadow(
-                offset:Offset(0,-3),
-                color: Colors.black12,
-                blurRadius: 3
-            )]
-
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: 2,),
-            FutureBuilder<double?>(
-                future: _preferencesHelper.getMinimumPurchaseStore(),
-                builder: (context,AsyncSnapshot<double?> snap){
-                  if(snap.hasData){
-                   return Text('${S.of(context)!.minimumAlert}  ${snap.data} ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(fontSize:12.5,fontWeight: FontWeight.w600,color: Colors.black54),);
-                  }else{
-                  return Text('${S.of(context)!.minimumAlert}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',style: TextStyle(fontSize:12.5,fontWeight: FontWeight.w600,color: Colors.black54),);
-                  }
-            }),
-            Container(
-              height: 38,
-              margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                  color: ColorsConst.mainColor,
-                  borderRadius: BorderRadius.circular(10)
+      bottomNavigationBar:  SafeArea(
+        bottom: true,
+        child: Container(height: 75,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
-              child: MaterialButton(
-                onPressed: (){
-                  widget._authService.isLoggedIn.then((value) {
-                    if(value){
-                      Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
+              boxShadow: [BoxShadow(
+                  offset:Offset(0,-3),
+                  color: Colors.black12,
+                  blurRadius: 3
+              )]
 
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(height: 2,),
+              FutureBuilder<double?>(
+                  future: _preferencesHelper.getMinimumPurchaseStore(),
+                  builder: (context,AsyncSnapshot<double?> snap){
+                    if(snap.hasData){
+                     return Text('${S.of(context)!.minimumAlert}  ${snap.data} ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(fontSize:12.5,fontWeight: FontWeight.w600,color: Colors.black54),);
                     }else{
-                      loginCheakAlertWidget(context);
+                    return Text('${S.of(context)!.minimumAlert}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'} ',style: TextStyle(fontSize:12.5,fontWeight: FontWeight.w600,color: Colors.black54),);
                     }
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${S.of(context)!.seeTheCart}',style: TextStyle(color: Colors.white,fontSize: 16.0),),
-                    BlocBuilder<ShopCartBloc,CartState>(
-                        bloc: shopCartBloc,
-                        builder: (context,state) {
-                          if(state is CartLoaded ){
+              }),
+              Container(
+                height: 38,
+                margin: EdgeInsets.symmetric(horizontal: 20,vertical: 4),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: ColorsConst.mainColor,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: MaterialButton(
+                  onPressed: (){
+                    widget._authService.isLoggedIn.then((value) {
+                      if(value){
+                        Navigator.pushNamed(context, ShopingRoutes.SHOPE_SCREEN);
 
-                            return Text('${state.cart.totalString}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(color: Colors.white,fontSize: SizeConfig.titleSize * 2.4));
-                          }
-                          else{
-                            return Text('',style: TextStyle(color: Colors.white,fontSize: 17.0));
-                          }
+                      }else{
+                        loginCheakAlertWidget(context);
+                      }
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('${S.of(context)!.seeTheCart}',style: TextStyle(color: Colors.white,fontSize: 16.0),),
+                      BlocBuilder<ShopCartBloc,CartState>(
+                          bloc: shopCartBloc,
+                          builder: (context,state) {
+                            if(state is CartLoaded ){
 
-                        }
-                    )
-                  ],
+                              return Text('${state.cart.totalString}  ${ UtilsConst.lang == 'en'?'AED':'د.إ'}',style: TextStyle(color: Colors.white,fontSize: 17.0));
+                            }
+                            else{
+                              return Text('',style: TextStyle(color: Colors.white,fontSize: 16.5));
+                            }
+
+                          }
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

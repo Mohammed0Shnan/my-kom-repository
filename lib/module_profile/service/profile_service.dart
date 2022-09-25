@@ -5,10 +5,8 @@ import 'package:my_kom/module_authorization/exceptions/auth_exception.dart';
 import 'package:my_kom/module_authorization/presistance/auth_prefs_helper.dart';
 import 'package:my_kom/module_authorization/repository/auth_repository.dart';
 import 'package:my_kom/module_authorization/requests/profile_request.dart';
-import 'package:my_kom/module_authorization/requests/register_request.dart';
 import 'package:my_kom/module_authorization/response/login_response.dart';
 import 'package:my_kom/module_authorization/service/auth_service.dart';
-import 'package:my_kom/module_map/models/address_model.dart';
 import 'package:my_kom/module_profile/model/profile_model.dart';
 import 'package:my_kom/module_profile/model/quick_location_model.dart';
 
@@ -130,8 +128,10 @@ class ProfileService{
         'email':'deleted_account',
         'address':{}
       });
+
       await FirebaseAuth.instance.currentUser!.delete();
       await  _auth.signOut();
+      await AuthService().logout();
       return true;
     }catch(e){
       return false;
