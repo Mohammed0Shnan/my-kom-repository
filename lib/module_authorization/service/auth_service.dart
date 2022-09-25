@@ -226,13 +226,10 @@ Future<AppUser>  getCurrentUser()async{
   }
 
   void fakeAccount() async{
-  if(FirebaseAuth.instance.currentUser != null){
-    String uid = await FirebaseAuth.instance.currentUser!.uid;
-    await _repository.deleteFakeProfile(uid);
+  print('fake account');
+ String uid = await FirebaseAuth.instance.currentUser!.uid;
+ await _repository.deleteFakeProfile(uid);
     FirebaseAuth.instance.currentUser!.delete();
-  }
-
-
   }
 
  Future<AuthResponse> resetPassword(String email) async{

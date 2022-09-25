@@ -7,6 +7,7 @@ import 'package:my_kom/module_about/service/about_service.dart';
 import 'package:my_kom/module_authorization/authorization_module.dart';
 import 'package:my_kom/module_authorization/screens/login_screen.dart';
 import 'package:my_kom/module_authorization/screens/register_screen.dart';
+import 'package:my_kom/module_authorization/service/auth_service.dart';
 import 'package:my_kom/module_company/bloc/all_company_bloc.dart';
 import 'package:my_kom/module_company/bloc/check_zone_bloc.dart';
 import 'package:my_kom/module_company/bloc/panar_bloc.dart';
@@ -59,6 +60,7 @@ class AppComponentInjector implements AppComponent {
       _createOrderModule(),
       _createProfileModule(),
       _createNotificationService(),
+      _createPaymentModule(),
 
       );
 

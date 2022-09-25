@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ import 'package:my_kom/module_home/navigator_routes.dart';
 import 'package:my_kom/module_localization/service/localization_service/localization_b;oc_service.dart';
 import 'package:my_kom/module_notifications/service/fire_notification_service/fire_notification_service.dart';
 import 'package:my_kom/module_orders/orders_module.dart';
+import 'package:my_kom/module_payment/stripe_payment_service.dart';
 import 'package:my_kom/module_profile/module_profile.dart';
 import 'package:my_kom/module_shoping/shoping_module.dart';
 import 'package:my_kom/module_splash/splash_module.dart';
@@ -29,16 +29,12 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> backgroundHandler(RemoteMessage message)async{
   await Firebase.initializeApp();
- // FireNotificationService().display(message.notification!);
+  FireNotificationService().display(message.notification!);
 }
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  /// Firebase Initial
-    await Firebase.initializeApp();
-
-
+  await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   if (defaultTargetPlatform == TargetPlatform.android) {
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
@@ -81,8 +77,9 @@ class MyApp extends StatefulWidget {
   final OrdersModule _ordersModule;
   final ProfileModule _profileModule;
   final FireNotificationService _fireNotificationService;
+  final StripePaymentService _paymentService;
   MyApp(this._localizationService, this._aboutModule,this._splashModule, this._navigatorModule,
-      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule,this._fireNotificationService);
+      this._authorizationModule,this._mapModule, this._companyModule,this._shopingModule,this._ordersModule,this._profileModule,this._fireNotificationService,this._paymentService);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -91,48 +88,32 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 Timer? _timer;
   FirebaseMessaging messaging =  FirebaseMessaging.instance;
-
-  void requestAndRegisterNotification()async{
-    await Firebase.initializeApp();
-    FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-    NotificationSettings settings =await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      provisional: false,
-      sound: true
-    );
-    if(settings.authorizationStatus == AuthorizationStatus.authorized){
-      String? token = await messaging.getToken();
-      FirebaseMessaging.onMessage.listen((event) {
-
-       if(event.notification != null){
-         widget._fireNotificationService.display(event.notification!);
-       }
-
-      });
-
-      FirebaseMessaging.onMessageOpenedApp.listen((event) {
-
-        Navigator.of(context).pushNamedAndRemoveUntil( NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
-      });
-
-    }
-  }
-
   @override
   void initState() {
-
-
-    /// Notifications Registration
-    requestAndRegisterNotification();
-
-
     EasyLoading.addStatusCallback((status) {
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
     });
 
+    widget._fireNotificationService.init(context);
+    FirebaseMessaging.onMessage.listen((event) {
+    if(event.notification != null){
+     widget._fireNotificationService.display(event.notification!);
+    }
+
+  });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+
+    Navigator.of(context).pushNamedAndRemoveUntil( NavigatorRoutes.NAVIGATOR_SCREEN, (route)=>false);
+  });
+
+  // messaging.setForegroundNotificationPresentationOptions(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
 
     super.initState();
   }

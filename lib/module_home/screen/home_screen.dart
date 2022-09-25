@@ -122,24 +122,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     builder: (context) {
                       return Container(
                         width: 10,
-                        child: Icon(
-
-                              Icons.notifications_active_outlined,
-                              color: Colors.black,
-
-                          ),
+                        child:  Icon(
+                                Icons.notifications_active_outlined,
+                                color: Colors.black,
+                              ),
+                        // child: IconButton(
+                        //     icon: Icon(
+                        //       Icons.notifications_active_outlined,
+                        //       color: Colors.black,
+                        //     ),
+                        //     onPressed: () {
+                        //       // Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
+                        //     }),
                       );
-                      // return Container(
-                      //   width: 10,
-                      //   child: IconButton(
-                      //       icon: Icon(
-                      //         Icons.notifications_active_outlined,
-                      //         color: Colors.black,
-                      //       ),
-                      //       onPressed: () {
-                      //         // Navigator.push(context,MaterialPageRoute(builder: (context)=> NotificationsScreen()));
-                      //       }),
-                      // );
                     },
                   ),
                   backgroundColor: Colors.white,
@@ -876,9 +871,10 @@ class CompanySearch extends SearchDelegate<SearchModel?> {
 
   @override
   Widget buildResults(BuildContext context) {
+
     return ListTile(
       onTap: () {},
-      title: Text('Select Result From Suggestions'),
+      title: Text(UtilsConst.lang == 'en' ?'Select Result From Suggestions':'الرجاء الاختيار من الاقتراحات'),
     );
   }
 
@@ -891,18 +887,14 @@ class CompanySearch extends SearchDelegate<SearchModel?> {
             List<CompanyModel> companies = state.data;
             companies.removeWhere((element) => element.isActive == false);
             List<CompanyModel> suggestionList = [];
-            if (UtilsConst.lang == 'ar'){
+            if (UtilsConst.lang == 'en')
               suggestionList = companies
-                  .where((element) => element.name2.startsWith(query.toUpperCase()))
+                  .where((element) => element.name.toUpperCase().startsWith(query.toUpperCase()))
                   .toList();
-            }
-
-            else{
-            suggestionList = companies
-                .where((element) => element.name.startsWith(query.toUpperCase()))
-                .toList();
-          }
-
+            else
+              suggestionList = companies
+                  .where((element) => element.name2.toUpperCase().startsWith(query.toUpperCase()))
+                  .toList();
 
             return ListView.builder(
                 itemCount: suggestionList.length,
@@ -925,19 +917,24 @@ class CompanySearch extends SearchDelegate<SearchModel?> {
                       text: TextSpan(
                           text: (UtilsConst.lang == 'en')
                               ? suggestionList[index].name.substring(0, query.length)
-                              : suggestionList[index].name2
-                              .substring(0,query.length,),
+                              : suggestionList[index]
+                                  .name2
+                                  .substring(0, query.length),
                           style: TextStyle(
                               color: Colors.black54,
                               fontWeight: FontWeight.bold,
-                              fontSize: 17),
+                              fontSize: 16),
                           children: [
                             TextSpan(
                               text: (UtilsConst.lang == 'en')
                                   ? suggestionList[index]
-                                      .name .substring( query.length,suggestionList[index].name.length):suggestionList[index].name2
-                                      .substring(query.length,suggestionList[index].name2.length)
-                              ,
+                                      .name
+                                      .substring(query.length,suggestionList[index]
+                                  .name.length)
+                                  : suggestionList[index]
+                                      .name2
+                                      .substring(query.length,suggestionList[index]
+                                  .name2.length),
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 14.5),
                             )
